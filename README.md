@@ -7,6 +7,7 @@ Currently, we are using :
 - React JS
 - Tailwind JS
 - Material Ui
+- Framer Motion
 - Redux Toolkit
 - Node JS
 - Express JS
