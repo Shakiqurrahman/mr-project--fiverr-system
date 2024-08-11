@@ -31,7 +31,7 @@ function Header() {
                         </button>
                     </div>
                 </form>
-                <nav className="flex gap-6 ">
+                <nav className="flex gap-6 items-center">
                     <ul className={`text-white md:static flex-col md:flex-row items-center gap-6 duration-300  ${activeMenu ? "flex absolute top-20 w-full left-0 py-16 bg-black md:bg-transparent" : "hidden md:flex"}`}>
                         <li className="text-white hover:text-gray-300">
                             <NavLink to="/">Home</NavLink>
@@ -62,7 +62,7 @@ function Header() {
                     </ul>
                     <div>
                         <button
-                            className={`block md:hidden w-12 h-12 text-white rounded-full focus:outline-none`}
+                            className={`block md:hidden text-white w-6 focus:outline-none`}
                             onClick={() => setActiveMenu(!activeMenu)}
                         >
                            { activeMenu ? <BiX size={30}/> : <GiHamburgerMenu size={24} /> }
