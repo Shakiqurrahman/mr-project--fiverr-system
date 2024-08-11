@@ -1,10 +1,11 @@
 import React from 'react'
+import SocialMediasForm from '../components/SocialMediasForm';
 
 function Home() {
     return (
-        <>
-        <h1>hello world</h1>
-        </>
+        <section className='my-20'>
+        <SocialMediasForm />
+        </section>
     )
 }
 
