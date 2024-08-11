@@ -11,6 +11,7 @@ import Contact from "../pages/Contact";
 import Affiliate from "../pages/Affiliate";
 import TermsAndConditions from "../pages/TermsAndConditions";
 import PrivacyPolicy from "../pages/PrivacyPolicy";
+import Join from "../pages/Join";
 
 export const router = createBrowserRouter([
     {
@@ -24,6 +25,10 @@ export const router = createBrowserRouter([
             {
                 path: "/about",
                 element: <About />,
+            },
+            {
+                path: "/join",
+                element: <Join />,
             },
             {
                 path: "/designs",
