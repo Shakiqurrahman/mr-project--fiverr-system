@@ -12,9 +12,9 @@ body {
   
   /* Additonal custom styles */
   .max-width {
-    @apply max-w-[1380px] mx-auto px-4;
+    @apply max-w-[1280px] mx-auto px-4;
   }
   
-  .active {
+  /* .active {
     @apply text-base font-semibold uppercase px-5 py-3.5 md:py-2.5  text-navy bg-white md:rounded-lg;
-  }
+  } */
