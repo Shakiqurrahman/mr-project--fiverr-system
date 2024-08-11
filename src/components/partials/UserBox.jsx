@@ -1,30 +1,30 @@
-import { Avatar, Divider, ListItemIcon, Menu, MenuItem } from "@mui/material";
+import { Divider, Menu, MenuItem } from "@mui/material";
 import React from "react";
-import img from "../../assets/images/MR Logo White.png";
-import { FiLogOut } from "react-icons/fi";
-import { CiSettings } from "react-icons/ci";
-import { BsPersonAdd } from "react-icons/bs";
+import { CgProfile } from "react-icons/cg";
 import { Link } from "react-router-dom";
 
-function UserBox() {
+function UserBox({ img }) {
     const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
     return (
         <>
             <button
                 onClick={handleClick}
-                size="small"
-                aria-controls={open ? 'account-menu' : undefined}
+                aria-controls={open ? "account-menu" : undefined}
                 aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
+                aria-expanded={open ? "true" : undefined}
             >
-                <img className="size-10" src={img} alt="user" />
+                {img ? (
+                    <img className="size-10" src={img} alt="user" />
+                ) : (
+                    <CgProfile size={32} />
+                )}
             </button>
             <Menu
                 anchorEl={anchorEl}
@@ -62,14 +62,14 @@ function UserBox() {
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
                 <MenuItem onClick={handleClose}>
-                     <Link to='/profile'>Profile</Link>
+                    <Link to="/profile">Profile</Link>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
-                     <Link to='/my-account'>My account</Link>
+                    <Link to="/my-account">My account</Link>
                 </MenuItem>
                 <Divider />
                 <MenuItem onClick={handleClose}>
-                    <Link to='/logout'>Logout</Link>
+                    <Link to="/logout">Logout</Link>
                 </MenuItem>
             </Menu>
         </>

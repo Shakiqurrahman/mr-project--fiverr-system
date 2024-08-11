@@ -9,7 +9,7 @@ import Navbar from "./Navbar";
 import UserBox from "./UserBox";
 
 function Header() {
-    const [user, setUser] = useState(false);
+    const [user, setUser] = useState(true);
     const [activeMenu, setActiveMenu] = useState(false);
 
     const handleClose = () => {
@@ -78,7 +78,7 @@ function Header() {
                                     user && "flex-row-reverse"
                                 }`}
                             >
-                                <li className="text-white hover:text-gray-300">
+                                <li className="text-white hover:text-gray-300 flex items-center">
                                     {user ? (
                                         <UserBox />
                                     ) : (
