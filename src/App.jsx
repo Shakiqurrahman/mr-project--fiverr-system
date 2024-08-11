@@ -1,10 +1,13 @@
-import { Button } from "@mui/material";
+import { Button } from '@mui/material'
+import React from 'react'
 
-function App() {
-    return <>
-    <h1>hello world</h1>
-    <Button />
-    </>;
+const App = () => {
+  return (
+    <>
+      <h1 className='text-4xl text-blue-600'>hello world</h1>
+
+    </>
+  )
 }
 
-export default App;
+export default App
