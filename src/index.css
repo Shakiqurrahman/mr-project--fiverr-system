@@ -4,39 +4,47 @@
 @tailwind utilities;
 
 body {
-    font-family: "Poppins", sans-serif;
-    max-width: 100%;
-    overflow-x: hidden;
-    scroll-behavior: smooth;
+  font-family: "Poppins", sans-serif;
+  max-width: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 /* Additonal custom styles */
 .max-width {
-    @apply max-w-[1280px] mx-auto px-4;
+  @apply max-w-[1280px] mx-auto px-4;
 }
 
-  .join button{
-    z-index: 2;
+.join button {
+  z-index: 2;
+}
+.join button::after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background-color: transparent;
+  display: block;
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  z-index: 1;
+}
+.join button.active {
+  @apply bg-primary text-white;
+}
+.join button.active::after {
+  @apply bg-primary;
+}
+
+@media (max-width: 575.99px) {
+  .join button::after {
+    width: 10px;
+    height: 10px;
+    bottom: -5px;
   }
-  .join button::after{
-    content: "";
-    width: 20px;
-    height: 20px;
-    background-color: transparent;
-    display: block;
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%) rotate(45deg);
-    z-index: 1;
-  }
-  .join button.active{
-    @apply bg-primary text-white;
-  }
-  .join button.active::after{
-    @apply bg-primary;
-  }
-  
-  /* .active {
+}
+
+/* .active {
     @apply text-base font-semibold uppercase px-5 py-3.5 md:py-2.5  text-navy bg-white md:rounded-lg;
   } */
