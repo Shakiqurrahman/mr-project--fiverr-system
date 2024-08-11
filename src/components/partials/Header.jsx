@@ -17,11 +17,11 @@ function Header() {
     };
     return (
         <>
-            <header className="h-20">
-                <div className="bg-[#121212] fixed top-0 w-full z-10">
-                    <div className="h-20 max-width flex justify-between items-center">
+            <header className="sticky top-0">
+                <div className="bg-[#121212] z-10">
+                    <div className="h-16 sm:h-20 max-width flex justify-between items-center">
                         <div>
-                            <img className="size-16" src={logo} alt="MR Logo" />
+                            <img className="size-10 sm:size-16" src={logo} alt="MR Logo" />
                         </div>
                         <form className="hidden lg:block">
                             <div className="relative flex justify-center items-center">
@@ -42,7 +42,7 @@ function Header() {
                             <ul
                                 className={`text-white md:static flex-col md:flex-row items-center gap-6 duration-300  ${
                                     activeMenu
-                                        ? "flex absolute top-20 w-full left-0 py-16 bg-black md:bg-transparent"
+                                        ? "flex absolute top-16 sm:top-20 w-full left-0 py-16 bg-black md:bg-transparent"
                                         : "hidden md:flex"
                                 }`}
                             >
@@ -106,8 +106,8 @@ function Header() {
                         </nav>
                     </div>
                 </div>
-            </header>
             <Navbar />
+            </header>
         </>
     );
 }
