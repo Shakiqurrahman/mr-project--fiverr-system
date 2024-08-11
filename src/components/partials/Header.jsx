@@ -2,7 +2,10 @@ import React from 'react'
 
 function Header() {
     return (
-    <h1>hello</h1>
+        <div className='max-width'>
+
+            <h1>hello</h1>
+        </div>
     )
 }
 
