@@ -10,6 +10,19 @@ body {
   scroll-behavior: smooth;
 }
 
+/* Removing Input Field Number Arrows */
+@layer base {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+input:placeholder-shown{
+  font-size: 14px;
+}
+
 /* Additonal custom styles */
 .max-width {
   @apply max-w-[1280px] mx-auto px-4;

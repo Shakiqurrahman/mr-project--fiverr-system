@@ -12,6 +12,7 @@ import PriceList from "../pages/PriceList";
 import PrivacyAndPolicy from "../pages/PrivacyAndPolicy";
 import Project from "../pages/Project";
 import TermsAndConditions from "../pages/TermsAndConditions";
+import SetupProfile from "../pages/SetupProfile";
 
 export const router = createBrowserRouter([
   {
@@ -61,6 +62,10 @@ export const router = createBrowserRouter([
       {
         path: "/privacypolicy",
         element: <PrivacyAndPolicy />,
+      },
+      {
+        path: "/setup-profile",
+        element: <SetupProfile />,
       },
       {
         path: "*",

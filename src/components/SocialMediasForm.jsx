@@ -55,6 +55,90 @@ const SocialMediasForm = () => {
                         className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
                     />
                 </div>
+                <label className="block px-2 pt-2">Twitter</label>
+                <div className="flex mt-1">
+                    <div className="h-[50px] w-[50px] flex-shrink-0  p-2 bg-white border border-[#e7e7e7]">
+                        <FaTwitter className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
+                    </div>
+                    <input
+                        type="text"
+                        name="facebook"
+                        placeholder="https://"
+                        className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
+                    />
+                </div>
+                <label className="block px-2 pt-2">Twitter</label>
+                <div className="flex mt-1">
+                    <div className="h-[50px] w-[50px] flex-shrink-0  p-2 bg-white border border-[#e7e7e7]">
+                        <FaTwitter className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
+                    </div>
+                    <input
+                        type="text"
+                        name="facebook"
+                        placeholder="https://"
+                        className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
+                    />
+                </div>
+                <label className="block px-2 pt-2">Twitter</label>
+                <div className="flex mt-1">
+                    <div className="h-[50px] w-[50px] flex-shrink-0  p-2 bg-white border border-[#e7e7e7]">
+                        <FaTwitter className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
+                    </div>
+                    <input
+                        type="text"
+                        name="facebook"
+                        placeholder="https://"
+                        className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
+                    />
+                </div>
+                <label className="block px-2 pt-2">Twitter</label>
+                <div className="flex mt-1">
+                    <div className="h-[50px] w-[50px] flex-shrink-0  p-2 bg-white border border-[#e7e7e7]">
+                        <FaTwitter className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
+                    </div>
+                    <input
+                        type="text"
+                        name="facebook"
+                        placeholder="https://"
+                        className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
+                    />
+                </div>
+                <label className="block px-2 pt-2">Twitter</label>
+                <div className="flex mt-1">
+                    <div className="h-[50px] w-[50px] flex-shrink-0  p-2 bg-white border border-[#e7e7e7]">
+                        <FaTwitter className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
+                    </div>
+                    <input
+                        type="text"
+                        name="facebook"
+                        placeholder="https://"
+                        className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
+                    />
+                </div>
+                <label className="block px-2 pt-2">Twitter</label>
+                <div className="flex mt-1">
+                    <div className="h-[50px] w-[50px] flex-shrink-0  p-2 bg-white border border-[#e7e7e7]">
+                        <FaTwitter className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
+                    </div>
+                    <input
+                        type="text"
+                        name="facebook"
+                        placeholder="https://"
+                        className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
+                    />
+                </div>
+                <label className="block px-2 pt-2">Twitter</label>
+                <div className="flex mt-1">
+                    <div className="h-[50px] w-[50px] flex-shrink-0  p-2 bg-white border border-[#e7e7e7]">
+                        <FaTwitter className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
+                    </div>
+                    <input
+                        type="text"
+                        name="facebook"
+                        placeholder="https://"
+                        className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
+                    />
+                </div>
                 <div className="flex gap-4 mt-4">
                     <button className="flex-1 py-2.5 px-4 bg-primary text-white rounded-[30px]">
                         Save

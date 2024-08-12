@@ -297,6 +297,7 @@ function CountryList({ country, handleChange }) {
         <option value="Zambia">Zambia</option>
         <option value="Zimbabwe">Zimbabwe</option>
       </select>
+      <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
     </div>
   );
 }
