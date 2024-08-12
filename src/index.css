@@ -19,7 +19,8 @@ body {
   }
 }
 
-input:placeholder-shown{
+input:placeholder-shown,
+textarea:placeholder-shown{
   font-size: 14px;
 }
 

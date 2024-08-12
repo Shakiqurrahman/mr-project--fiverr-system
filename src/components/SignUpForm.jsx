@@ -54,7 +54,7 @@ function SignUpForm({ handleClick }) {
         name="name"
         value={form.name}
         onChange={handleChange}
-        className="bg-white block w-full p-1 sm:p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
+        className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
       />
       <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
       <label className="block px-2 pt-2">Username</label>
@@ -63,7 +63,7 @@ function SignUpForm({ handleClick }) {
         name="username"
         value={form.username}
         onChange={handleChange}
-        className="bg-white block w-full p-1 sm:p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
+        className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
       />
       <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
       <label className="block px-2 pt-2">Email</label>
@@ -72,7 +72,7 @@ function SignUpForm({ handleClick }) {
         name="email"
         value={form.email}
         onChange={handleChange}
-        className="bg-white block w-full p-1 sm:p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
+        className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
       />
       <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
       <label className="block px-2 pt-2">Set Password</label>
@@ -97,7 +97,7 @@ function SignUpForm({ handleClick }) {
           name="password"
           value={form.password}
           onChange={handleChange}
-          className="bg-white block w-full p-1 sm:p-2 border border-solid border-[#e7e7e7] mt-3 z-0 outline-none"
+          className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 z-0 outline-none"
         />
         <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
       </div>
@@ -123,14 +123,14 @@ function SignUpForm({ handleClick }) {
           name="confirmPassword"
           value={form.confirmPassword}
           onChange={handleChange}
-          className="bg-white block w-full p-1 sm:p-2 border border-solid border-[#e7e7e7] mt-3 z-0 outline-none"
+          className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 z-0 outline-none"
         />
         <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
       </div>
       <button
         type="submit"
         onClick={handleSubmit}
-        className="my-4 py-1 sm:py-3 block w-full bg-primary text-white font-medium text-lg"
+        className="my-4 py-2 sm:py-3 block w-full bg-primary text-white font-medium text-lg"
       >
         Sign Up
       </button>

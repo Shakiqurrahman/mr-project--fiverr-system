@@ -16,9 +16,8 @@ function Join() {
               type="button"
               value="Sign In"
               onClick={handleClick}
-              className={`w-1/2 p-2 sm:p-4 bg-[#D1E6F9] text-base sm:text-lg font-semibold relative ${
-                tab === "Sign In" ? "active" : ""
-              }`}
+              className={`w-1/2 p-3 sm:p-4 bg-[#D1E6F9] text-base sm:text-lg font-semibold relative ${tab === "Sign In" ? "active" : ""
+                }`}
             >
               Sign In
             </button>
@@ -26,9 +25,8 @@ function Join() {
               type="button"
               value="Sign Up"
               onClick={handleClick}
-              className={`w-1/2 p-2 sm:p-4 bg-[#D1E6F9] text-base sm:text-lg font-semibold relative ${
-                tab === "Sign Up" ? "active" : ""
-              }`}
+              className={`w-1/2 p-3 sm:p-4 bg-[#D1E6F9] text-base sm:text-lg font-semibold relative ${tab === "Sign Up" ? "active" : ""
+                }`}
             >
               Sign Up
             </button>

@@ -37,7 +37,7 @@ function SignInForm({ handleClick }) {
         name="email"
         value={form.email}
         onChange={handleChange}
-        className="bg-white block w-full p-1 sm:p-2 border border-solid border-[#e7e7e7] mt-3 outline-none isError"
+        className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none isError"
       />
       <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
       <label className="block px-2 pt-2">Password</label>
@@ -62,7 +62,7 @@ function SignInForm({ handleClick }) {
           name="password"
           value={form.password}
           onChange={handleChange}
-          className="bg-white block w-full p-1 sm:p-2 border border-solid border-[#e7e7e7] mt-3 z-0 outline-none"
+          className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 z-0 outline-none"
         />
         <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
       </div>
@@ -81,7 +81,7 @@ function SignInForm({ handleClick }) {
       <button
         type="submit"
         onClick={handleSubmit}
-        className="my-4 py-1 sm:py-3 block w-full bg-primary text-white font-medium text-lg"
+        className="my-4 py-2 sm:py-3 block w-full bg-primary text-white font-medium text-lg"
       >
         Sign In
       </button>

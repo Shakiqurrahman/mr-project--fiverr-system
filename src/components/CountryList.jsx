@@ -7,7 +7,7 @@ function CountryList({ country, handleChange }) {
       <select
         id="country"
         name="country"
-        className="bg-white block w-full p-1 sm:p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
+        className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
         value={country}
         onChange={handleChange}
       >

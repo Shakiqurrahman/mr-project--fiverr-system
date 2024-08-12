@@ -39,7 +39,7 @@ function SetupProfile() {
                             name="fullName"
                             value={form.fullName}
                             onChange={handleChange}
-                            className="bg-white block w-full p-1 sm:p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
+                            className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
                         />
                         <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
                         <label className="block px-2 pt-2">Username</label>
@@ -48,7 +48,7 @@ function SetupProfile() {
                             name="userName"
                             value={form.userName}
                             onChange={handleChange}
-                            className="bg-white block w-full p-1 sm:p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
+                            className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
                         />
                         <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
                         <label className="block px-2 pt-2">Industry Name</label>
@@ -57,7 +57,7 @@ function SetupProfile() {
                             name="industryName"
                             value={form.industryName}
                             onChange={handleChange}
-                            className="bg-white block w-full p-1 sm:p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
+                            className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
                         />
                         <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
                         <div className="flex gap-3">
@@ -71,7 +71,7 @@ function SetupProfile() {
                                     name="city"
                                     value={form.city}
                                     onChange={handleChange}
-                                    className="bg-white block w-full p-1 sm:p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
+                                    className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
                                 />
                                 <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
                             </div>
@@ -82,7 +82,7 @@ function SetupProfile() {
                             name="address"
                             value={form.address}
                             onChange={handleChange}
-                            className="bg-white block w-full p-1 sm:p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
+                            className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
                         />
                         <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
                         <label className="block px-2 pt-2">Email</label>
@@ -91,18 +91,18 @@ function SetupProfile() {
                             name="email"
                             value={form.email}
                             onChange={handleChange}
-                            className="bg-white block w-full p-1 sm:p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
+                            className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
                         />
                         <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
                         <label className="block px-2 pt-2">Phone Number</label>
                         <div className="flex mt-1">
-                            <div className="flex-shrink-0  p-1 sm:p-2 bg-white border border-[#e7e7e7] select-none border-r-0">
+                            <div className="flex-shrink-0 flex items-center p-1 sm:p-2 bg-white border border-[#e7e7e7] select-none border-r-0">
                                 +880
                             </div>
                             <input
                                 type="number"
                                 name="facebook"
-                                className="bg-white block w-full p-1 sm:p-2 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none border-l-0"
+                                className="bg-white block w-full p-2 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none border-l-0"
                             />
                             <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
                         </div>
@@ -113,7 +113,7 @@ function SetupProfile() {
                             value={form.language}
                             placeholder="Example: English, Spanish"
                             onChange={handleChange}
-                            className="bg-white block w-full p-1 sm:p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
+                            className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
                         />
                         <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
                     </div>
@@ -121,7 +121,7 @@ function SetupProfile() {
                 <div className="bg-[#DCEEFA] mt-5">
                     <h1 className="bg-primary text-white p-3">Description</h1>
                     <div className="px-3 py-5">
-                        <textarea name="desc" value={form.desc} onChange={handleChange} className="bg-white block w-full p-1 sm:p-2 border border-solid border-[#e7e7e7] mt-3 outline-none h-[200px] resize-y" placeholder="Write something about yourself and your industry"></textarea>
+                        <textarea name="desc" value={form.desc} onChange={handleChange} className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none h-[200px] resize-y" placeholder="Write something about yourself and your industry"></textarea>
                         <div className="flex gap-3 mt-5">
                             <button type="submit" className="flex-grow p-3 text-center text-white bg-primary rounded-3xl">Save</button>
                             <button type="button" className="flex-grow p-3 text-center text-white bg-gray-500 rounded-3xl">Skip</button>
