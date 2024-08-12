@@ -9,7 +9,7 @@ import Navbar from "./Navbar";
 import UserBox from "./UserBox";
 
 function Header() {
-  const [user, setUser] = useState(false);
+  const [user, setUser] = useState(true);
   const [activeMenu, setActiveMenu] = useState(false);
 
   const handleClose = () => {
@@ -70,13 +70,19 @@ function Header() {
                 >
                   <NavLink to="/contact">Contact</NavLink>
                 </li>
+                {!user && <li
+                  className="md:hidden text-white hover:text-gray-300"
+                  onClick={handleClose}
+                >
+                  <NavLink to="/join">Join</NavLink>
+                </li>}
               </ul>
               <ul
                 className={`flex items-center gap-6 ${
                   user && "flex-row-reverse"
                 }`}
               >
-                <li className="text-white hover:text-gray-300 flex items-center">
+                <li className={`${!user && "hidden md:block"} text-white hover:text-gray-300 flex items-center`}>
                   {user ? <UserBox /> : <NavLink to="/join">Join</NavLink>}
                 </li>
                 <li className="text-white hover:text-gray-300">
