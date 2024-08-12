@@ -1,6 +1,7 @@
 import React from "react";
-import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
+import { FaFacebookF, FaGoogle, FaInstagram, FaPinterest, FaTiktok, FaTumblr, FaTwitter, FaYelp, FaYoutube } from "react-icons/fa";
 import { FaLinkedinIn } from "react-icons/fa6";
+import nextDoorIcon from '../assets/images/nextdoor_icon.png'
 
 const SocialMediasForm = () => {
     return (
@@ -55,10 +56,10 @@ const SocialMediasForm = () => {
                         className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
                     />
                 </div>
-                <label className="block px-2 pt-2">Twitter</label>
+                <label className="block px-2 pt-2">Pinterest</label>
                 <div className="flex mt-1">
                     <div className="h-[50px] w-[50px] flex-shrink-0  p-2 bg-white border border-[#e7e7e7]">
-                        <FaTwitter className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
+                        <FaPinterest className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
                     </div>
                     <input
                         type="text"
@@ -67,10 +68,10 @@ const SocialMediasForm = () => {
                         className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
                     />
                 </div>
-                <label className="block px-2 pt-2">Twitter</label>
+                <label className="block px-2 pt-2">Google</label>
                 <div className="flex mt-1">
                     <div className="h-[50px] w-[50px] flex-shrink-0  p-2 bg-white border border-[#e7e7e7]">
-                        <FaTwitter className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
+                        <FaGoogle className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
                     </div>
                     <input
                         type="text"
@@ -79,10 +80,10 @@ const SocialMediasForm = () => {
                         className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
                     />
                 </div>
-                <label className="block px-2 pt-2">Twitter</label>
+                <label className="block px-2 pt-2">Tumblr</label>
                 <div className="flex mt-1">
                     <div className="h-[50px] w-[50px] flex-shrink-0  p-2 bg-white border border-[#e7e7e7]">
-                        <FaTwitter className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
+                        <FaTumblr className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
                     </div>
                     <input
                         type="text"
@@ -91,10 +92,10 @@ const SocialMediasForm = () => {
                         className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
                     />
                 </div>
-                <label className="block px-2 pt-2">Twitter</label>
+                <label className="block px-2 pt-2">YouTube</label>
                 <div className="flex mt-1">
                     <div className="h-[50px] w-[50px] flex-shrink-0  p-2 bg-white border border-[#e7e7e7]">
-                        <FaTwitter className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
+                        <FaYoutube className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
                     </div>
                     <input
                         type="text"
@@ -103,10 +104,10 @@ const SocialMediasForm = () => {
                         className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
                     />
                 </div>
-                <label className="block px-2 pt-2">Twitter</label>
+                <label className="block px-2 pt-2">Yelp</label>
                 <div className="flex mt-1">
                     <div className="h-[50px] w-[50px] flex-shrink-0  p-2 bg-white border border-[#e7e7e7]">
-                        <FaTwitter className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
+                        <FaYelp className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
                     </div>
                     <input
                         type="text"
@@ -115,10 +116,10 @@ const SocialMediasForm = () => {
                         className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
                     />
                 </div>
-                <label className="block px-2 pt-2">Twitter</label>
+                <label className="block px-2 pt-2">Tiktok</label>
                 <div className="flex mt-1">
                     <div className="h-[50px] w-[50px] flex-shrink-0  p-2 bg-white border border-[#e7e7e7]">
-                        <FaTwitter className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
+                        <FaTiktok className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
                     </div>
                     <input
                         type="text"
@@ -127,10 +128,11 @@ const SocialMediasForm = () => {
                         className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
                     />
                 </div>
-                <label className="block px-2 pt-2">Twitter</label>
+                <label className="block px-2 pt-2">Nextdoor</label>
                 <div className="flex mt-1">
                     <div className="h-[50px] w-[50px] flex-shrink-0  p-2 bg-white border border-[#e7e7e7]">
-                        <FaTwitter className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
+                        {/* < className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" /> */}
+                        <img className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" src={nextDoorIcon} alt="nextDoor Icon" />
                     </div>
                     <input
                         type="text"

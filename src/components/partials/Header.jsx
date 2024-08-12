@@ -9,7 +9,7 @@ import Navbar from "./Navbar";
 import UserBox from "./UserBox";
 
 function Header() {
-  const [user, setUser] = useState(true);
+  const [user, setUser] = useState(false);
   const [activeMenu, setActiveMenu] = useState(false);
 
   const handleClose = () => {
