@@ -3,13 +3,13 @@ import SignInForm from "../components/SignInForm";
 import SignUpForm from "../components/SignUpForm";
 
 function Join() {
-  const [tab, setTab] = useState("Sign Up");
+  const [tab, setTab] = useState("Sign In");
   const handleClick = (e) => {
     setTab(e.target.value);
   };
   return (
     <>
-      <div className="max-width my-10">
+      <div className="max-width mt-10 sm:mt-20">
         <div className="w-full max-w-[500px] bg-[#F2F9FF] mx-auto">
           <div className="flex items-stretch join">
             <button

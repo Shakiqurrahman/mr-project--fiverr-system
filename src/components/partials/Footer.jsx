@@ -7,7 +7,7 @@ import { FaFacebookF, FaInstagram, FaLinkedinIn, FaPinterestP, FaTwitter } from 
 
 function Footer() {
     return (
-        <div className='bg-black text-white'>
+        <div className='bg-black text-white mt-10 sm:mt-20'>
             <div className="max-width">
                 <div className="flex pt-10 flex-wrap sm:flex-nowrap">
                     <div className="w-full sm:w-1/3 pr-0 sm:pr-16">
