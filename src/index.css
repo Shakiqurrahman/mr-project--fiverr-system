@@ -37,6 +37,14 @@ body {
   @apply bg-primary;
 }
 
+/* Form Error Handling Design */
+.isError {
+  @apply border-red-600;
+}
+.isError + p{
+  @apply block;
+}
+
 @media (max-width: 575.99px) {
   .join button::after {
     width: 10px;

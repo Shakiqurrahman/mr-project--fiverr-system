@@ -56,6 +56,7 @@ function SignUpForm({ handleClick }) {
         onChange={handleChange}
         className="bg-white block w-full p-1 sm:p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
       />
+      <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
       <label className="block px-2 pt-2">Username</label>
       <input
         type="text"
@@ -64,6 +65,7 @@ function SignUpForm({ handleClick }) {
         onChange={handleChange}
         className="bg-white block w-full p-1 sm:p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
       />
+      <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
       <label className="block px-2 pt-2">Email</label>
       <input
         type="email"
@@ -72,6 +74,7 @@ function SignUpForm({ handleClick }) {
         onChange={handleChange}
         className="bg-white block w-full p-1 sm:p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
       />
+      <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
       <label className="block px-2 pt-2">Set Password</label>
       <div className="relative">
         {show ? (
@@ -96,6 +99,7 @@ function SignUpForm({ handleClick }) {
           onChange={handleChange}
           className="bg-white block w-full p-1 sm:p-2 border border-solid border-[#e7e7e7] mt-3 z-0 outline-none"
         />
+        <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
       </div>
       <label className="block px-2 pt-2">Confirm Password</label>
       <div className="relative">
@@ -121,13 +125,14 @@ function SignUpForm({ handleClick }) {
           onChange={handleChange}
           className="bg-white block w-full p-1 sm:p-2 border border-solid border-[#e7e7e7] mt-3 z-0 outline-none"
         />
+        <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
       </div>
       <button
         type="submit"
         onClick={handleSubmit}
         className="my-4 py-1 sm:py-3 block w-full bg-primary text-white font-medium text-lg"
       >
-        Sign In
+        Sign Up
       </button>
       <p className="py-3 text-center text-sm">
         Already have an Account?{" "}
