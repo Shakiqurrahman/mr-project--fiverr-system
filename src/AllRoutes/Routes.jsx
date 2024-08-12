@@ -15,6 +15,9 @@ import TermsAndConditions from "../pages/TermsAndConditions";
 import SetupProfile from "../pages/SetupProfile";
 import Profile from "../pages/Profile";
 import MyAccount from "../pages/MyAccount";
+import ForgetPassword from "../pages/ForgetPassword";
+import Verify from "../pages/Verify";
+import ChangePassword from "../pages/ChangePassword";
 
 export const router = createBrowserRouter([
   {
@@ -64,6 +67,18 @@ export const router = createBrowserRouter([
       {
         path: "/privacypolicy",
         element: <PrivacyAndPolicy />,
+      },
+      {
+        path: "/forget-password",
+        element: <ForgetPassword />,
+      },
+      {
+        path: "/verify",
+        element: <Verify />,
+      },
+      {
+        path: "/change-password",
+        element: <ChangePassword />,
       },
       {
         path: "/setup-profile",

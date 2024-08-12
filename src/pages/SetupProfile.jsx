@@ -21,7 +21,7 @@ function SetupProfile() {
         setForm({ ...form, [e.target.name]: e.target.value })
     }
     return (
-        <div className="max-width my-10">
+        <div className="max-width mt-10 sm:mt-20">
             <form className="w-full max-w-[800px] mx-auto">
                 <div className="text-center">
                     <div className="h-[220px] w-[220px] flex items-center justify-center rounded-full  mx-auto mb-10 bg-[#DCEEFA] overflow-hidden">
