@@ -17,7 +17,7 @@ function Header() {
   };
   return (
     <>
-      <header className="sticky top-0 z-[9999999]">
+      <header className="sticky top-0 z-[99]">
         <div className="bg-[#121212] z-10">
           <div className="h-16 sm:h-20 max-width flex justify-between items-center">
             <div>
