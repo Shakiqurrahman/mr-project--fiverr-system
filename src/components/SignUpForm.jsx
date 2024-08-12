@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import CountryList from "./CountryList";
+import axios from 'axios';
+import { configApi } from "../libs/configApi";
 
 function SignUpForm({ handleClick }) {
   const [form, setForm] = useState({
@@ -22,7 +24,7 @@ function SignUpForm({ handleClick }) {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (
       form.country &&
@@ -33,15 +35,36 @@ function SignUpForm({ handleClick }) {
       form.confirmPassword
     ) {
       if (form.password == form.confirmPassword) {
-        console.log(form);
-        setForm({
-          country: "",
-          name: "",
-          username: "",
-          email: "",
-          password: "",
-          confirmPassword: "",
-        });
+        try {
+          const api = `${configApi.api}sign-up`;
+
+          const { data } = await axios.post(api, {
+            userName: form.username,
+            fullName: form.name,
+            email: form.email,
+            country: form.country,
+            password: form.password
+          });
+          console.log(data);
+
+          if (data.success) {
+            // const token = data.data.token;
+            // const expiresInDays = form.isRemember ? 30 : 10;
+            // Cookies.set('authToken', JSON.stringify({ token, data }), { expires: expiresInDays });
+
+            setForm({
+              country: "",
+              name: "",
+              username: "",
+              email: "",
+              password: "",
+              confirmPassword: "",
+            });
+            return;
+          }
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
   };

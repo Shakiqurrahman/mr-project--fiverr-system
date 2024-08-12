@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { configApi } from "../libs/configApi";
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 function SignInForm({ handleClick }) {
   const [form, setForm] = useState({
@@ -9,6 +12,8 @@ function SignInForm({ handleClick }) {
     isRemember: false,
   });
   const [show, setShow] = useState(true);
+
+  const token = Cookies.get('authToken');
   const handleShow = () => {
     setShow(!show);
   };
@@ -18,17 +23,41 @@ function SignInForm({ handleClick }) {
   const handleCheck = (e) => {
     setForm({ ...form, [e.target.name]: e.target.checked });
   };
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    console.log(`${configApi.api}sign-in`);
+
     if (form.email && form.password) {
-      console.log(form);
-      setForm({
-        email: "",
-        password: "",
-        isRemember: false,
-      });
+      try {
+        const api = `${configApi.api}sign-in`;
+        const { data } = await axios.post(api, {
+          email: form.email,
+          password: form.password,
+        });
+
+        if (data.success) {
+          const token = data.data.token;
+          const expiresInDays = form.isRemember ? 30 : 10;
+          Cookies.set('authToken', JSON.stringify({ token, data }), { expires: expiresInDays });
+          setForm({
+            email: "",
+            password: "",
+            isRemember: false,
+          });
+          return;
+        }
+
+        // Reset the form
+
+      } catch (error) {
+        console.error('Error:', error);
+      }
     }
   };
+
+
   return (
     <div>
       <label className="block px-2 pt-2">Email</label>
