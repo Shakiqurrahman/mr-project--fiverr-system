@@ -13,6 +13,8 @@ import PrivacyAndPolicy from "../pages/PrivacyAndPolicy";
 import Project from "../pages/Project";
 import TermsAndConditions from "../pages/TermsAndConditions";
 import SetupProfile from "../pages/SetupProfile";
+import Profile from "../pages/Profile";
+import MyAccount from "../pages/MyAccount";
 
 export const router = createBrowserRouter([
   {
@@ -66,6 +68,14 @@ export const router = createBrowserRouter([
       {
         path: "/setup-profile",
         element: <SetupProfile />,
+      },
+      {
+        path: "/profile",
+        element: <Profile />,
+      },
+      {
+        path: "/my-account",
+        element: <MyAccount />,
       },
       {
         path: "*",
