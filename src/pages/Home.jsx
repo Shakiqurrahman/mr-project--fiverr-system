@@ -1,11 +1,7 @@
-import React from 'react'
-import SocialMediasForm from '../components/SocialMediasForm';
+import React from "react";
 
 function Home() {
-    return (
-        <>
-        </>
-    )
+    return <></>;
 }
 
 export default Home;

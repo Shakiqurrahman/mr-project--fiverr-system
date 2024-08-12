@@ -14,7 +14,7 @@ const SocialMediasForm = () => {
                         <FaFacebookF className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
                     </div>
                     <input
-                        type="text"
+                        type="url"
                         name="facebook"
                         placeholder="https://"
                         className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
@@ -26,7 +26,7 @@ const SocialMediasForm = () => {
                         <FaInstagram className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
                     </div>
                     <input
-                        type="text"
+                        type="url"
                         name="facebook"
                         placeholder="https://"
                         className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
@@ -38,7 +38,7 @@ const SocialMediasForm = () => {
                         <FaLinkedinIn className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
                     </div>
                     <input
-                        type="text"
+                        type="url"
                         name="facebook"
                         placeholder="https://"
                         className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
@@ -50,7 +50,7 @@ const SocialMediasForm = () => {
                         <FaTwitter className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
                     </div>
                     <input
-                        type="text"
+                        type="url"
                         name="facebook"
                         placeholder="https://"
                         className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
@@ -62,7 +62,7 @@ const SocialMediasForm = () => {
                         <FaPinterest className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
                     </div>
                     <input
-                        type="text"
+                        type="url"
                         name="facebook"
                         placeholder="https://"
                         className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
@@ -74,7 +74,7 @@ const SocialMediasForm = () => {
                         <FaGoogle className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
                     </div>
                     <input
-                        type="text"
+                        type="url"
                         name="facebook"
                         placeholder="https://"
                         className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
@@ -86,7 +86,7 @@ const SocialMediasForm = () => {
                         <FaTumblr className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
                     </div>
                     <input
-                        type="text"
+                        type="url"
                         name="facebook"
                         placeholder="https://"
                         className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
@@ -98,7 +98,7 @@ const SocialMediasForm = () => {
                         <FaYoutube className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
                     </div>
                     <input
-                        type="text"
+                        type="url"
                         name="facebook"
                         placeholder="https://"
                         className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
@@ -110,7 +110,7 @@ const SocialMediasForm = () => {
                         <FaYelp className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
                     </div>
                     <input
-                        type="text"
+                        type="url"
                         name="facebook"
                         placeholder="https://"
                         className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
@@ -122,7 +122,7 @@ const SocialMediasForm = () => {
                         <FaTiktok className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" />
                     </div>
                     <input
-                        type="text"
+                        type="url"
                         name="facebook"
                         placeholder="https://"
                         className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
@@ -131,11 +131,10 @@ const SocialMediasForm = () => {
                 <label className="block px-2 pt-2">Nextdoor</label>
                 <div className="flex mt-1">
                     <div className="h-[50px] w-[50px] flex-shrink-0  p-2 bg-white border border-[#e7e7e7]">
-                        {/* < className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" /> */}
                         <img className="flex-shrink-0 text-base  border border-primary rounded-full p-1.5 w-full h-full" src={nextDoorIcon} alt="nextDoor Icon" />
                     </div>
                     <input
-                        type="text"
+                        type="url"
                         name="facebook"
                         placeholder="https://"
                         className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
