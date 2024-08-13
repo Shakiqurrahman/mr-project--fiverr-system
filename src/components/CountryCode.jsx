@@ -4,7 +4,7 @@ function CountryCode({ countryCode, handleChange }) {
       name="countryCode"
       value={countryCode}
       onChange={handleChange}
-      className="outline-none"
+      className="outline-none bg-white border-none"
     >
       <option value={213}>(+213)</option>
       <option value={376}>(+376)</option>
