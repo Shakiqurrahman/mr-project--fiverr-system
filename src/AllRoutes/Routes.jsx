@@ -18,7 +18,7 @@ import MyAccount from "../pages/MyAccount";
 import ForgetPassword from "../pages/ForgetPassword";
 import Verify from "../pages/Verify";
 import ChangePassword from "../pages/ChangePassword";
-
+import SocialMediasForm from "../components/SocialMediasForm";
 export const router = createBrowserRouter([
   {
     path: "/",
