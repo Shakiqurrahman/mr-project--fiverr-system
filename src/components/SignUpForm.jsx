@@ -3,7 +3,8 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import CountryList from "./CountryList";
 import axios from 'axios';
 import { configApi } from "../libs/configApi";
-
+import toast from "react-hot-toast";
+import Cookies from 'js-cookie';
 function SignUpForm({ handleClick }) {
   const [form, setForm] = useState({
     country: "",
@@ -48,10 +49,9 @@ function SignUpForm({ handleClick }) {
           console.log(data);
 
           if (data.success) {
-            // const token = data.data.token;
             // const expiresInDays = form.isRemember ? 30 : 10;
-            // Cookies.set('authToken', JSON.stringify({ token, data }), { expires: expiresInDays });
-
+            Cookies.set('authToken', JSON.stringify({ data }), { expires: 10 });
+            toast.success('User sign in successfully');
             setForm({
               country: "",
               name: "",

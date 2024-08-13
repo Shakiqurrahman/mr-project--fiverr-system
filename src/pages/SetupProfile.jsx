@@ -209,7 +209,6 @@ function SetupProfile() {
             <label className="block px-2 pt-2">Phone Number</label>
             <div className="flex mt-1">
               <div className="flex-shrink-0 flex items-center p-1 sm:p-2 bg-white border border-[#e7e7e7] select-none border-r-0">
-                {/* +880 */}
                 <CountryCode
                   countryCode={form.countryCode}
                   handleChange={handleChange}

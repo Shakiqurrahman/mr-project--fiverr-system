@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { configApi } from "../libs/configApi";
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import toast from "react-hot-toast";
 
 function SignInForm({ handleClick }) {
   const [form, setForm] = useState({
@@ -38,6 +39,7 @@ function SignInForm({ handleClick }) {
         });
 
         if (data.success) {
+          toast.success('User sign in successfully');
           const token = data.data.token;
           const expiresInDays = form.isRemember ? 30 : 10;
           Cookies.set('authToken', JSON.stringify({ token, data }), { expires: expiresInDays });
