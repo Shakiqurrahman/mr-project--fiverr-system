@@ -1,7 +1,9 @@
-import React from "react";
+import Testimonials from "../components/Testimonials";
 
 function Home() {
-    return <></>;
+    return <>
+        <Testimonials />
+    </>;
 }
 
 export default Home;
