@@ -26,7 +26,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <SocialMediasForm />,
+        element: <SetupProfile />,
       },
       {
         path: "/about",
