@@ -51,6 +51,11 @@ textarea:placeholder-shown{
   @apply bg-primary;
 }
 
+/* Testimonial review sorting button active design */
+.sortingBtn.active{
+  @apply border-black bg-[#FFEFEF];
+}
+
 /* Form Error Handling Design */
 .isError {
   @apply border-red-600;

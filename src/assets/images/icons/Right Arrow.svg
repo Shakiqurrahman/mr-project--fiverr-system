@@ -1,0 +1,11 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+	<title>Right Arrow-svg</title>
+	<style>
+		.s0 { fill: #ffffff;stroke: #cecece;stroke-miterlimit:100 } 
+		.s1 { fill: #1c8bdc } 
+	</style>
+	<g id="Upper Arrow">
+		<path id="Ellipse 1 copy 7" class="s0" d="m250 498.5c-137.4 0-248.5-111.1-248.5-248.5 0-137.4 111.1-248.5 248.5-248.5 137.4 0 248.5 111.1 248.5 248.5 0 137.4-111.1 248.5-248.5 248.5z"/>
+		<path id="Shape 3682 2 copy 9" class="s1" d="m174.1 98.3l152 151.9-152 152 85-152z"/>
+	</g>
+</svg>
