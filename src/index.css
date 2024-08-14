@@ -75,3 +75,16 @@ textarea:placeholder-shown{
 /* .active {
     @apply text-base font-semibold uppercase px-5 py-3.5 md:py-2.5  text-navy bg-white md:rounded-lg;
   } */
+
+.file-input::file-selector-button{
+  padding: 0 16px;
+  height: 40px;
+  cursor: pointer;
+  background-color: #7C7C7C;
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
+  margin-right: 16px;
+  color: white;
+  text-transform: uppercase;
+  transition: background-color 200ms;
+}

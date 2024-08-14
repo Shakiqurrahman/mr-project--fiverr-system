@@ -19,6 +19,8 @@ import ForgetPassword from "../pages/ForgetPassword";
 import Verify from "../pages/Verify";
 import ChangePassword from "../pages/ChangePassword";
 import SocialMediasForm from "../components/SocialMediasForm";
+import CreateProject from "../pages/CreateProject";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -91,6 +93,10 @@ export const router = createBrowserRouter([
       {
         path: "/my-account",
         element: <MyAccount />,
+      },
+      {
+        path: "/create-project",
+        element: <CreateProject />,
       },
       {
         path: "*",
