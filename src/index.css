@@ -56,6 +56,18 @@ textarea:placeholder-shown{
   @apply border-black bg-[#FFEFEF];
 }
 
+/* homeactivitycard slider design */
+.homeactivitycard .slick-track{
+  display: flex;
+  align-items: stretch
+}
+.homeactivitycard .slick-track > div{
+  height: auto;
+}
+.homeactivitycard .slick-track > div > div{
+  height: 100%;
+}
+
 /* Form Error Handling Design */
 .isError {
   @apply border-red-600;
