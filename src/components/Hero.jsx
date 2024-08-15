@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import bigDealIcon from "../assets/images/Big Deal.svg";
 import heroBanner from "../assets/images/Home Page Banner.jpg";
-import shape from "../assets/images/free_shape.png";
 
 const Hero = () => {
     const { control, handleSubmit, watch, setValue } = useForm();
@@ -18,8 +17,7 @@ const Hero = () => {
         } else if (!checked) {
             setSelectedItems(selectedItems.filter((item) => item !== name));
             setDropdownVisible((prev) => ({ ...prev, [name]: false }));
-            setValue(`${name}_single_side`, false);
-            setValue(`${name}_double_side`, false);
+            setValue(`${name}_side`, ""); // Reset the radio selection
         }
     };
 
@@ -29,8 +27,11 @@ const Hero = () => {
 
     const onSubmit = (data) => {
         const filteredData = Object.entries(data).filter(
-            ([key, value]) => value === true
-        ); // for showing only those values are true
+            ([key, value]) =>
+                value === true ||
+                value === "single_side" ||
+                value === "double_side"
+        ); // for showing only those values are true or a side is selected
         console.log("Filtered Data:", Object.fromEntries(filteredData));
     };
 
@@ -48,10 +49,10 @@ const Hero = () => {
 
     return (
         <section
-            className="py-20 flex items-center bg-cover bg-center"
+            className="py-28 flex items-center bg-cover bg-center"
             style={{ backgroundImage: `url(${heroBanner})` }}
         >
-            <div className="max-width flex flex-col lg:flex-row gap-16 lg:gap-10 items-center">
+            <div className="max-width pr-0 lg:pr-24 2xl:pr-0 flex flex-col lg:flex-row gap-16 lg:gap-10 items-center">
                 <div className="w-full">
                     <h2 className="text-center lg:text-left text-2xl sm:text-[36px] font-bold uppercase text-primary leading-snug mb-4">
                         WE specialize in creating advertisement designs.
@@ -62,23 +63,29 @@ const Hero = () => {
                     </p>
                 </div>
                 <div className="relative w-[80%] lg:w-full border-2 border-dashed border-primary px-6 py-10">
+                    {/* big deal */}
                     <img
-                        className="size-40 md:size-60 absolute ml-2 md:ml-0 -top-16 -left-20 md:-top-24 md:-left-28"
+                        className="size-32 sm:size-40 md:size-54 xl:size-60 absolute ml-2 md:ml-0 -top-16 -left-16 sm:-left-20 md:-top-20 xl:-top-24 md:-left-20 xl:-left-28 z-[80]"
                         src={bigDealIcon}
                         alt="big deal icon"
                     />
-                    <img
-                        className="absolute -right-10 top-20 sm:mr-0 sm:-right-6 w-32"
-                        src={shape}
-                        alt="icon"
-                    />
-                    <h3 className="uppercase font-bold text-3xl text-center">
+                    {/* discounts */}
+                    <div className="absolute space-y-1 -right-5 sm:-right-10 top-[50%] sm:top-20">
+                        <h4 className="bg-primary text-base sm:text-xl text-white px-1.5 sm:px-3 py-0.5 sm:py-1 uppercase italic -rotate-6">
+                            Only <span className="font-bold">$120</span>
+                        </h4>
+                        <h4 className="bg-[#E85426] text-base sm:text-xl text-white px-1.5 sm:px-3 py-0.5 sm:py-1 uppercase italic -rotate-6 relative sm:left-10 left-5">
+                            Orig <span className="font-bold line-through">$160</span>
+                        </h4>
+                    </div>
+
+                    <h3 className="uppercase font-bold text-2xl sm:text-3xl text-center relative z-[90]">
                         business card design is
                     </h3>
-                    <h1 className="text-primary text-5xl my-2 sm:text-7xl font-bold text-center">
+                    <h1 className="text-primary text-4xl my-2 sm:text-7xl font-bold text-center">
                         FREE
                     </h1>
-                    <p className="font-medium text-2xl text-center">
+                    <p className="font-medium text-lg sm:text-2xl text-center">
                         if you create any{" "}
                         <span className="font-bold">3 designs</span> below
                         together
@@ -132,12 +139,13 @@ const Hero = () => {
                                     >
                                         <label className="flex items-center gap-2 cursor-pointer">
                                             <Controller
-                                                name={`${item.name}_single_side`}
+                                                name={`${item.name}_side`}
                                                 control={control}
                                                 render={({ field }) => (
                                                     <input
-                                                        type="checkbox"
+                                                        type="radio"
                                                         {...field}
+                                                        value="single_side"
                                                         className="accent-[#ed8864]"
                                                     />
                                                 )}
@@ -148,12 +156,13 @@ const Hero = () => {
                                         </label>
                                         <label className="flex items-center gap-2 cursor-pointer">
                                             <Controller
-                                                name={`${item.name}_double_side`}
+                                                name={`${item.name}_side`}
                                                 control={control}
                                                 render={({ field }) => (
                                                     <input
-                                                        type="checkbox"
+                                                        type="radio"
                                                         {...field}
+                                                        value="double_side"
                                                         className="accent-[#ed8864]"
                                                     />
                                                 )}
