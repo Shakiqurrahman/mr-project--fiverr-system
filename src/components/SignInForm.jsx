@@ -1,64 +1,86 @@
 import { useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { FaEye, FaEyeSlash, FaSearch } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 import { configApi } from "../libs/configApi";
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import toast from "react-hot-toast";
+import { z } from "zod";
+
+// Define the validation schema using Zod
+const signInSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters long"),
+  isRemember: z.boolean(),
+});
 
 function SignInForm({ handleClick }) {
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+
+
   const [form, setForm] = useState({
     email: "",
     password: "",
     isRemember: false,
   });
-  const [show, setShow] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const token = Cookies.get('authToken');
-  const handleShow = () => {
-    setShow(!show);
+  const handleShowPassword = () => setShowPassword(prev => !prev);
+
+  const handleInputChange = (e) => {
+    const { name, type, value, checked } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
   };
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-  const handleCheck = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.checked });
-  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(`${configApi.api}sign-in`);
+    // Validate form data with Zod
+    const validation = signInSchema.safeParse(form);
 
-    if (form.email && form.password) {
-      try {
-        const api = `${configApi.api}sign-in`;
-        const { data } = await axios.post(api, {
-          email: form.email,
-          password: form.password,
-        });
+    if (!validation.success) {
+      validation.error.errors.forEach(err => toast.error(err.message));
+      return;
+    }
 
-        if (data.success) {
-          toast.success('User sign in successfully');
-          const token = data.data.token;
-          const expiresInDays = form.isRemember ? 30 : 10;
-          Cookies.set('authToken', JSON.stringify({ token, data }), { expires: expiresInDays });
-          setForm({
-            email: "",
-            password: "",
-            isRemember: false,
-          });
-          return;
-        }
+    try {
+      setLoading(true);
+      const api = `${configApi.api}sign-in`;
+      const data = await axios.post(api, {
+        email: form.email,
+        password: form.password,
+      });
 
-        // Reset the form
+      const response = await data.data;
+      setLoading(false);
 
-      } catch (error) {
-        console.error('Error:', error);
+      if (!response.success) {
+        toast.error('User are not found');
+        return;
       }
+      else if (response?.success) {
+        toast.success('User signed in successfully');
+        const token = data.data.token;
+        const expiresInDays = form.isRemember ? 30 : 10;
+        Cookies.set('authToken', JSON.stringify({ token, data }), { expires: expiresInDays });
+        setForm({ email: "", password: "", isRemember: false });
+        navigate('/profile');
+        return;
+      }
+
+      toast.error('Sign in failed. Please check your credentials.');
+
+    } catch (error) {
+      console.log('Error:', error.response.data.message);
+      toast.error('An error occurred. Please try again.');
     }
   };
-
 
   return (
     <div>
@@ -67,35 +89,24 @@ function SignInForm({ handleClick }) {
         type="email"
         name="email"
         value={form.email}
-        onChange={handleChange}
-        className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none isError"
+        onChange={handleInputChange}
+        className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
       />
-      <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
-      <label className="block px-2 pt-2">Password</label>
+      <label className="block px-2 pt-2 mt-4">Password</label>
       <div className="relative">
-        {show ? (
-          <button
-            className="absolute text-lg sm:text-2xl right-[20px] top-1/2 -translate-y-1/2 z-10 text-primary"
-            onClick={handleShow}
-          >
-            <FaEye />
-          </button>
-        ) : (
-          <button
-            className="absolute text-lg sm:text-2xl right-[20px] top-1/2 -translate-y-1/2 z-10 text-primary"
-            onClick={handleShow}
-          >
-            <FaEyeSlash />
-          </button>
-        )}
+        <button
+          className="absolute text-lg sm:text-2xl right-[20px] top-1/2 -translate-y-1/2 z-10 text-primary"
+          onClick={handleShowPassword}
+        >
+          {showPassword ? <FaEyeSlash /> : <FaEye />}
+        </button>
         <input
-          type={show ? "password" : "text"}
+          type={showPassword ? "text" : "password"}
           name="password"
           value={form.password}
-          onChange={handleChange}
+          onChange={handleInputChange}
           className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 z-0 outline-none"
         />
-        <p className="text-red-600 text-xs mt-2 px-2 hidden">There was an error!</p>
       </div>
       <div className="flex mt-3 justify-between">
         <label className="select-none">
@@ -103,7 +114,7 @@ function SignInForm({ handleClick }) {
             type="checkbox"
             name="isRemember"
             checked={form.isRemember}
-            onChange={handleCheck}
+            onChange={handleInputChange}
           />{" "}
           Remember me
         </label>
@@ -114,11 +125,11 @@ function SignInForm({ handleClick }) {
         onClick={handleSubmit}
         className="my-4 py-2 sm:py-3 block w-full bg-primary text-white font-medium text-lg"
       >
-        Sign In
+        {loading ? 'loading ....' : 'Sign In'}
       </button>
       <p className="py-3 text-center text-sm">
         Don&apos;t have an Account?{" "}
-        <button className="text-primary" value="Sign Up" onClick={handleClick}>
+        <button className="text-primary" onClick={handleClick}>
           Sign Up
         </button>
       </p>

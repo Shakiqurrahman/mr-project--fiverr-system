@@ -13,7 +13,7 @@ const Layout = () => {
       <Outlet />
       <ScrollRestoration />
       <Footer />
-      <Toaster />
+      <Toaster position="top-right" />
     </>
   );
 };
