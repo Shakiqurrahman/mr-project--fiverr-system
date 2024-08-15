@@ -10,6 +10,8 @@ body {
   scroll-behavior: smooth;
 }
 
+
+
 /* Removing Input Field Number Arrows */
 @layer base {
   input[type="number"]::-webkit-inner-spin-button,
