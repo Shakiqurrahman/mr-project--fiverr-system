@@ -5,6 +5,22 @@ import axios from 'axios';
 import { configApi } from "../libs/configApi";
 import toast from "react-hot-toast";
 import Cookies from 'js-cookie';
+
+import { z } from "zod";
+import { useNavigate } from "react-router-dom";
+
+const signUpSchema = z.object({
+  country: z.string().nonempty("Country is required"),
+  name: z.string().nonempty("Full Name is required"),
+  username: z.string().nonempty("Username is required"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters long"),
+  confirmPassword: z.string().min(6, "Confirm password must be at least 6 characters long"),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
+
 function SignUpForm({ handleClick }) {
   const [form, setForm] = useState({
     country: "",
@@ -15,7 +31,9 @@ function SignUpForm({ handleClick }) {
     confirmPassword: "",
   });
 
+  const [errors, setErrors] = useState({});
   const [show, setShow] = useState(true);
+  const navigate = useNavigate(); // Moved here
 
   const handleShow = () => {
     setShow(!show);
@@ -27,47 +45,55 @@ function SignUpForm({ handleClick }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (
-      form.country &&
-      form.email &&
-      form.name &&
-      form.username &&
-      form.password &&
-      form.confirmPassword
-    ) {
-      if (form.password == form.confirmPassword) {
-        try {
-          const api = `${configApi.api}sign-up`;
 
-          const { data } = await axios.post(api, {
-            userName: form.username,
-            fullName: form.name,
-            email: form.email,
-            country: form.country,
-            password: form.password
-          });
-          console.log(data);
+    // Validate form data using Zod
+    const validationResult = signUpSchema.safeParse(form);
 
-          if (data.success) {
-            // const expiresInDays = form.isRemember ? 30 : 10;
-            Cookies.set('authToken', JSON.stringify({ data }), { expires: 10 });
-            toast.success('User sign in successfully');
-            setForm({
-              country: "",
-              name: "",
-              username: "",
-              email: "",
-              password: "",
-              confirmPassword: "",
-            });
-            return;
-          }
-        } catch (error) {
-          console.log(error);
-        }
+    if (!validationResult.success) {
+      const formErrors = validationResult.error.format();
+      setErrors(formErrors); // Set errors in the state to display them
+      Object.values(formErrors).forEach((error) => {
+        if (error && error._errors) toast.error(error._errors[0]);
+      });
+      return;
+    }
+
+    // Clear errors if validation passes
+    setErrors({});
+
+    // If validation is successful, proceed with form submission
+    try {
+      const api = `${configApi.api}sign-up`;
+
+      const { data } = await axios.post(api, {
+        userName: form.username,
+        fullName: form.name,
+        email: form.email,
+        country: form.country,
+        password: form.password,
+      });
+
+      if (data.success) {
+        Cookies.set("authToken", JSON.stringify({ data }), { expires: 10 });
+        toast.success("User signed up successfully");
+        setForm({
+          country: "",
+          name: "",
+          username: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
+        navigate("/profile");
+      } else {
+        toast.error("User was not created");
       }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error(error);
     }
   };
+
   return (
     <div>
       <CountryList country={form.country} handleChange={handleChange} />
