@@ -49,7 +49,7 @@ const Hero = () => {
 
     return (
         <section
-            className="py-28 flex items-center bg-cover bg-center"
+            className="py-20 flex items-center bg-cover bg-center"
             style={{ backgroundImage: `url(${heroBanner})` }}
         >
             <div className="max-width pr-0 lg:pr-24 2xl:pr-0 flex flex-col lg:flex-row gap-16 lg:gap-10 items-center">
