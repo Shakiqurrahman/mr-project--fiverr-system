@@ -28,7 +28,7 @@ function About() {
                             designs. Print design and social media post design.
                             Most of the designs we create.
                         </p>
-                        <div className="md:flex gap-[120px] leading-[50px] text-[18px] lg:text-[24px] mt-5 font-normal">
+                        <div className="md:flex gap-[120px] leading-[50px] text-[18px] mt-5 font-normal">
                             <ul>
                                 <li className="flex items-center gap-2">
                                     <MdOutlineCheck className="text-primary font-semibold text-[24px]" />
