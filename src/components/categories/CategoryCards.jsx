@@ -1,19 +1,17 @@
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
-import LeftArrowIcon from "../assets/images/icons/Left Arrow.svg";
-import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
-import logo from "../assets/images/MR Logo White.png";
-import thumbnail from "../assets/images/project-thumbnail.jpg";
-import CategoryLayout from "./categories/CategoryLayout";
-import ProjectCard from "./categories/ProjectCard";
-
-function CompletedProject() {
+import LeftArrowIcon from "../../assets/images/icons/Left Arrow.svg";
+import RightArrowIcon from "../../assets/images/icons/Right Arrow.svg";
+import thumbnail from "../../assets/images/project-thumbnail.jpg";
+import CategoryLayout from "./CategoryLayout";
+import ProjectCard from "./ProjectCard";
+function CategoryCards({ title, path }) {
   const settings = {
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: 4,
+    slidesToShow: 3,
     slidesToScroll: 1,
     arrows: true,
     autoplay: true,
@@ -49,59 +47,39 @@ function CompletedProject() {
   const categories = [
     {
       thumbnail,
-      clientLogo: logo,
       title: "Pressure and Soft Washing Door Hanger Design",
-      clientName: "clientname",
-      timeStamp: "5 days ago",
     },
     {
       thumbnail,
-      clientLogo: logo,
       title: "Pressure and Soft Washing Door Hanger Design",
-      clientName: "clientname",
-      timeStamp: "5 days ago",
     },
     {
       thumbnail,
-      clientLogo: logo,
       title: "Pressure and Soft Washing Door Hanger Design",
-      clientName: "clientname",
-      timeStamp: "5 days ago",
     },
     {
       thumbnail,
-      clientLogo: logo,
       title: "Pressure and Soft Washing Door Hanger Design",
-      clientName: "clientname",
-      timeStamp: "5 days ago",
     },
     {
       thumbnail,
-      clientLogo: logo,
       title: "Pressure and Soft Washing Door Hanger Design",
-      clientName: "clientname",
-      timeStamp: "5 days ago",
     },
   ];
   return (
-    <div className="max-width">
-      <CategoryLayout title={"Completed Projects"}>
-        <div>
-          <Slider {...settings}>
-            {categories.map((category) => (
-              <ProjectCard
-                key={Math.random()}
-                thumbnail={category.thumbnail}
-                clientLogo={category.clientLogo}
-                title={category.title}
-                clientName={category.clientName}
-                timeStamp={category.timeStamp}
-              />
-            ))}
-          </Slider>
-        </div>
-      </CategoryLayout>
-    </div>
+    <CategoryLayout title={title} path={path}>
+      <div>
+        <Slider {...settings}>
+          {categories.map((category) => (
+            <ProjectCard
+              key={Math.random()}
+              thumbnail={category.thumbnail}
+              title={category.title}
+            />
+          ))}
+        </Slider>
+      </div>
+    </CategoryLayout>
   );
 }
 
@@ -128,4 +106,4 @@ function PrevArrow({ onClick }) {
   );
 }
 
-export default CompletedProject;
+export default CategoryCards;
