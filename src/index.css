@@ -1,104 +1,108 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  font-family: "Poppins", sans-serif;
-  max-width: 100%;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
+    font-family: 'Poppins', sans-serif;
+    max-width: 100%;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
 }
 
 
 
 /* Removing Input Field Number Arrows */
 @layer base {
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number']::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 }
 
 input:placeholder-shown,
-textarea:placeholder-shown{
-  font-size: 14px;
+textarea:placeholder-shown {
+    font-size: 14px;
 }
 
 /* Additonal custom styles */
 .max-width {
-  @apply max-w-[1280px] mx-auto px-4;
+    @apply max-w-[1280px] mx-auto px-4;
 }
 
 .join button {
-  z-index: 2;
+    z-index: 2;
 }
 .join button::after {
-  content: "";
-  width: 20px;
-  height: 20px;
-  background-color: transparent;
-  display: block;
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%) rotate(45deg);
-  z-index: 1;
+    content: '';
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    display: block;
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    z-index: 1;
 }
 .join button.active {
-  @apply bg-primary text-white;
+    @apply bg-primary text-white;
 }
 .join button.active::after {
-  @apply bg-primary;
+    @apply bg-primary;
 }
 
 /* Testimonial review sorting button active design */
-.sortingBtn.active{
-  @apply border-black bg-[#FFEFEF];
+.sortingBtn.active {
+    @apply border-black bg-[#FFEFEF];
 }
 
 /* homeactivitycard slider design */
-.homeactivitycard .slick-track{
-  display: flex;
-  align-items: stretch
+.homeactivitycard .slick-track {
+    display: flex;
+    align-items: stretch;
 }
-.homeactivitycard .slick-track > div{
-  height: auto;
+.homeactivitycard .slick-track > div {
+    height: auto;
 }
-.homeactivitycard .slick-track > div > div{
-  height: 100%;
+.homeactivitycard .slick-track > div > div {
+    height: 100%;
 }
 
 /* Form Error Handling Design */
 .isError {
-  @apply border-red-600;
+    @apply border-red-600;
 }
-.isError + p{
-  @apply block;
+.isError + p {
+    @apply block;
 }
 
 @media (max-width: 575.99px) {
-  .join button::after {
-    width: 10px;
-    height: 10px;
-    bottom: -5px;
-  }
+    .join button::after {
+        width: 10px;
+        height: 10px;
+        bottom: -5px;
+    }
 }
 
 /* .active {
     @apply text-base font-semibold uppercase px-5 py-3.5 md:py-2.5  text-navy bg-white md:rounded-lg;
   } */
 
-.file-input::file-selector-button{
-  padding: 0 16px;
-  height: 40px;
-  cursor: pointer;
-  background-color: #7C7C7C;
-  border: 1px solid rgba(0, 0, 0, 0.16);
-  box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
-  margin-right: 16px;
-  color: white;
-  text-transform: uppercase;
-  transition: background-color 200ms;
+.file-input::file-selector-button {
+    padding: 0 16px;
+    height: 40px;
+    cursor: pointer;
+    background-color: #7c7c7c;
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
+    margin-right: 16px;
+    color: white;
+    text-transform: uppercase;
+    transition: background-color 200ms;
+}
+
+.cusotomTextarea::-webkit-scrollbar {
+    display: none;
 }
