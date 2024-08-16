@@ -1,9 +1,22 @@
+import { GiShoppingCart } from "react-icons/gi";
 import { Link } from "react-router-dom";
 
-function ProjectCard({ thumbnail, title, clientLogo, clientName, timeStamp }) {
+function ProjectCard({
+  thumbnail,
+  title,
+  clientLogo,
+  clientName,
+  timeStamp,
+  cart,
+}) {
   return (
     <div className="px-[5px]">
-      <div className="border">
+      <div className="border relative">
+        {cart && (
+          <button className="absolute top-4 right-4 h-8 w-8 flex justify-center items-center rounded-md bg-white">
+            <GiShoppingCart />
+          </button>
+        )}
         <img
           src={thumbnail}
           alt=""
