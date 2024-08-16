@@ -1,25 +1,26 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../AllRoutes/Layout";
+import CategoryPage from "../components/categories/CategoryPage";
 import About from "../pages/About";
 import Affiliate from "../pages/Affiliate";
+import ChangePassword from "../pages/ChangePassword";
 import Companies from "../pages/Companies";
 import Contact from "../pages/Contact";
+import CreateProject from "../pages/CreateProject";
 import Designs from "../pages/Designs";
 import ErrorPage from "../pages/ErrorPage";
+import ForgetPassword from "../pages/ForgetPassword";
 import Home from "../pages/Home";
+import Industries from "../pages/Industries";
 import Join from "../pages/Join";
+import MyAccount from "../pages/MyAccount";
 import PriceList from "../pages/PriceList";
 import PrivacyAndPolicy from "../pages/PrivacyAndPolicy";
-import Project from "../pages/Project";
-import TermsAndConditions from "../pages/TermsAndConditions";
-import SetupProfile from "../pages/SetupProfile";
 import Profile from "../pages/Profile";
-import MyAccount from "../pages/MyAccount";
-import ForgetPassword from "../pages/ForgetPassword";
+import Project from "../pages/Project";
+import SetupProfile from "../pages/SetupProfile";
+import TermsAndConditions from "../pages/TermsAndConditions";
 import Verify from "../pages/Verify";
-import ChangePassword from "../pages/ChangePassword";
-import SocialMediasForm from "../components/SocialMediasForm";
-import CreateProject from "../pages/CreateProject";
 import ProtectedRoute from "./private-rotue/PrivateRoute";
 
 export const router = createBrowserRouter([
@@ -44,8 +45,16 @@ export const router = createBrowserRouter([
         element: <Designs />,
       },
       {
+        path: "/industries",
+        element: <Industries />,
+      },
+      {
         path: "/companies",
         element: <Companies />,
+      },
+      {
+        path: "/category",
+        element: <CategoryPage />,
       },
       {
         path: "/pricelist",
