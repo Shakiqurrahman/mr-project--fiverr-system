@@ -2,6 +2,7 @@ import FeatureCategory from "../components/categories/FeatureCategory";
 import CompletedProject from "../components/CompletedProject";
 import Hero from "../components/Hero";
 import HomeActivityCards from "../components/HomeActivityCards";
+import HomeKeywords from "../components/HomeKeywords";
 import Testimonials from "../components/Testimonials";
 
 function Home() {
@@ -9,6 +10,9 @@ function Home() {
     <>
       {/* hero section */}
       <Hero />
+
+      {/* Homepage Category Keywords section */}
+      <HomeKeywords />
 
       {/* Feature Component section */}
       <FeatureCategory />

@@ -4,7 +4,7 @@ function SidebarProfileStatus() {
   return (
     <div className="p-2 bg-[#F2F9FF] border border-primary rounded-lg">
       <h1 className="font-semibold">Mahfujurrahm535</h1>
-      <Divider className="h-px w-full bg-[#1b8cdc] my-2" />
+      <Divider className="h-px w-full bg-[#1b8cdc!important] my-2" />
       <p className="text-sm">Avg. Response Time</p>
       <span className="font-semibold text-lg mb-3 block">1 Hour</span>
       <p className="text-sm">Avg. Rating</p>
