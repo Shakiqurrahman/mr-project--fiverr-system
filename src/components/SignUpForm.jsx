@@ -73,8 +73,13 @@ function SignUpForm({ handleClick }) {
         password: form.password,
       });
 
+
       if (data.success) {
-        Cookies.set("authToken", JSON.stringify({ data }), { expires: 10 });
+        const token = data.data;
+        console.log(token
+        );
+
+        Cookies.set("authToken", JSON.stringify(token), { expires: 10 });
         toast.success("User signed up successfully");
         setForm({
           country: "",
@@ -84,7 +89,7 @@ function SignUpForm({ handleClick }) {
           password: "",
           confirmPassword: "",
         });
-        navigate("/profile");
+        navigate("/setup-profile");
       } else {
         toast.error("User was not created");
       }

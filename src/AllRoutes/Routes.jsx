@@ -20,6 +20,7 @@ import Verify from "../pages/Verify";
 import ChangePassword from "../pages/ChangePassword";
 import SocialMediasForm from "../components/SocialMediasForm";
 import CreateProject from "../pages/CreateProject";
+import ProtectedRoute from "./private-rotue/PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -84,7 +85,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/setup-profile",
-        element: <SetupProfile />,
+        element: (
+          <ProtectedRoute>
+            <SetupProfile />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/profile",

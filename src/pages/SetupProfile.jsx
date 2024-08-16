@@ -5,13 +5,13 @@ import CountryList from "../components/CountryList";
 import axios from "axios";
 import toast from 'react-hot-toast';
 import { configApi } from "../libs/configApi";
+import Cookies from 'js-cookie';
+import fetchData from 'data-fetch-ts';
+
 function SetupProfile() {
-
   const [uploading, setUploading] = useState(false);
-
-
   const [form, setForm] = useState({
-    profilePic: "",
+    image: "",
     fullName: "",
     userName: "",
     industryName: "",
@@ -19,56 +19,80 @@ function SetupProfile() {
     city: "",
     address: "",
     email: "",
-    phone: 0,
+    number: 0,
     language: "",
-    desc: "",
+    description: "",
     countryCode: "",
   });
 
-  console.log(form);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSave = async (e) => {
+  const handleUpdateProfileData = async (e) => {
     e.preventDefault();
 
     try {
       setUploading(true);
       // Example API endpoint
       const { data } = await axios.post(`${configApi.api}/update-user`, form);
+      console.log(data);
+
       if (data.success === true) {
         toast.success('Add data successfull');
-        localStorage.setItem("profileData", JSON.stringify(form));
         setUploading(false);
         return;
       }
-
-
     } catch (error) {
       console.error("Error saving data to the database:", error);
       setUploading(false);
     }
   };
 
+
+  const token = Cookies.get('authToken');
+
   useEffect(() => {
-    // Load data from local storage if it exists
-    const storedData = localStorage.getItem("profileData");
-    if (storedData) {
-      setForm(JSON.parse(storedData));
-    }
-  }, []);
+    const data = async () => {
+      const endpoint = `${configApi.api}get-singel-user`;
+      const res = await fetchData({ endpoint, token });
+      if (res.success) {
+        const data = res.data;
+        setForm((prev) => ({
+          ...prev,
+          country: data?.country ? data.country : '',
+          email: data?.email ? data.email : '',
+          userName: data?.userName ? data.userName : '',
+          fullName: data?.fullName ? data.fullName : '',
+          address: data?.address ? data.address : '',
+          city: data?.city ? data.city : '',
+          image: data?.image ? data.image : '',
+          industryName: data?.industryName ? data.industryName : '',
+          number: data?.number ? data.number : '',
+          language: data?.language ? data.language : '',
+          description: data?.description ? data.description : ''
+        }));
+      } else {
+        toast.error("Profile are not updated");
+      }
+    };
+
+    data();
+  }, [token]);
+
+
 
   const handleSkip = () => {
     try {
-      localStorage.setItem("profileData", JSON.stringify(form));
-      console.log("Data saved to local storage");
+      Cookies.set('profileData', JSON.stringify(form), { expires: 10 });
       toast.success('Add store on local storage');
     } catch (error) {
       console.error("Error saving data to local storage:", error);
     }
   };
+
+
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
@@ -84,8 +108,8 @@ function SetupProfile() {
         setUploading(true);
         const response = await axios.post(uploadUrl, formData);
         const imageUrl = response.data.data.url;
-        setForm((prevForm) => ({ ...prevForm, profilePic: imageUrl }));
-        localStorage.setItem("profileData", JSON.stringify(form.profilePic = imageUrl));
+        setForm((prevForm) => ({ ...prevForm, image: imageUrl }));
+        localStorage.setItem("profileData", JSON.stringify(form.image = imageUrl));
       } catch (error) {
         console.error("Error uploading image:", error);
       } finally {
@@ -96,12 +120,12 @@ function SetupProfile() {
 
   return (
     <div className="max-width mt-10 sm:mt-20">
-      <form onSubmit={handleSave} className="w-full max-w-[800px] mx-auto">
+      <form onSubmit={handleUpdateProfileData} className="w-full max-w-[800px] mx-auto">
         <div className="text-center">
           <div className="h-[220px] w-[220px] flex items-center justify-center rounded-full mx-auto mb-10 bg-[#DCEEFA] overflow-hidden">
-            <label htmlFor="profilePic">
-              {form.profilePic ? (
-                <img src={form.profilePic} alt="Profile" className="object-contain cursor-pointer" />
+            <label htmlFor="image">
+              {form.image ? (
+                <img src={form.image} alt="Profile" className="object-contain cursor-pointer" />
               ) : (
                 // <span className="text-gray-500">No image uploaded</span>
                 <img src={Avatar} alt="Profile" className="object-contain cursor-pointer" />
@@ -110,14 +134,14 @@ function SetupProfile() {
           </div>
           <input
             type="file"
-            name="profilePic"
-            id="profilePic"
+            name="image"
+            id="image"
             accept="image/png, image/jpeg"
             hidden
             onChange={handleFileChange}
           />
           <label
-            htmlFor="profilePic"
+            htmlFor="image"
             className="bg-primary py-3 px-5 text-white cursor-pointer"
           >
             {uploading ? "Uploading..." : "Upload Profile Picture"}
@@ -131,7 +155,7 @@ function SetupProfile() {
             <input
               type="text"
               name="fullName"
-              // disabled
+              disabled
               value={form.fullName}
               onChange={handleChange}
               className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
@@ -144,7 +168,7 @@ function SetupProfile() {
               type="text"
               name="userName"
               value={form.userName}
-              // disabled
+              disabled
               onChange={handleChange}
               className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
             />
@@ -198,7 +222,7 @@ function SetupProfile() {
             <input
               type="email"
               name="email"
-              // disabled
+              disabled
               value={form.email}
               onChange={handleChange}
               className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
@@ -216,8 +240,8 @@ function SetupProfile() {
               </div>
               <input
                 type="number"
-                name="phone"
-                value={form.phone}
+                name="number"
+                value={form.number}
                 onChange={handleChange}
                 className="bg-white block w-full p-2 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none border-l-0"
               />
@@ -240,8 +264,8 @@ function SetupProfile() {
           <h1 className="bg-primary text-white p-3">Description</h1>
           <div className="px-3 py-5">
             <textarea
-              name="desc"
-              value={form.desc}
+              name="description"
+              value={form.description}
               onChange={handleChange}
               className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none h-[200px] resize-y"
               placeholder="Write something about yourself and your industry"

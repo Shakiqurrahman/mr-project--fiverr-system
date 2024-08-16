@@ -65,12 +65,14 @@ function SignInForm({ handleClick }) {
         return;
       }
       else if (response?.success) {
+
         toast.success('User signed in successfully');
-        const token = data.data.token;
+        const token = response.data.token;
+
         const expiresInDays = form.isRemember ? 30 : 10;
-        Cookies.set('authToken', JSON.stringify({ token, data }), { expires: expiresInDays });
+        Cookies.set('authToken', JSON.stringify(token), { expires: expiresInDays });
         setForm({ email: "", password: "", isRemember: false });
-        navigate('/profile');
+        navigate('/setup-profile');
         return;
       }
 
