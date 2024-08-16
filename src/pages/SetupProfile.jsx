@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Avatar from "../assets/images/camera.jpg";
 import CountryCode from "../components/CountryCode";
 import CountryList from "../components/CountryList";
@@ -50,47 +50,62 @@ function SetupProfile() {
     }
   };
 
-
   const token = Cookies.get('authToken');
 
-  useEffect(() => {
-    const data = async () => {
-      const endpoint = `${configApi.api}get-singel-user`;
-      const res = await fetchData({ endpoint, token });
-      if (res.success) {
-        const data = res.data;
+  // Parse local storage data once at the top
+  const dataFromLocalStorage = JSON.parse(localStorage.getItem('profileData') || '{}');
+
+  const fetchDataFromApi = useCallback(async () => {
+    const endpoint = `${configApi.api}get-singel-user`;
+    const res = await fetchData({ endpoint, token });
+    try {
+
+      if (res?.success) {
+        const apiData = res.data;
+
+        // Update the form with either API data or fallback to localStorage data
         setForm((prev) => ({
           ...prev,
-          country: data?.country ? data.country : '',
-          email: data?.email ? data.email : '',
-          userName: data?.userName ? data.userName : '',
-          fullName: data?.fullName ? data.fullName : '',
-          address: data?.address ? data.address : '',
-          city: data?.city ? data.city : '',
-          image: data?.image ? data.image : '',
-          industryName: data?.industryName ? data.industryName : '',
-          number: data?.number ? data.number : '',
-          language: data?.language ? data.language : '',
-          description: data?.description ? data.description : ''
+          country: apiData?.country ?? dataFromLocalStorage?.country,
+          email: apiData?.email ?? dataFromLocalStorage?.email,
+          userName: apiData?.userName ?? dataFromLocalStorage?.userName,
+          fullName: apiData?.fullName ?? dataFromLocalStorage?.fullName,
+          address: apiData?.address ?? dataFromLocalStorage?.address,
+          city: apiData?.city ?? dataFromLocalStorage?.city,
+          image: apiData?.image ?? dataFromLocalStorage?.image,
+          industryName: apiData?.industryName ?? dataFromLocalStorage?.industryName,
+          number: apiData?.number ?? dataFromLocalStorage?.number,
+          language: apiData?.language ?? dataFromLocalStorage?.language,
+          description: apiData?.description ?? dataFromLocalStorage?.description,
         }));
       } else {
-        toast.error("Profile are not updated");
+        toast.error("Profile not updated");
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      toast.error("Failed to fetch profile data");
+    }
+  }, [token, dataFromLocalStorage]);
 
-    data();
-  }, [token]);
+  // Fetch data when the component mounts or token changes
+  useEffect(() => {
+    if (token) {
+      fetchDataFromApi();
+    }
+  }, []);
 
 
 
   const handleSkip = () => {
     try {
-      Cookies.set('profileData', JSON.stringify(form), { expires: 10 });
-      toast.success('Add store on local storage');
+      // Save the form data to localStorage
+      localStorage.setItem('profileData', JSON.stringify(form));
+      toast.success('Data stored in local storage.');
     } catch (error) {
       console.error("Error saving data to local storage:", error);
     }
   };
+
 
 
 
@@ -109,7 +124,7 @@ function SetupProfile() {
         const response = await axios.post(uploadUrl, formData);
         const imageUrl = response.data.data.url;
         setForm((prevForm) => ({ ...prevForm, image: imageUrl }));
-        localStorage.setItem("profileData", JSON.stringify(form.image = imageUrl));
+        localStorage.setItem('profileData', JSON.stringify(form));
       } catch (error) {
         console.error("Error uploading image:", error);
       } finally {
