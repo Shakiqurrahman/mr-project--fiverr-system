@@ -66,10 +66,10 @@ const Hero = () => {
             <div className="absolute -bottom-28 md:-bottom-40 right-3 w-44 md:w-auto">
                 <img src={bulletDotBlue} alt="bullet-dot-blue" />
             </div>
-            <div className="absolute top-36 lg:top-20 left-5 lg:left-[25%] hidden md:block">
+            <div className="absolute top-6 right-5 md:top-36 md:left-5 lg:top-20 lg:left-[25%]">
                 <img src={starBlue} alt="star blue" />
             </div>
-            <div className="absolute top-10 right-5 sm:right-10 md:left-[40%]">
+            <div className="absolute  top-10 left-[40%] hidden md:block">
                 <img src={circleOrange} alt="circleOrange" />
             </div>
             <div className="absolute -bottom-48 -left-44 hidden md:block">
