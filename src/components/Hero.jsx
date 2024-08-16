@@ -60,19 +60,19 @@ const Hero = () => {
             className="bg-cover bg-center relative overflow-hidden"
             style={{ backgroundImage: `url(${heroBanner})` }}
         >
-            <div className="absolute -top-32 left-6">
+            <div className="absolute -top-24 md:-top-32 left-4 md:left-6 w-44 md:w-full">
                 <img src={bulletDotOrange} alt="bullet-dot-orange" />
             </div>
-            <div className="absolute -bottom-40 right-3">
+            <div className="absolute -bottom-28 md:-bottom-40 right-3 w-44 md:w-auto">
                 <img src={bulletDotBlue} alt="bullet-dot-blue" />
             </div>
-            <div className="absolute top-36 lg:top-20 left-5 lg:left-[25%]">
+            <div className="absolute top-36 lg:top-20 left-5 lg:left-[25%] hidden md:block">
                 <img src={starBlue} alt="star blue" />
             </div>
             <div className="absolute top-10 right-5 sm:right-10 md:left-[40%]">
                 <img src={circleOrange} alt="circleOrange" />
             </div>
-            <div className="absolute -bottom-48 -left-44">
+            <div className="absolute -bottom-48 -left-44 hidden md:block">
                 <img src={cornerShape} alt="cornerShape" />
             </div>
             <div className="absolute -top-56 lg:-top-48 -right-60 lg:-right-44 hidden md:block">
@@ -84,10 +84,10 @@ const Hero = () => {
             <div className="absolute bottom-10 left-[15%]">
                 <img src={triangleOrange} alt="triangleOrange" />
             </div>
-            <div className="absolute bottom-16 left-[35%]">
+            <div className="absolute bottom-16 left-[35%] hidden md:block">
                 <img src={starOrange} alt="starOrange" />
             </div>
-            <div className="py-28 md:py-24 flex items-center relative z-20">
+            <div className="py-20 flex items-center relative z-20">
                 <div className="max-width pr-0 lg:pr-24 2xl:pr-0 flex flex-col lg:flex-row gap-16 lg:gap-10 items-center">
                     <div className="w-full">
                         <h2 className="text-center lg:text-left text-2xl sm:text-[36px] font-bold uppercase text-primary leading-snug mb-4">
