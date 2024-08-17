@@ -7,6 +7,7 @@ import PaginationItem from "@mui/material/PaginationItem";
 import Stack from "@mui/material/Stack";
 import prevBtn from "../assets/images/icons/Left Arrow.svg";
 import nextBtn from "../assets/images/icons/Right Arrow.svg";
+import RelatedDesigns from "../components/RelatedDesigns";
 
 function Industries() {
   const data = [
@@ -49,6 +50,7 @@ function Industries() {
           </Stack>
         </div>
       </div>
+      <RelatedDesigns />
     </>
   );
 }

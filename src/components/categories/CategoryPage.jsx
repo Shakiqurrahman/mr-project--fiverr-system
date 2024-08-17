@@ -1,4 +1,5 @@
 import bgImage from "../../assets/images/Page Title Backround Alt.jpg";
+import thumbnailAlt from "../../assets/images/project-thumbnail-alt.jpg";
 import thumbnail from "../../assets/images/project-thumbnail.jpg";
 import PageHeader from "../../components/PageHeader";
 import ProjectCard from "../../components/categories/ProjectCard";
@@ -8,6 +9,7 @@ import PaginationItem from "@mui/material/PaginationItem";
 import Stack from "@mui/material/Stack";
 import prevBtn from "../../assets/images/icons/Left Arrow.svg";
 import nextBtn from "../../assets/images/icons/Right Arrow.svg";
+import RelatedDesigns from "../RelatedDesigns";
 
 function CategoryPage() {
   const data = [
@@ -52,6 +54,11 @@ function CategoryPage() {
           </Stack>
         </div>
       </div>
+      <RelatedDesigns
+        bgColor={"bg-lightcream"}
+        color={"text-[#f1592a]"}
+        img={thumbnailAlt}
+      />
     </>
   );
 }
