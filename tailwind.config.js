@@ -6,6 +6,8 @@ export default {
       colors: {
         primary: "#1b8cdc",
         secondary: "#f1592a",
+        lightskyblue: "#edf7fd",
+        lightcream: "#ffefef",
       },
     },
   },

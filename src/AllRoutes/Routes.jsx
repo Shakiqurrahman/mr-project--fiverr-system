@@ -4,7 +4,6 @@ import CategoryPage from "../components/categories/CategoryPage";
 import About from "../pages/About";
 import Affiliate from "../pages/Affiliate";
 import ChangePassword from "../pages/ChangePassword";
-import Companies from "../pages/Companies";
 import Contact from "../pages/Contact";
 import CreateProject from "../pages/CreateProject";
 import Designs from "../pages/Designs";
@@ -14,6 +13,7 @@ import Home from "../pages/Home";
 import Industries from "../pages/Industries";
 import Join from "../pages/Join";
 import MyAccount from "../pages/MyAccount";
+import OfferProject from "../pages/OfferProject";
 import PriceList from "../pages/PriceList";
 import PrivacyAndPolicy from "../pages/PrivacyAndPolicy";
 import Profile from "../pages/Profile";
@@ -49,10 +49,6 @@ export const router = createBrowserRouter([
         element: <Industries />,
       },
       {
-        path: "/companies",
-        element: <Companies />,
-      },
-      {
         path: "/category",
         element: <CategoryPage />,
       },
@@ -63,6 +59,10 @@ export const router = createBrowserRouter([
       {
         path: "/project",
         element: <Project />,
+      },
+      {
+        path: "/start-offer-project",
+        element: <OfferProject />,
       },
       {
         path: "/contact",
