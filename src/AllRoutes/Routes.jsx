@@ -19,6 +19,7 @@ import PrivacyAndPolicy from "../pages/PrivacyAndPolicy";
 import Profile from "../pages/Profile";
 import Project from "../pages/Project";
 import SetupProfile from "../pages/SetupProfile";
+import SingleProductPage from "../pages/SingleProductPage";
 import TermsAndConditions from "../pages/TermsAndConditions";
 import Verify from "../pages/Verify";
 import ProtectedRoute from "./private-rotue/PrivateRoute";
@@ -51,6 +52,10 @@ export const router = createBrowserRouter([
       {
         path: "/category",
         element: <CategoryPage />,
+      },
+      {
+        path: "/category/single-product",
+        element: <SingleProductPage />,
       },
       {
         path: "/pricelist",
