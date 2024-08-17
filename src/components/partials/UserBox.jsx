@@ -61,16 +61,27 @@ function UserBox({ img }) {
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
-                <MenuItem onClick={handleClose}>
-                    <Link to="/profile">Profile</Link>
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                    <Link to="/my-account">My account</Link>
-                </MenuItem>
+                <Link to="/profile">
+                    <MenuItem onClick={handleClose}>Profile</MenuItem>
+                </Link>
+                <Link to="/billing-information">
+                    <MenuItem onClick={handleClose}>
+                        Billing Information
+                    </MenuItem>
+                </Link>
+                <Link to="/payment-methods">
+                    <MenuItem onClick={handleClose}>Payment Methods</MenuItem>
+                </Link>
+                <Link to="/affiliate">
+                    <MenuItem onClick={handleClose}>Affiliate</MenuItem>
+                </Link>
+                <Link to="/change-password">
+                    <MenuItem onClick={handleClose}>Change Password</MenuItem>
+                </Link>
                 <Divider />
-                <MenuItem onClick={handleClose}>
-                    <Link to="/logout">Logout</Link>
-                </MenuItem>
+                <Link to="/logout">
+                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                </Link>
             </Menu>
         </>
     );

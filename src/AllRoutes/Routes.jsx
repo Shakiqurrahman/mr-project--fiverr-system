@@ -3,7 +3,6 @@ import Layout from "../AllRoutes/Layout";
 import CategoryPage from "../components/categories/CategoryPage";
 import About from "../pages/About";
 import Affiliate from "../pages/Affiliate";
-import ChangePassword from "../pages/ChangePassword";
 import Contact from "../pages/Contact";
 import CreateProject from "../pages/CreateProject";
 import Designs from "../pages/Designs";
@@ -12,7 +11,6 @@ import ForgetPassword from "../pages/ForgetPassword";
 import Home from "../pages/Home";
 import Industries from "../pages/Industries";
 import Join from "../pages/Join";
-import MyAccount from "../pages/MyAccount";
 import OfferProject from "../pages/OfferProject";
 import PriceList from "../pages/PriceList";
 import PrivacyAndPolicy from "../pages/PrivacyAndPolicy";
@@ -22,6 +20,8 @@ import SetupProfile from "../pages/SetupProfile";
 import TermsAndConditions from "../pages/TermsAndConditions";
 import Verify from "../pages/Verify";
 import ProtectedRoute from "./private-rotue/PrivateRoute";
+import UpdatePassword from "../pages/UpdatePassword";
+import ChangePassword from "../pages/ChangePassword";
 
 export const router = createBrowserRouter([
   {
@@ -89,8 +89,8 @@ export const router = createBrowserRouter([
         element: <Verify />,
       },
       {
-        path: "/change-password",
-        element: <ChangePassword />,
+        path: "/update-password",
+        element: <UpdatePassword />,
       },
       {
         path: "/setup-profile",
@@ -105,8 +105,8 @@ export const router = createBrowserRouter([
         element: <Profile />,
       },
       {
-        path: "/my-account",
-        element: <MyAccount />,
+        path: "/change-password",
+        element: <ChangePassword />,
       },
       {
         path: "/create-project",
