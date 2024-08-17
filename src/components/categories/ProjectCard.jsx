@@ -11,7 +11,7 @@ function ProjectCard({
 }) {
   return (
     <div className="px-[5px]">
-      <div className="border relative">
+      <div className="border relative bg-white">
         {cart && (
           <button className="absolute top-4 right-4 h-8 w-8 flex justify-center items-center rounded-md bg-white">
             <GiShoppingCart />
