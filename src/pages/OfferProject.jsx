@@ -139,7 +139,7 @@ function OfferProject() {
                 <div className="bg-white font-semibold h-[30px] sm:h-[40px] border border-solid flex items-center px-3 text-xs sm:text-base">
                   {item.categoryLabel}
                 </div>
-                <div className="flex items-center gap-x-10 mt-5">
+                <div className="flex items-center gap-x-3 sm:gap-x-10 mt-5">
                   <div className="flex items-center gap-x-3">
                     <input
                       type="radio"
