@@ -1,10 +1,14 @@
 import { Divider, Menu, MenuItem, Skeleton } from "@mui/material";
 import React from "react";
 import { CgProfile } from "react-icons/cg";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { logout } from "../../Redux/features/userSlice";
+import useLogout from "../useLogout";
 
 function UserBox() {
+    const dispatch = useDispatch();
+    const logout = useLogout();
     const { user, loading } = useSelector((state) => state.user);
     console.log("user", user);
 
@@ -95,9 +99,9 @@ function UserBox() {
                     <MenuItem onClick={handleClose}>Change Password</MenuItem>
                 </Link>
                 <Divider />
-                <Link to="/logout">
+                <div onClick={logout}>
                     <MenuItem onClick={handleClose}>Logout</MenuItem>
-                </Link>
+                </div>
             </Menu>
         </>
     );
