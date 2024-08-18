@@ -1,17 +1,17 @@
-import bgImage from "../../assets/images/Page Title Backround Alt.jpg";
-import thumbnailAlt from "../../assets/images/project-thumbnail-alt.jpg";
-import thumbnail from "../../assets/images/project-thumbnail.jpg";
-import PageHeader from "../../components/PageHeader";
-import ProjectCard from "../../components/categories/ProjectCard";
+import bgImage from "../assets/images/Page Title Backround Alt.jpg";
+import thumbnailAlt from "../assets/images/project-thumbnail-alt.jpg";
+import thumbnail from "../assets/images/project-thumbnail.jpg";
+import PageHeader from "../components/PageHeader";
+import ProjectCard from "../components/categories/ProjectCard";
 
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import Stack from "@mui/material/Stack";
-import prevBtn from "../../assets/images/icons/Left Arrow.svg";
-import nextBtn from "../../assets/images/icons/Right Arrow.svg";
-import RelatedDesigns from "../RelatedDesigns";
+import prevBtn from "../assets/images/icons/Left Arrow.svg";
+import nextBtn from "../assets/images/icons/Right Arrow.svg";
+import RelatedDesigns from "../components/RelatedDesigns";
 
-function CategoryPage() {
+function AllDesign() {
   const data = [
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
   ];
@@ -70,4 +70,4 @@ const nextBtnIcon = () => {
   return <img src={nextBtn} alt="" className="h-8 w-8 rounded-full" />;
 };
 
-export default CategoryPage;
+export default AllDesign;
