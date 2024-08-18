@@ -6,6 +6,8 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import toast from "react-hot-toast";
 import { z } from "zod";
+import { setUser } from "../Redux/features/userSlice";
+import { useDispatch } from "react-redux";
 
 // Define the validation schema using Zod
 const signInSchema = z.object({
@@ -15,6 +17,8 @@ const signInSchema = z.object({
 });
 
 function SignInForm({ handleClick }) {
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -71,6 +75,8 @@ function SignInForm({ handleClick }) {
 
         const expiresInDays = form.isRemember ? 30 : 10;
         Cookies.set('authToken', JSON.stringify(token), { expires: expiresInDays });
+        const user = {email : form.email, password : form.password}
+        dispatch(setUser({ user, token }));
         setForm({ email: "", password: "", isRemember: false });
         navigate('/setup-profile');
         return;

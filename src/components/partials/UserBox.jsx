@@ -1,9 +1,13 @@
 import { Divider, Menu, MenuItem } from "@mui/material";
 import React from "react";
 import { CgProfile } from "react-icons/cg";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-function UserBox({ img }) {
+function UserBox() {
+    const {user, loading } = useSelector(state => state.user);
+    console.log('user',user);
+    
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -20,8 +24,8 @@ function UserBox({ img }) {
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}
             >
-                {img ? (
-                    <img className="size-10" src={img} alt="user" />
+                {user.image ? (
+                    <img className="size-12 bg-cover  rounded-full" src={user.image} alt="user" />
                 ) : (
                     <CgProfile size={32} />
                 )}

@@ -3,26 +3,27 @@ import { BiX } from "react-icons/bi";
 import { BsCart4 } from "react-icons/bs";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { GoSearch } from "react-icons/go";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import logo from "../../assets/images/MR Logo White.png";
 import Navbar from "./Navbar";
 import UserBox from "./UserBox";
+import { useSelector } from "react-redux";
 
 function Header() {
-  const [user, setUser] = useState(true);
+  const {user, loading } = useSelector(state => state.user);
   const [activeMenu, setActiveMenu] = useState(false);
 
   const handleClose = () => {
-    setActiveMenu(!activeMenu);
+    setActiveMenu(false);
   };
   return (
     <>
       <header className="sticky top-0 z-[99]">
         <div className="bg-[#121212] z-10">
           <div className="h-16 sm:h-20 max-width flex justify-between items-center">
-            <div>
+            <Link to='/'>
               <img className="size-10 sm:size-16" src={logo} alt="MR Logo" />
-            </div>
+            </Link>
             <form className="hidden lg:block">
               <div className="relative flex justify-center items-center">
                 <input
@@ -83,10 +84,10 @@ function Header() {
                 }`}
               >
                 <li className={`${!user && "hidden md:block"} text-white hover:text-gray-300 flex items-center`}>
-                  {user ? <UserBox /> : <NavLink to="/join">Join</NavLink>}
+                  {user ? <UserBox/> : <NavLink to="/join">Join</NavLink>}
                 </li>
                 <li className="text-white hover:text-gray-300">
-                  <NavLink to="/notifications">
+                  <NavLink to="/cart">
                     <BsCart4 size={30} />
                   </NavLink>
                 </li>

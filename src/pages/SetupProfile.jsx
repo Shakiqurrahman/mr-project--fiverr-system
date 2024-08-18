@@ -7,8 +7,11 @@ import toast from 'react-hot-toast';
 import { configApi } from "../libs/configApi";
 import Cookies from 'js-cookie';
 import fetchData from 'data-fetch-ts';
+import { setUser } from "../Redux/features/userSlice";
+import { useDispatch } from "react-redux";
 
 function SetupProfile() {
+  const dispatch = useDispatch();
   const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState({
     image: "",
@@ -78,6 +81,20 @@ function SetupProfile() {
           language: apiData?.language ?? dataFromLocalStorage?.language,
           description: apiData?.description ?? dataFromLocalStorage?.description,
         }));
+        const user = {
+          country: apiData?.country ?? dataFromLocalStorage?.country,
+          email: apiData?.email ?? dataFromLocalStorage?.email,
+          userName: apiData?.userName ?? dataFromLocalStorage?.userName,
+          fullName: apiData?.fullName ?? dataFromLocalStorage?.fullName,
+          address: apiData?.address ?? dataFromLocalStorage?.address,
+          city: apiData?.city ?? dataFromLocalStorage?.city,
+          image: apiData?.image ?? dataFromLocalStorage?.image,
+          industryName: apiData?.industryName ?? dataFromLocalStorage?.industryName,
+          number: apiData?.number ?? dataFromLocalStorage?.number,
+          language: apiData?.language ?? dataFromLocalStorage?.language,
+          description: apiData?.description ?? dataFromLocalStorage?.description,
+        }
+        dispatch(setUser({ user, token }));
       } else {
         toast.error("Profile not updated");
       }
