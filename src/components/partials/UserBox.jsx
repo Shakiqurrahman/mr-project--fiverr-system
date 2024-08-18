@@ -1,13 +1,13 @@
-import { Divider, Menu, MenuItem } from "@mui/material";
+import { Divider, Menu, MenuItem, Skeleton } from "@mui/material";
 import React from "react";
 import { CgProfile } from "react-icons/cg";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 function UserBox() {
-    const {user, loading } = useSelector(state => state.user);
-    console.log('user',user);
-    
+    const { user, loading } = useSelector((state) => state.user);
+    console.log("user", user);
+
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -16,6 +16,19 @@ function UserBox() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    let content;
+    if (user.image) {
+        content = (
+            <img
+                className="size-10 bg-cover  rounded-full"
+                src={user.image}
+                alt="user"
+            />
+        );
+    } else {
+        content = <CgProfile size={32} />;
+    }
     return (
         <>
             <button
@@ -24,11 +37,10 @@ function UserBox() {
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}
             >
-                {user.image ? (
-                    <img className="size-12 bg-cover  rounded-full" src={user.image} alt="user" />
-                ) : (
-                    <CgProfile size={32} />
+                {loading && (
+                    <Skeleton className="!bg-[rgba(255,255,255,0.20)]" variant="circular" width={40} height={40} />
                 )}
+                {!loading && content}
             </button>
             <Menu
                 anchorEl={anchorEl}

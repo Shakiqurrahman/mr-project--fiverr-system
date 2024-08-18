@@ -7,6 +7,9 @@ const userSlice = createSlice({
         loginStart: (state) => {
             state.loading = true;
         },
+        setToken : (state, action) => {
+            state.token = action.payload.token;
+        },
         setUser(state, action) {
             state.loading = false;
             state.user = action.payload.user;

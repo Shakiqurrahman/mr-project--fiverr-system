@@ -1,6 +1,7 @@
 import defaultImg from "../assets/images/default_user.png";
 import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
+import { func } from "./function";
 
 function Profile() {
     // const [userData, setUserData] = useState(null);
@@ -21,6 +22,11 @@ function Profile() {
     // if (!userData) {
     //     return <p>Loading...</p>;
     // }
+
+    useEffect(() => {
+            const functionwrapper = async() => await func();
+            functionwrapper();
+        }, []);
 
     return (
         <section className="my-20 max-w-[500px] flex flex-col items-center mx-auto rounded-2xl p-10 border shadow-xl">

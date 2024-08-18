@@ -187,7 +187,6 @@ function SetupProfile() {
             <input
               type="text"
               name="fullName"
-              disabled
               value={form.fullName}
               onChange={handleChange}
               className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
