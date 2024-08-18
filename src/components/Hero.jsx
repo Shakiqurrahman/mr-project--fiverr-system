@@ -105,10 +105,10 @@ const Hero = () => {
             />
             {/* discounts */}
             <div className="absolute -right-5 sm:-right-10 top-[50%] sm:top-20 font-Oswald">
-              <h4 className="bg-primary text-base sm:text-xl text-white px-1 sm:px-2 py-0.5 -skew-y-[12deg] uppercase font-light">
+              <h4 className="bg-primary text-base sm:text-xl text-white px-1 sm:px-2 py-0.5 -skew-y-[12deg] uppercase font-light select-none">
                 Only <span className="font-bold">$120</span>
               </h4>
-              <h4 className="bg-[#E85426] text-base sm:text-xl text-white px-1 sm:px-2 py-0.5 uppercase -skew-y-[12deg] relative sm:left-10 left-5  font-light">
+              <h4 className="bg-[#E85426] text-base sm:text-xl text-white px-1 sm:px-2 py-0.5 uppercase -skew-y-[12deg] relative sm:left-10 left-5  font-light select-none">
                 Orig <span className="font-bold line-through">$160</span>
               </h4>
             </div>
