@@ -1,8 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../AllRoutes/Layout";
-import CategoryPage from "../components/categories/CategoryPage";
 import About from "../pages/About";
 import Affiliate from "../pages/Affiliate";
+import AllCategory from "../pages/AllCategory";
+import AllDesign from "../pages/AllDesign";
+import ChangePassword from "../pages/ChangePassword";
 import Contact from "../pages/Contact";
 import CreateProject from "../pages/CreateProject";
 import Designs from "../pages/Designs";
@@ -19,10 +21,9 @@ import Project from "../pages/Project";
 import SetupProfile from "../pages/SetupProfile";
 import SingleProductPage from "../pages/SingleProductPage";
 import TermsAndConditions from "../pages/TermsAndConditions";
+import UpdatePassword from "../pages/UpdatePassword";
 import Verify from "../pages/Verify";
 import ProtectedRoute from "./private-rotue/PrivateRoute";
-import UpdatePassword from "../pages/UpdatePassword";
-import ChangePassword from "../pages/ChangePassword";
 
 export const router = createBrowserRouter([
   {
@@ -50,8 +51,12 @@ export const router = createBrowserRouter([
         element: <Industries />,
       },
       {
-        path: "/category",
-        element: <CategoryPage />,
+        path: "/all-designs",
+        element: <AllDesign />,
+      },
+      {
+        path: "/all-caterogy",
+        element: <AllCategory />,
       },
       {
         path: "/category/single-product",
