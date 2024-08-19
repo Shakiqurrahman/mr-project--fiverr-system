@@ -23,6 +23,8 @@ import Verify from "../pages/Verify";
 import ProtectedRoute from "./private-rotue/PrivateRoute";
 import UpdatePassword from "../pages/UpdatePassword";
 import ChangePassword from "../pages/ChangePassword";
+import CreateCategory from "../pages/CreateCategory";
+import UploadDesign from "../pages/UploadDesign";
 
 export const router = createBrowserRouter([
   {
@@ -116,6 +118,14 @@ export const router = createBrowserRouter([
       {
         path: "/create-project",
         element: <CreateProject />,
+      },
+      {
+        path: "/create-category",
+        element: <CreateCategory />,
+      },
+      {
+        path: "/upload-design",
+        element: <UploadDesign />,
       },
       {
         path: "*",
