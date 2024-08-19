@@ -143,7 +143,12 @@ function CreateProject() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = {
-      form,
+      image: form.image,
+      offerAmount: form.offerAmount,
+      originalAmount: form.originalAmount,
+      regularDeliveryDays: form.regularDeliveryDays,
+      fastDeliveryDays: form.fastDeliveryDays,
+      fdAmount: form.fdAmount,
       designs,
       bullets,
       requirements: requirements.filter(req => req.trim() !== "")
@@ -154,11 +159,11 @@ function CreateProject() {
   return (
     <div className="max-width mt-10 sm:mt-20">
       <form className="w-full max-w-[800px] mx-auto" onSubmit={handleSubmit}>
-        <div className="bg-[#DCEEFA] mt-10">
+        <div className="bg-lightskyblue mt-10">
           <h1 className="bg-primary text-white p-3">Image</h1>
           <input type="file" name="image" id="image" className='file-input' onChange={handleFileChange} />
         </div>
-        <div className="bg-[#DCEEFA] mt-5">
+        <div className="bg-lightskyblue mt-5">
           <h1 className="bg-primary text-white p-3">Price & Delivery</h1>
           <div className="p-3">
             <div className='flex gap-2'>
@@ -235,7 +240,7 @@ function CreateProject() {
             </div>
           </div>
         </div>
-        <div className="bg-[#DCEEFA] mt-5">
+        <div className="bg-lightskyblue mt-5">
           <div className='bg-primary text-white p-3 flex justify-between'>
             <h1 className="">Design</h1>
             <ImPlus onClick={addDesign} />
@@ -276,7 +281,7 @@ function CreateProject() {
             ))}
           </div>
         </div>
-        <div className="bg-[#DCEEFA] mt-5">
+        <div className="bg-lightskyblue mt-5">
           <h1 className="bg-primary text-white p-3">Bullet Point</h1>
           <div className="p-3">
             <div className='flex flex-wrap mt-2 gap-2'>
@@ -297,7 +302,7 @@ function CreateProject() {
             </div>
           </div>
         </div>
-        <div className="bg-[#DCEEFA] mt-5">
+        <div className="bg-lightskyblue mt-5">
           <div className='bg-primary text-white p-3 flex justify-between'>
             <h1 className="">Requirements</h1>
             <ImPlus onClick={addRequirements} />
