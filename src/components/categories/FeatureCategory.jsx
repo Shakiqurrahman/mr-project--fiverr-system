@@ -1,12 +1,14 @@
 import { Reorder } from "framer-motion";
 import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
+import { useSelector } from "react-redux";
 import DownArrow from "../../assets/images/icons/Down Arrow.svg";
 import Check from "../../assets/svg/Check";
 import Sidebar from "../Sidebar";
 import CategoryCards from "./CategoryCards";
 
 function FeatureCategory() {
+  const { user } = useSelector((state) => state.user);
   const [expand, setExpand] = useState(false);
   const [isDraggable, setIsDraggable] = useState(false);
   const [categoryList, setCategoryList] = useState([
@@ -40,30 +42,32 @@ function FeatureCategory() {
   };
   return (
     <div className="max-width">
-      <div className="flex items-center justify-between mt-10">
-        <button
-          className="p-[6px_15px] bg-[#EEF7FE] border-2 border-solid border-primary rounded-[30px]"
-          onClick={() => setIsDraggable(true)}
-        >
-          CUSTOMISE
-        </button>
-        {isDraggable && (
-          <div className="flex gap-4">
-            <button
-              className="h-[35px] w-[35px] rounded-full bg-[#EEF7FE] border-2 border-solid border-primary flex items-center justify-center"
-              onClick={handleSave}
-            >
-              <Check className={"h-4 w-4"} />
-            </button>
-            <button
-              className="h-[35px] w-[35px] rounded-full bg-[#EEF7FE] border-2 border-solid border-canceled flex items-center justify-center"
-              onClick={handleCancel}
-            >
-              <IoMdClose className="text-canceled text-xl" />
-            </button>
-          </div>
-        )}
-      </div>
+      {user?.role === "ADMIN" && (
+        <div className="flex items-center justify-between mt-10">
+          <button
+            className="p-[6px_15px] bg-[#EEF7FE] border-2 border-solid border-primary rounded-[30px]"
+            onClick={() => setIsDraggable(true)}
+          >
+            CUSTOMISE
+          </button>
+          {isDraggable && (
+            <div className="flex gap-4">
+              <button
+                className="h-[35px] w-[35px] rounded-full bg-[#EEF7FE] border-2 border-solid border-primary flex items-center justify-center"
+                onClick={handleSave}
+              >
+                <Check className={"h-4 w-4"} />
+              </button>
+              <button
+                className="h-[35px] w-[35px] rounded-full bg-[#EEF7FE] border-2 border-solid border-canceled flex items-center justify-center"
+                onClick={handleCancel}
+              >
+                <IoMdClose className="text-canceled text-xl" />
+              </button>
+            </div>
+          )}
+        </div>
+      )}
       <div className="flex gap-3 flex-wrap sm:flex-nowrap">
         <div className="w-full sm:w-2/3 md:w-3/4 lg:w-4/5 relative">
           <div>
