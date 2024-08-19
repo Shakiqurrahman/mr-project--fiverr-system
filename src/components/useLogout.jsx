@@ -9,7 +9,7 @@ const useLogout = () => {
 
   const handleLogout = () => {
     // Remove token from local storage
-    localStorage.removeItem('token');
+    localStorage.removeItem('profileData');
     
     // Dispatch logout action to clear Redux state
     dispatch(logout());
@@ -17,6 +17,8 @@ const useLogout = () => {
 
     // Clear persisted state
     persistor.purge();
+    // Optionally, redirect to login page or home page
+    window.location.href = '/join';
   };
 
   return handleLogout;
