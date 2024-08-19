@@ -4,6 +4,7 @@ import About from "../pages/About";
 import Affiliate from "../pages/Affiliate";
 import AllCategory from "../pages/AllCategory";
 import AllDesign from "../pages/AllDesign";
+import BillingInformation from "../pages/BillingInformation";
 import ChangePassword from "../pages/ChangePassword";
 import Contact from "../pages/Contact";
 import CreateProject from "../pages/CreateProject";
@@ -113,6 +114,10 @@ export const router = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile />,
+      },
+      {
+        path: "/billing-information",
+        element: <BillingInformation />,
       },
       {
         path: "/change-password",
