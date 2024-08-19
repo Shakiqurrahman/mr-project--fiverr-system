@@ -94,8 +94,6 @@ function SetupProfile() {
     }
   }, []);
 
-
-
   const handleSkip = () => {
     try {
       // Save the form data to localStorage
@@ -105,9 +103,6 @@ function SetupProfile() {
       console.error("Error saving data to local storage:", error);
     }
   };
-
-
-
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
@@ -170,7 +165,7 @@ function SetupProfile() {
             <input
               type="text"
               name="fullName"
-              disabled
+
               value={form.fullName}
               onChange={handleChange}
               className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
