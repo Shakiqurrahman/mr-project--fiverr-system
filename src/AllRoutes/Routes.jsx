@@ -25,8 +25,6 @@ import TermsAndConditions from "../pages/TermsAndConditions";
 import UpdatePassword from "../pages/UpdatePassword";
 import Verify from "../pages/Verify";
 import ProtectedRoute from "./private-rotue/PrivateRoute";
-import UpdatePassword from "../pages/UpdatePassword";
-import ChangePassword from "../pages/ChangePassword";
 import CreateCategory from "../pages/CreateCategory";
 import UploadDesign from "../pages/UploadDesign";
 
