@@ -3,6 +3,7 @@ import Layout from "../AllRoutes/Layout";
 import About from "../pages/About";
 import Affiliate from "../pages/Affiliate";
 import AllCategory from "../pages/AllCategory";
+import AllCompletedProjects from "../pages/AllCompletedProjects";
 import AllDesign from "../pages/AllDesign";
 import BillingInformation from "../pages/BillingInformation";
 import ChangePassword from "../pages/ChangePassword";
@@ -70,6 +71,10 @@ export const router = createBrowserRouter([
       {
         path: "/project",
         element: <Project />,
+      },
+      {
+        path: "/all-completed-projects",
+        element: <AllCompletedProjects />,
       },
       {
         path: "/start-offer-project",

@@ -85,7 +85,10 @@ function CompletedProject() {
   ];
   return (
     <div className="max-width">
-      <CategoryLayout title={"Completed Projects"}>
+      <CategoryLayout
+        title={"Completed Projects"}
+        path={"/all-completed-projects"}
+      >
         <div>
           <Slider {...settings}>
             {categories.map((category) => (

@@ -19,7 +19,7 @@ function Designs() {
   ];
 
   const handleSortChange = (option) => {
-    console.log("Selected sorting option:", option);
+    // console.log("Selected sorting option:", option);
     // Implement sorting logic here
   };
   const data = [
