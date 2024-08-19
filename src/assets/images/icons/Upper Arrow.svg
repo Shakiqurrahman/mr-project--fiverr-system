@@ -1,0 +1,15 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+	<title>Upper Arrow-svg</title>
+	<style>
+		.s0 { fill: none;stroke: #cecece;stroke-miterlimit:100 } 
+		.s1 { fill: #1c8bdc } 
+		.s2 { fill: #349ae4 } 
+		.s3 { fill: #52adef } 
+	</style>
+	<g id="Upper Arrow">
+		<path id="Ellipse 1 copy 7" fill-rule="evenodd" class="s0" d="m250 498c-137.2 0-248-110.8-248-248 0-137.2 110.8-248 248-248 137.2 0 248 110.8 248 248 0 137.2-110.8 248-248 248z"/>
+		<path id="Shape 3682 2 copy 9" class="s1" d="m98.6 237.5l151.6-151.7 151.7 151.7-151.7-84.8z"/>
+		<path id="Shape 3682 2 copy 9" class="s2" d="m128.8 329.8l121.4-121.4 121.2 121.4-121.2-68z"/>
+		<path id="Shape 3682 2 copy 9" class="s3" d="m157.9 408l92.3-92.3 92.1 92.3-92.1-51.6z"/>
+	</g>
+</svg>
