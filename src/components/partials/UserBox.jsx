@@ -3,7 +3,6 @@ import React from "react";
 import { CgProfile } from "react-icons/cg";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { logout } from "../../Redux/features/userSlice";
 import useLogout from "../useLogout";
 
 function UserBox() {
@@ -25,7 +24,7 @@ function UserBox() {
     if (user.image) {
         content = (
             <img
-                className="size-10 bg-cover  rounded-full"
+                className="size-10 object-cover rounded-full"
                 src={user.image}
                 alt="user"
             />
