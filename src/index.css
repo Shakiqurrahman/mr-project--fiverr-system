@@ -88,9 +88,6 @@ textarea:placeholder-shown {
     }
 }
 
-/* .active {
-    @apply text-base font-semibold uppercase px-5 py-3.5 md:py-2.5  text-navy bg-white md:rounded-lg;
-  } */
 
 .file-input::file-selector-button {
     padding: 0 16px;
@@ -116,4 +113,11 @@ textarea:placeholder-shown {
 }
 .rating-icon svg path[stroke-width] {
     stroke-width: 20;
+}
+
+/* Custom styles for SweetAlert2 buttons */
+.swal2-confirm.successfull-button {
+    background-color: #1b8cdc; 
+    color: #fff;
+    border: none;
 }

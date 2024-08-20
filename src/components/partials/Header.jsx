@@ -22,7 +22,7 @@ function Header() {
         <div className="bg-[#121212] z-10">
           <div className="h-16 sm:h-20 max-width flex justify-between items-center">
             <Link to='/'>
-              <img className="size-10 sm:size-16" src={logo} alt="MR Logo" />
+              <img className="size-10 sm:size-16 object-contain" src={logo} alt="MR Logo" />
             </Link>
             <form className="hidden lg:block">
               <div className="relative flex justify-center items-center">

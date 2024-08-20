@@ -9,6 +9,7 @@ import CountryCode from "../components/CountryCode";
 import CountryList from "../components/CountryList";
 import { configApi } from "../libs/configApi";
 import { setUser } from "../Redux/features/userSlice";
+import Swal from "sweetalert2";
 
 function SetupProfile() {
   const dispatch = useDispatch();
@@ -43,6 +44,17 @@ function SetupProfile() {
 
       if (data.success === true) {
         toast.success("Add data successfull");
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Thank you very much!",
+          html: "<p>for joining us. Your registration is successful.</p>",
+          showConfirmButton: true,
+          timer: 1500,
+          customClass: {
+              confirmButton: 'successfull-button'
+          }
+      });
         setUploading(false);
         // dispatch(setUser(data?.data))
         return;
@@ -104,7 +116,18 @@ function SetupProfile() {
     try {
       // Save the form data to localStorage
       localStorage.setItem("profileData", JSON.stringify(form));
-      toast.success("Data stored in local storage.");
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Thank you very much!",
+        html: "<p>for joining us. Your registration is successful.</p>", // Add custom HTML content here
+        showConfirmButton: true,
+        timer: 1200,
+        customClass: {
+            confirmButton: 'successfull-button'
+        }
+    });
+    
     } catch (error) {
       console.error("Error saving data to local storage:", error);
     }
