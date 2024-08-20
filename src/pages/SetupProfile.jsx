@@ -22,7 +22,7 @@ function SetupProfile() {
     city: "",
     address: "",
     email: "",
-    number: 0,
+    number: "",
     language: "",
     description: "",
     countryCode: "",
@@ -163,7 +163,7 @@ function SetupProfile() {
             type="file"
             name="image"
             id="image"
-            accept="image/png, image/jpeg"
+            accept="image/*"
             hidden
             onChange={handleFileChange}
           />

@@ -3,13 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 const passwordVisibilitySlice = createSlice({
     name: "passwordVisibility",
     initialState: {
-        showOldPassword: false,
+        showPassword: false,
         showNewPassword: false,
         showConfirmPassword: false,
     },
     reducers: {
-        toggleShowOldPassword: (state) => {
-            state.showOldPassword = !state.showOldPassword;
+        toggleShowPassword: (state) => {
+            state.showPassword = !state.showPassword;
         },
         toggleShowNewPassword: (state) => {
             state.showNewPassword = !state.showNewPassword;
@@ -17,12 +17,18 @@ const passwordVisibilitySlice = createSlice({
         toggleShowConfirmPassword: (state) => {
             state.showConfirmPassword = !state.showConfirmPassword;
         },
+        clearPasswordVisibility: (state) => {
+            state.showPassword = false;
+            state.showNewPassword = false;
+            state.showConfirmPassword = false;
+        }
     },
 });
 
 export const {
-    toggleShowOldPassword,
+    toggleShowPassword,
     toggleShowNewPassword,
     toggleShowConfirmPassword,
+    clearPasswordVisibility
 } = passwordVisibilitySlice.actions;
 export default passwordVisibilitySlice.reducer;

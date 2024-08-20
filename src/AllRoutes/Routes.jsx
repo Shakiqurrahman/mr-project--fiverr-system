@@ -25,9 +25,9 @@ import SingleProductPage from "../pages/SingleProductPage";
 import TermsAndConditions from "../pages/TermsAndConditions";
 import UpdatePassword from "../pages/UpdatePassword";
 import Verify from "../pages/Verify";
-import ProtectedRoute from "./private-rotue/PrivateRoute";
 import CreateCategory from "../pages/CreateCategory";
 import UploadDesign from "../pages/UploadDesign";
+import PrivateRoute from "./private-route/PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -113,9 +113,9 @@ export const router = createBrowserRouter([
       {
         path: "/setup-profile",
         element: (
-          <ProtectedRoute>
+          <PrivateRoute>
             <SetupProfile />
-          </ProtectedRoute>
+          </PrivateRoute>
         ),
       },
       {
