@@ -30,6 +30,7 @@ import UpdatePassword from "../pages/UpdatePassword";
 import UploadDesign from "../pages/UploadDesign";
 import Verify from "../pages/Verify";
 import ProtectedRoute from "./private-rotue/PrivateRoute";
+import Cart from "../pages/Cart";
 
 export const router = createBrowserRouter([
   {
@@ -153,6 +154,10 @@ export const router = createBrowserRouter([
       {
         path: "/upload-design",
         element: <UploadDesign />,
+      },
+      {
+        path: "/cart",
+        element: <Cart />,
       },
       {
         path: "*",
