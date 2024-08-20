@@ -6,7 +6,7 @@ const Navbar = () => {
     const { user } = useSelector((state) => state.user);
 
     const adminRole = user?.role === "ADMIN";
-    const userRole = user?.role === "USER";
+    // const userRole = user?.role === "USER";
 
     return (
         <nav className="bg-primary py-4">
@@ -23,11 +23,6 @@ const Navbar = () => {
                             <Link to="/admin-dashboard">Dashboard</Link>
                         </li>
                     </>
-                )}
-                {userRole && (
-                    <li className="hover:text-gray-300 duration-300">
-                        <Link to="/dashboard">Dashboard</Link>
-                    </li>
                 )}
                 <li className="hover:text-gray-300 duration-300">
                     <Link to="/designs">Designs</Link>
