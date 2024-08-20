@@ -90,7 +90,7 @@ function Feedback() {
                     </form>
                 </div>
                 <div className="w-full md:w-1/4 flex flex-col justify-center items-center lg:mt-[-80px]">
-                    <div className=" bg-lightskyblue p-3 w-full md:w-auto">
+                    <div className=" bg-lightskyblue p-5 w-full md:w-auto">
                         <h4 className="text-black text-xl my-2 font-semibold">
                             Project Details
                         </h4>
