@@ -29,12 +29,8 @@ import Tips from "../pages/Tips";
 import UpdatePassword from "../pages/UpdatePassword";
 import UploadDesign from "../pages/UploadDesign";
 import Verify from "../pages/Verify";
-<<<<<<< HEAD
 import AdminRoute from "./private-route/AdminRoute";
 import PrivateRoute from "./private-route/PrivateRoute";
-=======
-import ProtectedRoute from "./private-rotue/PrivateRoute";
->>>>>>> bd57b86399d93a8ceb52ca40571d39a2fe37de7f
 
 export const router = createBrowserRouter([
   {
@@ -145,16 +141,16 @@ export const router = createBrowserRouter([
           </AdminRoute>
         ),
       },
-       // Mahdi's created routes start
-       {
-        path: '/tips',
+      // Mahdi's created routes start
+      {
+        path: "/tips",
         element: <Tips />,
-    },
-    {
-        path: '/feedback',
+      },
+      {
+        path: "/feedback",
         element: <Feedback />,
-    },
-    // Mahdi's created routes end
+      },
+      // Mahdi's created routes end
       {
         path: "/create-category",
         element: (
