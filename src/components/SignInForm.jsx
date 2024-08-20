@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { configApi } from "../libs/configApi";
+import { setUser } from "../Redux/features/userSlice";
 
 // Define the validation schema using Zod
 const signInSchema = z.object({
@@ -16,8 +17,7 @@ const signInSchema = z.object({
 });
 
 function SignInForm({ handleClick }) {
-  const dispatch = useDispatch();
-
+  const dispatch = useDispatch();  
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -59,6 +59,7 @@ function SignInForm({ handleClick }) {
       });
 
       const response = await data.data;
+      dispatch(setUser({ user: response?.data?.user, token: response?.data?.token }));
       setLoading(false);
 
       if (!response.success) {
@@ -73,7 +74,7 @@ function SignInForm({ handleClick }) {
           expires: expiresInDays,
         });
         setForm({ email: "", password: "", isRemember: false });
-        navigate("/setup-profile");
+        // navigate("/setup-profile");
         return;
       }
 
@@ -83,6 +84,7 @@ function SignInForm({ handleClick }) {
       toast.error("An error occurred. Please try again.");
     }
   };
+
 
   return (
     <div>
