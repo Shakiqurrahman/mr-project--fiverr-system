@@ -8,9 +8,11 @@ import AllDesign from "../pages/AllDesign";
 import BillingInformation from "../pages/BillingInformation";
 import ChangePassword from "../pages/ChangePassword";
 import Contact from "../pages/Contact";
+import CreateCategory from "../pages/CreateCategory";
 import CreateProject from "../pages/CreateProject";
 import Designs from "../pages/Designs";
 import ErrorPage from "../pages/ErrorPage";
+import Feedback from "../pages/Feedback";
 import ForgetPassword from "../pages/ForgetPassword";
 import Home from "../pages/Home";
 import Industries from "../pages/Industries";
@@ -23,11 +25,11 @@ import Project from "../pages/Project";
 import SetupProfile from "../pages/SetupProfile";
 import SingleProductPage from "../pages/SingleProductPage";
 import TermsAndConditions from "../pages/TermsAndConditions";
+import Tips from "../pages/Tips";
 import UpdatePassword from "../pages/UpdatePassword";
+import UploadDesign from "../pages/UploadDesign";
 import Verify from "../pages/Verify";
 import ProtectedRoute from "./private-rotue/PrivateRoute";
-import CreateCategory from "../pages/CreateCategory";
-import UploadDesign from "../pages/UploadDesign";
 
 export const router = createBrowserRouter([
   {
@@ -134,6 +136,16 @@ export const router = createBrowserRouter([
         path: "/create-project",
         element: <CreateProject />,
       },
+       // Mahdi's created routes start
+       {
+        path: '/tips',
+        element: <Tips />,
+    },
+    {
+        path: '/feedback',
+        element: <Feedback />,
+    },
+    // Mahdi's created routes end
       {
         path: "/create-category",
         element: <CreateCategory />,
