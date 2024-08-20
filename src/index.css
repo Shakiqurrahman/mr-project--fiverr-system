@@ -4,17 +4,15 @@
 @tailwind utilities;
 
 body {
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Montserrat', sans-serif;
     max-width: 100%;
     overflow-x: hidden;
     scroll-behavior: smooth;
 }
 
 .font-Oswald {
-    font-family: "Oswald", sans-serif;
+    font-family: 'Oswald', sans-serif;
 }
-
-
 
 /* Removing Input Field Number Arrows */
 @layer base {
@@ -109,4 +107,13 @@ textarea:placeholder-shown {
 
 .cusotomTextarea::-webkit-scrollbar {
     display: none;
+}
+
+/* Rating Page Icons Customization starts here */
+
+.rating-icon svg {
+    @apply !stroke-primary;
+}
+.rating-icon svg path[stroke-width] {
+    stroke-width: 20;
 }
