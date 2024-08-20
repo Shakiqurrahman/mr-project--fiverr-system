@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     toggleShowConfirmPassword,
     toggleShowNewPassword,
-    toggleShowOldPassword,
+    toggleShowPassword
 } from "../Redux/features/passwordVisibilitySlice";
 
 function ChangePassword() {
     const dispatch = useDispatch();
-    const { showOldPassword, showNewPassword, showConfirmPassword } =
+    const { showPassword, showNewPassword, showConfirmPassword } =
         useSelector((state) => state.passwordVisibility);
     const [form, setForm] = useState({
         currentPassword: "",
@@ -40,7 +40,7 @@ function ChangePassword() {
                     <label className="block px-2 pt-2">Current Password</label>
                     <div className="relative flex items-center w-full mt-3">
                         <input
-                            type={showOldPassword ? "text" : "password"}
+                            type={showPassword ? "text" : "password"}
                             placeholder="Create password"
                             value={form.currentPassword}
                             onChange={handleChange}
@@ -50,9 +50,9 @@ function ChangePassword() {
                         />
                         <span
                             className="absolute top-1/2 -translate-y-1/2 right-5 cursor-pointer text-2xl text-primary select-none"
-                            onClick={() => dispatch(toggleShowOldPassword())}
+                            onClick={() => dispatch(toggleShowPassword())}
                         >
-                            {showOldPassword ? <FaEye /> : <FaEyeSlash />}
+                            {showPassword ? <FaEye /> : <FaEyeSlash />}
                         </span>
                     </div>
                     <label className="block px-2 pt-2">Set Password</label>
