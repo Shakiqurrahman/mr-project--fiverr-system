@@ -8,6 +8,7 @@ import AllDesign from "../pages/AllDesign";
 import BillingInformation from "../pages/BillingInformation";
 import ChangePassword from "../pages/ChangePassword";
 import Contact from "../pages/Contact";
+import CreateCategory from "../pages/CreateCategory";
 import CreateProject from "../pages/CreateProject";
 import Designs from "../pages/Designs";
 import ErrorPage from "../pages/ErrorPage";
@@ -24,10 +25,10 @@ import SetupProfile from "../pages/SetupProfile";
 import SingleProductPage from "../pages/SingleProductPage";
 import TermsAndConditions from "../pages/TermsAndConditions";
 import UpdatePassword from "../pages/UpdatePassword";
-import Verify from "../pages/Verify";
-import ProtectedRoute from "./private-rotue/PrivateRoute";
-import CreateCategory from "../pages/CreateCategory";
 import UploadDesign from "../pages/UploadDesign";
+import Verify from "../pages/Verify";
+import AdminRoute from "./private-route/AdminRoute";
+import PrivateRoute from "./private-route/PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -113,9 +114,9 @@ export const router = createBrowserRouter([
       {
         path: "/setup-profile",
         element: (
-          <ProtectedRoute>
+          <PrivateRoute>
             <SetupProfile />
-          </ProtectedRoute>
+          </PrivateRoute>
         ),
       },
       {
@@ -132,15 +133,27 @@ export const router = createBrowserRouter([
       },
       {
         path: "/create-project",
-        element: <CreateProject />,
+        element: (
+          <AdminRoute>
+            <CreateProject />
+          </AdminRoute>
+        ),
       },
       {
         path: "/create-category",
-        element: <CreateCategory />,
+        element: (
+          <AdminRoute>
+            <CreateCategory />
+          </AdminRoute>
+        ),
       },
       {
         path: "/upload-design",
-        element: <UploadDesign />,
+        element: (
+          <AdminRoute>
+            <UploadDesign />
+          </AdminRoute>
+        ),
       },
       {
         path: "*",
