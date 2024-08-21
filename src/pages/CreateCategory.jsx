@@ -12,20 +12,20 @@ function CreateCategory() {
   });
 
   const [subCategory, setSubcategory] = useState([{
-    title: "",
-    amount: "",
+    subTitle: "",
+    subAmount: "",
     regularDeliveryDays: "",
     fastDeliveryDays: "",
-    fdAmount: "",
+    fastDeliveryPrice: "",
   }]);
 
   const addSubcategory = () => {
     setSubcategory([...subCategory, {
-      title: "",
-      amount: "",
+      subTitle: "",
+      subAmount: "",
       regularDeliveryDays: "",
       fastDeliveryDays: "",
-      fdAmount: "",
+      fastDeliveryPrice: "",
     }]);
   };
 
@@ -86,12 +86,13 @@ function CreateCategory() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = {
-      form,
+      categoryName: form.categoryName,
+      image: form.categoryImage,
       subCategory,
-      bullets,
+      bulletPoint: bullets,
       requirements: requirements.filter(req => req.trim() !== "")
     };
-    console.log(data);
+    console.log(JSON.stringify(data));
   };
 
   return (
@@ -215,8 +216,8 @@ function SubCategory({ input, index, handleChange, subCategoryLength }) {
     <div key={index}>
       <input
         type="text"
-        name="title"
-        value={input.title}
+        name="subTitle"
+        value={input.subTitle}
         onChange={(e) => handleChange(e, index)}
         placeholder='Subcategory Title'
         className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
@@ -227,8 +228,8 @@ function SubCategory({ input, index, handleChange, subCategoryLength }) {
       </p>
       <input
         type="text"
-        name="amount"
-        value={input.amount}
+        name="subAmount"
+        value={input.subAmount}
         onChange={(e) => handleChange(e, index)}
         placeholder='Subcategory Amount'
         className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
@@ -261,8 +262,8 @@ function SubCategory({ input, index, handleChange, subCategoryLength }) {
         />
         <input
           type="text"
-          name="fdAmount"
-          value={input.fdAmount}
+          name="fastDeliveryPrice"
+          value={input.fastDeliveryPrice}
           onChange={(e) => handleChange(e, index)}
           placeholder='F.D. Amount'
           className="bg-white block w-56 p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"

@@ -51,8 +51,17 @@ function SignUpForm({ handleClick }) {
     formState: { errors },
     reset,
   } = useForm({
-    resolver: zodResolver(signUpSchema)
-  });
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      country: "",
+      name: "",
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  },
+);
 
   const onSubmit = async (data) => {
     try {
@@ -78,7 +87,7 @@ function SignUpForm({ handleClick }) {
         dispatch(setUser({ user, token }));
 
         Cookies.set("authToken", JSON.stringify(token), { expires: 10 });
-        toast.success("Signed Up successfully");
+        // toast.success("Signed Up successfully");
         reset();
         dispatch(clearPasswordVisibility());
         navigate("/setup-profile");

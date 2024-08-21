@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { configApi } from "../libs/configApi";
 import { clearPasswordVisibility, toggleShowPassword } from "../Redux/features/passwordVisibilitySlice";
 import { setUser } from "../Redux/features/userSlice";
+import Swal from "sweetalert2";
 
 // Define the validation schema using Zod
 const signInSchema = z.object({
@@ -55,7 +56,16 @@ function SignInForm({ handleClick }) {
         return;
       }
 
-      toast.success("Signed In successfully");
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Signed In successfully!",
+        showConfirmButton: true,
+        timer: 1200,
+        customClass: {
+          confirmButton: 'successfull-button'
+      }
+      });
       const token = userData.token; // from response data
       const expiresInDays = data.isRemember ? 30 : 10;
       Cookies.set("authToken", JSON.stringify(token), {

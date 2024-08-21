@@ -6,6 +6,7 @@ import AllCategory from "../pages/AllCategory";
 import AllCompletedProjects from "../pages/AllCompletedProjects";
 import AllDesign from "../pages/AllDesign";
 import BillingInformation from "../pages/BillingInformation";
+import Cart from "../pages/Cart";
 import ChangePassword from "../pages/ChangePassword";
 import Contact from "../pages/Contact";
 import CreateCategory from "../pages/CreateCategory";
@@ -171,6 +172,10 @@ export const router = createBrowserRouter([
             <UploadDesign />
           </AdminRoute>
         ),
+      },
+      {
+        path: "/cart",
+        element: <Cart />,
       },
       {
         path: "*",
