@@ -5,12 +5,11 @@ import { useNavigate } from "react-router-dom";
 const UnAuthenticatedRoute = ({ children }) => {
   const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
-  console.log(user);
   useEffect(() => {
-    if (!user) {
-      navigate("/not-found");
+    if (user) {
+      navigate("/");
     }
-  }, [user, navigate]);
+  }, []);
 
   return children;
 };

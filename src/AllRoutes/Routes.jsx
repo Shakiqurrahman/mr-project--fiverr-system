@@ -31,6 +31,7 @@ import UploadDesign from "../pages/UploadDesign";
 import Verify from "../pages/Verify";
 import AdminRoute from "./private-route/AdminRoute";
 import PrivateRoute from "./private-route/PrivateRoute";
+import UnAuthenticatedRoute from "./private-route/UnAuthenticatedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -47,7 +48,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/join",
-        element: <Join />,
+        element: (
+          <UnAuthenticatedRoute>
+            <Join />
+          </UnAuthenticatedRoute>
+        ),
       },
       {
         path: "/designs",
