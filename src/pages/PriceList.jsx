@@ -1,5 +1,5 @@
 import { Reorder } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
@@ -9,6 +9,7 @@ import Check from "../assets/svg/Check";
 
 function PriceList() {
   const [controller, setController] = useState(false);
+  const menuRef = useRef(null);
   const { user } = useSelector((state) => state.user);
   const [isDraggable, setIsDraggable] = useState(false);
   const [categoryList, setCategoryList] = useState([
@@ -106,9 +107,21 @@ function PriceList() {
     setIsDraggable(false);
     setCategoryList(tempCategoryList); // Discard changes by resetting to tempCategoryList
   };
-  const handleController = () => {
-    setController(!controller);
-  };
+  const handleController = (id) => {
+    setController(controller === id ? null : id);
+};
+
+const handleClickOutside = (event) => {
+  if (menuRef.current && !menuRef.current.contains(event.target)) {
+    setController(null);
+  }
+};
+
+useEffect(() => {
+  document.addEventListener('mousedown', handleClickOutside);
+  return () => document.removeEventListener('mousedown', handleClickOutside);
+}, []);
+
   return (
     <div className="max-width">
       <div className="mx-auto mt-10 max-w-[800px]">
@@ -195,12 +208,13 @@ function PriceList() {
                       <>
                         <button
                           className="text-lg text-gray-600 sm:text-3xl"
-                          onClick={handleController}
+                          onClick={()=> handleController(category.id)}
                         >
                           <BsThreeDotsVertical />
                         </button>
-                        {controller && (
-                          <div className="absolute left-10 top-0 z-10 min-w-[150px] rounded-lg border border-solid bg-white py-2 text-center *:block *:p-[5px_15px]">
+                        {controller === category.id && (
+                          <div className="absolute left-10 top-0 z-10 min-w-[150px] rounded-lg border border-solid bg-white py-2 text-center *:block *:p-[5px_15px]"
+                          ref={menuRef}>
                             <Link className="text-sm hover:bg-gray-200">
                               Edit
                             </Link>
