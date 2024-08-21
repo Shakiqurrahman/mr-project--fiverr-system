@@ -6,6 +6,7 @@ import AllCategory from "../pages/AllCategory";
 import AllCompletedProjects from "../pages/AllCompletedProjects";
 import AllDesign from "../pages/AllDesign";
 import BillingInformation from "../pages/BillingInformation";
+import Cart from "../pages/Cart";
 import ChangePassword from "../pages/ChangePassword";
 import Contact from "../pages/Contact";
 import CreateCategory from "../pages/CreateCategory";
@@ -31,7 +32,7 @@ import UploadDesign from "../pages/UploadDesign";
 import Verify from "../pages/Verify";
 import AdminRoute from "./private-route/AdminRoute";
 import PrivateRoute from "./private-route/PrivateRoute";
-import Cart from "../pages/Cart";
+import UnAuthenticatedRoute from "./private-route/UnAuthenticatedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -48,7 +49,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/join",
-        element: <Join />,
+        element: (
+          <UnAuthenticatedRoute>
+            <Join />
+          </UnAuthenticatedRoute>
+        ),
       },
       {
         path: "/designs",
