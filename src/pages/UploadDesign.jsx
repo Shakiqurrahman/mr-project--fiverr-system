@@ -24,14 +24,17 @@ function UploadDesign() {
     }
   ];
 
+  const [tags, setTags] = useState(['Tag One', 'Tag Two', 'Tag Three', 'Tag Four']);
+
   const [form, setForm] = useState({
     title: '',
     description: '',
-    category: categories[0].id,
+    category: categories[0].name,
     subcategory: '',
     size: '',
     fileFormat: '',
-    images: ''
+    images: '',
+    thumbnail: ''
   });
 
   const selectedCategory = categories.find(cat => cat.id == form.category);
@@ -46,8 +49,9 @@ function UploadDesign() {
     });
   };
 
+  // Image Operations
   const [selectedImages, setSelectedImages] = useState([]);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0); // Start with the first image selected
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -57,22 +61,52 @@ function UploadDesign() {
     }));
     setSelectedImages(prevImages => [...prevImages, ...images]);
     // Automatically select the first image if it's the first upload
-    if (images.length > 0) {
+    if (images.length > 0 && selectedImages.length === 0) {
       setSelectedImageIndex(0);
+      setForm(prevForm => ({
+        ...prevForm,
+        thumbnail: images[0].name
+      }));
     }
   };
 
   const handleImageRemove = (index) => {
     setSelectedImages(prevImages => prevImages.filter((_, i) => i !== index));
     if (selectedImageIndex === index) {
-      setSelectedImageIndex(prevIndex => prevIndex > 0 ? prevIndex - 1 : 0);
+      const newIndex = index > 0 ? index - 1 : 0;
+      setSelectedImageIndex(newIndex);
+      setForm(prevForm => ({
+        ...prevForm,
+        thumbnail: selectedImages[newIndex]?.name || ''
+      }));
     }
   };
 
   const handleRadioChange = (index) => {
     setSelectedImageIndex(index);
+    setForm(prevForm => ({
+      ...prevForm,
+      thumbnail: selectedImages[index].name
+    }));
   };
 
+  // Tags Operations
+  const removeTag = (indexToRemove) => {
+    setTags(prevTags => prevTags.filter((_, index) => index !== indexToRemove));
+  };
+
+  const [newTag, setNewTag] = useState("");
+
+  const addBullet = () => {
+    if (newBullet.trim() === "") return;
+
+    setBullets([...bullets, newBullet]);
+    setNewBullet("");
+  };
+
+
+
+  // Global Operations
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
@@ -188,30 +222,51 @@ function UploadDesign() {
             <div className='mt-5 grid grid-cols-1 md:grid-cols-2 gap-3'>
               {selectedImages.map((item, index) => (
                 <div key={index} className='flex items-start gap-3 p-2'>
-                  <input
-                    type="radio"
-                    name="selectedImage"
-                    checked={selectedImageIndex === index}
-                    onChange={() => handleRadioChange(index)}
-                    className="mr-2"
-                  />
+                  <div>
+                    <input
+                      type="radio"
+                      name='thumbnail'
+                      value={item.name} // Set the value as the image name
+                      className='hidden'
+                      onChange={() => handleRadioChange(index)}
+                      checked={selectedImageIndex === index} // Check if this is the selected image
+                    />
+                    <label
+                      htmlFor={`thumbnail-${index}`}
+                      className="h-[20px] w-[20px] bg-white flex items-center justify-center cursor-pointer border border-solid border-primary"
+                    >
+                      <Check className="h-[14px] sm:h-[18px]" />
+                    </label>
+                  </div>
                   <img
                     src={item.url}
                     alt={item.name}
                     className='h-[100px] w-[150px] object-cover'
                   />
-                  <div className='flex-grow'>
-                    <h2 className='font-bold'>{item.name}</h2>
-                  </div>
+                  <h1 className='flex-grow'>{item.name}</h1>
                   <button
                     type='button'
                     className='min-h-6 min-w-6 grid place-content-center border border-slate-500 rounded-full'
                     onClick={() => handleImageRemove(index)}
                   >
-                    <RxCross2 className='text-slate-500' />  
+                    <RxCross2 className='text-slate-500' />
                   </button>
                 </div>
               ))}
+            </div>
+          </div>
+          <div className='flex flex-col mt-2'>
+            <label className='block px-2'>Tags</label>
+            <div className='bg-white w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none flex gap-2'>
+              {tags.map((item,index)=>(
+                <span key={index} className='bg-[#FFEFEF] flex items-center px-2 py-1 rounded-full gap-2 text-sm'>
+                  {item}
+                  <button className='bg-white p-1 rounded-full' onClick={()=>removeTag(index)}>
+                    <RxCross2 className='text-slate-700 h-3 w-3' />
+                  </button>  
+                </span>
+              ))}
+
             </div>
           </div>
           <button className="p-3 text-center text-white bg-primary rounded-3xl w-1/2 mx-auto block mt-5">
