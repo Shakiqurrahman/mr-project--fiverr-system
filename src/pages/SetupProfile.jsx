@@ -120,7 +120,7 @@ function SetupProfile() {
         position: "center",
         icon: "success",
         title: "Thank you very much!",
-        html: "<p>for joining us. Your registration is successful.</p>", // Add custom HTML content here
+        html: "<p>for joining us. Your registration is successful.</p>",
         showConfirmButton: true,
         timer: 1200,
         customClass: {

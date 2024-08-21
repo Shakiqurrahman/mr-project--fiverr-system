@@ -2,13 +2,17 @@ import React, { useState } from 'react';
 import { ImPlus } from "react-icons/im";
 import { RxCross2 } from "react-icons/rx";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import axios from 'axios';
 
 // CreateCategory Component
 function CreateCategory() {
   // Form State
   const [form, setForm] = useState({
     categoryName: "",
-    categoryImage: "", 
+    categoryImage: {
+      name: "",
+      url: ""
+    },
   });
 
   const [subCategory, setSubcategory] = useState([{
@@ -28,6 +32,8 @@ function CreateCategory() {
       fastDeliveryPrice: "",
     }]);
   };
+
+  const [uploading, setUploading] = useState(false);
 
   const [bullets, setBullets] = useState([
     "Unlimited Revision", 
@@ -52,9 +58,37 @@ function CreateCategory() {
     }
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setForm({ ...form, categoryImage: file });
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+  
+    if (file) {
+      const formData = new FormData();
+      formData.append("image", file);
+  
+      const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
+      const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+  
+      try {
+        setUploading(true);
+        const response = await axios.post(uploadUrl, formData);
+        const imageUrl = response.data.data.url;
+  
+        // Update the form state with the new image URL
+        setForm(prevForm => ({ ...prevForm, categoryImage: {
+          name: file.name,
+          url: imageUrl,
+        }}));
+  
+        // Optionally, you can also store this data in localStorage if needed
+        // localStorage.setItem("profileData", JSON.stringify({ ...form, categoryImage: imageUrl }));
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        // You can use a library like react-toastify to display error messages
+        // toast.error("Failed to upload image");
+      } finally {
+        setUploading(false);
+      }
+    }
   };
 
   const addBullet = () => {
@@ -82,7 +116,6 @@ function CreateCategory() {
     setRequirements(requirements.filter((_, i) => i !== index));
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = {
@@ -93,11 +126,12 @@ function CreateCategory() {
       requirements: requirements.filter(req => req.trim() !== "")
     };
     console.log(JSON.stringify(data));
+    // Here you can handle form submission, e.g., by sending the data to your backend
   };
 
   return (
     <div className="max-width mt-10 sm:mt-20">
-      <form className="w-full max-w-[800px] mx-auto">
+      <form className="w-full max-w-[800px] mx-auto" onSubmit={handleSubmit}>
 
         {/* Category */}
         <div className="bg-lightskyblue mt-10">
@@ -112,19 +146,21 @@ function CreateCategory() {
               className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
               required
             />
-            <p className="text-red-600 text-xs mt-2 px-2 hidden">
-              There was an error!
-            </p>
           </div>
         </div>
 
         {/* Image */}
         <div className="bg-lightskyblue mt-10">
           <h1 className="bg-primary text-white p-3">Image</h1>
-          <input type="file" name="image" id="image" className='file-input' onChange={handleFileChange} />
-          <p className="text-red-600 text-xs mt-2 px-2 hidden">
-            There was an error!
-          </p>
+          <input 
+            type="file" 
+            name="image" 
+            id="image" 
+            className='file-input' 
+            onChange={handleFileChange} 
+            disabled={uploading} // Disable while uploading
+          />
+          {uploading && <p>Uploading...</p>}
         </div>
 
         {/* Subcategory */}
@@ -202,7 +238,7 @@ function CreateCategory() {
         <button
           type="submit"
           className="p-3 text-center text-white bg-primary rounded-3xl w-1/2 mx-auto block mt-5"
-          onClick={handleSubmit}>
+        >
           Update
         </button>
       </form>
@@ -213,7 +249,7 @@ function CreateCategory() {
 // SubCategory Component
 function SubCategory({ input, index, handleChange, subCategoryLength }) {
   return (
-    <div key={index}>
+    <div>
       <input
         type="text"
         name="subTitle"
@@ -223,9 +259,6 @@ function SubCategory({ input, index, handleChange, subCategoryLength }) {
         className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
         required
       />
-      <p className="text-red-600 text-xs mt-2 px-2 hidden">
-        There was an error!
-      </p>
       <input
         type="text"
         name="subAmount"
@@ -235,9 +268,6 @@ function SubCategory({ input, index, handleChange, subCategoryLength }) {
         className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
         required
       />
-      <p className="text-red-600 text-xs mt-2 px-2 hidden">
-        There was an error!
-      </p>
       <input
         type="text"
         name="regularDeliveryDays"
@@ -247,9 +277,6 @@ function SubCategory({ input, index, handleChange, subCategoryLength }) {
         className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
         required
       />
-      <p className="text-red-600 text-xs mt-2 px-2 hidden">
-        There was an error!
-      </p>
       <div className='flex'>
         <input
           type="text"
@@ -270,9 +297,6 @@ function SubCategory({ input, index, handleChange, subCategoryLength }) {
           required
         />
       </div>
-      <p className="text-red-600 text-xs mt-2 px-2 hidden">
-        There was an error!
-      </p>
 
       {/* Conditionally render the divider */}
       {index !== subCategoryLength - 1 && (
