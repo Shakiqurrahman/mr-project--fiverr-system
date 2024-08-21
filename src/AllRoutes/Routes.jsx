@@ -31,6 +31,7 @@ import UploadDesign from "../pages/UploadDesign";
 import Verify from "../pages/Verify";
 import AdminRoute from "./private-route/AdminRoute";
 import PrivateRoute from "./private-route/PrivateRoute";
+import Cart from "../pages/Cart";
 
 export const router = createBrowserRouter([
   {
@@ -166,6 +167,10 @@ export const router = createBrowserRouter([
             <UploadDesign />
           </AdminRoute>
         ),
+      },
+      {
+        path: "/cart",
+        element: <Cart />,
       },
       {
         path: "*",
