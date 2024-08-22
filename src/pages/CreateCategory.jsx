@@ -269,7 +269,7 @@ function CreateCategory() {
           type="submit"
           className="mx-auto mt-5 block w-1/2 rounded-3xl bg-primary p-3 text-center text-white"
         >
-          Update
+          Create
         </button>
       </form>
     </div>

@@ -2,11 +2,16 @@ import { Reorder } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaCircleCheck } from "react-icons/fa6";
+import { ImSpinner9 } from "react-icons/im";
 import { IoMdClose } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 import Check from "../assets/svg/Check";
-import { fetchCategory } from "../Redux/features/categorySlice";
+import {
+  deleteCategory,
+  fetchCategory,
+} from "../Redux/features/category/categoryApi";
 
 function PriceList() {
   const dispatch = useDispatch();
@@ -23,7 +28,7 @@ function PriceList() {
   }, [dispatch]);
 
   useEffect(() => {
-    setCategoryList(category);
+    setCategoryList([...category].reverse());
   }, [category]);
 
   const handleSave = () => {
@@ -49,6 +54,33 @@ function PriceList() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#1b8cdc",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteCategory(id))
+          .then(() => {
+            dispatch(fetchCategory());
+            Swal.fire("Deleted!", "Your category has been deleted.", "success");
+          })
+          .catch((error) => {
+            Swal.fire(
+              "Error!",
+              "There was an error deleting the category.",
+              "error",
+            );
+          });
+      }
+    });
+  };
 
   return (
     <div className="max-width">
@@ -120,85 +152,106 @@ function PriceList() {
           onReorder={setCategoryList}
           style={{ cursor: isDraggable ? "grab" : "default" }}
         >
-          {categoryList.map((category) => (
-            <Reorder.Item
-              key={category.id}
-              value={category}
-              drag={isDraggable ? "y" : false}
-            >
-              <div
+          {categoryList?.length > 0 ? (
+            categoryList.map((category) => (
+              <Reorder.Item
                 key={category.id}
-                className="mt-8 overflow-hidden rounded-lg border-2 border-solid border-gray-300"
+                value={category}
+                drag={isDraggable ? "y" : false}
               >
-                <div className="flex items-center justify-between bg-lightcream p-2">
-                  <div className="relative flex items-center gap-1 sm:gap-4">
-                    {user?.role === "ADMIN" && (
-                      <>
-                        <button
-                          className="text-lg text-gray-600 sm:text-3xl"
-                          onClick={() => handleController(category.id)}
-                        >
-                          <BsThreeDotsVertical />
-                        </button>
-                        {controller === category.id && (
-                          <div
-                            className="absolute left-10 top-0 z-10 min-w-[150px] rounded-lg border border-solid bg-white py-2 text-center *:block *:p-[5px_15px]"
-                            ref={menuRef}
-                          >
-                            <Link className="text-sm hover:bg-gray-200">
-                              Edit
-                            </Link>
-                            <Link className="text-sm hover:bg-gray-200">
-                              Delete
-                            </Link>
-                          </div>
-                        )}
-                      </>
-                    )}
-                    <h1 className="text-sm font-semibold sm:text-lg">
-                      {category.categoryName}
-                    </h1>
-                  </div>
-                  <Link className="rounded-lg bg-primary px-2 py-1 text-center text-xs font-medium text-white sm:px-3 sm:py-2 sm:text-sm">
-                    PROJECT START
-                  </Link>
-                </div>
                 <div
-                  className={`grid md:grid-cols-${category.subCategory.length} items-center border-y-2 *:border-b-2 *:border-solid *:border-gray-300 md:*:border-b-0 md:*:border-e-2`}
+                  key={category.id}
+                  className="mt-8 overflow-hidden rounded-lg border-2 border-solid border-gray-300"
                 >
-                  {category.subCategory.map((sub) => (
-                    <div
-                      key={Math.random()}
-                      className="p-5 text-center last-of-type:border-0"
-                    >
-                      <h1 className="text-base font-semibold sm:text-lg">
-                        {sub.subTitle}
+                  <div className="flex items-center justify-between bg-lightcream p-2">
+                    <div className="relative flex items-center gap-1 sm:gap-4">
+                      {user?.role === "ADMIN" && (
+                        <>
+                          <button
+                            className="text-lg text-gray-600 sm:text-3xl"
+                            onClick={() => handleController(category.id)}
+                          >
+                            <BsThreeDotsVertical />
+                          </button>
+                          {controller === category.id && (
+                            <div
+                              className="absolute left-10 top-0 z-10 min-w-[150px] rounded-lg border border-solid bg-white py-2 text-center *:block *:p-[5px_15px]"
+                              ref={menuRef}
+                            >
+                              <Link
+                                to="/edit-category"
+                                state={category}
+                                className="text-sm hover:bg-gray-200"
+                              >
+                                Edit
+                              </Link>
+                              <button
+                                onClick={() => handleDelete(category.id)}
+                                className="w-full text-sm hover:bg-gray-200"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          )}
+                        </>
+                      )}
+                      <h1 className="text-sm font-semibold sm:text-lg">
+                        {category.categoryName}
                       </h1>
-                      <span className="my-3 text-lg font-bold text-primary sm:text-2xl">
-                        ${sub.subAmount} USD
-                      </span>
-                      <p className="text-sm font-medium">
-                        {sub.regularDeliveryDays} Days Delivery
-                      </p>
-                      <p className="text-sm font-medium">
-                        Extra-Fast {sub.fastDeliveryDays} Day Delivery $
-                        {sub.fastDeliveryPrice}
-                      </p>
                     </div>
-                  ))}
+                    <Link className="rounded-lg bg-primary px-2 py-1 text-center text-xs font-medium text-white sm:px-3 sm:py-2 sm:text-sm">
+                      PROJECT START
+                    </Link>
+                  </div>
+                  <div
+                    className={`grid md:grid-cols-${category.subCategory.length} items-center border-y-2 *:border-b-2 *:border-solid *:border-gray-300 md:*:border-b-0 md:*:border-e-2`}
+                  >
+                    {category.subCategory.map((sub) => (
+                      <div
+                        key={Math.random()}
+                        className="p-5 text-center last-of-type:border-0"
+                      >
+                        <h1 className="text-base font-semibold sm:text-lg">
+                          {sub.subTitle}
+                        </h1>
+                        <span className="my-3 text-lg font-bold text-primary sm:text-2xl">
+                          ${sub.subAmount} USD
+                        </span>
+                        <p className="text-sm font-medium">
+                          {sub.regularDeliveryDays} Days Delivery
+                        </p>
+                        <p className="text-sm font-medium">
+                          Extra-Fast {sub.fastDeliveryDays} Day Delivery $
+                          {sub.fastDeliveryPrice}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                  <ul className="flex flex-col items-center justify-center gap-2 bg-lightskyblue p-3 text-sm font-medium sm:flex-row sm:gap-5">
+                    {category.bulletPoint.map((bulletText) => (
+                      <li
+                        key={Math.random()}
+                        className="flex items-center gap-2"
+                      >
+                        <FaCircleCheck className="text-primary" />
+                        {bulletText}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <ul className="flex flex-col items-center justify-center gap-2 bg-lightskyblue p-3 text-sm font-medium sm:flex-row sm:gap-5">
-                  {category.bulletPoint.map((bulletText) => (
-                    <li key={Math.random()} className="flex items-center gap-2">
-                      <FaCircleCheck className="text-primary" />
-                      {bulletText}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </Reorder.Item>
-          ))}
+              </Reorder.Item>
+            ))
+          ) : (
+            <div className="pt-10 text-center">
+              <h2 className="text-2xl">No projects available here!</h2>
+            </div>
+          )}
         </Reorder.Group>
+        {loading && (
+          <div className="py-10">
+            <ImSpinner9 className="mx-auto animate-spin text-4xl text-primary" />
+          </div>
+        )}
       </div>
     </div>
   );
