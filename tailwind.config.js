@@ -1,6 +1,5 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-<<<<<<< HEAD
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
@@ -15,18 +14,6 @@ export default {
         delivered: "#0e97a0",
         canceled: "#e60006",
       },
-=======
-    content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
-    theme: {
-        extend: {
-            colors: {
-                primary: '#1b8cdc',
-                secondary: '#f1592a',
-                lightskyblue: '#edf7fd',
-                lightcream: '#ffefef',
-            },
-        },
->>>>>>> mahdi
     },
     plugins: [],
 };
