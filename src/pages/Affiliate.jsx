@@ -20,8 +20,8 @@ function Affiliate() {
                     </p>
                 }
             />
-            <div className="max-width flex md:flex-row flex-col-reverse justify-between gap-10">
-                <div className="w-full md:w-2/4 lg:w-3/4 mt-6">
+            <div className="max-width flex lg:flex-row flex-col-reverse justify-between gap-10">
+                <div className="w-full lg:w-3/4 mt-6">
                     <div className="grid grid-cols-3 gap-3 lg:gap-5 text-center text-sm sm:text-lg lg:text-xl">
                         <div className="p-5 bg-[#FFEFEF] text-center">
                             <img
@@ -53,7 +53,7 @@ function Affiliate() {
                     </div>
 
                     <div className="mt-10">
-                        <h3 className="text-xl font-medium">
+                        <h3 className="text-base sm:text-xl font-medium">
                             Affiliate link auto generated
                         </h3>
                         <div className="mt-3 flex">
@@ -62,14 +62,14 @@ function Affiliate() {
                                 type="text"
                                 placeholder="https://mahfujurrahman535.com/aff-auto/username/"
                             />
-                            <button className="bg-[#7C7C7C] p-2 text-white min-w-[100px]">
+                            <button className="bg-secondary p-2 text-white min-w-[100px]">
                                 Copy
                             </button>
                         </div>
                     </div>
 
                     <div className="mt-10">
-                        <h3 className="text-xl font-medium">
+                        <h3 className="text-base sm:text-xl font-medium">
                             Affiliate link custom generator
                         </h3>
                         <div className="mt-3 flex">
@@ -94,95 +94,62 @@ function Affiliate() {
                         </div>
                     </div>
 
-                    <div className="relative overflow-x-auto mt-[50px]">
-                        <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-                            <thead className="text-xs text-gray-700">
-                                <tr className="border-b border-gray-700 text-xl">
-                                    <th
-                                        scope="col"
-                                        className="px-6 py-3 font-medium"
-                                    >
-                                        Created links
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="px-6 py-3 text-center font-medium"
-                                    >
-                                        Clicks
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="px-6 py-3 text-center font-medium"
-                                    >
-                                        Join
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="px-6 py-3 text-center font-medium"
-                                    >
-                                        Sales
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr className="bg-white border-b text-black border-gray-700 text-center">
-                                    <th
-                                        scope="row"
-                                        className="px-6 py-4 font-medium text-black whitespace-nowrap text-left"
-                                    >
-                                        https://mahfujurrahman535.com/aff-auto/username/
-                                    </th>
-                                    <td className="px-6 py-4">8</td>
-                                    <td className="px-6 py-4">1</td>
-                                    <td className="px-6 py-4">0</td>
-                                    <td className="text-gray-500 text-sm">
-                                        <FaTrashAlt />
-                                    </td>
-                                </tr>
-                                <tr className="bg-white text-black border-b border-gray-700 text-center">
-                                    <th
-                                        scope="row"
-                                        className="px-6 py-4 font-medium text-black whitespace-nowrap text-left"
-                                    >
-                                        https://mahfujurrahman535.com/aff-z3/username/
-                                    </th>
-                                    <td className="px-6 py-4">5</td>
-                                    <td className="px-6 py-4">0</td>
-                                    <td className="px-6 py-4">0</td>
-                                    <td className="text-gray-500 text-sm">
-                                        <FaTrashAlt />
-                                    </td>
-                                </tr>
-                                <tr className="bg-white text-black border-b  border-gray-700 text-center">
-                                    <th
-                                        scope="row"
-                                        className="px-6 py-4 font-medium text-black whitespace-nowrap text-left"
-                                    >
-                                        https://mahfujurrahman535.com/aff-zN/username/
-                                    </th>
-                                    <td className="px-6 py-4">15</td>
-                                    <td className="px-6 py-4">5</td>
-                                    <td className="px-6 py-4">2</td>
-                                    <td className="text-gray-500 text-sm">
-                                        <FaTrashAlt />
-                                    </td>
-                                </tr>
-                                <tr className="bg-white text-black text-center ">
-                                    <th
-                                        scope="row"
-                                        className="px-6 py-4 font-medium text-black whitespace-nowrap text-left"
-                                    >
-                                        https://mahfujurrahman535.com/aff-zl/username/
-                                    </th>
-                                    <td className="px-6 py-4">4</td>
-                                    <td className="px-6 py-4">0</td>
-                                    <td className="px-6 py-4">0</td>
-                                    <td className="text-gray-500 text-sm">
-                                        <FaTrashAlt />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div className="mt-10">
+                        <ul>
+                            <li className="flex gap-1 sm:gap-2 text-sm sm:text-xl mt-3 text-center border-b border-gray-500 p-1 items-center">
+                                <h1 className="w-[40%] sm:w-[50%] text-start">
+                                    Created Links
+                                </h1>
+                                <h1 className="w-[18%] sm:w-[15%]">Clicks</h1>
+                                <h1 className="w-[18%] sm:w-[15%]">Join</h1>
+                                <h1 className="w-[18%] sm:w-[15%]">Sales</h1>
+                                <h1 className="w-[6%] sm:w-[5%]"></h1>
+                            </li>
+                            <li className="flex gap-1 sm:gap-2  text-sm mt-3 text-center border-b border-gray-500 p-1 items-center">
+                                <p className="w-[40%] sm:w-[50%] text-start break-words">
+                                    https://mahfujurrahman535.com/aff-auto/username/
+                                </p>
+                                <p className="w-[18%] sm:w-[15%]">8</p>
+                                <p className="w-[18%] sm:w-[15%]">1</p>
+                                <p className="w-[18%] sm:w-[15%]">0</p>
+                                <button className="w-[6%] sm:w-[5%]">
+                                    <FaTrashAlt className="text-sm" />
+                                </button>
+                            </li>
+                            <li className="flex gap-1 sm:gap-2  text-sm mt-3 text-center border-b border-gray-500 p-1 items-center">
+                                <p className="w-[40%] sm:w-[50%] text-start break-words">
+                                    https://mahfujurrahman535.com/aff-z3/username/
+                                </p>
+                                <p className="w-[18%] sm:w-[15%]">5</p>
+                                <p className="w-[18%] sm:w-[15%]">0</p>
+                                <p className="w-[18%] sm:w-[15%]">0</p>
+                                <button className="w-[6%] sm:w-[5%]">
+                                    <FaTrashAlt className="text-sm" />
+                                </button>
+                            </li>
+                            <li className="flex gap-1 sm:gap-2  text-sm mt-3 text-center border-b border-gray-500 p-1 items-center">
+                                <p className="w-[40%] sm:w-[50%] text-start break-words">
+                                    https://mahfujurrahman535.com/aff-zN/username/
+                                </p>
+                                <p className="w-[18%] sm:w-[15%]">15</p>
+                                <p className="w-[18%] sm:w-[15%]">5</p>
+                                <p className="w-[18%] sm:w-[15%]">0</p>
+                                <button className="w-[6%] sm:w-[5%]">
+                                    <FaTrashAlt className="text-sm" />
+                                </button>
+                            </li>
+                            <li className="flex gap-1 sm:gap-2  text-sm  mt-3 text-center border-b border-gray-500 p-1 items-center">
+                                <p className="w-[40%] sm:w-[50%] text-start break-words">
+                                    https://mahfujurrahman535.com/aff-zl/username/
+                                </p>
+                                <p className="w-[18%] sm:w-[15%]">4</p>
+                                <p className="w-[18%] sm:w-[15%]">0</p>
+                                <p className="w-[18%] sm:w-[15%]">0</p>
+                                <button className="w-[6%] sm:w-[5%]">
+                                    <FaTrashAlt className="text-sm" />
+                                </button>
+                            </li>
+                        </ul>
                     </div>
 
                     <div className="flex justify-center mt-10">
@@ -200,7 +167,7 @@ function Affiliate() {
                         />
                     </div>
                 </div>
-                <div className="w-full md:w-2/4 lg:w-1/4 mt-6 bg-lightskyblue py-6 px-8">
+                <div className="w-full lg:w-1/4 mt-6 bg-lightskyblue py-6 px-8">
                     <ul>
                         <li className="list-disc mt-4">
                             You must first create a link to start working as an
