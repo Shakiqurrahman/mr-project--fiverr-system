@@ -28,7 +28,9 @@ function PriceList() {
   }, [dispatch]);
 
   useEffect(() => {
-    setCategoryList([...category].reverse());
+    if (category) {
+      setCategoryList([...category].reverse());
+    }
   }, [category]);
 
   const handleSave = () => {
@@ -152,7 +154,11 @@ function PriceList() {
           onReorder={setCategoryList}
           style={{ cursor: isDraggable ? "grab" : "default" }}
         >
-          {categoryList?.length > 0 ? (
+          {loading ? (
+            <div className="py-10">
+              <ImSpinner9 className="mx-auto animate-spin text-4xl text-primary" />
+            </div>
+          ) : categoryList?.length > 0 ? (
             categoryList.map((category) => (
               <Reorder.Item
                 key={category.id}
@@ -247,11 +253,6 @@ function PriceList() {
             </div>
           )}
         </Reorder.Group>
-        {loading && (
-          <div className="py-10">
-            <ImSpinner9 className="mx-auto animate-spin text-4xl text-primary" />
-          </div>
-        )}
       </div>
     </div>
   );
