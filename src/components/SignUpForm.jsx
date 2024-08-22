@@ -25,7 +25,7 @@ const signUpSchema = z
     username: z.string().min(1,"Username is required")
     .regex(/^[\w]+$/, "Username should only contain letters, numbers"),
     email: z.string().email("Invalid email address"),
-    password: z.string().min(6, "Password must be at least 6 characters long"),
+    password: z.string().min(8, "Password must be at least 8 characters long"),
     confirmPassword: z
       .string()
       .min(1,"Passwords do not match")

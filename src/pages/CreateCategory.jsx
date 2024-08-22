@@ -143,9 +143,8 @@ function CreateCategory() {
     // Here you can handle form submission, e.g., by sending the data to your backend
     try {
       const api = `${configApi.api}category/create`;
-
       const response = await axios.post(api, data);
-
+      
       if (response.data.success) {
         navigate("/pricelist");
       }

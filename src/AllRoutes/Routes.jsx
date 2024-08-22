@@ -133,7 +133,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/billing-information",
-        element: <BillingInformation />,
+        element: <SetupProfile from_profile={true}/>,
       },
       {
         path: "/change-password",

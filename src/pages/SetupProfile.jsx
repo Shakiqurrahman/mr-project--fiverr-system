@@ -4,14 +4,14 @@ import Cookies from "js-cookie";
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
+import Swal from "sweetalert2";
 import Avatar from "../assets/images/camera.jpg";
 import CountryCode from "../components/CountryCode";
 import CountryList from "../components/CountryList";
 import { configApi } from "../libs/configApi";
 import { setUser } from "../Redux/features/userSlice";
-import Swal from "sweetalert2";
 
-function SetupProfile() {
+function SetupProfile({ from_profile }) {
   const dispatch = useDispatch();
   const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState({
@@ -43,18 +43,21 @@ function SetupProfile() {
       dispatch(setUser({ user: data.data }));
 
       if (data.success === true) {
-        toast.success("Add data successfull");
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Thank you very much!",
-          html: "<p>for joining us. Your registration is successful.</p>",
-          showConfirmButton: true,
-          timer: 1500,
-          customClass: {
-              confirmButton: 'successfull-button'
-          }
-      });
+        if (from_profile) {
+          toast.success("Saved successfully");
+        } else {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Thank you very much!",
+            html: "<p>for joining us. Your registration is successful.</p>",
+            showConfirmButton: true,
+            timer: 1500,
+            customClass: {
+              confirmButton: "successfull-button",
+            },
+          });
+        }
         setUploading(false);
         // dispatch(setUser(data?.data))
         return;
@@ -96,8 +99,6 @@ function SetupProfile() {
           description:
             apiData?.description ?? dataFromLocalStorage?.description,
         }));
-      } else {
-        toast.error("Profile not updated");
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -113,9 +114,9 @@ function SetupProfile() {
   }, []);
 
   const handleSkip = () => {
-    try {
-      // Save the form data to localStorage
-      localStorage.setItem("profileData", JSON.stringify(form));
+    // Save the form data to localStorage
+    localStorage.setItem("profileData", JSON.stringify(form));
+    if (!from_profile) {
       Swal.fire({
         position: "center",
         icon: "success",
@@ -124,12 +125,9 @@ function SetupProfile() {
         showConfirmButton: true,
         timer: 1200,
         customClass: {
-            confirmButton: 'successfull-button'
-        }
-    });
-    
-    } catch (error) {
-      console.error("Error saving data to local storage:", error);
+          confirmButton: "successfull-button",
+        },
+      });
     }
   };
 
