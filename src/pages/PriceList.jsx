@@ -3,124 +3,52 @@ import { useEffect, useRef, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Check from "../assets/svg/Check";
+import { fetchCategory } from "../Redux/features/categorySlice";
 
 function PriceList() {
-  const [controller, setController] = useState(false);
+  const dispatch = useDispatch();
+  const [controller, setController] = useState(null);
   const menuRef = useRef(null);
   const { user } = useSelector((state) => state.user);
+  const { loading, category, error } = useSelector((state) => state.category);
   const [isDraggable, setIsDraggable] = useState(false);
-  const [categoryList, setCategoryList] = useState([
-    {
-      id: 1,
-      categoryName: "Door Hanger Design",
-      bulletPoint: [
-        "Unlimited Rivisions",
-        "PSD Source File",
-        "Print Ready PDF or JPEG File",
-      ],
-      subCategory: [
-        {
-          subTitle: "Single Side Design",
-          subAmount: "20",
-          regularDeliveryDays: "2",
-          fastDeliveryDays: 1,
-          fastDeliveryPrice: 5,
-        },
-        {
-          subTitle: "Double Side Design",
-          subAmount: "40",
-          regularDeliveryDays: "4",
-          fastDeliveryDays: 2,
-          fastDeliveryPrice: 10,
-        },
-      ],
-    },
-    {
-      id: 2,
-      categoryName: "Flyer Design",
-      bulletPoint: [
-        "Unlimited Rivisions",
-        "PSD Source File",
-        "Print Ready PDF or JPEG File",
-      ],
-      subCategory: [
-        {
-          subTitle: "Single Side Design",
-          subAmount: "30",
-          regularDeliveryDays: "2",
-          fastDeliveryDays: 1,
-          fastDeliveryPrice: 10,
-        },
-        {
-          subTitle: "Double Side Design",
-          subAmount: "50",
-          regularDeliveryDays: "4",
-          fastDeliveryDays: 2,
-          fastDeliveryPrice: 15,
-        },
-        {
-          subTitle: "Multi Side Design",
-          subAmount: "80",
-          regularDeliveryDays: "7",
-          fastDeliveryDays: 4,
-          fastDeliveryPrice: 30,
-        },
-      ],
-    },
-    {
-      id: 3,
-      categoryName: "Business Card Design",
-      bulletPoint: [
-        "Unlimited Rivisions",
-        "PSD Source File",
-        "Print Ready PDF or JPEG File",
-      ],
-      subCategory: [
-        {
-          subTitle: "Single Side Design",
-          subAmount: "20",
-          regularDeliveryDays: "2",
-          fastDeliveryDays: 1,
-          fastDeliveryPrice: 5,
-        },
-      ],
-    },
-  ]);
-  const [tempCategoryList, setTempCategoryList] = useState([...categoryList]);
+  const [categoryList, setCategoryList] = useState([]);
+
+  // Get the category data from API
+  useEffect(() => {
+    dispatch(fetchCategory());
+  }, [dispatch]);
 
   useEffect(() => {
-    // When isDraggable is turned off, save or discard changes
-    if (!isDraggable) {
-      setCategoryList(tempCategoryList);
-    }
-  }, [isDraggable, tempCategoryList]);
+    setCategoryList(category);
+  }, [category]);
 
   const handleSave = () => {
     setIsDraggable(false);
-    setTempCategoryList(categoryList);
   };
 
   const handleCancel = () => {
     setIsDraggable(false);
-    setCategoryList(tempCategoryList); // Discard changes by resetting to tempCategoryList
+    setCategoryList(category);
   };
+
   const handleController = (id) => {
     setController(controller === id ? null : id);
-};
+  };
 
-const handleClickOutside = (event) => {
-  if (menuRef.current && !menuRef.current.contains(event.target)) {
-    setController(null);
-  }
-};
+  const handleClickOutside = (event) => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setController(null);
+    }
+  };
 
-useEffect(() => {
-  document.addEventListener('mousedown', handleClickOutside);
-  return () => document.removeEventListener('mousedown', handleClickOutside);
-}, []);
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <div className="max-width">
@@ -190,13 +118,13 @@ useEffect(() => {
           axis="y"
           values={categoryList}
           onReorder={setCategoryList}
+          style={{ cursor: isDraggable ? "grab" : "default" }}
         >
           {categoryList.map((category) => (
             <Reorder.Item
               key={category.id}
               value={category}
-              drag={isDraggable ? true : false}
-              style={{ cursor: isDraggable ? "grab" : "default" }}
+              drag={isDraggable ? "y" : false}
             >
               <div
                 key={category.id}
@@ -208,13 +136,15 @@ useEffect(() => {
                       <>
                         <button
                           className="text-lg text-gray-600 sm:text-3xl"
-                          onClick={()=> handleController(category.id)}
+                          onClick={() => handleController(category.id)}
                         >
                           <BsThreeDotsVertical />
                         </button>
                         {controller === category.id && (
-                          <div className="absolute left-10 top-0 z-10 min-w-[150px] rounded-lg border border-solid bg-white py-2 text-center *:block *:p-[5px_15px]"
-                          ref={menuRef}>
+                          <div
+                            className="absolute left-10 top-0 z-10 min-w-[150px] rounded-lg border border-solid bg-white py-2 text-center *:block *:p-[5px_15px]"
+                            ref={menuRef}
+                          >
                             <Link className="text-sm hover:bg-gray-200">
                               Edit
                             </Link>

@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import persistReducer from "redux-persist/es/persistReducer";
 import persistStore from "redux-persist/es/persistStore";
 import storage from "redux-persist/lib/storage";
+import categorySlice from "./features/categorySlice";
 import passwordVisibilitySlice from "./features/passwordVisibilitySlice";
 import userSlice from "./features/userSlice";
 
@@ -17,6 +18,7 @@ const store = configureStore({
   reducer: {
     user: persistedReducer,
     passwordVisibility: passwordVisibilitySlice,
+    category: categorySlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

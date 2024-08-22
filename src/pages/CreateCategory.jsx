@@ -1,57 +1,68 @@
-import React, { useState } from 'react';
+import axios from "axios";
+import React, { useState } from "react";
 import { ImPlus } from "react-icons/im";
-import { RxCross2 } from "react-icons/rx";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import axios from 'axios';
+import { RxCross2 } from "react-icons/rx";
+import { useNavigate } from "react-router-dom";
+import { configApi } from "../libs/configApi";
 
 // CreateCategory Component
 function CreateCategory() {
+  const navigate = useNavigate();
   // Form State
   const [form, setForm] = useState({
     categoryName: "",
     categoryImage: {
       name: "",
-      url: ""
+      url: "",
     },
   });
 
-  const [subCategory, setSubcategory] = useState([{
-    subTitle: "",
-    subAmount: "",
-    regularDeliveryDays: "",
-    fastDeliveryDays: "",
-    fastDeliveryPrice: "",
-  }]);
-
-  const addSubcategory = () => {
-    setSubcategory([...subCategory, {
+  const [subCategory, setSubcategory] = useState([
+    {
       subTitle: "",
       subAmount: "",
       regularDeliveryDays: "",
       fastDeliveryDays: "",
       fastDeliveryPrice: "",
-    }]);
+    },
+  ]);
+
+  const addSubcategory = () => {
+    setSubcategory([
+      ...subCategory,
+      {
+        subTitle: "",
+        subAmount: "",
+        regularDeliveryDays: "",
+        fastDeliveryDays: "",
+        fastDeliveryPrice: "",
+      },
+    ]);
   };
 
   const [uploading, setUploading] = useState(false);
 
   const [bullets, setBullets] = useState([
-    "Unlimited Revision", 
-    "PSD Source file", 
+    "Unlimited Revision",
+    "PSD Source file",
   ]);
 
   const [newBullet, setNewBullet] = useState("");
 
   const [requirements, setRequirements] = useState([
-    "Which industry do you work in?", 
+    "Which industry do you work in?",
     "Do you have your own company logo?",
-    ""
+    "",
   ]);
 
   const handleChange = (e, index) => {
     if (index !== undefined) {
       const updatedSubCategories = [...subCategory];
-      updatedSubCategories[index] = { ...updatedSubCategories[index], [e.target.name]: e.target.value };
+      updatedSubCategories[index] = {
+        ...updatedSubCategories[index],
+        [e.target.name]: e.target.value,
+      };
       setSubcategory(updatedSubCategories);
     } else {
       setForm({ ...form, [e.target.name]: e.target.value });
@@ -60,25 +71,28 @@ function CreateCategory() {
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
-  
+
     if (file) {
       const formData = new FormData();
       formData.append("image", file);
-  
+
       const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
       const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
-  
+
       try {
         setUploading(true);
         const response = await axios.post(uploadUrl, formData);
         const imageUrl = response.data.data.url;
-  
+
         // Update the form state with the new image URL
-        setForm(prevForm => ({ ...prevForm, categoryImage: {
-          name: file.name,
-          url: imageUrl,
-        }}));
-  
+        setForm((prevForm) => ({
+          ...prevForm,
+          categoryImage: {
+            name: file.name,
+            url: imageUrl,
+          },
+        }));
+
         // Optionally, you can also store this data in localStorage if needed
         // localStorage.setItem("profileData", JSON.stringify({ ...form, categoryImage: imageUrl }));
       } catch (error) {
@@ -92,7 +106,7 @@ function CreateCategory() {
   };
 
   const addBullet = () => {
-    if (newBullet.trim() === "") return; 
+    if (newBullet.trim() === "") return;
     setBullets([...bullets, newBullet]);
     setNewBullet("");
   };
@@ -102,7 +116,7 @@ function CreateCategory() {
   };
 
   const createBulletEventHandler = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
       addBullet();
     }
@@ -116,56 +130,66 @@ function CreateCategory() {
     setRequirements(requirements.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
       categoryName: form.categoryName,
       image: form.categoryImage,
       subCategory,
       bulletPoint: bullets,
-      requirements: requirements.filter(req => req.trim() !== "")
+      requirements: requirements.filter((req) => req.trim() !== ""),
     };
     console.log(JSON.stringify(data));
     // Here you can handle form submission, e.g., by sending the data to your backend
+    try {
+      const api = `${configApi.api}category/create`;
+
+      const response = await axios.post(api, data);
+
+      if (response.data.success) {
+        navigate("/pricelist");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <div className="max-width mt-10 sm:mt-20">
-      <form className="w-full max-w-[800px] mx-auto" onSubmit={handleSubmit}>
-
+      <form className="mx-auto w-full max-w-[800px]" onSubmit={handleSubmit}>
         {/* Category */}
-        <div className="bg-lightskyblue mt-10">
-          <h1 className="bg-primary text-white p-3">Category</h1>
-          <div className='p-3'>
+        <div className="mt-10 bg-lightskyblue">
+          <h1 className="bg-primary p-3 text-white">Category</h1>
+          <div className="p-3">
             <input
               type="text"
               name="categoryName"
               value={form.categoryName}
               onChange={handleChange}
-              placeholder='Category Name'
-              className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
+              placeholder="Category Name"
+              className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
               required
             />
           </div>
         </div>
 
         {/* Image */}
-        <div className="bg-lightskyblue mt-10">
-          <h1 className="bg-primary text-white p-3">Image</h1>
-          <input 
-            type="file" 
-            name="image" 
-            id="image" 
-            className='file-input' 
-            onChange={handleFileChange} 
+        <div className="mt-10 bg-lightskyblue">
+          <h1 className="bg-primary p-3 text-white">Image</h1>
+          <input
+            type="file"
+            name="image"
+            id="image"
+            className="file-input"
+            onChange={handleFileChange}
             disabled={uploading} // Disable while uploading
           />
           {uploading && <p>Uploading...</p>}
         </div>
 
         {/* Subcategory */}
-        <div className="bg-lightskyblue mt-5">
-          <div className='bg-primary text-white p-3 flex items-center justify-between'>
+        <div className="mt-5 bg-lightskyblue">
+          <div className="flex items-center justify-between bg-primary p-3 text-white">
             <h1 className="">Subcategory</h1>
             <ImPlus onClick={addSubcategory} />
           </div>
@@ -183,50 +207,56 @@ function CreateCategory() {
         </div>
 
         {/* Bullets */}
-        <div className="bg-lightskyblue mt-5">
-          <h1 className="bg-primary text-white p-3">Bullet Point</h1>
+        <div className="mt-5 bg-lightskyblue">
+          <h1 className="bg-primary p-3 text-white">Bullet Point</h1>
           <div className="p-3">
-            <div className='flex flex-wrap mt-2 gap-2'>
+            <div className="mt-2 flex flex-wrap gap-2">
               {bullets.map((bullet, index) => (
-                <small key={index} className='flex items-center gap-2 bg-white p-2 rounded-sm'>
-                  {bullet} 
-                  <RxCross2 className='text-red-600' onClick={() => removeBullet(index)} />
+                <small
+                  key={index}
+                  className="flex items-center gap-2 rounded-sm bg-white p-2"
+                >
+                  {bullet}
+                  <RxCross2
+                    className="text-red-600"
+                    onClick={() => removeBullet(index)}
+                  />
                 </small>
               ))}
-              <input 
-                type="text" 
-                placeholder='Add new bullet'
+              <input
+                type="text"
+                placeholder="Add new bullet"
                 value={newBullet}
                 onChange={(e) => setNewBullet(e.target.value)}
                 onKeyDown={createBulletEventHandler}
-                className='bg-transparent focus:outline-none'
+                className="bg-transparent focus:outline-none"
               />
             </div>
           </div>
         </div>
 
         {/* Requirements */}
-        <div className="bg-lightskyblue mt-5">
-          <div className='bg-primary text-white p-3 flex justify-between'>
+        <div className="mt-5 bg-lightskyblue">
+          <div className="flex justify-between bg-primary p-3 text-white">
             <h1 className="">Requirements</h1>
             <ImPlus onClick={addRequirements} />
           </div>
           <div className="p-3">
             {requirements.map((requirement, index) => (
-              <div key={index} className='flex items-center gap-2 mb-2'>
+              <div key={index} className="mb-2 flex items-center gap-2">
                 <input
                   type="text"
-                  placeholder='Type'
+                  placeholder="Type"
                   value={requirement}
                   onChange={(e) => {
                     const newRequirements = [...requirements];
                     newRequirements[index] = e.target.value;
                     setRequirements(newRequirements);
                   }}
-                  className='bg-white block w-full p-2 border border-solid border-[#e7e7e7] outline-none'
+                  className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
                 />
                 <RiDeleteBin6Line
-                  className='text-gray-500 cursor-pointer'
+                  className="cursor-pointer text-gray-500"
                   onClick={() => deleteRequirements(index)}
                 />
               </div>
@@ -237,7 +267,7 @@ function CreateCategory() {
         {/* Submit */}
         <button
           type="submit"
-          className="p-3 text-center text-white bg-primary rounded-3xl w-1/2 mx-auto block mt-5"
+          className="mx-auto mt-5 block w-1/2 rounded-3xl bg-primary p-3 text-center text-white"
         >
           Update
         </button>
@@ -255,8 +285,8 @@ function SubCategory({ input, index, handleChange, subCategoryLength }) {
         name="subTitle"
         value={input.subTitle}
         onChange={(e) => handleChange(e, index)}
-        placeholder='Subcategory Title'
-        className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
+        placeholder="Subcategory Title"
+        className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
         required
       />
       <input
@@ -264,8 +294,8 @@ function SubCategory({ input, index, handleChange, subCategoryLength }) {
         name="subAmount"
         value={input.subAmount}
         onChange={(e) => handleChange(e, index)}
-        placeholder='Subcategory Amount'
-        className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
+        placeholder="Subcategory Amount"
+        className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
         required
       />
       <input
@@ -273,18 +303,18 @@ function SubCategory({ input, index, handleChange, subCategoryLength }) {
         name="regularDeliveryDays"
         value={input.regularDeliveryDays}
         onChange={(e) => handleChange(e, index)}
-        placeholder='Regular Delivery Days'
-        className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
+        placeholder="Regular Delivery Days"
+        className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
         required
       />
-      <div className='flex'>
+      <div className="flex">
         <input
           type="text"
           name="fastDeliveryDays"
           value={input.fastDeliveryDays}
           onChange={(e) => handleChange(e, index)}
-          placeholder='Fast Delivery Days'
-          className="bg-white block w-full flex-grow p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
+          placeholder="Fast Delivery Days"
+          className="mt-3 block w-full flex-grow border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
           required
         />
         <input
@@ -292,15 +322,15 @@ function SubCategory({ input, index, handleChange, subCategoryLength }) {
           name="fastDeliveryPrice"
           value={input.fastDeliveryPrice}
           onChange={(e) => handleChange(e, index)}
-          placeholder='F.D. Amount'
-          className="bg-white block w-56 p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
+          placeholder="F.D. Amount"
+          className="mt-3 block w-56 border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
           required
         />
       </div>
 
       {/* Conditionally render the divider */}
       {index !== subCategoryLength - 1 && (
-        <div className="border-b border-gray-300 my-4" />
+        <div className="my-4 border-b border-gray-300" />
       )}
     </div>
   );
