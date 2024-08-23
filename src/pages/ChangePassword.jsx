@@ -50,7 +50,7 @@ function ChangePassword() {
     setApiError("");
 
     try {
-      const response = await axios.put(`${configApi}set-new-pass`, {
+      const response = await axios.put(`${configApi.api}set-new-pass`, {
         currentPassword,
         password,
       });
