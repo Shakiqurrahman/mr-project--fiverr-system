@@ -5,7 +5,6 @@ import Affiliate from "../pages/Affiliate";
 import AllCategory from "../pages/AllCategory";
 import AllCompletedProjects from "../pages/AllCompletedProjects";
 import AllDesign from "../pages/AllDesign";
-import BillingInformation from "../pages/BillingInformation";
 import Cart from "../pages/Cart";
 import ChangePassword from "../pages/ChangePassword";
 import Contact from "../pages/Contact";
@@ -123,7 +122,7 @@ export const router = createBrowserRouter([
         path: "/setup-profile",
         element: (
           <PrivateRoute>
-            <SetupProfile />
+              <SetupProfile />
           </PrivateRoute>
         ),
       },
@@ -133,7 +132,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/billing-information",
-        element: <SetupProfile from_profile={true}/>,
+        element: <SetupProfile from_profile={true} />,
       },
       {
         path: "/change-password",

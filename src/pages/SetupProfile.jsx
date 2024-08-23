@@ -1,9 +1,11 @@
+import { Backdrop, Box, CircularProgress } from "@mui/material";
 import axios from "axios";
 import fetchData from "data-fetch-ts";
 import Cookies from "js-cookie";
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Avatar from "../assets/images/camera.jpg";
 import CountryCode from "../components/CountryCode";
@@ -13,7 +15,9 @@ import { setUser } from "../Redux/features/userSlice";
 
 function SetupProfile({ from_profile }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState();
   const [form, setForm] = useState({
     image: "",
     fullName: "",
@@ -38,6 +42,7 @@ function SetupProfile({ from_profile }) {
 
     try {
       setUploading(true);
+      setLoading(true);
       // Example API endpoint
       const { data } = await axios.post(`${configApi.api}/update-user`, form);
       dispatch(setUser({ user: data.data }));
@@ -59,12 +64,16 @@ function SetupProfile({ from_profile }) {
           });
         }
         setUploading(false);
-        // dispatch(setUser(data?.data))
+        setLoading(false);
+        if (from_profile) {
+          navigate("/");
+        }
         return;
       }
     } catch (error) {
       console.error("Error saving data to the database:", error);
       setUploading(false);
+      setLoading(false);
     }
   };
 
@@ -76,6 +85,7 @@ function SetupProfile({ from_profile }) {
   );
 
   const fetchDataFromApi = useCallback(async () => {
+    setLoading(true);
     const endpoint = `${configApi.api}get-singel-user`;
     const res = await fetchData({ endpoint, token });
     try {
@@ -104,6 +114,7 @@ function SetupProfile({ from_profile }) {
       console.error("Error fetching data:", error);
       toast.error("Failed to fetch profile data");
     }
+    setLoading(false);
   }, [token, dataFromLocalStorage]);
 
   // Fetch data when the component mounts or token changes
@@ -165,11 +176,17 @@ function SetupProfile({ from_profile }) {
           <div className="mx-auto mb-10 flex h-[220px] w-[220px] items-center justify-center overflow-hidden rounded-full bg-[#DCEEFA]">
             <label htmlFor="image">
               {form.image ? (
-                <img
-                  src={form.image}
-                  alt="Profile"
-                  className="cursor-pointer object-cover"
-                />
+                uploading ? (
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <CircularProgress />
+                  </Box>
+                ) : (
+                  <img
+                    src={form.image}
+                    alt="Profile"
+                    className="cursor-pointer object-cover"
+                  />
+                )
               ) : (
                 // <span className="text-gray-500">No image uploaded</span>
                 <img
@@ -331,6 +348,17 @@ function SetupProfile({ from_profile }) {
               >
                 Skip
               </button>
+              {loading && (
+                <Backdrop
+                  sx={{
+                    color: "#fff",
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                  }}
+                  open={open}
+                >
+                  <CircularProgress color="inherit" />
+                </Backdrop>
+              )}
             </div>
           </div>
         </div>
