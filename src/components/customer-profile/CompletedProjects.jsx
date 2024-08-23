@@ -9,7 +9,7 @@ const CompletedProjects = () => {
         title: "Flyer Design",
         img: designImg,
         price: 30,
-        time: "11h - 45m late",
+        time: "May 15, 2024",
         status: "Completed",
       },
       {
@@ -17,7 +17,7 @@ const CompletedProjects = () => {
         title: "Door Hanger Design",
         img: designImg,
         price: 40,
-        time: "11h - 45m",
+        time: "May 9, 2024",
         status: "Completed",
       }
   ]);

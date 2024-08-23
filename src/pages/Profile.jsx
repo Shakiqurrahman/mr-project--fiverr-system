@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import defaultImg from "../assets/images/default_user.png";
 import ActiveProjects from "../components/customer-profile/ActiveProjects";
 import CompletedProjects from "../components/customer-profile/CompletedProjects";
+import AllReviews from '../components/customer-profile/AllReviews';
 
 function Profile() {
   const { user } = useSelector((state) => state.user);
@@ -25,7 +26,7 @@ function Profile() {
   const monthYear = date.toLocaleDateString("en-US", options);
 
   return (
-    <section className="max-width mt-10 flex flex-col gap-10 md:flex-row">
+    <section className="max-width mt-10 flex flex-col gap-10 lg:gap-16 md:flex-row">
       <div className="min-w-[260px] md:w-1/4">
         <div className="relative border border-gray-300 bg-[#edf7fd] p-4 py-6">
           <BsInfoCircle className="absolute right-4 top-4 text-base text-gray-500" />
@@ -137,7 +138,10 @@ function Profile() {
         </div>
         {/* activeProject */}
         {activeTab === "active" && <ActiveProjects />}
+        {/* completedProjects */}
         {activeTab === "completed" && <CompletedProjects />}
+        {/* All Reviews  */}
+        <AllReviews />
       </div>
     </section>
   );
