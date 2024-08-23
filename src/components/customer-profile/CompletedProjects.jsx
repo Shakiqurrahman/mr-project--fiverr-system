@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import designImg from "../../assets/images/project-thumbnail.jpg";
 import { getStatusText } from "./StatusText";
 
-const ActiveProjects = () => {
-  const [activeProjects] = useState([
+const CompletedProjects = () => {
+  const [completedProjects] = useState([
     {
         id: 1,
         title: "Flyer Design",
         img: designImg,
         price: 30,
         time: "11h - 45m late",
-        status: "Revision",
+        status: "Completed",
       },
       {
         id: 2,
@@ -18,30 +18,14 @@ const ActiveProjects = () => {
         img: designImg,
         price: 40,
         time: "11h - 45m",
-        status: "Ongoing",
-      },
-      {
-        id: 3,
-        title: "Postcard Design",
-        img: designImg,
-        price: 40,
-        time: "00 - 00",
-        status: "Waiting",
-      },
-      {
-        id: 4,
-        title: "Business Card Design",
-        img: designImg,
-        price: 25,
-        time: "00 - 00",
-        status: "Delivered",
-      },
+        status: "Completed",
+      }
   ]);
 
   return (
     <div className="mt-8 grid gap-4 min-[850px]:grid-cols-2">
-      {activeProjects.length > 0 ? (
-        activeProjects.map((project) => {
+      {completedProjects.length > 0 ? (
+        completedProjects.map((project) => {
           return (
             <div
               className="rounded-lg border border-gray-300 p-2 shadow-sm lg:p-4"
@@ -69,11 +53,11 @@ const ActiveProjects = () => {
         })
       ) : (
         <h2 className="text-center text-nowrap text-lg min-[850px]:translate-x-1/2">
-          You haven't started any projects yet!
+          You haven't completed any projects yet!
         </h2>
       )}
     </div>
   );
 };
 
-export default ActiveProjects;
+export default CompletedProjects;

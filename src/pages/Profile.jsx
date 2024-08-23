@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import defaultImg from "../assets/images/default_user.png";
 import ActiveProjects from "../components/customer-profile/ActiveProjects";
+import CompletedProjects from "../components/customer-profile/CompletedProjects";
 
 function Profile() {
   const { user } = useSelector((state) => state.user);
@@ -136,7 +137,7 @@ function Profile() {
         </div>
         {/* activeProject */}
         {activeTab === "active" && <ActiveProjects />}
-        {activeTab === "completed" && ""}
+        {activeTab === "completed" && <CompletedProjects />}
       </div>
     </section>
   );
