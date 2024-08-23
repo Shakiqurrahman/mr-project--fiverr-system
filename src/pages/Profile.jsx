@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { BsInfoCircle } from "react-icons/bs";
 import {
   FaFacebookF,
@@ -10,9 +11,11 @@ import { LiaEditSolid } from "react-icons/lia";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import defaultImg from "../assets/images/default_user.png";
+import ActiveProjects from "../components/customer-profile/ActiveProjects";
 
 function Profile() {
   const { user } = useSelector((state) => state.user);
+  const [activeTab, setActiveTab] = useState("active"); // 'active' or 'completed'
   console.log("profile-page", user);
 
   // for user creating date making readable and formatted
@@ -21,8 +24,8 @@ function Profile() {
   const monthYear = date.toLocaleDateString("en-US", options);
 
   return (
-    <section className="max-width mt-10">
-      <div className="w-1/4">
+    <section className="max-width mt-10 flex flex-col gap-10 md:flex-row">
+      <div className="min-w-[260px] md:w-1/4">
         <div className="relative border border-gray-300 bg-[#edf7fd] p-4 py-6">
           <BsInfoCircle className="absolute right-4 top-4 text-base text-gray-500" />
           <div className="pb-4">
@@ -31,7 +34,7 @@ function Profile() {
               src={user?.image ? user.image : defaultImg}
               alt="user image"
             />
-            <h2 className="mt-3 text-center text-xl font-semibold">
+            <h2 className="mt-3 text-center text-lg font-semibold sm:text-xl">
               {user?.userName}
             </h2>
           </div>
@@ -102,11 +105,38 @@ function Profile() {
         {/* description  */}
         <div className="mt-6 border border-gray-300 bg-[#edf7fd] p-4 py-6">
           <div className="flex items-center justify-between gap-1 border-b border-gray-300 pb-3">
-            <h2 className="text-lg font-bold">Description</h2>
+            <h2 className="text-base font-bold sm:text-lg">Description</h2>
             <LiaEditSolid className="text-xl" />
           </div>
-          <p className="text-[15px] pt-4 leading-relaxed font-medium">{user?.description}</p>
+          <p className="pt-4 text-[15px] font-medium leading-relaxed">
+            {user?.description}
+          </p>
         </div>
+      </div>
+
+      {/* projects  */}
+      <div className="flex-1">
+        <div className="flex justify-around gap-4">
+          <h2
+            className={`cursor-pointer text-lg font-semibold sm:text-xl ${
+              activeTab === "active" && "text-primary underline"
+            }`}
+            onClick={() => setActiveTab("active")}
+          >
+            Active Projects (4)
+          </h2>
+          <h2
+            className={`cursor-pointer text-lg font-semibold sm:text-xl ${
+              activeTab === "completed" && "text-primary underline"
+            }`}
+            onClick={() => setActiveTab("completed")}
+          >
+            Completed Projects (13)
+          </h2>
+        </div>
+        {/* activeProject */}
+        {activeTab === "active" && <ActiveProjects />}
+        {activeTab === "completed" && ""}
       </div>
     </section>
   );
