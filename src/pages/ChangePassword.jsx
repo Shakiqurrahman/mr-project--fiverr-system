@@ -13,6 +13,7 @@ import {
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 // Zod schema for validation
 const schema = z.object({
@@ -34,8 +35,10 @@ function ChangePassword() {
   const { showPassword, showNewPassword, showConfirmPassword } = useSelector(
     (state) => state.passwordVisibility,
   );
-  
+  const token = Cookies.get("authToken");
+
   const [apiError, setApiError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -48,31 +51,45 @@ function ChangePassword() {
   const onSubmit = async (data) => {
     const { currentPassword, password } = data;
     setApiError("");
+    setLoading(true);
 
     try {
-      const response = await axios.put(`${configApi.api}set-new-pass`, {
-        currentPassword,
-        password,
-      });
-
-      if (response.status !== 200) {
-        setApiError("Failed to change password");
-      }
-
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Password changed successfully!",
-        showConfirmButton: true,
-        timer: 1200,
-        customClass: {
-          confirmButton: "successfull-button",
+      const response = await axios.put(
+        `${configApi.api}set-new-pass`,
+        {
+          currentPassword,
+          password,
         },
-      });
-      navigate('/');
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Password changed successfully!",
+          showConfirmButton: true,
+          timer: 1200,
+          customClass: {
+            confirmButton: "successful-button",
+          },
+        });
+        navigate("/");
+      } else {
+        setApiError("Failed to change password.");
+      }
     } catch (error) {
       console.error("Error:", error);
-      setApiError("Failed to change password. Please try again.");
+      setApiError(
+        error.response?.data?.message ||
+        "Failed to change password. Please try again."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -93,6 +110,7 @@ function ChangePassword() {
               placeholder="Enter current password"
               {...register("currentPassword")}
               className="w-full p-3 text-base outline-none"
+              disabled={loading}
             />
             <span
               className="absolute right-5 top-1/2 -translate-y-1/2 cursor-pointer select-none text-2xl text-primary"
@@ -115,6 +133,7 @@ function ChangePassword() {
               placeholder="Set new password"
               {...register("password")}
               className="w-full p-3 text-base outline-none"
+              disabled={loading}
             />
             <span
               className="absolute right-5 top-1/2 -translate-y-1/2 cursor-pointer select-none text-2xl text-primary"
@@ -137,6 +156,7 @@ function ChangePassword() {
               placeholder="Confirm new password"
               {...register("confirmPassword")}
               className="w-full p-3 text-base outline-none"
+              disabled={loading}
             />
             <span
               className="absolute right-5 top-1/2 -translate-y-1/2 cursor-pointer select-none text-2xl text-primary"
@@ -155,8 +175,9 @@ function ChangePassword() {
           <button
             type="submit"
             className="my-5 block w-full bg-primary p-3 text-center text-white"
+            disabled={loading}
           >
-            Save Changes
+            {loading ? "Saving..." : "Save Changes"}
           </button>
 
           {/* API Error Message */}

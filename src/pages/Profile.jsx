@@ -6,6 +6,7 @@ import {
   FaInstagram,
   FaLinkedinIn,
   FaPinterestP,
+  FaSpinner,
   FaTwitter,
 } from "react-icons/fa";
 import { LiaEditSolid } from "react-icons/lia";
@@ -25,6 +26,7 @@ function Profile() {
   const [isOnline, setIsOnline] = useState(true);
   const [showDesqEdit, setShowDesqEdit] = useState(false);
   const [description, setDescription] = useState(user?.description || "");
+  const [loading, setLoading] = useState(false);
   console.log("profile-page", user);
 
   // for user creating date making readable and formatted
@@ -38,12 +40,14 @@ function Profile() {
 
   const handleSave = async () => {
     try {
+      setLoading(true);
       const { data } = await axios.post(`${configApi.api}update-user`, {
         email: user.email,
         description,
       });
       dispatch(setUser({ user: data.data }));
       setShowDesqEdit(false);
+      setLoading(false);
     } catch (error) {
       console.error("Error updating description:", error);
     }
@@ -60,13 +64,15 @@ function Profile() {
         <div className="relative border border-gray-300 bg-[#edf7fd] p-4 py-6">
           <BsInfoCircle className="absolute right-4 top-4 text-base text-gray-500" />
           <div className="pb-4">
-            <div className="relative size-32 mx-auto rounded-full border border-gray-300">
+            <div className="relative mx-auto size-32 rounded-full border border-gray-300">
               <img
                 className="rounded-full object-cover"
                 src={user?.image ? user.image : defaultImg}
                 alt="user image"
               />
-              <span className={`absolute bottom-1.5 right-4 size-4 rounded-full border border-white bg-primary ${!isOnline && 'hidden'}`}></span>
+              <span
+                className={`absolute bottom-1.5 right-4 size-4 rounded-full border border-white bg-primary ${!isOnline && "hidden"}`}
+              ></span>
             </div>
             <h2 className="mt-3 text-center text-lg font-semibold sm:text-xl">
               {user?.userName}
@@ -171,11 +177,18 @@ function Profile() {
               >
                 Cancel
               </button>
+
               <button
-                className="mt-4 w-full bg-primary px-4 py-2 font-semibold text-white"
+                className="mt-4 w-full flex justify-center items-center bg-primary px-4 py-2 font-semibold text-white"
                 onClick={handleSave}
               >
-                Save
+                {loading ? (
+                  <span className="animate-spin text-xl">
+                    <FaSpinner />
+                  </span>
+                ) : (
+                  "Save"
+                )}
               </button>
             </div>
           )}

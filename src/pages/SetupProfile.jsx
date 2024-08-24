@@ -85,10 +85,10 @@ function SetupProfile({ from_profile }) {
   );
 
   const fetchDataFromApi = useCallback(async () => {
-    setLoading(true);
     const endpoint = `${configApi.api}get-singel-user`;
-    const res = await fetchData({ endpoint, token });
     try {
+      setLoading(true);
+      const res = await fetchData({ endpoint, token });
       if (res?.success) {
         const apiData = res.data;
         dispatch(setUser({ user: apiData, token }));
@@ -110,11 +110,12 @@ function SetupProfile({ from_profile }) {
             apiData?.description ?? dataFromLocalStorage?.description,
         }));
       }
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
       toast.error("Failed to fetch profile data");
+      setLoading(false);
     }
-    setLoading(false);
   }, [token, dataFromLocalStorage]);
 
   // Fetch data when the component mounts or token changes
