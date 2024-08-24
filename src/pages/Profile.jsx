@@ -38,12 +38,10 @@ function Profile() {
   const handleSave = async () => {
     try {
       const { data } = await axios.post(`${configApi.api}update-user`, {
-        description: user.description,
+        email : user.email,
+        description
       });
-      console.log('descData',data);
-      
-      // dispatch(setUser({ user: data.data }));
-      
+      dispatch(setUser({ user: data.data }));
       setShowDesqEdit(false);
     } catch (error) {
       console.error("Error updating description:", error);
