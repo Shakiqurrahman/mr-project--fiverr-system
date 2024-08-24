@@ -11,6 +11,7 @@ import Contact from "../pages/Contact";
 import CreateCategory from "../pages/CreateCategory";
 import CreateProject from "../pages/CreateProject";
 import Designs from "../pages/Designs";
+import EditCategory from "../pages/EditCategory";
 import ErrorPage from "../pages/ErrorPage";
 import Feedback from "../pages/Feedback";
 import ForgetPassword from "../pages/ForgetPassword";
@@ -122,7 +123,7 @@ export const router = createBrowserRouter([
         path: "/setup-profile",
         element: (
           <PrivateRoute>
-              <SetupProfile />
+            <SetupProfile />
           </PrivateRoute>
         ),
       },
@@ -161,6 +162,14 @@ export const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <CreateCategory />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/edit-category",
+        element: (
+          <AdminRoute>
+            <EditCategory />
           </AdminRoute>
         ),
       },
