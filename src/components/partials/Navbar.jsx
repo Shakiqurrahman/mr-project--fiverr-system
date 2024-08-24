@@ -13,7 +13,7 @@ const Navbar = () => {
         {adminRole && (
           <>
             <li className="duration-300 hover:text-gray-300">
-              <Link to="/upload">Upload</Link>
+              <Link to="/upload-design">Upload</Link>
             </li>
             <li className="duration-300 hover:text-gray-300">
               <Link to="/analytics">Analytics</Link>
