@@ -26,6 +26,7 @@ function Profile() {
   const [isOnline, setIsOnline] = useState(true);
   const [showDesqEdit, setShowDesqEdit] = useState(false);
   const [description, setDescription] = useState(user?.description || "");
+
   const [loading, setLoading] = useState(false);
   console.log("profile-page", user);
 
@@ -39,17 +40,21 @@ function Profile() {
   };
 
   const handleSave = async () => {
-    try {
-      setLoading(true);
-      const { data } = await axios.post(`${configApi.api}update-user`, {
-        email: user.email,
-        description,
-      });
-      dispatch(setUser({ user: data.data }));
+    if (user.description !== description) {
+      try {
+        setLoading(true);
+        const { data } = await axios.post(`${configApi.api}update-user`, {
+          email: user.email,
+          description,
+        });
+        dispatch(setUser({ user: data.data }));
+        setShowDesqEdit(false);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error updating description:", error);
+      }
+    } else {
       setShowDesqEdit(false);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error updating description:", error);
     }
   };
 
@@ -179,7 +184,7 @@ function Profile() {
               </button>
 
               <button
-                className="mt-4 w-full flex justify-center items-center bg-primary px-4 py-2 font-semibold text-white"
+                className="mt-4 flex w-full items-center justify-center bg-primary px-4 py-2 font-semibold text-white"
                 onClick={handleSave}
               >
                 {loading ? (

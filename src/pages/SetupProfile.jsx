@@ -93,22 +93,21 @@ function SetupProfile({ from_profile }) {
         const apiData = res.data;
         dispatch(setUser({ user: apiData, token }));
         // Update the form with either API data or fallback to localStorage data
-        setForm((prev) => ({
-          ...prev,
-          country: apiData?.country ?? dataFromLocalStorage?.country,
-          email: apiData?.email ?? dataFromLocalStorage?.email,
-          userName: apiData?.userName ?? dataFromLocalStorage?.userName,
-          fullName: apiData?.fullName ?? dataFromLocalStorage?.fullName,
-          address: apiData?.address ?? dataFromLocalStorage?.address,
-          city: apiData?.city ?? dataFromLocalStorage?.city,
-          image: apiData?.image ?? dataFromLocalStorage?.image,
+        setForm({
+          country: (apiData?.country ?? dataFromLocalStorage?.country) || "",
+          email: (apiData?.email ?? dataFromLocalStorage?.email) || "",
+          userName: (apiData?.userName ?? dataFromLocalStorage?.userName) || "",
+          fullName: (apiData?.fullName ?? dataFromLocalStorage?.fullName) || "",
+          address: (apiData?.address ?? dataFromLocalStorage?.address) || "",
+          city: (apiData?.city ?? dataFromLocalStorage?.city) || "",
+          image: (apiData?.image ?? dataFromLocalStorage?.image) || "",
           industryName:
-            apiData?.industryName ?? dataFromLocalStorage?.industryName,
-          number: apiData?.number ?? dataFromLocalStorage?.number,
-          language: apiData?.language ?? dataFromLocalStorage?.language,
+            (apiData?.industryName ?? dataFromLocalStorage?.industryName) || "",
+          number: (apiData?.number ?? dataFromLocalStorage?.number) || "",
+          language: (apiData?.language ?? dataFromLocalStorage?.language) || "",
           description:
-            apiData?.description ?? dataFromLocalStorage?.description,
-        }));
+            (apiData?.description ?? dataFromLocalStorage?.description) || "",
+        });
       }
       setLoading(false);
     } catch (error) {
@@ -355,7 +354,7 @@ function SetupProfile({ from_profile }) {
                     color: "#fff",
                     zIndex: (theme) => theme.zIndex.drawer + 1,
                   }}
-                  open={open}
+                  open
                 >
                   <CircularProgress color="inherit" />
                 </Backdrop>
