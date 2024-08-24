@@ -12,6 +12,7 @@ import CountryCode from "../components/CountryCode";
 import CountryList from "../components/CountryList";
 import { configApi } from "../libs/configApi";
 import { setUser } from "../Redux/features/userSlice";
+import { countryCodes } from "../libs/countryCodeList";
 
 function SetupProfile({ from_profile }) {
   const dispatch = useDispatch();
