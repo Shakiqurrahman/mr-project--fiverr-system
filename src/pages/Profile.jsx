@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 import { BsInfoCircle } from "react-icons/bs";
 import {
@@ -8,16 +9,21 @@ import {
   FaTwitter,
 } from "react-icons/fa";
 import { LiaEditSolid } from "react-icons/lia";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import defaultImg from "../assets/images/default_user.png";
 import ActiveProjects from "../components/customer-profile/ActiveProjects";
+import AllReviews from "../components/customer-profile/AllReviews";
 import CompletedProjects from "../components/customer-profile/CompletedProjects";
-import AllReviews from '../components/customer-profile/AllReviews';
+import { configApi } from "../libs/configApi";
+import { setUser } from "../Redux/features/userSlice";
 
 function Profile() {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const [activeTab, setActiveTab] = useState("active"); // 'active' or 'completed'
+  const [showDesqEdit, setShowDesqEdit] = useState(false);
+  const [description, setDescription] = useState(user?.description || "");
   console.log("profile-page", user);
 
   // for user creating date making readable and formatted
@@ -25,14 +31,38 @@ function Profile() {
   const options = { year: "numeric", month: "long" };
   const monthYear = date.toLocaleDateString("en-US", options);
 
+  const handleDesqEdit = () => {
+    setShowDesqEdit(true);
+  };
+
+  const handleSave = async () => {
+    try {
+      const { data } = await axios.post(`${configApi.api}update-user`, {
+        description: user.description,
+      });
+      console.log('descData',data);
+      
+      // dispatch(setUser({ user: data.data }));
+      
+      setShowDesqEdit(false);
+    } catch (error) {
+      console.error("Error updating description:", error);
+    }
+  };
+
+  const handleCancel = () => {
+    setShowDesqEdit(false);
+    setDescription(user?.description || "");
+  };
+
   return (
-    <section className="max-width mt-10 flex flex-col gap-10 lg:gap-16 md:flex-row">
+    <section className="max-width mt-10 flex flex-col gap-10 md:flex-row lg:gap-16">
       <div className="min-w-[260px] md:w-1/4">
         <div className="relative border border-gray-300 bg-[#edf7fd] p-4 py-6">
           <BsInfoCircle className="absolute right-4 top-4 text-base text-gray-500" />
           <div className="pb-4">
             <img
-              className="mx-auto size-32 rounded-full object-cover"
+              className="mx-auto size-32 rounded-full border border-gray-300 object-cover"
               src={user?.image ? user.image : defaultImg}
               alt="user image"
             />
@@ -106,13 +136,47 @@ function Profile() {
 
         {/* description  */}
         <div className="mt-6 border border-gray-300 bg-[#edf7fd] p-4 py-6">
-          <div className="flex items-center justify-between gap-1 border-b border-gray-300 pb-3">
+          <div className="flex items-center justify-between gap-1 pb-3">
             <h2 className="text-base font-bold sm:text-lg">Description</h2>
-            <LiaEditSolid className="text-xl" />
+            {!showDesqEdit && (
+              <LiaEditSolid
+                onClick={handleDesqEdit}
+                className="size-6 cursor-pointer text-xl"
+              />
+            )}
           </div>
-          <p className="pt-4 text-[15px] font-medium leading-relaxed">
-            {user?.description}
-          </p>
+          <div>
+              {!showDesqEdit ? (
+                <p className="border-t border-gray-300 pt-4 text-[15px] font-medium leading-relaxed">
+                  {description}
+                </p>
+              ) : (
+                <p
+                  contentEditable
+                  suppressContentEditableWarning
+                  className="p-4 text-[15px] font-medium leading-relaxed bg-white border border-gray-300 outline-none"
+                  onBlur={(e) => setDescription(e.target.innerText)}
+                >
+                  {description}
+                </p>
+              )}
+            </div>
+          {showDesqEdit && (
+              <div className="flex gap-4">
+                <button
+                  className="mt-4 w-full bg-transparent text-primary border border-primary font-semibold py-2 px-4"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="mt-4 w-full bg-primary text-white font-semibold py-2 px-4"
+                  onClick={handleSave}
+                >
+                  Save
+                </button>
+              </div>
+            )}
         </div>
       </div>
 
