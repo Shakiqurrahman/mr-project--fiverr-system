@@ -137,14 +137,21 @@ function EditCategory() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const imageName = form.categoryImage.name;
+    const getExtension = imageName.slice(imageName.lastIndexOf("."));
+    const updatedName = imageName.replace(getExtension, "");
+    const image = {
+      name: updatedName,
+      url: form.categoryImage.url,
+    };
     const data = {
       categoryName: form.categoryName,
-      image: form.categoryImage,
+      image: image,
       subCategory,
       bulletPoint: bullets,
       requirements: requirements.filter((req) => req.trim() !== ""),
     };
-    console.log(JSON.stringify(data));
+    // console.log(JSON.stringify(data));
     console.log(data);
     // Here you can handle form submission, e.g., by sending the data to your backend
     // try {
