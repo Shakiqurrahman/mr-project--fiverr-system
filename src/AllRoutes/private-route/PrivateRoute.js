@@ -1,11 +1,13 @@
 import Cookies from 'js-cookie';
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import useLogout from '../../components/useLogout';
 
 const PrivateRoute = ({ children }) => {
     const navigate = useNavigate();
     const location = useLocation()
     const token = Cookies.get('authToken');
+    const handleLogout = useLogout();
 
     useEffect(() => {
         if (!token) {

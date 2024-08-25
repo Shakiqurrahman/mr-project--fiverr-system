@@ -31,7 +31,7 @@ function Profile() {
   console.log("profile-page", user);
 
   // for user creating date making readable and formatted
-  const date = new Date(user.createdAt);
+  const date = new Date(user?.createdAt);
   const options = { year: "numeric", month: "long" };
   const monthYear = date.toLocaleDateString("en-US", options);
 

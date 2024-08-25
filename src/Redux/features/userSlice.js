@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import storage from "redux-persist/lib/storage";
+import { removeCookie } from "../../libs/removeCookie";
 
 const userSlice = createSlice({
   name: "user",
@@ -18,6 +20,9 @@ const userSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
+      storage.removeItem('persist:root');
+      localStorage.removeItem("profileData");
+      removeCookie("authToken");
     },
   },
 });

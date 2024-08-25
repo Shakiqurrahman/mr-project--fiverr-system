@@ -5,6 +5,7 @@ import userSlice from "./features/userSlice";
 import persistReducer from "redux-persist/es/persistReducer";
 import persistStore from "redux-persist/es/persistStore";
 import storage from "redux-persist/lib/storage";
+import { apiSlice } from "./api/apiSlice";
 
 
 const persistConfig = {
@@ -18,13 +19,14 @@ const persistedReducer = persistReducer(persistConfig, userSlice);
 const store = configureStore({
   reducer: {
     user: persistedReducer,
+    [apiSlice.reducerPath]: apiSlice.reducer,
     passwordVisibility: passwordVisibilitySlice,
     category: categorySlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // To allow non-serializable values
-    }),
+    }).concat(apiSlice.middleware),
 });
 export default store;
 export const persistor = persistStore(store);

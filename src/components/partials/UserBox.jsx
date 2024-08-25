@@ -3,11 +3,11 @@ import React from "react";
 import { CgProfile } from "react-icons/cg";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { logout } from "../../Redux/features/userSlice";
 // import { handleLogout } from "../../Redux/features/userSlice";
 
 function UserBox() {
   const dispatch = useDispatch();
-  // const logout = useLogout();
   const { user, loading } = useSelector((state) => state.user);
   console.log("user", user);
 
@@ -101,7 +101,7 @@ function UserBox() {
           <MenuItem onClick={handleClose}>Change Password</MenuItem>
         </Link>
         <Divider />
-        <div>
+        <div onClick={()=> dispatch(logout())}>
           <MenuItem onClick={handleClose}>Logout</MenuItem>
         </div>
       </Menu>
