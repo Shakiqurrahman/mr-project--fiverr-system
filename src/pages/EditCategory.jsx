@@ -4,6 +4,7 @@ import { ImPlus } from "react-icons/im";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
 import { useLocation, useNavigate } from "react-router-dom";
+import { configApi } from "../libs/configApi";
 
 // CreateCategory Component
 function EditCategory() {
@@ -154,16 +155,16 @@ function EditCategory() {
     // console.log(JSON.stringify(data));
     console.log(data);
     // Here you can handle form submission, e.g., by sending the data to your backend
-    // try {
-    //   const api = `${configApi.api}category/create`;
-    //   const response = await axios.post(api, data);
+    try {
+      const api = `${configApi.api}category/update/${state.id}`;
+      const response = await axios.put(api, data);
 
-    //   if (response.data.success) {
-    //     navigate("/pricelist");
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
+      if (response.data.success) {
+        navigate("/pricelist");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

@@ -8,11 +8,10 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Avatar from "../assets/images/camera.jpg";
-import CountryCode from "../components/CountryCode";
 import CountryList from "../components/CountryList";
 import { configApi } from "../libs/configApi";
-import { setUser } from "../Redux/features/userSlice";
 import { countryCodes } from "../libs/countryCodeList";
+import { setUser } from "../Redux/features/userSlice";
 
 function SetupProfile({ from_profile }) {
   const dispatch = useDispatch();
@@ -298,10 +297,11 @@ function SetupProfile({ from_profile }) {
             <label className="block px-2 pt-2">Phone Number</label>
             <div className="mt-1 flex">
               <div className="flex flex-shrink-0 select-none items-center border border-r-0 border-[#e7e7e7] bg-white p-1 sm:p-2">
-                <CountryCode
+                {/* <CountryCode
                   countryCode={form.countryCode}
                   handleChange={handleChange}
-                />
+                /> */}
+                {countryCodes[form.country]}
               </div>
               <input
                 type="number"
