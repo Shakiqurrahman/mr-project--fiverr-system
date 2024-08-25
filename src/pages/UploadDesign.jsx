@@ -95,7 +95,8 @@ function UploadDesign() {
   };
 
   // Tags Operations
-  const removeTag = (indexToRemove) => {
+  const removeTag = (indexToRemove, e) => {
+    e.preventDefault();
     setTags((prevTags) =>
       prevTags.filter((_, index) => index !== indexToRemove),
     );
@@ -103,11 +104,104 @@ function UploadDesign() {
 
   const [newTag, setNewTag] = useState("");
 
-  const addBullet = () => {
-    if (newBullet.trim() === "") return;
+  const addTag = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (newTag) {
+        setTags([...tags, newTag]);
+        setNewTag("");
+      }
+    }
+  };
+  // Related Designs Operations
+  const [relatedTags, setRelatedTags] = useState([]);
+  const removeRelatedTag = (indexToRemove, e) => {
+    e.preventDefault();
+    setRelatedTags((prevTag) =>
+      prevTag.filter((_, index) => index !== indexToRemove),
+    );
+  };
 
-    setBullets([...bullets, newBullet]);
-    setNewBullet("");
+  const addRelatedTag = (e) => {
+    e.preventDefault();
+    const isFound = relatedTags.find((value) => value === e.target.value);
+    if (!isFound) {
+      setRelatedTags([...relatedTags, e.target.value]);
+    }
+  };
+
+  // Folder Operations
+  const [newFolder, setNewFolder] = useState("");
+
+  const addNewFolder = (e) => {
+    e.preventDefault();
+    setNewFolder(e.target.value);
+  };
+
+  // SubFolder Operations
+  const [newSubFolder, setNewSubFolder] = useState("");
+
+  const addNewSubFolder = (e) => {
+    e.preventDefault();
+    setNewSubFolder(e.target.value);
+  };
+
+  // Industries Operations
+  const [industries, setIndustries] = useState([]);
+  const removeIndustrie = (indexToRemove, e) => {
+    e.preventDefault();
+    setIndustries((prevTags) =>
+      prevTags.filter((_, index) => index !== indexToRemove),
+    );
+  };
+
+  const [newIndustrie, setNewIndustrie] = useState("");
+
+  const addIndustrie = (e) => {
+    e.preventDefault();
+    const isFound = industries.find((value) => value === e.target.value);
+    if (!isFound) {
+      setIndustries([...industries, e.target.value]);
+    }
+  };
+
+  const addNewIndusTrie = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (newIndustrie) {
+        setIndustries([...industries, newIndustrie]);
+        setNewIndustrie("");
+      }
+    }
+  };
+
+  // Designs Operations
+  const [designs, setDesigns] = useState([]);
+  const removeDesign = (indexToRemove, e) => {
+    e.preventDefault();
+    setDesigns((prevTags) =>
+      prevTags.filter((_, index) => index !== indexToRemove),
+    );
+  };
+
+  const [newDesign, setNewDesign] = useState("");
+
+  const addDesign = (e) => {
+    e.preventDefault();
+    const isFound = designs.find((value) => value === e.target.value);
+    if (!isFound) {
+      setDesigns([...designs, e.target.value]);
+    }
+  };
+
+  const addNewDesign = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (newDesign) {
+        setDesigns([...designs, newDesign]);
+        setNewDesign("");
+      }
+    }
   };
 
   // Global Operations
@@ -119,9 +213,20 @@ function UploadDesign() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = {
-      form: form,
+      title: form.title,
+      description: form.description,
+      category: form.category,
+      subCategory: form.subcategory,
+      fileFormat: form.fileFormat,
+      size: form.size,
       images: selectedImages,
       selectedImageIndex: selectedImageIndex,
+      tags,
+      relatedDesigns: relatedTags,
+      folder: newFolder,
+      subFolder: newSubFolder,
+      industries,
+      designs,
     };
     console.log(data);
   };
@@ -239,7 +344,7 @@ function UploadDesign() {
             />
             <label
               htmlFor="images"
-              className="mt-2 block w-full cursor-pointer bg-white p-3 text-center"
+              className="mt-2 block w-full cursor-pointer border border-solid bg-white p-3 text-center"
             >
               Upload Images
             </label>
@@ -284,7 +389,7 @@ function UploadDesign() {
           </div>
           <div className="mt-2 flex flex-col">
             <label className="block px-2">Tags</label>
-            <div className="mt-3 flex w-full gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none">
+            <div className="mt-3 flex w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none">
               {tags.map((item, index) => (
                 <span
                   key={index}
@@ -293,12 +398,165 @@ function UploadDesign() {
                   {item}
                   <button
                     className="rounded-full bg-white p-1"
-                    onClick={() => removeTag(index)}
+                    onClick={(e) => removeTag(index, e)}
                   >
                     <RxCross2 className="h-3 w-3 text-slate-700" />
                   </button>
                 </span>
               ))}
+              <input
+                type="text"
+                name="tag"
+                placeholder="Add tag"
+                className="outline-none"
+                value={newTag}
+                onChange={(e) => setNewTag(e.target.value)}
+                onKeyDown={addTag}
+              />
+            </div>
+          </div>
+          <div className="mt-5 flex flex-col">
+            <label className="block px-2">Related Designs</label>
+            <div className="mt-3 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none">
+              {relatedTags.map((item, index) => (
+                <span
+                  key={index}
+                  className="flex items-center gap-2 rounded-full bg-[#FFEFEF] px-2 py-1 text-sm"
+                >
+                  {item}
+                  <button
+                    className="rounded-full bg-white p-1"
+                    onClick={(e) => removeRelatedTag(index, e)}
+                  >
+                    <RxCross2 className="h-3 w-3 text-slate-700" />
+                  </button>
+                </span>
+              ))}
+            </div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <button
+                className="rounded-[30px] bg-lightcream px-4 py-1 text-sm"
+                value={"MR1DN"}
+                onClick={addRelatedTag}
+              >
+                MR1DN
+              </button>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2 sm:flex-nowrap">
+            <div className="mt-5 flex w-full flex-col sm:w-1/2">
+              <label className="block px-2">Folder</label>
+              <input
+                type="text"
+                name="folder"
+                value={newFolder}
+                onChange={(e) => setNewFolder(e.target.value)}
+                className="mt-3 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+              />
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button
+                  className="rounded-[30px] bg-[#e7e7e7] px-3 py-1 text-xs"
+                  value={"MR1DN"}
+                  onClick={addNewFolder}
+                >
+                  MR1DN
+                </button>
+              </div>
+            </div>
+            <div className="mt-5 flex w-full flex-col sm:w-1/2">
+              <label className="block px-2">Subfolder</label>
+              <input
+                type="text"
+                name="subFolder"
+                value={newSubFolder}
+                onChange={addNewSubFolder}
+                className="mt-3 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+              />
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button
+                  className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
+                  value={"MR1DN"}
+                  onClick={addNewSubFolder}
+                >
+                  MR1DN
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2 sm:flex-nowrap">
+            <div className="mt-5 flex w-full flex-col sm:w-1/2">
+              <label className="block px-2">Industries</label>
+              <div className="mt-3 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none">
+                {industries.map((item, index) => (
+                  <span
+                    key={index}
+                    className="flex items-center gap-2 rounded-full bg-[#FFEFEF] px-2 py-1 text-sm"
+                  >
+                    {item}
+                    <button
+                      className="rounded-full bg-white p-1"
+                      onClick={(e) => removeIndustrie(index, e)}
+                    >
+                      <RxCross2 className="h-3 w-3 text-slate-700" />
+                    </button>
+                  </span>
+                ))}
+                <input
+                  type="text"
+                  name="industries"
+                  className="outline-none"
+                  placeholder="Add industries"
+                  value={newIndustrie}
+                  onChange={(e) => setNewIndustrie(e.target.value)}
+                  onKeyDown={addNewIndusTrie}
+                />
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button
+                  className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
+                  value={"MR1DN"}
+                  onClick={addIndustrie}
+                >
+                  MR1DN
+                </button>
+              </div>
+            </div>
+            <div className="mt-5 flex w-full flex-col sm:w-1/2">
+              <label className="block px-2">Designs</label>
+              <div className="mt-3 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none">
+                {designs.map((item, index) => (
+                  <span
+                    key={index}
+                    className="flex items-center gap-2 rounded-full bg-[#FFEFEF] px-2 py-1 text-sm"
+                  >
+                    {item}
+                    <button
+                      className="rounded-full bg-white p-1"
+                      onClick={(e) => removeDesign(index, e)}
+                    >
+                      <RxCross2 className="h-3 w-3 text-slate-700" />
+                    </button>
+                  </span>
+                ))}
+                <input
+                  type="text"
+                  name="design"
+                  className="outline-none"
+                  placeholder="Add Design"
+                  value={newDesign}
+                  onChange={(e) => setNewDesign(e.target.value)}
+                  onKeyDown={addNewDesign}
+                />
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button
+                  className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
+                  value={"MR1DN"}
+                  onClick={addDesign}
+                >
+                  MR1DN
+                </button>
+              </div>
             </div>
           </div>
           <button className="mx-auto mt-5 block w-1/2 rounded-3xl bg-primary p-3 text-center text-white">

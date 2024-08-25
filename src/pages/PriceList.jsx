@@ -35,6 +35,7 @@ function PriceList() {
 
   const handleSave = () => {
     setIsDraggable(false);
+    console.log(categoryList);
   };
 
   const handleCancel = () => {
