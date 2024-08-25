@@ -1,24 +1,22 @@
 // Logout function with persistor
-import { useDispatch } from 'react-redux';
-import { persistor } from '../Redux/store';
-import { logout } from '../Redux/features/userSlice';
-import { removeCookie } from '../libs/removeCookie';
+import { useDispatch } from "react-redux";
+import { logout } from "../Redux/features/userSlice";
+import { removeCookie } from "../libs/removeCookie";
 
 const useLogout = () => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
     // Remove token from local storage
-    localStorage.removeItem('profileData');
-    
+    localStorage.removeItem("profileData");
+
     // Dispatch logout action to clear Redux state
     dispatch(logout());
-    removeCookie('authToken');
+    removeCookie("authToken");
 
     // Clear persisted state
-    persistor.purge();
     // Optionally, redirect to login page or home page
-    window.location.href = '/join';
+    window.location.href = "/join";
   };
 
   return handleLogout;
