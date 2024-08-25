@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { configApi } from "../libs/configApi";
 import { logout, setUser } from "../Redux/features/userSlice";
 import { removeCookie } from "./removeCookie";
+import { persistor } from "../Redux/store";
 
 const AuthWrapper = ({ children }) => {
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ const AuthWrapper = ({ children }) => {
     removeCookie("authToken");
 
     // Clear persisted state
-    // persistor.purge();
+    persistor.purge();
     // Optionally, redirect to login page or home page
     // window.location.href = '/join';
   };
