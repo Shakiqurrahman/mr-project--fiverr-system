@@ -1,100 +1,121 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
+import { useDispatch, useSelector } from "react-redux";
 import Check from "../assets/svg/Check";
+import { configApi } from "../libs/configApi";
+import { fetchCategory } from "../Redux/features/category/categoryApi";
 
 function UploadDesign() {
-  // Sample data for categories and subcategories
-  const categories = [
-    {
-      id: 1,
-      name: "Category One",
-      subcategories: [
-        { id: 1, name: "Subcategory One" },
-        { id: 2, name: "Subcategory Two" },
-      ],
-    },
-    {
-      id: 2,
-      name: "Category Two",
-      subcategories: [
-        { id: 3, name: "Subcategory Three" },
-        { id: 4, name: "Subcategory Four" },
-      ],
-    },
-  ];
+  const dispatch = useDispatch();
+  const { loading, category, error } = useSelector((state) => state.category);
 
-  const [tags, setTags] = useState([
-    "Tag One",
-    "Tag Two",
-    "Tag Three",
-    "Tag Four",
-  ]);
-
+  // initial state of form
   const [form, setForm] = useState({
     title: "",
     description: "",
-    category: categories[0].name,
-    subcategory: "",
     size: "",
     fileFormat: "",
     images: "",
     thumbnail: "",
   });
 
-  const selectedCategory = categories.find((cat) => cat.id == form.category);
-  const subcategories = selectedCategory ? selectedCategory.subcategories : [];
+  // Sample data for categories and subcategories
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [subCategories, setSubCategories] = useState([]);
+  const [selectedSubCategory, setSelectedSubCategory] = useState("");
+
+  // category fetching
+
+  useEffect(() => {
+    dispatch(fetchCategory());
+  }, [dispatch]);
+
+  // updating categories with database
+  useEffect(() => {
+    setCategories(category);
+  }, [category, setCategories]);
+
+  // updating subCategories using category state
+  useEffect(() => {
+    if (selectedCategory) {
+      const fetchSubCategory = categories.filter(
+        (cat) => cat.categoryName === selectedCategory,
+      )[0].subCategory;
+      setSubCategories(fetchSubCategory);
+    }
+  }, [categories, selectedCategory]);
 
   const handleCategoryChange = (e) => {
-    const selectedCategoryId = e.target.value;
-    setForm({
-      ...form,
-      category: selectedCategoryId,
-      subcategory: "",
-    });
+    setSelectedCategory(e.target.value);
+    setSelectedSubCategory("");
+  };
+
+  const handleSubCategoryChange = (e) => {
+    setSelectedSubCategory(e.target.value);
   };
 
   // Image Operations
   const [selectedImages, setSelectedImages] = useState([]);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
-    const images = files.map((file) => ({
-      url: URL.createObjectURL(file),
-      name: file.name,
-    }));
+    const imagesPromise = files.map(async (file, index) => {
+      if (file) {
+        const formData = new FormData();
+        formData.append("image", file);
+
+        const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
+        const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+        try {
+          // setUploading(true);
+          const response = await axios.post(uploadUrl, formData);
+          const name = response.data.data.title;
+          const imageUrl = response.data.data.url;
+
+          // Update the form state with the new image URL
+          const value = selectedImages.length + index;
+          return {
+            url: imageUrl,
+            name,
+            thumbnail: selectedImages.length === 0 && index === 0,
+            value,
+          };
+        } catch (error) {
+          console.error("Error uploading image:", error);
+          // You can use a library like react-toastify to display error messages
+          // toast.error("Failed to upload image");
+        } finally {
+          // setUploading(false);
+        }
+      }
+    });
+    const images = await Promise.all(imagesPromise);
+    console.log(images);
     setSelectedImages((prevImages) => [...prevImages, ...images]);
-    // Automatically select the first image if it's the first upload
-    if (images.length > 0 && selectedImages.length === 0) {
-      setSelectedImageIndex(0);
-      setForm((prevForm) => ({
-        ...prevForm,
-        thumbnail: images[0].name,
-      }));
-    }
   };
 
   const handleImageRemove = (index) => {
-    setSelectedImages((prevImages) => prevImages.filter((_, i) => i !== index));
-    if (selectedImageIndex === index) {
-      const newIndex = index > 0 ? index - 1 : 0;
-      setSelectedImageIndex(newIndex);
-      setForm((prevForm) => ({
-        ...prevForm,
-        thumbnail: selectedImages[newIndex]?.name || "",
-      }));
-    }
+    setSelectedImages((prevImages) =>
+      prevImages
+        .filter((_, i) => i !== index)
+        .map((v, i) => ({ ...v, value: i })),
+    );
   };
 
-  const handleRadioChange = (index) => {
-    setSelectedImageIndex(index);
-    setForm((prevForm) => ({
-      ...prevForm,
-      thumbnail: selectedImages[index].name,
-    }));
+  const handleRadioChange = (e) => {
+    const selectedValue = parseInt(e.target.value, 10);
+    setSelectedImages((prevImages) =>
+      prevImages.map((obj) => ({
+        ...obj,
+        thumbnail: obj.value === selectedValue,
+      })),
+    );
   };
 
   // Tags Operations
+  const [tags, setTags] = useState([]);
   const removeTag = (indexToRemove, e) => {
     e.preventDefault();
     setTags((prevTags) =>
@@ -210,17 +231,16 @@ function UploadDesign() {
     setForm({ ...form, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
       title: form.title,
       description: form.description,
-      category: form.category,
-      subCategory: form.subcategory,
+      category: selectedCategory,
+      subCategory: selectedSubCategory,
       fileFormat: form.fileFormat,
       size: form.size,
       images: selectedImages,
-      selectedImageIndex: selectedImageIndex,
       tags,
       relatedDesigns: relatedTags,
       folder: newFolder,
@@ -228,7 +248,18 @@ function UploadDesign() {
       industries,
       designs,
     };
-    console.log(data);
+    try {
+      const url = `${configApi.api}upload/create`;
+
+      const response = await axios.post(url, data);
+
+      if (response.data.success) {
+        console.log(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    // console.log(data);
   };
 
   return (
@@ -268,16 +299,19 @@ function UploadDesign() {
             <div className="w-full">
               <label className="block px-2">Category</label>
               <select
+                disabled={loading}
                 name="category"
                 className="mt-3 block min-h-11 w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
-                value={form.category}
+                value={selectedCategory}
                 onChange={handleCategoryChange}
               >
-                {categories.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
-                ))}
+                <option value={""}>Select Category</option>
+                {categories.length > 0 &&
+                  categories.map((item) => (
+                    <option key={item.id} value={item.categoryName}>
+                      {item.categoryName}
+                    </option>
+                  ))}
               </select>
               <p className="mt-2 hidden px-2 text-xs text-red-600">
                 There was an error!
@@ -286,15 +320,16 @@ function UploadDesign() {
             <div className="w-full">
               <label className="block px-2">Subcategory</label>
               <select
+                disabled={loading}
                 name="subcategory"
                 className="custom-arrow mt-3 block min-h-11 w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
-                value={form.subcategory}
-                onChange={handleChange}
+                value={selectedSubCategory}
+                onChange={handleSubCategoryChange}
               >
                 <option value="">Select Subcategory</option>
-                {subcategories.map((sub) => (
-                  <option key={sub.id} value={sub.id}>
-                    {sub.name}
+                {subCategories.map((sub) => (
+                  <option key={sub.id} value={sub.subTitle}>
+                    {sub.subTitle}
                   </option>
                 ))}
               </select>
@@ -338,7 +373,7 @@ function UploadDesign() {
               type="file"
               id="images"
               onChange={handleImageUpload}
-              accept="image/jpeg, image/png"
+              accept="image/*"
               multiple
               hidden
             />
@@ -358,14 +393,16 @@ function UploadDesign() {
                     <input
                       type="radio"
                       name="thumbnail"
-                      value={item.name} // Set the value as the image name
-                      className="hidden"
-                      onChange={() => handleRadioChange(index)}
-                      checked={selectedImageIndex === index} // Check if this is the selected image
+                      className="peer"
+                      hidden
+                      value={item.value} // Set the value as the image name
+                      id={`thumbnail-${index}`}
+                      onChange={handleRadioChange}
+                      checked={item.thumbnail} // Check if this is the selected image
                     />
                     <label
                       htmlFor={`thumbnail-${index}`}
-                      className="flex h-[20px] w-[20px] cursor-pointer items-center justify-center border border-solid border-primary bg-white"
+                      className="flex h-[20px] w-[20px] cursor-pointer items-center justify-center border border-solid border-primary bg-white *:opacity-0 peer-checked:*:opacity-100"
                     >
                       <Check className="h-[14px] sm:h-[18px]" />
                     </label>
