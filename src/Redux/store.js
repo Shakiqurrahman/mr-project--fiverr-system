@@ -6,6 +6,7 @@ import persistReducer from "redux-persist/es/persistReducer";
 import persistStore from "redux-persist/es/persistStore";
 import storage from "redux-persist/lib/storage";
 import { apiSlice } from "./api/apiSlice";
+import uploadDesignSlice from "./features/uploadDesign/uploadDesignSlice";
 
 
 const persistConfig = {
@@ -22,6 +23,7 @@ const store = configureStore({
     [apiSlice.reducerPath]: apiSlice.reducer,
     passwordVisibility: passwordVisibilitySlice,
     category: categorySlice,
+    uploadDesign : uploadDesignSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
