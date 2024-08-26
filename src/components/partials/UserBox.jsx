@@ -1,9 +1,16 @@
-import { Divider, Menu, MenuItem } from "@mui/material";
+import { Divider, Menu, MenuItem, Skeleton } from "@mui/material";
 import React from "react";
 import { CgProfile } from "react-icons/cg";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import useLogout from "../useLogout";
 
-function UserBox({ img }) {
+function UserBox() {
+    const dispatch = useDispatch();
+    const logout = useLogout();
+    const { user, loading } = useSelector((state) => state.user);
+    console.log("user", user);
+
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -12,6 +19,19 @@ function UserBox({ img }) {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    let content;
+    if (user.image) {
+        content = (
+            <img
+                className="size-10 object-cover rounded-full"
+                src={user.image}
+                alt="user"
+            />
+        );
+    } else {
+        content = <CgProfile size={32} />;
+    }
     return (
         <>
             <button
@@ -20,11 +40,10 @@ function UserBox({ img }) {
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}
             >
-                {img ? (
-                    <img className="size-10" src={img} alt="user" />
-                ) : (
-                    <CgProfile size={32} />
+                {loading && (
+                    <Skeleton className="!bg-[rgba(255,255,255,0.20)]" variant="circular" width={40} height={40} />
                 )}
+                {!loading && content}
             </button>
             <Menu
                 anchorEl={anchorEl}
@@ -61,16 +80,27 @@ function UserBox({ img }) {
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
-                <MenuItem onClick={handleClose}>
-                    <Link to="/profile">Profile</Link>
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                    <Link to="/my-account">My account</Link>
-                </MenuItem>
+                <Link to="/profile">
+                    <MenuItem onClick={handleClose}>Profile</MenuItem>
+                </Link>
+                <Link to="/billing-information">
+                    <MenuItem onClick={handleClose}>
+                        Billing Information
+                    </MenuItem>
+                </Link>
+                <Link to="/payment-methods">
+                    <MenuItem onClick={handleClose}>Payment Methods</MenuItem>
+                </Link>
+                <Link to="/affiliate">
+                    <MenuItem onClick={handleClose}>Affiliate</MenuItem>
+                </Link>
+                <Link to="/change-password">
+                    <MenuItem onClick={handleClose}>Change Password</MenuItem>
+                </Link>
                 <Divider />
-                <MenuItem onClick={handleClose}>
-                    <Link to="/logout">Logout</Link>
-                </MenuItem>
+                <div onClick={logout}>
+                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                </div>
             </Menu>
         </>
     );

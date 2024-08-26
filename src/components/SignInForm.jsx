@@ -1,11 +1,12 @@
+import axios from "axios";
+import Cookies from "js-cookie";
 import { useState } from "react";
-import { FaEye, FaEyeSlash, FaSearch } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
-import { configApi } from "../libs/configApi";
-import axios from 'axios';
-import Cookies from 'js-cookie';
 import toast from "react-hot-toast";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
+import { configApi } from "../libs/configApi";
 
 // Define the validation schema using Zod
 const signInSchema = z.object({
@@ -15,10 +16,11 @@ const signInSchema = z.object({
 });
 
 function SignInForm({ handleClick }) {
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
-
 
   const [form, setForm] = useState({
     email: "",
@@ -27,16 +29,15 @@ function SignInForm({ handleClick }) {
   });
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleShowPassword = () => setShowPassword(prev => !prev);
+  const handleShowPassword = () => setShowPassword((prev) => !prev);
 
   const handleInputChange = (e) => {
     const { name, type, value, checked } = e.target;
     setForm((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,7 +46,7 @@ function SignInForm({ handleClick }) {
     const validation = signInSchema.safeParse(form);
 
     if (!validation.success) {
-      validation.error.errors.forEach(err => toast.error(err.message));
+      validation.error.errors.forEach((err) => toast.error(err.message));
       return;
     }
 
@@ -61,26 +62,25 @@ function SignInForm({ handleClick }) {
       setLoading(false);
 
       if (!response.success) {
-        toast.error('User are not found');
+        toast.error("User are not found");
         return;
-      }
-      else if (response?.success) {
-
-        toast.success('User signed in successfully');
+      } else if (response?.success) {
+        toast.success("User signed in successfully");
         const token = response.data.token;
 
         const expiresInDays = form.isRemember ? 30 : 10;
-        Cookies.set('authToken', JSON.stringify(token), { expires: expiresInDays });
+        Cookies.set("authToken", JSON.stringify(token), {
+          expires: expiresInDays,
+        });
         setForm({ email: "", password: "", isRemember: false });
-        navigate('/setup-profile');
+        navigate("/setup-profile");
         return;
       }
 
-      toast.error('Sign in failed. Please check your credentials.');
-
+      toast.error("Sign in failed. Please check your credentials.");
     } catch (error) {
-      console.log('Error:', error.response.data.message);
-      toast.error('An error occurred. Please try again.');
+      console.log("Error:", error.response.data.message);
+      toast.error("An error occurred. Please try again.");
     }
   };
 
@@ -127,11 +127,11 @@ function SignInForm({ handleClick }) {
         onClick={handleSubmit}
         className="my-4 py-2 sm:py-3 block w-full bg-primary text-white font-medium text-lg"
       >
-        {loading ? 'loading ....' : 'Sign In'}
+        {loading ? "loading ...." : "Sign In"}
       </button>
       <p className="py-3 text-center text-sm">
         Don&apos;t have an Account?{" "}
-        <button className="text-primary" onClick={handleClick}>
+        <button className="text-primary" value="Sign Up" onClick={handleClick}>
           Sign Up
         </button>
       </p>

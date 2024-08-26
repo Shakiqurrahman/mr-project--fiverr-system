@@ -1,39 +1,107 @@
 import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    toggleShowConfirmPassword,
+    toggleShowNewPassword,
+    toggleShowOldPassword,
+} from "../Redux/features/passwordVisibilitySlice";
 
 function ChangePassword() {
+    const dispatch = useDispatch();
+    const { showOldPassword, showNewPassword, showConfirmPassword } =
+        useSelector((state) => state.passwordVisibility);
     const [form, setForm] = useState({
+        currentPassword: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
     });
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value })
-    }
-    return (
-        <div className="max-width mt-10 sm:mt-20">
-            <form className="w-full max-w-[600px] mx-auto p-5 sm:p-10 bg-[#DCEEFA] text-center">
-                <h1 className="text-primary text-2xl sm:text-3xl mb-5 font-medium">Change Your Password</h1>
-                <label className="block px-2 pt-2 text-start mt-5">New Password</label>
-                <input
-                    type="text"
-                    name="password"
-                    value={form.password}
-                    onChange={handleChange}
-                    className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-2 outline-none isError"
-                />
-                <p className="text-red-600 text-xs mt-2 px-2 hidden text-start">There was an error!</p>
-                <label className="block px-2 pt-2 text-start">Confirm Password</label>
-                <input
-                    type="text"
-                    name="confirmPassword"
-                    value={form.confirmPassword}
-                    onChange={handleChange}
-                    className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-2 outline-none"
-                />
-                <p className="text-red-600 text-xs mt-2 px-2 hidden text-start">There was an error!</p>
-                <button type="submit" className="w-full p-3 bg-primary text-center block text-white my-5">Change Password</button>
-            </form>
-        </div>
-    )
-}
 
-export default ChangePassword
+    const [errors, setErrors] = useState({});
+
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const { currentPassword, password, confirmPassword } = form;
+        console.log(currentPassword, password, confirmPassword);
+    };
+    return (
+        <div className="max-w-[600px] mx-auto mt-10 sm:mt-20">
+            <h1 className="bg-primary text-white p-4">Change Password</h1>
+            <div className="bg-[#DCEEFA] ">
+                <p className="px-6 pt-4 text-sm">
+                    8 characters ot longer. Combine upper and lowercase letters,
+                    numbers and special characters.
+                </p>
+                <form onSubmit={handleSubmit} className="w-full p-5 sm:p-6">
+                    <label className="block px-2 pt-2">Current Password</label>
+                    <div className="relative flex items-center w-full mt-3">
+                        <input
+                            type={showOldPassword ? "text" : "password"}
+                            placeholder="Create password"
+                            value={form.currentPassword}
+                            onChange={handleChange}
+                            required
+                            name="currentPassword"
+                            className="w-full p-3 outline-none text-base"
+                        />
+                        <span
+                            className="absolute top-1/2 -translate-y-1/2 right-5 cursor-pointer text-2xl text-primary select-none"
+                            onClick={() => dispatch(toggleShowOldPassword())}
+                        >
+                            {showOldPassword ? <FaEye /> : <FaEyeSlash />}
+                        </span>
+                    </div>
+                    <label className="block px-2 pt-2">Set Password</label>
+                    <div className="mt-3 relative flex items-center w-full">
+                        <input
+                            type={showNewPassword ? "text" : "password"}
+                            placeholder="Create password"
+                            name="password"
+                            value={form.password}
+                            onChange={handleChange}
+                            required
+                            className="w-full p-3 outline-none text-base"
+                        />
+                        <span
+                            className="absolute top-1/2 -translate-y-1/2 right-5 cursor-pointer text-2xl text-primary select-none"
+                            onClick={() => dispatch(toggleShowNewPassword())}
+                        >
+                            {showNewPassword ? <FaEye /> : <FaEyeSlash />}
+                        </span>
+                    </div>
+
+                    <label className="block px-2 pt-2">Confirm Password</label>
+                    <div className="mt-3 relative flex items-center w-full">
+                        <input
+                            type={showConfirmPassword ? "text" : "password"}
+                            placeholder="Create password"
+                            name="confirmPassword"
+                            value={form.confirmPassword}
+                            onChange={handleChange}
+                            required
+                            className="w-full p-3 outline-none text-base"
+                        />
+                        <span
+                            className="absolute top-1/2 -translate-y-1/2 right-5 cursor-pointer text-2xl text-primary select-none"
+                            onClick={() => dispatch(toggleShowConfirmPassword())}
+                        >
+                            {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+                        </span>
+                    </div>
+                    <button
+                        type="submit"
+                        // onClick={handleSubmit}
+                        className="w-full p-3 bg-primary text-center block text-white my-5"
+                    >
+                        Save Changes
+                    </button>
+                </form>
+            </div>
+        </div>
+    );
+}
+export default ChangePassword;
