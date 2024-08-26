@@ -1,232 +1,221 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { configApi } from "../libs/configApi";
-import CountryList from "./CountryList";
-
-import { useDispatch } from "react-redux";
+import { FaEye, FaEyeSlash, FaSpinner } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
+import { configApi } from "../libs/configApi";
+import {
+  clearPasswordVisibility,
+  toggleShowConfirmPassword,
+  toggleShowNewPassword,
+} from "../Redux/features/passwordVisibilitySlice";
 import { setUser } from "../Redux/features/userSlice";
+import CountryList from "./CountryList";
 
+// Define the validation schema using Zod
 const signUpSchema = z
-    .object({
-        country: z.string().nonempty("Country is required"),
-        name: z.string().nonempty("Full Name is required"),
-        username: z.string().nonempty("Username is required"),
-        email: z.string().email("Invalid email address"),
-        password: z
-            .string()
-            .min(6, "Password must be at least 6 characters long"),
-        confirmPassword: z
-            .string()
-            .min(6, "Confirm password must be at least 6 characters long"),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-        message: "Passwords don't match",
-        path: ["confirmPassword"],
-    });
+  .object({
+    country: z.string(),
+    name: z.string().min(1,"Full Name is required"),
+    username: z.string().min(1,"Username is required")
+    .regex(/^[\w]+$/, "Username should only contain letters, numbers"),
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(8, "Password must be at least 8 characters long"),
+    confirmPassword: z
+      .string()
+      .min(1,"Passwords do not match")
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 function SignUpForm({ handleClick }) {
-    const dispatch = useDispatch();
-    const [form, setForm] = useState({
-        country: "",
-        name: "",
-        username: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-    });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { showNewPassword, showConfirmPassword } = useSelector(
+    (state) => state.passwordVisibility,
+  );
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-    const [errors, setErrors] = useState({});
-    const [show, setShow] = useState(true);
-    const navigate = useNavigate(); // Moved here
+  // Use React Hook Form
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      country: "",
+      name: "",
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  },
+);
 
-    const handleShow = () => {
-        setShow(!show);
-    };
+  const onSubmit = async (data) => {
+    try {
+      setLoading(true);
+      const api = `${configApi.api}sign-up`;
 
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
+      const response = await axios.post(api, {
+        userName: data.username,
+        fullName: data.name,
+        email: data.email,
+        country: data.country,
+        password: data.password,
+      });
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+      if (response.data.success) {
+        const token = response.data.data;
+        const user = {
+          userName: data.username,
+          name: data.name,
+          email: data.email,
+          country: data.country,
+        };
+        dispatch(setUser({ user, token }));
 
-        // Validate form data using Zod
-        const validationResult = signUpSchema.safeParse(form);
+        Cookies.set("authToken", JSON.stringify(token), { expires: 10 });
+        // toast.success("Signed Up successfully");
+        reset();
+        dispatch(clearPasswordVisibility());
+        navigate("/setup-profile");
+      } else {
+        setError("User was not created");
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      setError("Something went wrong!");
+      console.error(error);
+    }
+  };
 
-        if (!validationResult.success) {
-            const formErrors = validationResult.error.format();
-            setErrors(formErrors); // Set errors in the state to display them
-            Object.values(formErrors).forEach((error) => {
-                if (error && error._errors) toast.error(error._errors[0]);
-            });
-            return;
-        }
+  return (
+    <>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Controller
+          name="country"
+          control={control}
+          render={({ field }) => (
+            <CountryList country={field.value} handleChange={field.onChange} />
+          )}
+        />
+        <label className="block px-2 pt-2">Full Name</label>
+        <input
+          type="text"
+          {...control.register("name")}
+          className={`${
+            errors.name ? "border-red-500" : "border-[#e7e7e7]"
+          } mt-3 block w-full border border-solid bg-white p-2 outline-none`}
+        />
+        {errors.name && (
+          <p className="text-sm text-red-500">{errors.name.message}</p>
+        )}
 
-        // Clear errors if validation passes
-        setErrors({});
+        <label className="block px-2 pt-2">Username</label>
+        <input
+          type="text"
+          {...control.register("username")}
+          className={`${
+            errors.username ? "border-red-500" : "border-[#e7e7e7]"
+          } mt-3 block w-full border border-solid bg-white p-2 outline-none`}
+        />
+        {errors.username && (
+          <p className="text-sm text-red-500">{errors.username.message}</p>
+        )}
 
-        // If validation is successful, proceed with form submission
-        try {
-            const api = `${configApi.api}sign-up`;
+        <label className="block px-2 pt-2">Email</label>
+        <input
+          type="email"
+          {...control.register("email")}
+          className={`${
+            errors.email ? "border-red-500" : "border-[#e7e7e7]"
+          } mt-3 block w-full border border-solid bg-white p-2 outline-none`}
+        />
+        {errors.email && (
+          <p className="text-sm text-red-500">{errors.email.message}</p>
+        )}
 
-            const { data } = await axios.post(api, {
-                userName: form.username,
-                fullName: form.name,
-                email: form.email,
-                country: form.country,
-                password: form.password,
-            });
-
-            if (data.success) {
-                const token = data.data;
-                console.log(token);
-                const user = {
-                    userName: form.username,
-                    name: form.name,
-                    email: form.email,
-                    country: form.country,
-                    password: form.password,
-                };
-                dispatch(setUser({ user, token }));
-
-                Cookies.set("authToken", JSON.stringify(token), {
-                    expires: 10,
-                });
-                toast.success("User signed up successfully");
-                setForm({
-                    country: "",
-                    name: "",
-                    username: "",
-                    email: "",
-                    password: "",
-                    confirmPassword: "",
-                });
-                navigate("/setup-profile");
-            } else {
-                toast.error("User was not created");
-            }
-        } catch (error) {
-            toast.error("Something went wrong!");
-            console.error(error);
-        }
-    };
-
-    return (
-        <div>
-            <CountryList country={form.country} handleChange={handleChange} />
-            <label className="block px-2 pt-2">Full Name</label>
-            <input
-                type="text"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
-            />
-            <p className="text-red-600 text-xs mt-2 px-2 hidden">
-                There was an error!
-            </p>
-            <label className="block px-2 pt-2">Username</label>
-            <input
-                type="text"
-                name="username"
-                value={form.username}
-                onChange={handleChange}
-                className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
-            />
-            <p className="text-red-600 text-xs mt-2 px-2 hidden">
-                There was an error!
-            </p>
-            <label className="block px-2 pt-2">Email</label>
-            <input
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
-            />
-            <p className="text-red-600 text-xs mt-2 px-2 hidden">
-                There was an error!
-            </p>
-            <label className="block px-2 pt-2">Set Password</label>
-            <div className="relative">
-                {show ? (
-                    <button
-                        className="absolute text-lg sm:text-2xl right-[20px] top-1/2 -translate-y-1/2 z-10 text-primary"
-                        onClick={handleShow}
-                    >
-                        <FaEye />
-                    </button>
-                ) : (
-                    <button
-                        className="absolute text-lg sm:text-2xl right-[20px] top-1/2 -translate-y-1/2 z-10 text-primary"
-                        onClick={handleShow}
-                    >
-                        <FaEyeSlash />
-                    </button>
-                )}
-                <input
-                    type={show ? "password" : "text"}
-                    name="password"
-                    value={form.password}
-                    onChange={handleChange}
-                    className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 z-0 outline-none"
-                />
-                <p className="text-red-600 text-xs mt-2 px-2 hidden">
-                    There was an error!
-                </p>
-            </div>
-            <label className="block px-2 pt-2">Confirm Password</label>
-            <div className="relative">
-                {show ? (
-                    <button
-                        className="absolute text-lg sm:text-2xl right-[20px] top-1/2 -translate-y-1/2 z-10 text-primary"
-                        onClick={handleShow}
-                    >
-                        <FaEye />
-                    </button>
-                ) : (
-                    <button
-                        className="absolute text-lg sm:text-2xl right-[20px] top-1/2 -translate-y-1/2 z-10 text-primary"
-                        onClick={handleShow}
-                    >
-                        <FaEyeSlash />
-                    </button>
-                )}
-                <input
-                    type={show ? "password" : "text"}
-                    name="confirmPassword"
-                    value={form.confirmPassword}
-                    onChange={handleChange}
-                    className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 z-0 outline-none"
-                />
-                <p className="text-red-600 text-xs mt-2 px-2 hidden">
-                    There was an error!
-                </p>
-            </div>
-            <button
-                type="submit"
-                onClick={handleSubmit}
-                className="my-4 py-2 sm:py-3 block w-full bg-primary text-white font-medium text-lg"
-            >
-                Sign Up
-            </button>
-            <p className="py-3 text-center text-sm">
-                Already have an Account?{" "}
-                <button
-                    className="text-primary"
-                    value="Sign In"
-                    onClick={handleClick}
-                >
-                    Sign In
-                </button>
-            </p>
+        <label className="block px-2 pt-2">Set Password</label>
+        <div className="relative">
+          <button
+            type="button"
+            className="absolute right-[20px] top-1/2 z-10 -translate-y-1/2 text-lg text-primary sm:text-2xl"
+            onClick={() => dispatch(toggleShowNewPassword())}
+          >
+            {showNewPassword ? <FaEyeSlash /> : <FaEye />}
+          </button>
+          <input
+            type={showNewPassword ? "text" : "password"}
+            {...control.register("password")}
+            className={`${
+              errors.password ? "border-red-500" : "border-[#e7e7e7]"
+            } z-0 mt-3 block w-full border border-solid bg-white p-2 outline-none`}
+          />
         </div>
-    );
+          {errors.password && (
+            <p className="text-sm text-red-500">{errors.password.message}</p>
+          )}
+
+        <label className="block px-2 pt-2">Confirm Password</label>
+        <div className="relative">
+          <button
+            type="button"
+            className="absolute right-[20px] top-1/2 z-10 -translate-y-1/2 text-lg text-primary sm:text-2xl"
+            onClick={() => dispatch(toggleShowConfirmPassword())}
+          >
+            {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+          </button>
+          <input
+            type={showConfirmPassword ? "text" : "password"}
+            {...control.register("confirmPassword")}
+            className={`${
+              errors.confirmPassword ? "border-red-500" : "border-[#e7e7e7]"
+            } z-0 mt-3 block w-full border border-solid bg-white p-2 outline-none`}
+          />
+        </div>
+          {errors.confirmPassword && (
+            <p className="text-sm text-red-500">
+              {errors.confirmPassword.message}
+            </p>
+          )}
+
+        <button
+          type="submit"
+          className={`my-4 flex h-[45px] bg-primary  w-full items-center justify-center py-2 text-lg font-medium text-white disabled:cursor-not-allowed`}
+          disabled={loading}
+        >
+          {loading ? (
+            <span className="animate-spin text-xl">
+              <FaSpinner />
+            </span>
+          ) : (
+            "Sign Up"
+          )}
+        </button>
+
+        {error && <p className="text-center text-sm text-red-500">{error}</p>}
+      </form>
+      <p className="py-3 text-center text-sm">
+        Already have an Account?{" "}
+        <button className="text-primary" value="Sign In" onClick={handleClick}>
+          Sign In
+        </button>
+      </p>
+    </>
+  );
 }
 
 export default SignUpForm;

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import SignInForm from "../components/SignInForm";
 import SignUpForm from "../components/SignUpForm";
-
 function Join() {
   const [tab, setTab] = useState("Sign In");
   const handleClick = (e) => {
@@ -33,9 +32,9 @@ function Join() {
           </div>
           <div className="py-5 px-3">
             {tab === "Sign In" ? (
-              <SignInForm handleClick={handleClick} />
+              <SignInForm handleClick={handleClick}/>
             ) : (
-              <SignUpForm handleClick={handleClick} />
+              <SignUpForm handleClick={handleClick}/>
             )}
           </div>
         </div>

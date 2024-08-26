@@ -1,18 +1,23 @@
+import { Backdrop, Box, CircularProgress } from "@mui/material";
 import axios from "axios";
 import fetchData from "data-fetch-ts";
 import Cookies from "js-cookie";
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import Avatar from "../assets/images/camera.jpg";
-import CountryCode from "../components/CountryCode";
 import CountryList from "../components/CountryList";
 import { configApi } from "../libs/configApi";
+import { countryCodes } from "../libs/countryCodeList";
 import { setUser } from "../Redux/features/userSlice";
 
-function SetupProfile() {
+function SetupProfile({ from_profile }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState();
   const [form, setForm] = useState({
     image: "",
     fullName: "",
@@ -22,7 +27,7 @@ function SetupProfile() {
     city: "",
     address: "",
     email: "",
-    number: 0,
+    number: "",
     language: "",
     description: "",
     countryCode: "",
@@ -37,19 +42,38 @@ function SetupProfile() {
 
     try {
       setUploading(true);
+      setLoading(true);
       // Example API endpoint
       const { data } = await axios.post(`${configApi.api}/update-user`, form);
       dispatch(setUser({ user: data.data }));
 
       if (data.success === true) {
-        toast.success("Add data successfull");
+        if (from_profile) {
+          toast.success("Saved successfully");
+        } else {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Thank you very much!",
+            html: "<p>for joining us. Your registration is successful.</p>",
+            showConfirmButton: true,
+            timer: 1500,
+            customClass: {
+              confirmButton: "successfull-button",
+            },
+          });
+        }
         setUploading(false);
-        // dispatch(setUser(data?.data))
+        setLoading(false);
+        if (from_profile) {
+          navigate("/");
+        }
         return;
       }
     } catch (error) {
       console.error("Error saving data to the database:", error);
       setUploading(false);
+      setLoading(false);
     }
   };
 
@@ -62,34 +86,34 @@ function SetupProfile() {
 
   const fetchDataFromApi = useCallback(async () => {
     const endpoint = `${configApi.api}get-singel-user`;
-    const res = await fetchData({ endpoint, token });
     try {
+      setLoading(true);
+      const res = await fetchData({ endpoint, token });
       if (res?.success) {
         const apiData = res.data;
         dispatch(setUser({ user: apiData, token }));
         // Update the form with either API data or fallback to localStorage data
-        setForm((prev) => ({
-          ...prev,
-          country: apiData?.country ?? dataFromLocalStorage?.country,
-          email: apiData?.email ?? dataFromLocalStorage?.email,
-          userName: apiData?.userName ?? dataFromLocalStorage?.userName,
-          fullName: apiData?.fullName ?? dataFromLocalStorage?.fullName,
-          address: apiData?.address ?? dataFromLocalStorage?.address,
-          city: apiData?.city ?? dataFromLocalStorage?.city,
-          image: apiData?.image ?? dataFromLocalStorage?.image,
+        setForm({
+          country: (apiData?.country ?? dataFromLocalStorage?.country) || "",
+          email: (apiData?.email ?? dataFromLocalStorage?.email) || "",
+          userName: (apiData?.userName ?? dataFromLocalStorage?.userName) || "",
+          fullName: (apiData?.fullName ?? dataFromLocalStorage?.fullName) || "",
+          address: (apiData?.address ?? dataFromLocalStorage?.address) || "",
+          city: (apiData?.city ?? dataFromLocalStorage?.city) || "",
+          image: (apiData?.image ?? dataFromLocalStorage?.image) || "",
           industryName:
-            apiData?.industryName ?? dataFromLocalStorage?.industryName,
-          number: apiData?.number ?? dataFromLocalStorage?.number,
-          language: apiData?.language ?? dataFromLocalStorage?.language,
+            (apiData?.industryName ?? dataFromLocalStorage?.industryName) || "",
+          number: (apiData?.number ?? dataFromLocalStorage?.number) || "",
+          language: (apiData?.language ?? dataFromLocalStorage?.language) || "",
           description:
-            apiData?.description ?? dataFromLocalStorage?.description,
-        }));
-      } else {
-        toast.error("Profile not updated");
+            (apiData?.description ?? dataFromLocalStorage?.description) || "",
+        });
       }
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
       toast.error("Failed to fetch profile data");
+      setLoading(false);
     }
   }, [token, dataFromLocalStorage]);
 
@@ -101,12 +125,20 @@ function SetupProfile() {
   }, []);
 
   const handleSkip = () => {
-    try {
-      // Save the form data to localStorage
-      localStorage.setItem("profileData", JSON.stringify(form));
-      toast.success("Data stored in local storage.");
-    } catch (error) {
-      console.error("Error saving data to local storage:", error);
+    // Save the form data to localStorage
+    localStorage.setItem("profileData", JSON.stringify(form));
+    if (!from_profile) {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Thank you very much!",
+        html: "<p>for joining us. Your registration is successful.</p>",
+        showConfirmButton: true,
+        timer: 1200,
+        customClass: {
+          confirmButton: "successfull-button",
+        },
+      });
     }
   };
 
@@ -144,11 +176,17 @@ function SetupProfile() {
           <div className="mx-auto mb-10 flex h-[220px] w-[220px] items-center justify-center overflow-hidden rounded-full bg-[#DCEEFA]">
             <label htmlFor="image">
               {form.image ? (
-                <img
-                  src={form.image}
-                  alt="Profile"
-                  className="cursor-pointer object-cover"
-                />
+                uploading ? (
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <CircularProgress />
+                  </Box>
+                ) : (
+                  <img
+                    src={form.image}
+                    alt="Profile"
+                    className="cursor-pointer object-cover"
+                  />
+                )
               ) : (
                 // <span className="text-gray-500">No image uploaded</span>
                 <img
@@ -163,7 +201,7 @@ function SetupProfile() {
             type="file"
             name="image"
             id="image"
-            accept="image/png, image/jpeg"
+            accept="image/*"
             hidden
             onChange={handleFileChange}
           />
@@ -259,10 +297,11 @@ function SetupProfile() {
             <label className="block px-2 pt-2">Phone Number</label>
             <div className="mt-1 flex">
               <div className="flex flex-shrink-0 select-none items-center border border-r-0 border-[#e7e7e7] bg-white p-1 sm:p-2">
-                <CountryCode
+                {/* <CountryCode
                   countryCode={form.countryCode}
                   handleChange={handleChange}
-                />
+                /> */}
+                {countryCodes[form.country]}
               </div>
               <input
                 type="number"
@@ -310,6 +349,17 @@ function SetupProfile() {
               >
                 Skip
               </button>
+              {loading && (
+                <Backdrop
+                  sx={{
+                    color: "#fff",
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                  }}
+                  open
+                >
+                  <CircularProgress color="inherit" />
+                </Backdrop>
+              )}
             </div>
           </div>
         </div>

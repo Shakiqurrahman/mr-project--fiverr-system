@@ -2,121 +2,122 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash, FaSpinner } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { configApi } from "../libs/configApi";
+import { clearPasswordVisibility, toggleShowPassword } from "../Redux/features/passwordVisibilitySlice";
+import { setUser } from "../Redux/features/userSlice";
+import Swal from "sweetalert2";
 
 // Define the validation schema using Zod
 const signInSchema = z.object({
   email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters long"),
+  password: z.string().min(8, "Password must be at least 8 characters long"),
   isRemember: z.boolean(),
 });
 
 function SignInForm({ handleClick }) {
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
-
+  const { showPassword } = useSelector((state) => state.passwordVisibility);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-    isRemember: false,
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+
+  // Use React Hook Form
+  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+    resolver: zodResolver(signInSchema),
   });
-  const [showPassword, setShowPassword] = useState(false);
 
-  const handleShowPassword = () => setShowPassword((prev) => !prev);
-
-  const handleInputChange = (e) => {
-    const { name, type, value, checked } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Validate form data with Zod
-    const validation = signInSchema.safeParse(form);
-
-    if (!validation.success) {
-      validation.error.errors.forEach((err) => toast.error(err.message));
-      return;
-    }
-
+  const onSubmit = async (data) => {
     try {
       setLoading(true);
       const api = `${configApi.api}sign-in`;
-      const data = await axios.post(api, {
-        email: form.email,
-        password: form.password,
+      const response = await axios.post(api, {
+        email: data.email,
+        password: data.password,
       });
 
-      const response = await data.data;
+      const userData = response?.data?.data;
+      dispatch(setUser({ user: userData.user, token: userData.token }));
       setLoading(false);
+      setError("");
+      dispatch(clearPasswordVisibility());
 
-      if (!response.success) {
-        toast.error("User are not found");
-        return;
-      } else if (response?.success) {
-        toast.success("User signed in successfully");
-        const token = response.data.token;
-
-        const expiresInDays = form.isRemember ? 30 : 10;
-        Cookies.set("authToken", JSON.stringify(token), {
-          expires: expiresInDays,
-        });
-        setForm({ email: "", password: "", isRemember: false });
-        navigate("/setup-profile");
+      if (!response.data.success) {
+        setError("User not found");
+        reset();
         return;
       }
 
-      toast.error("Sign in failed. Please check your credentials.");
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Signed In successfully!",
+        showConfirmButton: true,
+        timer: 1200,
+        customClass: {
+          confirmButton: 'successfull-button'
+      }
+      });
+      const token = userData.token; // from response data
+      const expiresInDays = data.isRemember ? 30 : 10;
+      Cookies.set("authToken", JSON.stringify(token), {
+        expires: expiresInDays,
+      });
+      reset();
+      navigate(from, { replace: true });
     } catch (error) {
-      console.log("Error:", error.response.data.message);
-      toast.error("An error occurred. Please try again.");
+      console.error("Error:", error.response?.data?.message || error.message);
+      setLoading(false);
+      setError("Sign in failed. Please check your credentials.");
+      reset();
     }
   };
 
   return (
-    <div>
+    <>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <label className="block px-2 pt-2">Email</label>
       <input
         type="email"
-        name="email"
-        value={form.email}
-        onChange={handleInputChange}
-        className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
+        {...register("email")}
+        className={`${
+          errors.email ? "border-red-500" : "border-[#e7e7e7]"
+        } mt-3 block w-full border border-solid bg-white p-2 outline-none`}
       />
-      <label className="block px-2 pt-2 mt-4">Password</label>
+      {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+
+      <label className="mt-4 block px-2 pt-2">Password</label>
       <div className="relative">
         <button
-          className="absolute text-lg sm:text-2xl right-[20px] top-1/2 -translate-y-1/2 z-10 text-primary"
-          onClick={handleShowPassword}
+          type="button"
+          className="absolute right-[20px] top-1/2 z-10 -translate-y-1/2 text-lg text-primary sm:text-2xl"
+          onClick={() => dispatch(toggleShowPassword())}
         >
           {showPassword ? <FaEyeSlash /> : <FaEye />}
         </button>
         <input
           type={showPassword ? "text" : "password"}
-          name="password"
-          value={form.password}
-          onChange={handleInputChange}
-          className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 z-0 outline-none"
+          {...register("password")}
+          className={`${
+            errors.password ? "border-red-500" : "border-[#e7e7e7]"
+          } z-0 mt-3 block w-full border border-solid bg-white p-2 outline-none`}
         />
       </div>
-      <div className="flex mt-3 justify-between">
+      {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+
+      <div className="mt-3 flex justify-between">
         <label className="select-none">
           <input
             type="checkbox"
-            name="isRemember"
-            checked={form.isRemember}
-            onChange={handleInputChange}
+            {...register("isRemember")}
           />{" "}
           Remember me
         </label>
@@ -124,18 +125,26 @@ function SignInForm({ handleClick }) {
       </div>
       <button
         type="submit"
-        onClick={handleSubmit}
-        className="my-4 py-2 sm:py-3 block w-full bg-primary text-white font-medium text-lg"
+        disabled={loading}
+        className="my-4 flex h-[45px] w-full items-center justify-center bg-primary text-lg font-medium text-white disabled:cursor-not-allowed"
       >
-        {loading ? "loading ...." : "Sign In"}
+        {loading ? (
+          <span className="animate-spin text-xl">
+            <FaSpinner />
+          </span>
+        ) : (
+          "Sign In"
+        )}
       </button>
+      {error && <p className="text-center text-sm text-red-500">{error}</p>}
+    </form>
       <p className="py-3 text-center text-sm">
         Don&apos;t have an Account?{" "}
         <button className="text-primary" value="Sign Up" onClick={handleClick}>
           Sign Up
         </button>
       </p>
-    </div>
+    </>
   );
 }
 

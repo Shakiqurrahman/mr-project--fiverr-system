@@ -1,8 +1,18 @@
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
+import { useEffect } from "react";
+import { fetchGetUpload } from "../Redux/features/uploadDesign/uploadDesignApi";
+import { useDispatch, useSelector } from "react-redux";
 
 function HomeActivityCards() {
+    // const dispatch = useDispatch();
+    // useEffect(() => {
+    //     dispatch(fetchGetUpload());
+    // },[dispatch])
+    // const { loading, uploadDesign } = useSelector(state => state.uploadDesign);
+    // console.log('fetching upload design',uploadDesign);
+    
     const settings = {
         dots: false,
         infinite: false,

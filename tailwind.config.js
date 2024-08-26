@@ -15,6 +15,6 @@ export default {
         canceled: "#e60006",
       },
     },
+    plugins: [],
   },
-  plugins: [],
 };

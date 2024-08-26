@@ -1,32 +1,37 @@
 import axios from "axios";
-import React, { useState } from "react";
+import { useState } from "react";
 import { ImPlus } from "react-icons/im";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { configApi } from "../libs/configApi";
 
 // CreateCategory Component
-function CreateCategory() {
+function EditCategory() {
+  const { state } = useLocation();
+
+  console.log(state);
   const navigate = useNavigate();
   // Form State
   const [form, setForm] = useState({
-    categoryName: "",
-    categoryImage: {
+    categoryName: state?.categoryName || "",
+    categoryImage: state?.image || {
       name: "",
       url: "",
     },
   });
 
-  const [subCategory, setSubcategory] = useState([
-    {
-      subTitle: "",
-      subAmount: "",
-      regularDeliveryDays: "",
-      fastDeliveryDays: "",
-      fastDeliveryPrice: "",
-    },
-  ]);
+  const [subCategory, setSubcategory] = useState(
+    state?.subCategory || [
+      {
+        subTitle: "",
+        subAmount: "",
+        regularDeliveryDays: "",
+        fastDeliveryDays: "",
+        fastDeliveryPrice: "",
+      },
+    ],
+  );
 
   const addSubcategory = () => {
     setSubcategory([
@@ -43,18 +48,19 @@ function CreateCategory() {
 
   const [uploading, setUploading] = useState(false);
 
-  const [bullets, setBullets] = useState([
-    "Unlimited Revision",
-    "PSD Source file",
-  ]);
+  const [bullets, setBullets] = useState(
+    state?.bulletPoint || ["Unlimited Revision", "PSD Source file"],
+  );
 
   const [newBullet, setNewBullet] = useState("");
 
-  const [requirements, setRequirements] = useState([
-    "Which industry do you work in?",
-    "Do you have your own company logo?",
-    "",
-  ]);
+  const [requirements, setRequirements] = useState(
+    state?.requirements || [
+      "Which industry do you work in?",
+      "Do you have your own company logo?",
+      "",
+    ],
+  );
 
   const handleChange = (e, index) => {
     if (index !== undefined) {
@@ -141,15 +147,17 @@ function CreateCategory() {
     };
     const data = {
       categoryName: form.categoryName,
-      image,
+      image: image,
       subCategory,
       bulletPoint: bullets,
       requirements: requirements.filter((req) => req.trim() !== ""),
     };
+    // console.log(JSON.stringify(data));
+    console.log(data);
     // Here you can handle form submission, e.g., by sending the data to your backend
     try {
-      const api = `${configApi.api}category/create`;
-      const response = await axios.post(api, data);
+      const api = `${configApi.api}category/update/${state.id}`;
+      const response = await axios.put(api, data);
 
       if (response.data.success) {
         navigate("/pricelist");
@@ -187,8 +195,20 @@ function CreateCategory() {
             id="image"
             className="file-input"
             onChange={handleFileChange}
+            hidden
             disabled={uploading} // Disable while uploading
           />
+          <div className="flex items-stretch">
+            <label
+              htmlFor="image"
+              className="block flex-shrink-0 bg-[#7c7c7c] px-4 py-2 text-sm text-white sm:text-base"
+            >
+              CHOOSE FILE
+            </label>
+            <div className="overflow-hidden text-ellipsis whitespace-nowrap px-4 py-2">
+              {form?.categoryImage?.name || "No file chosen"}
+            </div>
+          </div>
           {uploading && <p>Uploading...</p>}
         </div>
 
@@ -274,7 +294,7 @@ function CreateCategory() {
           type="submit"
           className="mx-auto mt-5 block w-1/2 rounded-3xl bg-primary p-3 text-center text-white"
         >
-          Create
+          Update
         </button>
       </form>
     </div>
@@ -341,4 +361,4 @@ function SubCategory({ input, index, handleChange, subCategoryLength }) {
   );
 }
 
-export default CreateCategory;
+export default EditCategory;

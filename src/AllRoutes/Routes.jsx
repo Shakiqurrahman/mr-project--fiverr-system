@@ -5,12 +5,15 @@ import Affiliate from "../pages/Affiliate";
 import AllCategory from "../pages/AllCategory";
 import AllCompletedProjects from "../pages/AllCompletedProjects";
 import AllDesign from "../pages/AllDesign";
-import BillingInformation from "../pages/BillingInformation";
+import Cart from "../pages/Cart";
 import ChangePassword from "../pages/ChangePassword";
 import Contact from "../pages/Contact";
+import CreateCategory from "../pages/CreateCategory";
 import CreateProject from "../pages/CreateProject";
 import Designs from "../pages/Designs";
+import EditCategory from "../pages/EditCategory";
 import ErrorPage from "../pages/ErrorPage";
+import Feedback from "../pages/Feedback";
 import ForgetPassword from "../pages/ForgetPassword";
 import Home from "../pages/Home";
 import Industries from "../pages/Industries";
@@ -23,11 +26,13 @@ import Project from "../pages/Project";
 import SetupProfile from "../pages/SetupProfile";
 import SingleProductPage from "../pages/SingleProductPage";
 import TermsAndConditions from "../pages/TermsAndConditions";
+import Tips from "../pages/Tips";
 import UpdatePassword from "../pages/UpdatePassword";
-import Verify from "../pages/Verify";
-import ProtectedRoute from "./private-rotue/PrivateRoute";
-import CreateCategory from "../pages/CreateCategory";
 import UploadDesign from "../pages/UploadDesign";
+import Verify from "../pages/Verify";
+import AdminRoute from "./private-route/AdminRoute";
+import PrivateRoute from "./private-route/PrivateRoute";
+import UnAuthenticatedRoute from "./private-route/UnAuthenticatedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -44,7 +49,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/join",
-        element: <Join />,
+        element: (
+          <UnAuthenticatedRoute>
+            <Join />
+          </UnAuthenticatedRoute>
+        ),
       },
       {
         path: "/designs",
@@ -113,18 +122,22 @@ export const router = createBrowserRouter([
       {
         path: "/setup-profile",
         element: (
-          <ProtectedRoute>
+          <PrivateRoute>
             <SetupProfile />
-          </ProtectedRoute>
+          </PrivateRoute>
         ),
       },
       {
         path: "/profile",
-        element: <Profile />,
+        element: (
+          // <PrivateRoute>
+            <Profile />
+          // </PrivateRoute>
+        ),
       },
       {
         path: "/billing-information",
-        element: <BillingInformation />,
+        element: <SetupProfile from_profile={true} />,
       },
       {
         path: "/change-password",
@@ -132,15 +145,49 @@ export const router = createBrowserRouter([
       },
       {
         path: "/create-project",
-        element: <CreateProject />,
+        element: (
+          <AdminRoute>
+            <CreateProject />
+          </AdminRoute>
+        ),
+      },
+      // Mahdi's created routes start
+      {
+        path: "/tips",
+        element: <Tips />,
       },
       {
+        path: "/feedback",
+        element: <Feedback />,
+      },
+      // Mahdi's created routes end
+      {
         path: "/create-category",
-        element: <CreateCategory />,
+        element: (
+          <AdminRoute>
+            <CreateCategory />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/edit-category",
+        element: (
+          <AdminRoute>
+            <EditCategory />
+          </AdminRoute>
+        ),
       },
       {
         path: "/upload-design",
-        element: <UploadDesign />,
+        element: (
+          <AdminRoute>
+            <UploadDesign />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/cart",
+        element: <Cart />,
       },
       {
         path: "*",
