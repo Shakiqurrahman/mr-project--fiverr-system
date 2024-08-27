@@ -4,11 +4,11 @@ import { IoMdClose } from "react-icons/io";
 import { useSelector } from "react-redux";
 import DownArrow from "../../assets/images/icons/Down Arrow.svg";
 import Check from "../../assets/svg/Check";
-import useSubFolders from "../../hooks/useSubFolders";
+import useSubFolders from "../../hooks/useGetCategory";
 import { useFetchGetUploadQuery } from "../../Redux/api/uploadDesignApiSlice";
 import Sidebar from "../Sidebar";
 import CategoryCards from "./CategoryCards";
-import useGetFolders from "../../hooks/useSubFolders";
+import useGetFolders from "../../hooks/useGetCategory";
 
 function FeatureCategory() {
   const { user } = useSelector((state) => state.user);
@@ -17,8 +17,8 @@ function FeatureCategory() {
   const [expand, setExpand] = useState(false);
   const [isDraggable, setIsDraggable] = useState(false);
   // const [categoryList, setCategoryList] = useState([]);
-  const { folders, error, isLoading, handleReorder } = useGetFolders();
-  console.log('folders---',folders);
+  const { categories, error, isLoading, handleReorder } = useGetFolders();
+  console.log('folders---',categories);
 
   // useEffect(() => {
   //   const categoryData = (uploadDesigns || []).reduce((acc, current) => {
@@ -94,10 +94,10 @@ function FeatureCategory() {
           <div>
             <Reorder.Group
               axis="y"
-              values={folders}
+              values={categories}
               onReorder={handleReorder}
             >
-              {folders.map((category, idx) => {
+              {categories.map((category, idx) => {
                 if (!expand) {
                   if (idx <= 4) {
                     return (
