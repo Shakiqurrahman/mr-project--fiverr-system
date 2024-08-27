@@ -72,6 +72,11 @@ textarea:placeholder-shown {
   height: 100%;
 }
 
+/* category cards slider design */
+.category-cards .slick-track {
+  margin-left: 0 !important;
+}
+
 /* Form Error Handling Design */
 .isError {
   @apply border-red-600;

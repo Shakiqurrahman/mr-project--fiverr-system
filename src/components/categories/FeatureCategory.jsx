@@ -4,11 +4,9 @@ import { IoMdClose } from "react-icons/io";
 import { useSelector } from "react-redux";
 import DownArrow from "../../assets/images/icons/Down Arrow.svg";
 import Check from "../../assets/svg/Check";
-import useSubFolders from "../../hooks/useGetCategory";
-import { useFetchGetUploadQuery } from "../../Redux/api/uploadDesignApiSlice";
+import useGetFolders from "../../hooks/useGetCategory";
 import Sidebar from "../Sidebar";
 import CategoryCards from "./CategoryCards";
-import useGetFolders from "../../hooks/useGetCategory";
 
 function FeatureCategory() {
   const { user } = useSelector((state) => state.user);
@@ -18,30 +16,7 @@ function FeatureCategory() {
   const [isDraggable, setIsDraggable] = useState(false);
   // const [categoryList, setCategoryList] = useState([]);
   const { categories, error, isLoading, handleReorder } = useGetFolders();
-  console.log('folders---',categories);
-
-  // useEffect(() => {
-  //   const categoryData = (uploadDesigns || []).reduce((acc, current) => {
-  //     const existingItem = acc.find((item) => item.title === current.folder);
-
-  //     if (!existingItem) {
-  //       acc.push({
-  //         id: current.id,
-  //         title: current.folder,
-  //       });
-  //     }
-  //     return acc;
-  //   }, []);
-
-  //   setCategoryList(categoryData);
-  // }, [uploadDesigns]);
-
-  // useEffect(() => {
-  //   if (categoryList.length > 0) {
-  //     const data = categoryList.map((category) => getAllSubFolders(category.title));
-  //     setSubFolders(data);
-  //   }
-  // }, [categoryList]);
+  console.log("folders---", categories);
 
   const [tempCategoryList, setTempCategoryList] = useState([]);
 
@@ -110,6 +85,7 @@ function FeatureCategory() {
                         <CategoryCards
                           title={category.folder}
                           path={"/all-category"}
+                          subCategory={category.subFolders}
                         />
                       </Reorder.Item>
                     );
@@ -125,6 +101,7 @@ function FeatureCategory() {
                       <CategoryCards
                         title={category.folder}
                         path={"/all-category"}
+                        subCategory={category.subFolders}
                       />
                     </Reorder.Item>
                   );

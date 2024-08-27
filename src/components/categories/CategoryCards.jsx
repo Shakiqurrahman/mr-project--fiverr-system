@@ -3,19 +3,19 @@ import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 import LeftArrowIcon from "../../assets/images/icons/Left Arrow.svg";
 import RightArrowIcon from "../../assets/images/icons/Right Arrow.svg";
-import thumbnail from "../../assets/images/project-thumbnail.jpg";
 import CategoryLayout from "./CategoryLayout";
 import ProjectCard from "./ProjectCard";
-function CategoryCards({ title, path }) {
+function CategoryCards({ title, path, subCategory = [] }) {
   const settings = {
     dots: false,
     infinite: false,
     speed: 500,
     slidesToShow: 3,
+    className: "category-cards",
     slidesToScroll: 1,
     arrows: true,
     autoplay: true,
-    autoplaySpeed: 2000,
+    autoplaySpeed: 1500,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
     responsive: [
@@ -44,39 +44,28 @@ function CategoryCards({ title, path }) {
       },
     ],
   };
-  const categories = [
-    {
-      thumbnail,
-      title: "Pressure and Soft Washing Door Hanger Design",
-    },
-    {
-      thumbnail,
-      title: "Pressure and Soft Washing Door Hanger Design",
-    },
-    {
-      thumbnail,
-      title: "Pressure and Soft Washing Door Hanger Design",
-    },
-    {
-      thumbnail,
-      title: "Pressure and Soft Washing Door Hanger Design",
-    },
-    {
-      thumbnail,
-      title: "Pressure and Soft Washing Door Hanger Design",
-    },
-  ];
+  console.log(subCategory);
+
   return (
     <CategoryLayout title={title} path={path}>
       <div>
         <Slider {...settings}>
-          {categories.map((category) => (
-            <ProjectCard
-              key={Math.random()}
-              thumbnail={category.thumbnail}
-              title={category.title}
-            />
-          ))}
+          {subCategory.length > 0 &&
+            subCategory.map((category) => {
+              console.log("cat", category);
+              const design = category?.designs[0];
+              const thumbnail = design.images.filter(
+                (img) => img?.thumbnail === true,
+              )[0];
+              return (
+                <ProjectCard
+                  key={Math.random()}
+                  thumbnail={thumbnail?.url}
+                  thumbnailName={thumbnail?.name}
+                  title={design?.title}
+                />
+              );
+            })}
         </Slider>
       </div>
     </CategoryLayout>
@@ -88,7 +77,7 @@ function NextArrow({ onClick }) {
   return (
     <div
       onClick={onClick}
-      className="slick-arrow before:content-none h-[35px] w-[35px] border cursor-pointer flex items-center justify-center rounded-full absolute top-[30%] -right-[15px] z-10"
+      className="slick-arrow absolute -right-[15px] top-[30%] z-10 flex h-[35px] w-[35px] cursor-pointer items-center justify-center rounded-full border before:content-none"
     >
       <img src={RightArrowIcon} alt="" />
     </div>
@@ -99,7 +88,7 @@ function PrevArrow({ onClick }) {
   return (
     <div
       onClick={onClick}
-      className="slick-arrow before:content-none h-[35px] w-[35px] border cursor-pointer flex items-center justify-center rounded-full absolute top-[30%] -left-[15px] z-10"
+      className="slick-arrow absolute -left-[15px] top-[30%] z-10 flex h-[35px] w-[35px] cursor-pointer items-center justify-center rounded-full border before:content-none"
     >
       <img src={LeftArrowIcon} alt="" />
     </div>

@@ -25,7 +25,7 @@ function Sidebar() {
     autoplaySpeed: 1500,
   };
   return (
-    <div className="flex-grow mt-10 w-full sm:w-auto">
+    <div className="flex-grow mt-10 w-full sm:w-1/3 md:w-1/4 lg:w-1/5">
       <SidebarProfileStatus />
       <div className="border border-solid border-primary rounded-lg overflow-hidden mt-5">
         <p className="bg-primary text-white p-2 text-center">
