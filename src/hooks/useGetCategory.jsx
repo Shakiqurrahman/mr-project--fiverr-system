@@ -17,9 +17,9 @@ const useGetCategory = () => {
         }
 
         // Find or create the subfolder
-        let subFolder = folder.subFolders.find(item => item.subFolder === design.subCategory);
+        let subFolder = folder.subFolders.find(item => item.subFolder === design.subFolder);
         if (!subFolder) {
-          subFolder = { subFolder: design.subCategory, designs: [] };
+          subFolder = { subFolder: design.subFolder, designs: [] };
           folder.subFolders.push(subFolder);
         }
 
