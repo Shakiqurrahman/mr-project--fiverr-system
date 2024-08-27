@@ -1,13 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import categorySlice from "./features/category/categorySlice";
-import passwordVisibilitySlice from "./features/passwordVisibilitySlice";
-import userSlice from "./features/userSlice";
 import persistReducer from "redux-persist/es/persistReducer";
 import persistStore from "redux-persist/es/persistStore";
 import storage from "redux-persist/lib/storage";
 import { apiSlice } from "./api/apiSlice";
-import uploadDesignSlice from "./features/uploadDesign/uploadDesignSlice";
-
+import { uploadDesignApiSlice } from "./api/uploadDesignApiSlice";
+import categorySlice from "./features/category/categorySlice";
+import passwordVisibilitySlice from "./features/passwordVisibilitySlice";
+import userSlice from "./features/userSlice";
 
 const persistConfig = {
   key: "auth",
@@ -23,12 +22,12 @@ const store = configureStore({
     [apiSlice.reducerPath]: apiSlice.reducer,
     passwordVisibility: passwordVisibilitySlice,
     category: categorySlice,
-    uploadDesign : uploadDesignSlice,
+    [uploadDesignApiSlice.reducerPath]: uploadDesignApiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // To allow non-serializable values
-    }).concat(apiSlice.middleware),
+    }).concat(apiSlice.middleware, uploadDesignApiSlice.middleware),
 });
 export default store;
 export const persistor = persistStore(store);

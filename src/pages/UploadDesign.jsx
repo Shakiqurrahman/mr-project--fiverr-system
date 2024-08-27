@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { FaSpinner } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
 import Check from "../assets/svg/Check";
@@ -9,6 +10,7 @@ import { fetchCategory } from "../Redux/features/category/categoryApi";
 function UploadDesign() {
   const dispatch = useDispatch();
   const { loading, category, error } = useSelector((state) => state.category);
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   // initial state of form
   const [form, setForm] = useState({
@@ -232,6 +234,7 @@ function UploadDesign() {
   };
 
   const handleSubmit = async (e) => {
+    setSubmitLoading(true);
     e.preventDefault();
     const data = {
       title: form.title,
@@ -259,7 +262,7 @@ function UploadDesign() {
     } catch (error) {
       console.log(error);
     }
-    // console.log(data);
+    setSubmitLoading(false);
   };
 
   return (
@@ -596,8 +599,18 @@ function UploadDesign() {
               </div>
             </div>
           </div>
-          <button className="mx-auto mt-5 block w-1/2 rounded-3xl bg-primary p-3 text-center text-white">
-            Upload
+          <button
+            type="submit"
+            disabled={submitLoading}
+            className="mx-auto mt-5 flex h-[45px] w-1/2 items-center justify-center rounded-3xl bg-primary text-white disabled:cursor-not-allowed"
+          >
+            {submitLoading ? (
+              <span className="animate-spin text-xl">
+                <FaSpinner />
+              </span>
+            ) : (
+              "Upload"
+            )}
           </button>
         </form>
       </div>

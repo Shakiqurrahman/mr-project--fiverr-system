@@ -68,7 +68,7 @@ export const router = createBrowserRouter([
         element: <AllDesign />,
       },
       {
-        path: "/all-caterogy",
+        path: "/all-category",
         element: <AllCategory />,
       },
       {
