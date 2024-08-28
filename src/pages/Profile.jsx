@@ -28,8 +28,6 @@ function Profile() {
   const [description, setDescription] = useState(user?.description || "");
 
   const [loading, setLoading] = useState(false);
-  console.log("profile-page", user);
-
   // for user creating date making readable and formatted
   const date = new Date(user?.createdAt);
   const options = { year: "numeric", month: "long" };
