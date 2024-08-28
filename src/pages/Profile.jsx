@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 import { LiaEditSolid } from "react-icons/lia";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import defaultImg from "../assets/images/default_user.png";
 import ActiveProjects from "../components/customer-profile/ActiveProjects";
 import AllReviews from "../components/customer-profile/AllReviews";
@@ -34,6 +34,8 @@ function Profile() {
   const date = new Date(user?.createdAt);
   const options = { year: "numeric", month: "long" };
   const monthYear = date.toLocaleDateString("en-US", options);
+
+  
 
   const handleDesqEdit = () => {
     setShowDesqEdit(true);

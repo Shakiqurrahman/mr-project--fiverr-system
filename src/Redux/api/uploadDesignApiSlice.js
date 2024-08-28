@@ -14,4 +14,4 @@ export const uploadDesignApiSlice = createApi({
   }),
 });
 
-export const { useFetchGetUploadQuery, useAddUploadDesignMutation } = uploadDesignApiSlice;
+export const { useFetchGetUploadQuery } = uploadDesignApiSlice;

@@ -88,7 +88,7 @@ function UserBox() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <Link to="/profile">
+        <Link to={`/${user?.userName}`}>
           <MenuItem onClick={handleClose}>Profile</MenuItem>
         </Link>
         <Link to="/billing-information">

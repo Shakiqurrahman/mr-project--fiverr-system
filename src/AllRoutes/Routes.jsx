@@ -33,6 +33,7 @@ import Verify from "../pages/Verify";
 import AdminRoute from "./private-route/AdminRoute";
 import PrivateRoute from "./private-route/PrivateRoute";
 import UnAuthenticatedRoute from "./private-route/UnAuthenticatedRoute";
+import ProfileLayout from "../pages/ProfileLayout";
 
 export const router = createBrowserRouter([
   {
@@ -128,10 +129,10 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/profile",
+        path: "/:userName",
         element: (
           // <PrivateRoute>
-            <Profile />
+            <ProfileLayout />
           // </PrivateRoute>
         ),
       },
