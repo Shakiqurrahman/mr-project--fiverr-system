@@ -75,6 +75,9 @@ textarea:placeholder-shown {
 /* category cards slider design */
 .category-cards .slick-track {
   margin-left: 0 !important;
+  display: flex !important;
+  justify-content: start !important;
+  align-items: stretch !important;
 }
 
 /* Form Error Handling Design */

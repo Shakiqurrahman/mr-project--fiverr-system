@@ -5,17 +5,17 @@ function ProjectCard({
   thumbnail,
   thumbnailName,
   title,
+  designs,
   clientLogo,
   clientName,
   timeStamp,
   cart,
+  slug
 }) {
-  const navigate = useNavigate();
   return (
     <div className="px-[5px]">
-      <div
-        onClick={() => navigate("/all-designs")}
-        className="relative cursor-pointer border bg-white"
+      <Link to={slug} state={{title,designs}}
+        className="relative block cursor-pointer border bg-white"
       >
         {cart && (
           <button className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-md bg-white">
@@ -25,10 +25,10 @@ function ProjectCard({
         <img
           src={thumbnail}
           alt=""
-          className="block h-[250px] w-full object-cover"
+          className="block h-[250px] w-full object-cover "
         />
         <h1 className="p-3">{title}</h1>
-      </div>
+      </Link>
       {clientLogo && (
         <div className="mt-3 flex items-center justify-between">
           <div className="flex items-center gap-1">

@@ -1,42 +1,56 @@
-import thumbnail from "../assets/images/project-thumbnail.jpg";
-import PageHeader from "../components/PageHeader";
-import ProjectCard from "../components/categories/ProjectCard";
-
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import Stack from "@mui/material/Stack";
+import { useLocation } from "react-router-dom";
 import prevBtn from "../assets/images/icons/Left Arrow.svg";
 import nextBtn from "../assets/images/icons/Right Arrow.svg";
+import ProjectCard from "../components/categories/ProjectCard";
+import PageHeader from "../components/PageHeader";
 import RelatedDesigns from "../components/RelatedDesigns";
+import useGetCategory from "../hooks/useGetCategory";
 
 function AllCategory() {
-  const data = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-  ];
+  // const filterredCategories = categories.filter(d => d.slug === id);
+  const location = useLocation();
+  const title = location?.state;
+  const { categories } = useGetCategory();
+  const subFolders = (categories || []).filter(
+    (data) => data.folder === title,
+  )[0]?.subFolders;
+
+  // console.log('datt2222',subFolders);
+
   return (
     <>
-      <PageHeader>Door Hanger Design</PageHeader>
+      <PageHeader>{title}</PageHeader>
       <div className="max-width">
-        <div className="flex justify-between items-center my-10">
-          <h1 className="text-base sm:text-lg font-semibold">
+        <div className="my-10 flex items-center justify-between">
+          <h1 className="text-base font-semibold sm:text-lg">
             Click on the design you need to see more designs.
           </h1>
-          <button className="border border-solid border-primary py-1 px-4 rounded-[30px] font-semibold text-sm duration-300 hover:bg-primary hover:text-white">
+          <button className="rounded-[30px] border border-solid border-primary px-4 py-1 text-sm font-semibold duration-300 hover:bg-primary hover:text-white">
             Customise
           </button>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-          {data.map((i) => (
-            <ProjectCard
-              cart={true}
-              key={i}
-              thumbnail={thumbnail}
-              title="Pressure and Soft Washing Door Hanger Design"
-            />
-          ))}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {subFolders?.map((subFolder, idx) => {
+            const design = subFolder?.designs[0];
+            const thumbnail = design.images.filter(
+              (img) => img?.thumbnail === true,
+            )[0];
+            return (
+              <ProjectCard
+                key={idx}
+                thumbnail={thumbnail?.url}
+                title={design?.title}
+                designs={subFolder?.designs}
+                slug={`/designs/${subFolder?.slug}`}
+              />
+            );
+          })}
         </div>
 
-        <div className="flex justify-center mt-10">
+        <div className="mt-10 flex justify-center">
           <Stack spacing={2}>
             <Pagination
               count={10}

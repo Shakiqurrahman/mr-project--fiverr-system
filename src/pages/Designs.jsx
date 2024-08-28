@@ -141,7 +141,7 @@ function Designs() {
     <>
       <div className="max-width">
         <h1 className="text-center my-10 font-bold text-lg sm:text-2xl md:text-3xl">
-          You select the industry and design of your need.{" "}
+          You select the design and industry of your need.{" "}
           <br className="hidden md:block" /> And see your selected items below.
         </h1>
         <div className="flex gap-3 flex-wrap">

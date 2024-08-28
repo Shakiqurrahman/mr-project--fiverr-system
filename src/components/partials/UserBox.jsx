@@ -9,8 +9,6 @@ function UserBox() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user, loading } = useSelector((state) => state.user);
-  console.log("user", user);
-
   const handleLogout  = () => {
     dispatch(logout());
     navigate("/join");

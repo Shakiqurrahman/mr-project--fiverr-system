@@ -4,19 +4,17 @@ import { IoMdClose } from "react-icons/io";
 import { useSelector } from "react-redux";
 import DownArrow from "../../assets/images/icons/Down Arrow.svg";
 import Check from "../../assets/svg/Check";
-import useGetFolders from "../../hooks/useGetCategory";
+import useGetCategory from "../../hooks/useGetCategory";
 import Sidebar from "../Sidebar";
 import CategoryCards from "./CategoryCards";
 
 function FeatureCategory() {
   const { user } = useSelector((state) => state.user);
-  // const { data: uploadDesigns, error, isLoading } = useFetchGetUploadQuery();
-
   const [expand, setExpand] = useState(false);
   const [isDraggable, setIsDraggable] = useState(false);
   // const [categoryList, setCategoryList] = useState([]);
-  const { categories, error, isLoading, handleReorder } = useGetFolders();
-  console.log("folders---", categories);
+  const { categories, error, isLoading, handleReorder } = useGetCategory();
+  // console.log("folders---", categories);
 
   const [tempCategoryList, setTempCategoryList] = useState([]);
 
@@ -84,7 +82,7 @@ function FeatureCategory() {
                       >
                         <CategoryCards
                           title={category.folder}
-                          path={"/all-category"}
+                          path={`categories/${category.slug}`}
                           subCategory={category.subFolders}
                         />
                       </Reorder.Item>
@@ -100,7 +98,7 @@ function FeatureCategory() {
                     >
                       <CategoryCards
                         title={category.folder}
-                        path={"/all-category"}
+                        path={`categories/${category.slug}`}
                         subCategory={category.subFolders}
                       />
                     </Reorder.Item>

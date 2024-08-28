@@ -12,7 +12,7 @@ const useGetCategory = () => {
         // Find or create the folder
         let folder = acc.find((item) => item.folder === design.folder);
         if (!folder) {
-          folder = { folder: design.folder, subFolders: [] };
+          folder = { slug: design.folder.split(" ").join("-").toLowerCase(),folder: design.folder, subFolders: [] };
           acc.unshift(folder);
         }
 
@@ -21,7 +21,7 @@ const useGetCategory = () => {
           (item) => item.subFolder === design.subFolder,
         );
         if (!subFolder) {
-          subFolder = { subFolder: design.subFolder, designs: [] };
+          subFolder = { slug:design.subFolder.split(" ").join("-").toLowerCase(), subFolder: design.subFolder, designs: [] };
           folder.subFolders.unshift(subFolder);
         }
 

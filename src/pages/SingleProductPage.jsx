@@ -1,22 +1,19 @@
 import { useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import thumbnail from "../assets/images/project-thumbnail.jpg";
 import ButtonSecondary from "../components/ButtonSecondary";
 import Divider from "../components/Divider";
 import RelatedDesigns from "../components/RelatedDesigns";
+import { useSelector } from "react-redux";
 
 function SingleProductPage() {
-  const btnArr = [
-    "Solar flyer",
-    "Door Hanger",
-    "Flyer",
-    "Postcard",
-    "Brochure",
-    "Billboard",
-    "Yard Sign",
-    "Print Design",
-  ];
+  const location = useLocation();
+  const { user } = useSelector((state) => state.user);
+  const {title,designs} = location.state;
+  const thumbnail = designs.images.find(d => d.thumbnail);
+  console.log(title,designs);
+  
   const [addCartBtn, setAddCartBtn] = useState(false);
   const handleAddCartBtn = () => {
     setAddCartBtn(!addCartBtn);
@@ -24,31 +21,31 @@ function SingleProductPage() {
   return (
     <>
       <div className="max-width">
-        <div className="mt-5 text-right">
+        {user?.role === 'ADMIN' &&<div className="mt-5 text-right">
           <button className="text-4xl">
             <BsThreeDots />
           </button>
-        </div>
-        <div className="flex gap-4 flex-wrap md:flex-nowrap">
+        </div>}
+        <div className="mt-5 sm:mt-10 flex gap-4 flex-wrap md:flex-nowrap">
           <div className="w-full md:w-2/3 lg:w-3/4">
-            <img src={thumbnail} alt="" className="w-full" />
+            <img src={thumbnail?.url} alt="" className="w-full" />
           </div>
           <div className="w-full md:w-1/3 lg:w-1/4 bg-lightskyblue py-5 px-4">
             <h1 className="font-bold text-lg sm:text-2xl">
-              Pressure & Soft Washing Door Hanger Design
+              {designs?.title}
             </h1>
             <ul className="mt-10 mb-5 *:my-4 *:font-medium">
               <li>
-                <b>Size:</b> 4.5x11 Inch, +0.25 Bleed
+                <b>Size:</b> {designs?.size}
               </li>
               <li>
-                <b>File Format:</b> Photoshop File
+                <b>File Format:</b> {designs?.fileFormat}
               </li>
               <li>
-                <b>Category:</b> Door Hanger Design
+                <b>Category:</b> {designs?.category}
               </li>
               <li>
-                <b>Subcategory:</b> Double Sided
+                <b>Subcategory:</b> {designs?.subCategory}
               </li>
             </ul>
             {addCartBtn ? (
@@ -73,18 +70,10 @@ function SingleProductPage() {
         </div>
         <div className="mt-10">
           <h1 className="font-bold text-lg sm:text-2xl mb-5">
-            Pressure & Soft Washing Door Hanger Design
+          {designs?.title}
           </h1>
           <p>
-            This Door Hanger Design is specially created for Pressure & Soft
-            Washing Services. You can definitely use this design for any other
-            service/company if you want. If you give us all the information of
-            your design, then we will edit this design according to your
-            information. Or if you want to create a different design according
-            to your information instead of this design, then we can create your
-            design. Please start a project for your design. If you are feeling
-            any difficulties while starting the project, or if you have any
-            questions. Then feel FREE to contact us.
+            {designs?.description}
           </p>
         </div>
         <div className="my-10 font-bold text-base sm:text-xl">
@@ -97,10 +86,7 @@ function SingleProductPage() {
         </div>
         <Divider className={"bg-[#000!important] h-px w-full"} />
         <div className="flex flex-wrap gap-3 mt-10">
-          {btnArr.map((btn) => (
-            <ButtonSecondary key={Math.random()}>{btn}</ButtonSecondary>
-          ))}
-          {btnArr.map((btn) => (
+          {designs?.tags?.map((btn) => (
             <ButtonSecondary key={Math.random()}>{btn}</ButtonSecondary>
           ))}
         </div>

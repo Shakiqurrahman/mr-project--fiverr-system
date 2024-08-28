@@ -44,7 +44,7 @@ function CategoryCards({ title, path, subCategory = [] }) {
       },
     ],
   };
-  console.log(subCategory);
+  
 
   return (
     <CategoryLayout title={title} path={path}>
@@ -52,7 +52,6 @@ function CategoryCards({ title, path, subCategory = [] }) {
         <Slider {...settings}>
           {subCategory.length > 0 &&
             subCategory.map((category) => {
-              console.log("cat", category);
               const design = category?.designs[0];
               const thumbnail = design.images.filter(
                 (img) => img?.thumbnail === true,
@@ -63,6 +62,8 @@ function CategoryCards({ title, path, subCategory = [] }) {
                   thumbnail={thumbnail?.url}
                   thumbnailName={thumbnail?.name}
                   title={design?.title}
+                  slug={`/designs/${category?.slug}`}
+                  designs={category.designs}
                 />
               );
             })}

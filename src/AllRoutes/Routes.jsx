@@ -64,15 +64,15 @@ export const router = createBrowserRouter([
         element: <Industries />,
       },
       {
-        path: "/all-designs",
+        path: "/designs/:slug",
         element: <AllDesign />,
       },
       {
-        path: "/all-category",
+        path: "/categories/:slug",
         element: <AllCategory />,
       },
       {
-        path: "/category/single-product",
+        path: "/design/:slug",
         element: <SingleProductPage />,
       },
       {
