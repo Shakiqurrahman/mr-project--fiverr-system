@@ -94,7 +94,6 @@ function UploadDesign() {
       }
     });
     const images = await Promise.all(imagesPromise);
-    console.log(images);
     setSelectedImages((prevImages) => [...prevImages, ...images]);
   };
 

@@ -1,154 +1,219 @@
-import { useRef, useState } from 'react';
-import { CgAttachment } from 'react-icons/cg';
-import { RiDeleteBin6Line } from 'react-icons/ri';
-import Skeleton from '@mui/material/Skeleton';
+import axios from "axios";
+import { useRef, useState } from "react";
+import { CgAttachment } from "react-icons/cg";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import formatFileSize from "../libs/formatFileSize";
 
 function Contact() {
-    const [value, setValue] = useState({
-        name: '',
-        email: '',
-        link: '',
-        Message: '',
+  const [value, setValue] = useState({
+    name: "",
+    email: "",
+    link: "",
+    Message: "",
+  });
+  const [matchingImages, setMatchingImages] = useState([]);
+  const [errorImg, setErrorImg] = useState(null);
+  const fileInputRef = useRef(); // Add a ref for the file input
+  const textarea = useRef();
+
+  const handleChange = (e) => {
+    setValue({
+      ...value,
+      [e.target.name]: e.target.value,
     });
-    const [selectedImages, setSelectedImages] = useState([]);
-    const [loadingImages, setLoadingImages] = useState([]);
-    const textarea = useRef();
+  };
 
-    const handleChange = (e) => {
-        setValue({
-            ...value,
-            [e.target.name]: e.target.value,
+  // Image Uploading Works
+  const getImagesWithDimensions = (files) => {
+    const images = [];
+
+    const handleImageLoad = (file, img) => {
+      if (img.width === 2700 && img.height === 2000) {
+        images.push({
+          file: file,
+          url: img.src,
         });
+      }
+      if (images.length === files.length) {
+        setMatchingImages(images);
+        setErrorImg(null);
+      } else {
+        setErrorImg("Resolution does not match. Expected 2700x2000");
+      }
     };
 
-    const handleFileChange = (e) => {
-        const files = Array.from(e.target.files);
-        const images = files.map(file => URL.createObjectURL(file));
-        setSelectedImages(prevImages => [...prevImages, ...images]);
-        setLoadingImages(images.map(() => true)); // Initialize loading states
+    const processFile = (file) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          handleImageLoad(file, img);
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
     };
 
-    const handleImageLoad = (index) => {
-        setLoadingImages(prevLoadingImages => {
-            const newLoadingImages = [...prevLoadingImages];
-            newLoadingImages[index] = false; // Set the loading state to false when the image is loaded
-            return newLoadingImages;
-        });
-    };
+    for (let i = 0; i < files.length; i++) {
+      processFile(files[i]);
+    }
+  };
 
-    const handleDeleteImage = (indexToRemove) => {
-        setSelectedImages(prevImages => prevImages.filter((_, index) => index !== indexToRemove));
-        setLoadingImages(prevLoadingImages => prevLoadingImages.filter((_, index) => index !== indexToRemove));
-    };
+  const handleFileChange = (event) => {
+    const files = Array.from(event.target.files);
+    getImagesWithDimensions(files);
+  };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(value);
-    };
+  const handleImageRemove = (index) => {
+    setMatchingImages((prevImages) => {
+      const newImages = prevImages.filter((_, i) => i !== index);
+      return newImages;
+    });
 
-    const handleKeyUp = (e) => {
-        textarea.current.style.height = `${e.target.scrollHeight}px`;
-    };
+    // Reset the file input to allow re-uploading the same file
+    fileInputRef.current.value = null;
+  };
 
-    return (
-        <div className="max-width">
-            <h1 className="text-center text-2xl mt-[40px] max-w-[700px] mx-auto">
-                If you have any questions or inquiries about our services,
-                please feel free to contact us by filling out this form
-            </h1>
+  // Form Submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const imagesPromise = matchingImages?.map(async (file) => {
+      if (file.file) {
+        const formData = new FormData();
+        formData.append("image", file.file);
 
-            <form
-                onSubmit={handleSubmit}
-                className="bg-[#FFEFEF] p-5 rounded-xl max-w-[800px] mx-auto mt-10"
-            >
-                <input
-                    className="block w-full mt-5 p-3 border border-solid border-gray-400 outline-0"
-                    type="text"
-                    name="name"
-                    value={value.name}
-                    placeholder="Name"
-                    onChange={handleChange}
+        const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
+        const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+        try {
+          // setUploading(true);
+          const response = await axios.post(uploadUrl, formData);
+          const name = file.file.name;
+          const imageUrl = response.data.data.url;
+
+          return {
+            url: imageUrl,
+            name,
+          };
+        } catch (error) {
+          console.error("Error uploading image:", error);
+          // You can use a library like react-toastify to display error messages
+          // toast.error("Failed to upload image");
+        } finally {
+          // setUploading(false);
+        }
+      }
+    });
+    const images = await Promise.all(imagesPromise);
+    console.log(value, images);
+  };
+
+  const handleKeyUp = (e) => {
+    textarea.current.style.height = `${e.target.scrollHeight}px`;
+  };
+  return (
+    <div className="max-width">
+      <h1 className="mx-auto mt-[40px] max-w-[700px] text-center text-2xl">
+        If you have any questions or inquiries about our services, please feel
+        free to contact us by filling out this form
+      </h1>
+
+      <form
+        onSubmit={handleSubmit}
+        className="mx-auto mt-10 max-w-[800px] rounded-xl bg-[#FFEFEF] p-5"
+      >
+        <input
+          className="mt-5 block w-full border border-solid border-gray-400 p-3 outline-0"
+          type="text"
+          name="name"
+          value={value.name}
+          placeholder="Name"
+          onChange={handleChange}
+        />
+        <input
+          className="mt-5 block w-full border border-solid border-gray-400 p-3 outline-0"
+          type="email"
+          name="email"
+          value={value.email}
+          placeholder="Email"
+          onChange={handleChange}
+        />
+        <input
+          className="mt-5 block w-full border border-solid border-gray-400 p-3 outline-0"
+          type="text"
+          name="link"
+          value={value.link}
+          placeholder="Website/Facebook"
+          onChange={handleChange}
+        />
+        <input
+          name="file"
+          type="file"
+          multiple
+          id="file"
+          hidden
+          ref={fileInputRef} // Attach the ref to the file input
+          onChange={handleFileChange}
+        />
+        <label
+          className="mt-5 flex w-full cursor-pointer justify-between border border-solid border-gray-400 bg-white p-3"
+          htmlFor="file"
+        >
+          <span className="text-gray-400">Example design</span>
+          <CgAttachment className="text-gray-400" />
+        </label>
+
+        <div className="mt-5 flex gap-2 overflow-x-auto">
+          {matchingImages.map((image, index) => (
+            <div key={index} className="w-[120px]">
+              <div className="group relative">
+                <img
+                  className={`h-[100px] w-full object-contain`}
+                  src={image.url}
+                  alt={`Selected ${index}`}
                 />
-                <input
-                    className="block w-full mt-5 p-3 border border-solid border-gray-400 outline-0"
-                    type="email"
-                    name="email"
-                    value={value.email}
-                    placeholder="Email"
-                    onChange={handleChange}
-                />
-                <input
-                    className="block w-full mt-5 p-3 border border-solid border-gray-400 outline-0"
-                    type="text"
-                    name="link"
-                    value={value.link}
-                    placeholder="Website/Facebook"
-                    onChange={handleChange}
-                />
-                <input
-                    name="file"
-                    type="file"
-                    multiple
-                    id="file"
-                    hidden
-                    onChange={handleFileChange}
-                />
-                <label
-                    className="p-3 w-full mt-5 flex justify-between bg-white border border-solid border-gray-400 cursor-pointer"
-                    htmlFor="file"
+                <button
+                  type="button"
+                  className="absolute right-2 top-2 rounded-full bg-black bg-opacity-50 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                  onClick={() => handleImageRemove(index)}
                 >
-                    <span className="text-gray-400">Example design</span>
-                    <CgAttachment className="text-gray-400" />
-                </label>
-
-                <div className="mt-5 flex gap-2 flex-wrap">
-                    {selectedImages.map((image, index) => (
-                        <div
-                            key={index}
-                            className="relative group"
-                            style={{ width: '100px', height: '100px' }}
-                        >
-                            {loadingImages[index] && (
-                                <Skeleton variant="rectangular" width={100} height={100} />
-                            )}
-                            <img
-                                className={`w-[100px] h-[100px] object-fill ${loadingImages[index] ? 'hidden' : ''}`}
-                                src={image}
-                                alt={`Selected ${index}`}
-                                onLoad={() => handleImageLoad(index)}
-                            />
-                            <button
-                                type="button"
-                                className="absolute top-2 right-2 text-white bg-black bg-opacity-50 p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                                onClick={() => handleDeleteImage(index)}
-                            >
-                                <RiDeleteBin6Line size={20} />
-                            </button>
-                        </div>
-                    ))}
-                </div>
-
-                <textarea
-                    name="Message"
-                    className="mt-5 w-full p-3 outline-none border border-solid border-gray-400 h-auto cusotomTextarea"
-                    value={value.Message}
-                    onChange={handleChange}
-                    placeholder="Message"
-                    ref={textarea}
-                    onKeyUp={handleKeyUp}
-                ></textarea>
-
-                <div className="text-center mt-5">
-                    <button
-                        type="submit"
-                        className="p-3 text-white bg-[#248EDA] w-[200px] font-medium text-[20px] scro"
-                    >
-                        SUBMIT
-                    </button>
-                </div>
-            </form>
+                  <RiDeleteBin6Line size={20} />
+                </button>
+              </div>
+              <h1
+                className="truncate text-xs font-medium"
+                title={image.file.name}
+              >
+                {image.file.name}
+              </h1>
+              <span className="text-xs">
+                ({formatFileSize(image.file.size)})
+              </span>
+            </div>
+          ))}
         </div>
-    );
+        {errorImg && <p className="text-sm text-red-600">{errorImg}</p>}
+
+        <textarea
+          name="Message"
+          className="cusotomTextarea mt-5 h-auto min-h-[100px] w-full border border-solid border-gray-400 p-3 outline-none"
+          value={value.Message}
+          onChange={handleChange}
+          placeholder="Message"
+          ref={textarea}
+          onKeyUp={handleKeyUp}
+        ></textarea>
+
+        <div className="mt-5 text-center">
+          <button
+            type="submit"
+            className="scro w-[200px] bg-[#248EDA] p-3 text-[20px] font-medium text-white"
+          >
+            SUBMIT
+          </button>
+        </div>
+      </form>
+    </div>
+  );
 }
 
 export default Contact;
