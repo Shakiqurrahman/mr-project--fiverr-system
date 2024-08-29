@@ -1,22 +1,18 @@
 import { useParams } from "react-router-dom";
 import { useFetchAllUsersQuery } from "../Redux/api/allUserApiSlice";
-import Profile from "./Profile";
 import ErrorPage from "./ErrorPage";
+import Profile from "./Profile";
 
 const ProfileLayout = () => {
   const { userName } = useParams();
   const { data: usersData } = useFetchAllUsersQuery();
   console.log(usersData);
-
-  /**
-   *** TODO: If you wanna get all users data by searching their username, you have to make profile page dynamic... 
-   **/
-  
+  const user = usersData?.find(user => user.userName === userName);
 
   // Check if the userName exists in the list of usernames
-  const userExists = usersData?.some(user => user.userName === userName);
+  const userExists = usersData?.some(user => user.userName.toLowerCase().trim() === userName.toLowerCase().trim() );
 
-  return userExists ? <Profile /> : <ErrorPage />;
+  return userExists ? <Profile user={user} slug={userName}/> : <ErrorPage />;
 };
 
 export default ProfileLayout;

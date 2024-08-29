@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 import { LiaEditSolid } from "react-icons/lia";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import defaultImg from "../assets/images/default_user.png";
 import ActiveProjects from "../components/customer-profile/ActiveProjects";
 import AllReviews from "../components/customer-profile/AllReviews";
@@ -19,9 +19,9 @@ import CompletedProjects from "../components/customer-profile/CompletedProjects"
 import { configApi } from "../libs/configApi";
 import { setUser } from "../Redux/features/userSlice";
 
-function Profile() {
+function Profile({ user = {}, slug }) {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.user);
+  const { user: loggedUser } = useSelector((state) => state.user);
   const [activeTab, setActiveTab] = useState("active"); // 'active' or 'completed'
   const [isOnline, setIsOnline] = useState(true);
   const [showDesqEdit, setShowDesqEdit] = useState(false);
@@ -32,8 +32,6 @@ function Profile() {
   const date = new Date(user?.createdAt);
   const options = { year: "numeric", month: "long" };
   const monthYear = date.toLocaleDateString("en-US", options);
-
-  
 
   const handleDesqEdit = () => {
     setShowDesqEdit(true);
@@ -151,7 +149,7 @@ function Profile() {
         <div className="mt-6 border border-gray-300 bg-[#edf7fd] p-4 py-6">
           <div className="flex items-center justify-between gap-1 pb-3">
             <h2 className="text-base font-bold sm:text-lg">Description</h2>
-            {!showDesqEdit && (
+            {!showDesqEdit && slug === loggedUser.userName && (
               <LiaEditSolid
                 onClick={handleDesqEdit}
                 className="size-6 cursor-pointer text-xl"

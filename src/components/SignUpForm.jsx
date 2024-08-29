@@ -3,7 +3,6 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import toast from "react-hot-toast";
 import { FaEye, FaEyeSlash, FaSpinner } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -21,14 +20,14 @@ import CountryList from "./CountryList";
 const signUpSchema = z
   .object({
     country: z.string(),
-    name: z.string().min(1,"Full Name is required"),
-    username: z.string().min(1,"Username is required")
-    .regex(/^[\w]+$/, "Username should only contain letters, numbers"),
+    name: z.string().min(1, "Full Name is required"),
+    username: z
+      .string()
+      .min(1, "Username is required")
+      .regex(/^[\w]+$/, "Username should only contain letters, numbers"),
     email: z.string().email("Invalid email address"),
     password: z.string().min(8, "Password must be at least 8 characters long"),
-    confirmPassword: z
-      .string()
-      .min(1,"Passwords do not match")
+    confirmPassword: z.string().min(1, "Passwords do not match"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -60,8 +59,7 @@ function SignUpForm({ handleClick }) {
       password: "",
       confirmPassword: "",
     },
-  },
-);
+  });
 
   const onSubmit = async (data) => {
     try {
@@ -165,9 +163,9 @@ function SignUpForm({ handleClick }) {
             } z-0 mt-3 block w-full border border-solid bg-white p-2 outline-none`}
           />
         </div>
-          {errors.password && (
-            <p className="text-sm text-red-500">{errors.password.message}</p>
-          )}
+        {errors.password && (
+          <p className="text-sm text-red-500">{errors.password.message}</p>
+        )}
 
         <label className="block px-2 pt-2">Confirm Password</label>
         <div className="relative">
@@ -186,15 +184,15 @@ function SignUpForm({ handleClick }) {
             } z-0 mt-3 block w-full border border-solid bg-white p-2 outline-none`}
           />
         </div>
-          {errors.confirmPassword && (
-            <p className="text-sm text-red-500">
-              {errors.confirmPassword.message}
-            </p>
-          )}
+        {errors.confirmPassword && (
+          <p className="text-sm text-red-500">
+            {errors.confirmPassword.message}
+          </p>
+        )}
 
         <button
           type="submit"
-          className={`my-4 flex h-[45px] bg-primary  w-full items-center justify-center py-2 text-lg font-medium text-white disabled:cursor-not-allowed`}
+          className={`my-4 flex h-[45px] w-full items-center justify-center bg-primary py-2 text-lg font-medium text-white disabled:cursor-not-allowed`}
           disabled={loading}
         >
           {loading ? (
