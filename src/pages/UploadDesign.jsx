@@ -58,47 +58,56 @@ function UploadDesign() {
     setSelectedSubCategory(e.target.value);
   };
 
-  // Image Operations
-  const [selectedImages, setSelectedImages] = useState([]);
+  // Image Uploading Works
+  const [matchingImages, setMatchingImages] = useState([]);
+  const [errorImg, setErrorImg] = useState(null);
 
-  const handleImageUpload = async (e) => {
-    const files = Array.from(e.target.files);
-    const imagesPromise = files.map(async (file, index) => {
-      if (file) {
-        const formData = new FormData();
-        formData.append("image", file);
+  const getImagesWithDimensions = (files) => {
+    const images = [];
+    let isError = false;
 
-        const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
-        const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
-        try {
-          // setUploading(true);
-          const response = await axios.post(uploadUrl, formData);
-          const name = response.data.data.title;
-          const imageUrl = response.data.data.url;
-
-          // Update the form state with the new image URL
-          const value = selectedImages.length + index;
-          return {
-            url: imageUrl,
-            name,
-            thumbnail: selectedImages.length === 0 && index === 0,
-            value,
-          };
-        } catch (error) {
-          console.error("Error uploading image:", error);
-          // You can use a library like react-toastify to display error messages
-          // toast.error("Failed to upload image");
-        } finally {
-          // setUploading(false);
-        }
+    const handleImageLoad = (file, img, index) => {
+      const value = matchingImages.length + index;
+      if (img.width === 2700 && img.height === 2000) {
+        images.push({
+          file: file,
+          url: img.src,
+          thumbnail: matchingImages.length === 0 && index === 0,
+          value,
+        });
       }
-    });
-    const images = await Promise.all(imagesPromise);
-    setSelectedImages((prevImages) => [...prevImages, ...images]);
+      if (images.length === files.length && !isError) {
+        setMatchingImages((prevImages) => [...prevImages, ...images]);
+        setErrorImg(null);
+      } else {
+        setErrorImg("Resolution does not match. Expected 2700x2000");
+      }
+    };
+
+    const processFile = (file, i) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          handleImageLoad(file, img, i);
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    for (let i = 0; i < files.length; i++) {
+      processFile(files[i], i);
+    }
+  };
+
+  const handleFileChange = (event) => {
+    const files = Array.from(event.target.files);
+    getImagesWithDimensions(files);
   };
 
   const handleImageRemove = (index) => {
-    setSelectedImages((prevImages) =>
+    setMatchingImages((prevImages) =>
       prevImages
         .filter((_, i) => i !== index)
         .map((v, i) => ({ ...v, value: i })),
@@ -107,7 +116,7 @@ function UploadDesign() {
 
   const handleRadioChange = (e) => {
     const selectedValue = parseInt(e.target.value, 10);
-    setSelectedImages((prevImages) =>
+    setMatchingImages((prevImages) =>
       prevImages.map((obj) => ({
         ...obj,
         thumbnail: obj.value === selectedValue,
@@ -235,32 +244,64 @@ function UploadDesign() {
   const handleSubmit = async (e) => {
     setSubmitLoading(true);
     e.preventDefault();
-    const data = {
-      title: form.title,
-      description: form.description,
-      category: selectedCategory,
-      subCategory: selectedSubCategory,
-      fileFormat: form.fileFormat,
-      size: form.size,
-      images: selectedImages,
-      tags,
-      relatedDesigns: relatedTags,
-      folder: newFolder,
-      subFolder: newSubFolder,
-      industries,
-      designs,
-    };
-    try {
-      const url = `${configApi.api}upload/create`;
+    const imagesPromise = matchingImages?.map(async (file) => {
+      if (file.file) {
+        const formData = new FormData();
+        formData.append("image", file.file);
 
-      const response = await axios.post(url, data);
+        const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
+        const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+        try {
+          // setUploading(true);
+          const response = await axios.post(uploadUrl, formData);
+          console.log(response);
+          const name = response.data.data.name;
+          const imageUrl = response.data.data.url;
 
-      if (response.data.success) {
-        console.log(response.data);
+          return {
+            url: imageUrl,
+            name,
+            thumbnail: file.thumbnail,
+          };
+        } catch (error) {
+          console.error("Error uploading image:", error);
+          // You can use a library like react-toastify to display error messages
+          // toast.error("Failed to upload image");
+        } finally {
+          // setUploading(false);
+        }
       }
-    } catch (error) {
-      console.log(error);
+    });
+    const images = await Promise.all(imagesPromise);
+    if (images) {
+      const data = {
+        title: form.title,
+        description: form.description,
+        category: selectedCategory,
+        subCategory: selectedSubCategory,
+        fileFormat: form.fileFormat,
+        size: form.size,
+        images: images,
+        tags,
+        relatedDesigns: relatedTags,
+        folder: newFolder,
+        subFolder: newSubFolder,
+        industries,
+        designs,
+      };
+      try {
+        const url = `${configApi.api}upload/create`;
+
+        const response = await axios.post(url, data);
+
+        if (response.data.success) {
+          console.log(response.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
+
     setSubmitLoading(false);
   };
 
@@ -374,7 +415,7 @@ function UploadDesign() {
               name="images"
               type="file"
               id="images"
-              onChange={handleImageUpload}
+              onChange={handleFileChange}
               accept="image/*"
               multiple
               hidden
@@ -389,7 +430,7 @@ function UploadDesign() {
               There was an error!
             </p>
             <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2">
-              {selectedImages.map((item, index) => (
+              {matchingImages.map((item, index) => (
                 <div key={index} className="flex items-start gap-3 p-2">
                   <div>
                     <input
@@ -414,7 +455,7 @@ function UploadDesign() {
                     alt={item.name}
                     className="h-[100px] w-[150px] object-cover"
                   />
-                  <h1 className="flex-grow">{item.name}</h1>
+                  <h1 className="flex-grow">{item.file.name}</h1>
                   <button
                     type="button"
                     className="grid min-h-6 min-w-6 place-content-center rounded-full border border-slate-500"
@@ -425,6 +466,7 @@ function UploadDesign() {
                 </div>
               ))}
             </div>
+            {errorImg && <p className="text-sm text-red-400">{errorImg}</p>}
           </div>
           <div className="mt-2 flex flex-col">
             <label className="block px-2">Tags</label>

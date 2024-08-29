@@ -11,9 +11,6 @@ function Contact() {
     link: "",
     Message: "",
   });
-  const [matchingImages, setMatchingImages] = useState([]);
-  const [errorImg, setErrorImg] = useState(null);
-  const fileInputRef = useRef(); // Add a ref for the file input
   const textarea = useRef();
 
   const handleChange = (e) => {
@@ -24,6 +21,10 @@ function Contact() {
   };
 
   // Image Uploading Works
+  const [matchingImages, setMatchingImages] = useState([]);
+  const [errorImg, setErrorImg] = useState(null);
+  const fileInputRef = useRef(); // Add a ref for the file input
+
   const getImagesWithDimensions = (files) => {
     const images = [];
 

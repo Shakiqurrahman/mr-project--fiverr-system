@@ -61,14 +61,14 @@ textarea:placeholder-shown {
 }
 
 /* homeactivitycard slider design */
-.homeactivitycard .slick-track {
+.slick-track {
   display: flex;
   align-items: stretch;
 }
-.homeactivitycard .slick-track > div {
-  height: auto;
+.slick-track > div {
+  height: auto !important;
 }
-.homeactivitycard .slick-track > div > div {
+.slick-track > div > div {
   height: 100%;
 }
 
