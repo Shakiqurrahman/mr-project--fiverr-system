@@ -1,7 +1,7 @@
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import Stack from "@mui/material/Stack";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import prevBtn from "../assets/images/icons/Left Arrow.svg";
 import nextBtn from "../assets/images/icons/Right Arrow.svg";
 import ProjectCard from "../components/categories/ProjectCard";
@@ -11,15 +11,16 @@ import useGetCategory from "../hooks/useGetCategory";
 
 function AllCategory() {
   // const filterredCategories = categories.filter(d => d.slug === id);
-  const location = useLocation();
-  const title = location?.state;
-  const { categories } = useGetCategory();
-  const subFolders = (categories || []).filter(
-    (data) => data.folder === title,
-  )[0]?.subFolders;
-
-  // console.log('datt2222',subFolders);
-
+  const { slug } = useParams();
+  const navigate = useNavigate();
+  const { categories, isLoading } = useGetCategory();
+  console.log(categories);
+  
+  const selectedCategory = (categories || []).find(
+    (data) => data.slug === slug,
+  );
+  const subFolders = selectedCategory?.subFolders;
+  const title = selectedCategory?.folder;
   return (
     <>
       <PageHeader>{title}</PageHeader>
@@ -43,8 +44,7 @@ function AllCategory() {
                 key={idx}
                 thumbnail={thumbnail?.url}
                 title={design?.title}
-                designs={subFolder?.designs}
-                slug={`/designs/${subFolder?.slug}`}
+                slug={`/designs/${slug}/${subFolder?.slug}`}
               />
             );
           })}

@@ -65,7 +65,7 @@ export const router = createBrowserRouter([
         element: <Industries />,
       },
       {
-        path: "/designs/:slug",
+        path: "/designs/:catSlug/:slug",
         element: <AllDesign />,
       },
       {

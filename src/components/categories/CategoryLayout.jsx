@@ -6,7 +6,6 @@ function CategoryLayout({ children, title, path }) {
       <div className="mb-5 flex items-center justify-between">
         <h1 className="text-base font-semibold sm:text-xl">{title}</h1>
         <Link
-          state={title}
           to={path}
           className="text-base font-medium text-primary sm:text-lg"
         >

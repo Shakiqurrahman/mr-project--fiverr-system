@@ -83,6 +83,7 @@ function FeatureCategory() {
                         <CategoryCards
                           title={category.folder}
                           path={`categories/${category.slug}`}
+                          titleSlug={category.slug}
                           subCategory={category.subFolders}
                         />
                       </Reorder.Item>
@@ -99,6 +100,7 @@ function FeatureCategory() {
                       <CategoryCards
                         title={category.folder}
                         path={`categories/${category.slug}`}
+                        titleSlug={category.slug}
                         subCategory={category.subFolders}
                       />
                     </Reorder.Item>

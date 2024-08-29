@@ -1,5 +1,5 @@
 import { GiShoppingCart } from "react-icons/gi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function ProjectCard({
   thumbnail,
@@ -10,13 +10,11 @@ function ProjectCard({
   clientName,
   timeStamp,
   cart,
-  slug
+  slug,
 }) {
   return (
     <div className="px-[5px]">
-      <Link to={slug} state={{title,designs}}
-        className="relative block cursor-pointer border bg-white"
-      >
+      <Link to={slug} className="relative block cursor-pointer border bg-white">
         {cart && (
           <button className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-md bg-white">
             <GiShoppingCart />
@@ -25,7 +23,7 @@ function ProjectCard({
         <img
           src={thumbnail}
           alt=""
-          className="block h-[250px] w-full object-cover "
+          className="block h-[250px] w-full object-cover"
         />
         <h1 className="p-3">{title}</h1>
       </Link>

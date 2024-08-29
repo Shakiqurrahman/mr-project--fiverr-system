@@ -5,7 +5,7 @@ import LeftArrowIcon from "../../assets/images/icons/Left Arrow.svg";
 import RightArrowIcon from "../../assets/images/icons/Right Arrow.svg";
 import CategoryLayout from "./CategoryLayout";
 import ProjectCard from "./ProjectCard";
-function CategoryCards({ title, path, subCategory = [] }) {
+function CategoryCards({ title, path, subCategory = [] , titleSlug}) {
   const settings = {
     dots: false,
     infinite: false,
@@ -62,8 +62,7 @@ function CategoryCards({ title, path, subCategory = [] }) {
                   thumbnail={thumbnail?.url}
                   thumbnailName={thumbnail?.name}
                   title={design?.title}
-                  slug={`/designs/${category?.slug}`}
-                  designs={category.designs}
+                  slug={`/designs/${titleSlug}/${category?.slug}`}
                 />
               );
             })}

@@ -5,16 +5,31 @@ import PageHeader from "../components/PageHeader";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import Stack from "@mui/material/Stack";
-import { useLocation, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import prevBtn from "../assets/images/icons/Left Arrow.svg";
 import nextBtn from "../assets/images/icons/Right Arrow.svg";
 import RelatedDesigns from "../components/RelatedDesigns";
 import ProjectCard from "../components/categories/ProjectCard";
+import useGetCategory from "../hooks/useGetCategory";
 
 function AllDesign() {
-  // const { slug } = useParams();
-  const location = useLocation();
-  const { title, designs } = location.state;
+  const { catSlug, slug } = useParams();
+  const { categories, isLoading } = useGetCategory();
+  const navigate = useNavigate();
+
+  // Find the category by `catSlug`
+  const category = (categories || []).find((cat) => cat.slug === catSlug);
+
+  // Find the subFolder within the selected category by `slug`
+  const subFolder = category?.subFolders?.find(
+    (subFolder) => subFolder.slug === slug,
+  );
+
+  // Extract the designs and title
+  const designs = subFolder?.designs;
+  const title = designs?.[0]?.title;
+  console.log('dseigin',designs);
+
   return (
     <>
       <PageHeader bgImage={bgImage} color={"text-secondary"}>
@@ -30,18 +45,16 @@ function AllDesign() {
           </button>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {designs?.map((design) => {
-          const slug = design.title.split(' ').join('-').toLowerCase();
-          return (
+          {designs?.map((design) => (
             <ProjectCard
               cart={true}
               key={design.id}
-              thumbnail={design.images.find(img => img.thumbnail).url}
+              thumbnail={design.images.find((img) => img.thumbnail).url}
               title={design.title}
               designs={design}
-              slug={`/design/${slug}`}
+              slug={`/design/${design?.designId}`}
             />
-          )})}
+          ))}
         </div>
 
         <div className="mt-10 flex justify-center">
