@@ -12,6 +12,7 @@ import CreateCategory from "../pages/CreateCategory";
 import CreateProject from "../pages/CreateProject";
 import Designs from "../pages/Designs";
 import EditCategory from "../pages/EditCategory";
+import EditDesign from "../pages/EditDesign";
 import ErrorPage from "../pages/ErrorPage";
 import Feedback from "../pages/Feedback";
 import ForgetPassword from "../pages/ForgetPassword";
@@ -21,7 +22,7 @@ import Join from "../pages/Join";
 import OfferProject from "../pages/OfferProject";
 import PriceList from "../pages/PriceList";
 import PrivacyAndPolicy from "../pages/PrivacyAndPolicy";
-import Profile from "../pages/Profile";
+import ProfileLayout from "../pages/ProfileLayout";
 import Project from "../pages/Project";
 import SetupProfile from "../pages/SetupProfile";
 import SingleProductPage from "../pages/SingleProductPage";
@@ -33,7 +34,6 @@ import Verify from "../pages/Verify";
 import AdminRoute from "./private-route/AdminRoute";
 import PrivateRoute from "./private-route/PrivateRoute";
 import UnAuthenticatedRoute from "./private-route/UnAuthenticatedRoute";
-import ProfileLayout from "../pages/ProfileLayout";
 
 export const router = createBrowserRouter([
   {
@@ -132,7 +132,7 @@ export const router = createBrowserRouter([
         path: "/:userName",
         element: (
           // <PrivateRoute>
-            <ProfileLayout />
+          <ProfileLayout />
           // </PrivateRoute>
         ),
       },
@@ -183,6 +183,14 @@ export const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <UploadDesign />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/edit-design",
+        element: (
+          <AdminRoute>
+            <EditDesign />
           </AdminRoute>
         ),
       },

@@ -11,6 +11,7 @@ function SingleProductPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
+  const [isClicked, setIsClicked] = useState(false);
 
   const { data: uploadDesigns, error, isLoading } = useFetchGetUploadQuery();
   const design = uploadDesigns?.find((d) => d.designId === slug);
@@ -21,18 +22,35 @@ function SingleProductPage() {
     setAddCartBtn(!addCartBtn);
   };
 
-  if(!design  && !isLoading ) {
+  if (!design && !isLoading) {
     navigate("/not-found", { replace: true });
     return null;
   }
+
+  // handling edit and delete button state
+  const handleIsClicked = () => setIsClicked(!isClicked);
+
   return (
     <>
       <div className="max-width">
         {user?.role === "ADMIN" && (
-          <div className="mt-5 text-right">
-            <button className="text-4xl">
+          <div className="relative mt-5 text-right">
+            <button className="text-4xl" onClick={handleIsClicked}>
               <BsThreeDots />
             </button>
+            {isClicked && (
+              <div className="absolute right-0 top-full z-10 flex w-full max-w-[120px] flex-col rounded-lg border border-solid bg-white py-2 text-center">
+                <Link
+                  className="w-full px-3 py-2 hover:bg-slate-100"
+                  to={"/edit-design"}
+                >
+                  Edit
+                </Link>
+                <button className="w-full px-3 py-2 hover:bg-slate-100">
+                  Delete
+                </button>
+              </div>
+            )}
           </div>
         )}
         <div className="mt-5 flex flex-wrap gap-4 sm:mt-10 md:flex-nowrap">

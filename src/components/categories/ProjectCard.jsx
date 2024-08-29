@@ -5,7 +5,6 @@ function ProjectCard({
   thumbnail,
   thumbnailName,
   title,
-  designs,
   clientLogo,
   clientName,
   timeStamp,
@@ -13,19 +12,29 @@ function ProjectCard({
   slug,
 }) {
   return (
-    <div className="px-[5px]">
-      <Link to={slug} className="relative block cursor-pointer border bg-white">
+    <div className="h-full px-[5px]">
+      <Link
+        to={slug}
+        className="relative block h-full cursor-pointer border bg-white"
+      >
         {cart && (
           <button className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-md bg-white">
             <GiShoppingCart />
           </button>
         )}
-        <img
-          src={thumbnail}
-          alt=""
-          className="block h-[250px] w-full object-cover"
-        />
-        <h1 className="p-3">{title}</h1>
+        <div className="relative">
+          <img
+            src={thumbnail}
+            alt=""
+            className="block h-[250px] w-full object-cover"
+          />
+          <h1 className="absolute left-0 top-0 flex h-full w-full items-center justify-center bg-[rgba(0,0,0,0.5)] p-5 text-center text-sm font-semibold text-white opacity-0 duration-300 hover:opacity-100">
+            {thumbnailName}
+          </h1>
+        </div>
+        <h1 className="px-3 py-2">
+          <span className="line-clamp-2">{title}</span>
+        </h1>
       </Link>
       {clientLogo && (
         <div className="mt-3 flex items-center justify-between">
