@@ -4,6 +4,7 @@ import { IoMdClose } from "react-icons/io";
 import { useSelector } from "react-redux";
 import DownArrow from "../../assets/images/icons/Down Arrow.svg";
 import Check from "../../assets/svg/Check";
+import FeatureCategorySkeleton from "../../CustomSkeleton/FeatureCategorySkeleton";
 import useGetCategory from "../../hooks/useGetCategory";
 import Sidebar from "../Sidebar";
 import CategoryCards from "./CategoryCards";
@@ -64,15 +65,39 @@ function FeatureCategory() {
       )}
       <div className="flex flex-wrap gap-3 sm:flex-nowrap">
         <div className="relative w-full sm:w-2/3 md:w-3/4 lg:w-4/5">
-          <div>
-            <Reorder.Group
-              axis="y"
-              values={categories}
-              onReorder={handleReorder}
-            >
-              {categories.map((category, idx) => {
-                if (!expand) {
-                  if (idx <= 4) {
+          {isLoading ? (
+            <>
+              <FeatureCategorySkeleton />
+              <FeatureCategorySkeleton />
+              <FeatureCategorySkeleton />
+            </>
+          ) : (
+            <div>
+              <Reorder.Group
+                axis="y"
+                values={categories}
+                onReorder={handleReorder}
+              >
+                {categories.map((category, idx) => {
+                  if (!expand) {
+                    if (idx <= 4) {
+                      return (
+                        <Reorder.Item
+                          key={idx}
+                          value={category}
+                          drag={isDraggable ? true : false}
+                          style={{ cursor: isDraggable ? "grab" : "default" }}
+                        >
+                          <CategoryCards
+                            title={category.folder}
+                            path={`categories/${category.slug}`}
+                            titleSlug={category.slug}
+                            subCategory={category.subFolders}
+                          />
+                        </Reorder.Item>
+                      );
+                    }
+                  } else {
                     return (
                       <Reorder.Item
                         key={idx}
@@ -89,26 +114,10 @@ function FeatureCategory() {
                       </Reorder.Item>
                     );
                   }
-                } else {
-                  return (
-                    <Reorder.Item
-                      key={idx}
-                      value={category}
-                      drag={isDraggable ? true : false}
-                      style={{ cursor: isDraggable ? "grab" : "default" }}
-                    >
-                      <CategoryCards
-                        title={category.folder}
-                        path={`categories/${category.slug}`}
-                        titleSlug={category.slug}
-                        subCategory={category.subFolders}
-                      />
-                    </Reorder.Item>
-                  );
-                }
-              })}
-            </Reorder.Group>
-          </div>
+                })}
+              </Reorder.Group>
+            </div>
+          )}
           {!expand && (
             <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
               <button
