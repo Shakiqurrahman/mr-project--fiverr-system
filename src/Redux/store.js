@@ -8,6 +8,7 @@ import { uploadDesignApiSlice } from "./api/uploadDesignApiSlice";
 import categorySlice from "./features/category/categorySlice";
 import passwordVisibilitySlice from "./features/passwordVisibilitySlice";
 import userSlice from "./features/userSlice";
+import { offerProjectApiSlice } from "./api/offerProjectApiSlice";
 
 const persistConfig = {
   key: "auth",
@@ -24,6 +25,7 @@ const store = configureStore({
     [allUserApiSlice.reducerPath]: allUserApiSlice.reducer,
     passwordVisibility: passwordVisibilitySlice,
     category: categorySlice,
+    [offerProjectApiSlice.reducerPath]: offerProjectApiSlice.reducer,
     [uploadDesignApiSlice.reducerPath]: uploadDesignApiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -31,8 +33,9 @@ const store = configureStore({
       serializableCheck: false, // To allow non-serializable values
     }).concat(
       apiSlice.middleware,
-      uploadDesignApiSlice.middleware,
       allUserApiSlice.middleware,
+      offerProjectApiSlice.middleware,
+      uploadDesignApiSlice.middleware,
     ),
 });
 export default store;
