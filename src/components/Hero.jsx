@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import bigDealIcon from "../assets/images/Big Deal.svg";
 import starBlue from "../assets/images/icons/banner-star-blue.svg";
@@ -11,14 +11,25 @@ import heroBanner from "../assets/images/icons/heroBanner.jpg";
 import cornerShape from "../assets/images/icons/left-bottom-circle-line.svg";
 import triangleOrange from "../assets/images/icons/triangle-orange.svg";
 import { useFetchOfferProjectQuery } from "../Redux/api/offerProjectApiSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setOfferProject } from "../Redux/features/offerProjectSlice";
 
 const Hero = () => {
-  const { data: offerProjects, isLoading, error } = useFetchOfferProjectQuery();
+  const dispatch = useDispatch();
+  const offerProjects = useSelector((state) => state.offerProject.offerProject);
+  const { data, isLoading, error } = useFetchOfferProjectQuery();
   console.log(offerProjects);
 
   const { control, handleSubmit, watch, setValue } = useForm();
   const [selectedItems, setSelectedItems] = useState([]);
   const [dropdownVisible, setDropdownVisible] = useState({});
+
+// when data will loaded it will dispatch the setOfferProject action to hold the data
+  useEffect(() => {
+    if (data) {
+      dispatch(setOfferProject(data));
+    }
+  }, [data, dispatch]);
 
   const watchAllFields = watch();
 

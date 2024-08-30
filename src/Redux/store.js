@@ -7,6 +7,7 @@ import { apiSlice } from "./api/apiSlice";
 import { offerProjectApiSlice } from "./api/offerProjectApiSlice";
 import { uploadDesignApiSlice } from "./api/uploadDesignApiSlice";
 import categorySlice from "./features/category/categorySlice";
+import offerProjectSlice from "./features/offerProjectSlice";
 import passwordVisibilitySlice from "./features/passwordVisibilitySlice";
 import userSlice from "./features/userSlice";
 
@@ -18,20 +19,20 @@ const userPersistConfig = {
 };
 
 // Persist config for the "offerProjectApiSlice"
-// const offerProjectPersistConfig = {
-//   key: "offerProject",
-//   version: 1,
-//   storage,
-// };
+const offerProjectPersistConfig = {
+  key: "offerProject",
+  version: 1,
+  storage,
+};
 
 // Wrap the "userSlice" reducer with persistReducer
 const persistedUserReducer = persistReducer(userPersistConfig, userSlice);
 
 // Wrap the "offerProjectApiSlice" reducer with persistReducer
-// const persistedOfferProjectReducer = persistReducer(
-//   offerProjectPersistConfig,
-//   offerProjectApiSlice.reducer,
-// );
+const persistedOfferProjectReducer = persistReducer(
+  offerProjectPersistConfig,
+  offerProjectSlice,
+);
 
 const store = configureStore({
   reducer: {
@@ -40,8 +41,8 @@ const store = configureStore({
     [allUserApiSlice.reducerPath]: allUserApiSlice.reducer,
     passwordVisibility: passwordVisibilitySlice,
     category: categorySlice,
+    offerProject: persistedOfferProjectReducer,
     [offerProjectApiSlice.reducerPath]: offerProjectApiSlice.reducer,
-    // [offerProjectApiSlice.reducerPath]: persistedOfferProjectReducer,
     [uploadDesignApiSlice.reducerPath]: offerProjectApiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
