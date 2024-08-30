@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { configApi } from "../../libs/configApi";
 
 export const offerProjectApiSlice = createApi({
@@ -9,6 +9,7 @@ export const offerProjectApiSlice = createApi({
   endpoints: (builder) => ({
     fetchOfferProject: builder.query({
       query: () => "create-project/get",
+      transformResponse: (response) => response?.data[0],
     }),
   }),
 });

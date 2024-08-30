@@ -9,7 +9,7 @@ import Cart from "../pages/Cart";
 import ChangePassword from "../pages/ChangePassword";
 import Contact from "../pages/Contact";
 import CreateCategory from "../pages/CreateCategory";
-import CreateProject from "../pages/CreateProject";
+import CreateOfferProject from "../pages/CreateOfferProject";
 import Designs from "../pages/Designs";
 import EditCategory from "../pages/EditCategory";
 import EditDesign from "../pages/EditDesign";
@@ -145,10 +145,10 @@ export const router = createBrowserRouter([
         element: <ChangePassword />,
       },
       {
-        path: "/create-project",
+        path: "/create-offer-project",
         element: (
           <AdminRoute>
-            <CreateProject />
+            <CreateOfferProject />
           </AdminRoute>
         ),
       },

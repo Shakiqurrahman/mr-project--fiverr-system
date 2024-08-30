@@ -3,7 +3,7 @@ import { ImPlus } from "react-icons/im";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
 
-function CreateProject() {
+function CreateOfferProject() {
   // Form state
   const [form, setForm] = useState({
     image: "",
@@ -339,4 +339,4 @@ function CreateProject() {
   );
 }
 
-export default CreateProject;
+export default CreateOfferProject;

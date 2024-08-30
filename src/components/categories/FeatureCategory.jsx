@@ -15,8 +15,6 @@ function FeatureCategory() {
   const [isDraggable, setIsDraggable] = useState(false);
   // const [categoryList, setCategoryList] = useState([]);
   const { categories, error, isLoading, handleReorder } = useGetCategory();
-  // console.log("folders---", categories);
-
   const [tempCategoryList, setTempCategoryList] = useState([]);
 
   useEffect(() => {
@@ -65,7 +63,7 @@ function FeatureCategory() {
       )}
       <div className="flex flex-wrap gap-3 sm:flex-nowrap">
         <div className="relative w-full sm:w-2/3 md:w-3/4 lg:w-4/5">
-          {isLoading ? (
+          {isLoading && categories.length > 0? (
             <>
               <FeatureCategorySkeleton />
               <FeatureCategorySkeleton />

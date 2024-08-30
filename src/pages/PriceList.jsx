@@ -29,7 +29,7 @@ function PriceList() {
 
   useEffect(() => {
     if (category) {
-      setCategoryList([...category].reverse());
+      setCategoryList([...category]);
     }
   }, [category]);
 
