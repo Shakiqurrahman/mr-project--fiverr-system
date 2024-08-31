@@ -18,7 +18,7 @@ const Hero = () => {
   const dispatch = useDispatch();
   const offerProjects = useSelector((state) => state.offerProject.offerProject);
   const { data, isLoading, error } = useFetchOfferProjectQuery();
-  console.log(offerProjects);
+  // console.log('offerproject',offerProjects);
 
   const { control, handleSubmit, watch, setValue } = useForm();
   const [selectedItems, setSelectedItems] = useState([]);
@@ -59,7 +59,7 @@ const Hero = () => {
   // if (isLoading) return <p>Loading...</p>;
   // if (error) return <p>Error loading data...</p>;
 
-  const offerProjectsData = offerProjects?.CreateProjectDesigns || [];
+  const offerProjectsData = offerProjects?.designs || [];
   return (
     <section
       className="relative overflow-hidden bg-cover bg-center"
@@ -139,11 +139,11 @@ const Hero = () => {
               onSubmit={handleSubmit(onSubmit)}
               className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3"
             >
-              {offerProjectsData.map((item) => (
-                <div className="flex flex-col gap-2" key={item.id}>
+              {offerProjectsData.map((item, idx) => (
+                <div className="flex flex-col gap-2" key={idx}>
                   <div className="flex items-center gap-2">
                     <Controller
-                      name={item.designName}
+                      name={item?.designName}
                       control={control}
                       render={({ field }) => (
                         <label className="flex cursor-pointer items-center gap-2">
@@ -176,7 +176,7 @@ const Hero = () => {
                           : "max-h-0 opacity-0"
                       } overflow-hidden`}
                     >
-                      {item.designTypogrphys.map((type) => (
+                      {item?.designView.map((type) => (
                         <label
                           key={type}
                           className="flex cursor-pointer items-center gap-2"
