@@ -1,10 +1,17 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaSpinner } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
 import Check from "../assets/svg/Check";
+import Datalist from "../components/Datalist";
 import { configApi } from "../libs/configApi";
+import {
+  useFetchFoldersQuery,
+  useFetchIndustriesQuery,
+  useFetchRelatedTagsQuery,
+  useFetchSubFoldersQuery,
+} from "../Redux/api/uploadDesignApiSlice";
 import { fetchCategory } from "../Redux/features/category/categoryApi";
 
 function UploadDesign() {
@@ -60,7 +67,7 @@ function UploadDesign() {
 
   // Image Uploading Works
   const [matchingImages, setMatchingImages] = useState([]);
-  const [errorImg, setErrorImg] = useState(null);
+  // const [errorImg, setErrorImg] = useState(null);
 
   const getImagesWithDimensions = (files) => {
     const images = [];
@@ -68,20 +75,21 @@ function UploadDesign() {
 
     const handleImageLoad = (file, img, index) => {
       const value = matchingImages.length + index;
-      if (img.width === 2700 && img.height === 2000) {
-        images.push({
-          file: file,
-          url: img.src,
-          thumbnail: matchingImages.length === 0 && index === 0,
-          value,
-        });
-      }
+      // if (img.width === 2700 && img.height === 2000) {
+      images.push({
+        file: file,
+        url: img.src,
+        thumbnail: matchingImages.length === 0 && index === 0,
+        value,
+      });
+      // }
       if (images.length === files.length && !isError) {
         setMatchingImages((prevImages) => [...prevImages, ...images]);
-        setErrorImg(null);
-      } else {
-        setErrorImg("Resolution does not match. Expected 2700x2000");
+        // setErrorImg(null);
       }
+      // else {
+      //   setErrorImg("Resolution does not match. Expected 2700x2000");
+      // }
     };
 
     const processFile = (file, i) => {
@@ -126,6 +134,22 @@ function UploadDesign() {
 
   // Tags Operations
   const [tags, setTags] = useState([]);
+  const [newTag, setNewTag] = useState("");
+
+  const addTag = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (newTag) {
+        const newTagsArr = newTag
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter((tag) => tag); // Clean up and remove empty tags
+        setTags([...tags, ...newTagsArr]);
+        setNewTag("");
+      }
+    }
+  };
+
   const removeTag = (indexToRemove, e) => {
     e.preventDefault();
     setTags((prevTags) =>
@@ -133,24 +157,30 @@ function UploadDesign() {
     );
   };
 
-  const [newTag, setNewTag] = useState("");
-
-  const addTag = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      if (newTag) {
-        setTags([...tags, newTag]);
-        setNewTag("");
-      }
-    }
-  };
   // Related Designs Operations
   const [relatedTags, setRelatedTags] = useState([]);
-  const removeRelatedTag = (indexToRemove, e) => {
+  const [newRelatedTag, setNewRelatedTag] = useState("");
+  const { data: relatedDesign } = useFetchRelatedTagsQuery();
+
+  const relatedDesigns = useMemo(() => relatedDesign, [relatedDesign]);
+
+  const handleNewRelatedTag = (e) => {
     e.preventDefault();
-    setRelatedTags((prevTag) =>
-      prevTag.filter((_, index) => index !== indexToRemove),
-    );
+    setNewRelatedTag(e.target.value);
+  };
+
+  const addNewRelatedTag = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (newRelatedTag) {
+        const newRelatedTagArr = newRelatedTag
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter((tag) => tag); // Clean up and remove empty tags
+        setRelatedTags([...relatedTags, ...newRelatedTagArr]);
+        setNewRelatedTag("");
+      }
+    }
   };
 
   const addRelatedTag = (e) => {
@@ -161,8 +191,18 @@ function UploadDesign() {
     }
   };
 
+  const removeRelatedTag = (indexToRemove, e) => {
+    e.preventDefault();
+    setRelatedTags((prevTag) =>
+      prevTag.filter((_, index) => index !== indexToRemove),
+    );
+  };
+
   // Folder Operations
   const [newFolder, setNewFolder] = useState("");
+  const { data: folder } = useFetchFoldersQuery();
+
+  const folders = useMemo(() => folder, [folder]);
 
   const addNewFolder = (e) => {
     e.preventDefault();
@@ -171,6 +211,9 @@ function UploadDesign() {
 
   // SubFolder Operations
   const [newSubFolder, setNewSubFolder] = useState("");
+  const { data: subFolder } = useFetchSubFoldersQuery();
+
+  const subFolders = useMemo(() => subFolder, [subFolder]);
 
   const addNewSubFolder = (e) => {
     e.preventDefault();
@@ -179,6 +222,10 @@ function UploadDesign() {
 
   // Industries Operations
   const [industries, setIndustries] = useState([]);
+  const { data: industrie } = useFetchIndustriesQuery();
+
+  const allIndustries = useMemo(() => industrie, [industrie]);
+
   const removeIndustrie = (indexToRemove, e) => {
     e.preventDefault();
     setIndustries((prevTags) =>
@@ -208,14 +255,10 @@ function UploadDesign() {
 
   // Designs Operations
   const [designs, setDesigns] = useState([]);
-  const removeDesign = (indexToRemove, e) => {
-    e.preventDefault();
-    setDesigns((prevTags) =>
-      prevTags.filter((_, index) => index !== indexToRemove),
-    );
-  };
-
+  const { data: design } = useFetchIndustriesQuery();
   const [newDesign, setNewDesign] = useState("");
+
+  const allDesigns = useMemo(() => design, [design]);
 
   const addDesign = (e) => {
     e.preventDefault();
@@ -233,6 +276,13 @@ function UploadDesign() {
         setNewDesign("");
       }
     }
+  };
+
+  const removeDesign = (indexToRemove, e) => {
+    e.preventDefault();
+    setDesigns((prevTags) =>
+      prevTags.filter((_, index) => index !== indexToRemove),
+    );
   };
 
   // Global Operations
@@ -466,7 +516,7 @@ function UploadDesign() {
                 </div>
               ))}
             </div>
-            {errorImg && <p className="text-sm text-red-400">{errorImg}</p>}
+            {/* {errorImg && <p className="text-sm text-red-400">{errorImg}</p>} */}
           </div>
           <div className="mt-2 flex flex-col">
             <label className="block px-2">Tags</label>
@@ -489,7 +539,7 @@ function UploadDesign() {
                 type="text"
                 name="tag"
                 placeholder="Add tag"
-                className="outline-none"
+                className="flex-grow outline-none"
                 value={newTag}
                 onChange={(e) => setNewTag(e.target.value)}
                 onKeyDown={addTag}
@@ -499,7 +549,7 @@ function UploadDesign() {
           <div className="mt-5 flex flex-col">
             <label className="block px-2">Related Designs</label>
             <div className="mt-3 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none">
-              {relatedTags.map((item, index) => (
+              {relatedTags?.map((item, index) => (
                 <span
                   key={index}
                   className="flex items-center gap-2 rounded-full bg-[#FFEFEF] px-2 py-1 text-sm"
@@ -513,15 +563,33 @@ function UploadDesign() {
                   </button>
                 </span>
               ))}
+              <input
+                type="text"
+                list="relatedTags"
+                className="w-full appearance-none outline-none"
+                placeholder="Search related design"
+                value={newRelatedTag}
+                onChange={handleNewRelatedTag}
+                onKeyDown={addNewRelatedTag}
+              />
+              <Datalist
+                id={"relatedTags"}
+                options={relatedDesigns}
+                maxCount={10}
+                value={newRelatedTag}
+              />
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
-              <button
-                className="rounded-[30px] bg-lightcream px-4 py-1 text-sm"
-                value={"MR1DN"}
-                onClick={addRelatedTag}
-              >
-                MR1DN
-              </button>
+              {relatedDesigns?.map((d) => (
+                <button
+                  key={d}
+                  className="rounded-[30px] bg-lightcream px-4 py-1 text-sm"
+                  value={d}
+                  onClick={addRelatedTag}
+                >
+                  {d}
+                </button>
+              ))}
             </div>
           </div>
           <div className="flex flex-wrap gap-2 sm:flex-nowrap">
@@ -530,10 +598,18 @@ function UploadDesign() {
               <input
                 type="text"
                 name="folder"
+                list="folder"
                 value={newFolder}
                 onChange={(e) => setNewFolder(e.target.value)}
                 className="mt-3 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
               />
+              <Datalist
+                id={"folder"}
+                options={folders}
+                maxCount={10}
+                value={newFolder}
+              />
+              {console.log(folders)}
               <div className="mt-3 flex flex-wrap gap-2">
                 <button
                   className="rounded-[30px] bg-[#e7e7e7] px-3 py-1 text-xs"
@@ -549,9 +625,16 @@ function UploadDesign() {
               <input
                 type="text"
                 name="subFolder"
+                list="subFolder"
                 value={newSubFolder}
                 onChange={addNewSubFolder}
                 className="mt-3 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+              />
+              <Datalist
+                id={"subFolder"}
+                options={subFolders}
+                maxCount={10}
+                value={newSubFolder}
               />
               <div className="mt-3 flex flex-wrap gap-2">
                 <button
@@ -585,11 +668,18 @@ function UploadDesign() {
                 <input
                   type="text"
                   name="industries"
-                  className="outline-none"
+                  list="industries"
+                  className="w-full outline-none"
                   placeholder="Add industries"
                   value={newIndustrie}
                   onChange={(e) => setNewIndustrie(e.target.value)}
                   onKeyDown={addNewIndusTrie}
+                />
+                <Datalist
+                  id={"industries"}
+                  options={allIndustries}
+                  maxCount={10}
+                  value={newIndustrie}
                 />
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -622,11 +712,18 @@ function UploadDesign() {
                 <input
                   type="text"
                   name="design"
-                  className="outline-none"
+                  list="design"
+                  className="w-full outline-none"
                   placeholder="Add Design"
                   value={newDesign}
                   onChange={(e) => setNewDesign(e.target.value)}
                   onKeyDown={addNewDesign}
+                />
+                <Datalist
+                  id={"design"}
+                  options={allDesigns}
+                  maxCount={10}
+                  value={newDesign}
                 />
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
