@@ -124,7 +124,7 @@ const SocialMediasForm = () => {
     };
 
     return (
-        <section className="max-w-[800px] mx-auto">
+        <section className="max-w-[800px] mx-auto my-20">
             <h1 className="bg-primary text-white p-4">Social Media Links</h1>
             <form className="bg-[#edf7fd] p-4" onSubmit={handleSubmit}>
                 {/* Facebook */}

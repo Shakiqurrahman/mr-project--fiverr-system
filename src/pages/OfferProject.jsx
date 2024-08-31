@@ -1,54 +1,34 @@
 import { FaCheckCircle } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
 import Check from "../assets/svg/Check";
 function OfferProject() {
-  // Dummy Content (Note: It's Recommended to use Database Structure same as this dummy fields object property names)
-  const fields = [
-    {
-      categoryName: "doorHanger",
-      categoryLabel: "Door Hanger",
-      subCategory1Name: "single",
-      subCategory1Label: "Single side",
-      subCategory2Name: "double",
-      subCategory2Label: "Double side",
-    },
-    {
-      categoryName: "flyer",
-      categoryLabel: "Flyer",
-      subCategory1Name: "single",
-      subCategory1Label: "Single side",
-      subCategory2Name: "double",
-      subCategory2Label: "Double side",
-    },
-    {
-      categoryName: "postcard",
-      categoryLabel: "Post Card",
-      subCategory1Name: "single",
-      subCategory1Label: "Single side",
-      subCategory2Name: "double",
-      subCategory2Label: "Double side",
-    },
-    {
-      categoryName: "rackCard",
-      categoryLabel: "Rack Card",
-      subCategory1Name: "single",
-      subCategory1Label: "Single side",
-      subCategory2Name: "double",
-      subCategory2Label: "Double side",
-    },
-  ];
+  const location = useLocation();
+  const { state } = location;
+  console.log(state);
+
+  // const fields = [
+  //   {
+  //     categoryName: "doorHanger",
+  //     categoryLabel: "Door Hanger",
+  //     subCategory1Name: "single",
+  //     subCategory1Label: "Single side",
+  //     subCategory2Name: "double",
+  //     subCategory2Label: "Double side",
+  //   }
+  // ];
   return (
     <div className="max-width">
-      <h1 className="text-lg sm:text-2xl font-semibold text-center my-10">
+      <h1 className="my-10 text-center text-lg font-semibold sm:text-2xl">
         Please select each step below carefully
       </h1>
 
       {/* Project Form Section */}
-      <form className="bg-lightskyblue border border-solid max-w-[800px] mx-auto">
-        <h1 className="p-4 text-center text-white bg-primary text-lg sm:text-xl">
+      <form className="mx-auto max-w-[800px] border border-solid bg-lightskyblue">
+        <h1 className="bg-primary p-4 text-center text-lg text-white sm:text-xl">
           You are starting a project
         </h1>
         <div className="p-3">
-          <p className="text-xs sm:text-sm font-medium my-4">
+          <p className="my-4 text-xs font-medium sm:text-sm">
             Choose the required option for your design
           </p>
 
@@ -66,16 +46,16 @@ function OfferProject() {
               />
               <label
                 htmlFor="businessCard"
-                className="h-[30px] sm:h-[40px] w-[30px] sm:w-[40px] bg-white flex items-center justify-center cursor-pointer border border-solid border-primary *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100"
+                className="flex h-[30px] w-[30px] cursor-pointer items-center justify-center border border-solid border-primary bg-white *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100 sm:h-[40px] sm:w-[40px]"
               >
                 <Check className="h-[14px] sm:h-[18px]" />
               </label>
             </div>
             <div className="flex-grow">
-              <div className="bg-white font-semibold h-[30px] sm:h-[40px] border border-solid flex items-center px-3 text-xs sm:text-base">
+              <div className="flex h-[30px] items-center border border-solid bg-white px-3 text-xs font-semibold sm:h-[40px] sm:text-base">
                 Business Card
               </div>
-              <div className="flex items-center gap-x-3 sm:gap-x-10 mt-5">
+              <div className="mt-5 flex items-center gap-x-3 sm:gap-x-10">
                 <div className="flex items-center gap-x-3">
                   <input
                     type="radio"
@@ -86,11 +66,11 @@ function OfferProject() {
                   />
                   <label
                     htmlFor="businessCardSingle"
-                    className="h-[16px] sm:h-[20px] w-[16px] sm:w-[20px] bg-white flex items-center justify-center cursor-pointer border border-solid border-primary *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100"
+                    className="flex h-[16px] w-[16px] cursor-pointer items-center justify-center border border-solid border-primary bg-white *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100 sm:h-[20px] sm:w-[20px]"
                   >
                     <Check className="h-[8px] sm:h-[10px]" />
                   </label>
-                  <p className="text-xs sm:text-sm font-medium">Single side</p>
+                  <p className="text-xs font-medium sm:text-sm">Single side</p>
                 </div>
                 <div className="flex items-center gap-x-3">
                   <input
@@ -102,24 +82,24 @@ function OfferProject() {
                   />
                   <label
                     htmlFor="businessCardDouble"
-                    className="h-[16px] sm:h-[20px] w-[16px] sm:w-[20px] bg-white flex items-center justify-center cursor-pointer border border-solid border-primary *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100"
+                    className="flex h-[16px] w-[16px] cursor-pointer items-center justify-center border border-solid border-primary bg-white *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100 sm:h-[20px] sm:w-[20px]"
                   >
                     <Check className="h-[8px] sm:h-[10px]" />
                   </label>
-                  <p className="text-xs sm:text-sm font-medium">Double side</p>
+                  <p className="text-xs font-medium sm:text-sm">Double side</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <p className="text-xs sm:text-sm font-medium mt-8 mb-4">
+          <p className="mb-4 mt-8 text-xs font-medium sm:text-sm">
             Choose the 3 designs you need and Choose the required options for
             the designs
           </p>
 
           {/* Selectable Fields */}
-          {fields.map((item) => (
-            <div className="flex items-start gap-3 mb-8" key={Math.random()}>
+          {state?.designs?.map((item) => (
+            <div className="mb-8 flex items-start gap-3" key={Math.random()}>
               <div className="">
                 <input
                   type="checkbox"
@@ -130,64 +110,48 @@ function OfferProject() {
                 />
                 <label
                   htmlFor={item.categoryName}
-                  className="h-[30px] sm:h-[40px] w-[30px] sm:w-[40px] bg-white flex items-center justify-center cursor-pointer border border-solid border-primary *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100"
+                  className="flex h-[30px] w-[30px] cursor-pointer items-center justify-center border border-solid border-primary bg-white *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100 sm:h-[40px] sm:w-[40px]"
                 >
                   <Check className="h-[14px] sm:h-[18px]" />
                 </label>
               </div>
               <div className="flex-grow">
-                <div className="bg-white font-semibold h-[30px] sm:h-[40px] border border-solid flex items-center px-3 text-xs sm:text-base">
+                <div className="flex h-[30px] items-center border border-solid bg-white px-3 text-xs font-semibold sm:h-[40px] sm:text-base">
                   {item.categoryLabel}
                 </div>
-                <div className="flex items-center gap-x-3 sm:gap-x-10 mt-5">
-                  <div className="flex items-center gap-x-3">
-                    <input
-                      type="radio"
-                      name={item.categoryName}
-                      id={item.categoryName + item.subCategory1Name}
-                      className="is-checked peer"
-                      hidden
-                    />
-                    <label
-                      htmlFor={item.categoryName + item.subCategory1Name}
-                      className="h-[16px] sm:h-[20px] w-[16px] sm:w-[20px] bg-white flex items-center justify-center cursor-pointer border border-solid border-primary *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100"
-                    >
-                      <Check className="h-[8px] sm:h-[10px]" />
-                    </label>
-                    <p className="text-xs sm:text-sm font-medium">
-                      {item.subCategory1Label}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-x-3">
-                    <input
-                      type="radio"
-                      name={item.categoryName}
-                      id={item.categoryName + item.subCategory2Name}
-                      className="is-checked peer"
-                      hidden
-                    />
-                    <label
-                      htmlFor={item.categoryName + item.subCategory2Name}
-                      className="h-[16px] sm:h-[20px] w-[16px] sm:w-[20px] bg-white flex items-center justify-center cursor-pointer border border-solid border-primary *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100"
-                    >
-                      <Check className="h-[8px] sm:h-[10px]" />
-                    </label>
-                    <p className="text-xs sm:text-sm font-medium">
-                      {item.subCategory2Label}
-                    </p>
-                  </div>
+                <div className="mt-5 flex items-center gap-x-3 sm:gap-x-10">
+                  {item?.subCategories.map((i, idx) => (
+                    <div key={idx} className="flex items-center gap-x-3">
+                      <input
+                        type="radio"
+                        name={item.categoryName}
+                        id={item.categoryName + i.subCategoryName}
+                        className="is-checked peer"
+                        hidden
+                      />
+                      <label
+                        htmlFor={item.categoryName + i.subCategoryName}
+                        className="flex h-[16px] w-[16px] cursor-pointer items-center justify-center border border-solid border-primary bg-white *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100 sm:h-[20px] sm:w-[20px]"
+                      >
+                        <Check className="h-[8px] sm:h-[10px]" />
+                      </label>
+                      <p className="text-xs font-medium sm:text-sm">
+                        {i.subCategoryLabel}
+                      </p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
           ))}
 
           {/* Extra Delivery Field */}
-          <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-3">
-            <div className="w-full sm:w-1/2 bg-white border border-solid p-2 text-xs sm:text-sm font-medium">
-              5 Days Delivery
+          <div className="flex flex-wrap items-center justify-between gap-3 sm:flex-nowrap">
+            <div className="w-full border border-solid bg-white p-2 text-xs font-medium sm:w-1/2 sm:text-sm">
+              {state?.delivery} Days Delivery
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-x-2 text-xs sm:text-sm font-medium">
+              <div className="flex items-center gap-x-2 text-xs font-medium sm:text-sm">
                 <input
                   type="checkbox"
                   name="extraDelivery"
@@ -197,47 +161,44 @@ function OfferProject() {
                 />
                 <label
                   htmlFor="extraDelivery"
-                  className="h-[16px] sm:h-[20px] w-[16px] sm:w-[20px] bg-white flex items-center justify-center cursor-pointer border border-solid border-primary *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100"
+                  className="flex h-[16px] w-[16px] cursor-pointer items-center justify-center border border-solid border-primary bg-white *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100 sm:h-[20px] sm:w-[20px]"
                 >
                   <Check className="h-[8px] sm:h-[10px]" />
                 </label>
-                Extra Fast 2-days delivery
+                Extra Fast {state?.extraFastDelivery}-days delivery
               </div>
-              <span className="font-bold text-primary mr-3 leading-none">
-                $15
+              <span className="mr-3 font-bold leading-none text-primary">
+                ${state?.extraFastDeliveryAmount}
               </span>
             </div>
           </div>
 
           {/* Bullet Point and Total Price Section */}
-          <div className="flex flex-wrap sm:flex-nowrap gap-3 items-stretch my-8">
-            <ul className="w-full sm:w-1/2 h-auto flex flex-col justify-center *:flex *:items-center *:gap-3 text-sm font-medium *:my-1">
-              <li>
-                <FaCheckCircle className="text-primary" /> Unlimited Revisions
-              </li>
-              <li>
-                <FaCheckCircle className="text-primary" /> PSD Source File
-              </li>
-              <li>
-                <FaCheckCircle className="text-primary" /> Print Ready PDF or
-                JPEG File
-              </li>
+          <div className="my-8 flex flex-wrap items-stretch gap-3 sm:flex-nowrap">
+            <ul className="flex h-auto w-full flex-col justify-center text-sm font-medium *:my-1 *:flex *:items-center *:gap-3 sm:w-1/2">
+              {state?.bullPoints?.map((i, idx) => (
+                <li key={idx}>
+                  <FaCheckCircle className="text-primary" /> {i}
+                </li>
+              ))}
             </ul>
-            <div className="flex-grow p-5 flex items-center justify-center bg-white border border-solid">
+            <div className="flex flex-grow items-center justify-center border border-solid bg-white p-5">
               <div className="text-center">
                 <h1 className="font-semibold">Total</h1>
-                <span className="font-bold text-primary text-xl">$120 USD</span>
+                <span className="text-xl font-bold text-primary">
+                  ${state?.offerAmount} USD
+                </span>
               </div>
             </div>
           </div>
 
           {/* Form Submit Button */}
-          <button className="block w-full p-2 text-white bg-primary">
-            Continue (120$)
+          <button className="block w-full bg-primary p-2 text-white">
+            Continue ({state?.offerAmount}$)
           </button>
 
           {/* Tips message Section */}
-          <p className="text-xs sm:text-sm text-center mb-2 my-8">
+          <p className="my-8 mb-2 text-center text-xs sm:text-sm">
             Go to the payment option by clicking &quot;Continue&quot;
           </p>
         </div>

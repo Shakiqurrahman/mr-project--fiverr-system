@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 import bigDealIcon from "../assets/images/Big Deal.svg";
 import starBlue from "../assets/images/icons/banner-star-blue.svg";
 import starOrange from "../assets/images/icons/banner-star-orange.svg";
@@ -11,20 +12,22 @@ import heroBanner from "../assets/images/icons/heroBanner.jpg";
 import cornerShape from "../assets/images/icons/left-bottom-circle-line.svg";
 import triangleOrange from "../assets/images/icons/triangle-orange.svg";
 import { useFetchOfferProjectQuery } from "../Redux/api/offerProjectApiSlice";
-import { useDispatch, useSelector } from "react-redux";
 import { setOfferProject } from "../Redux/features/offerProjectSlice";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const offerProjects = useSelector((state) => state.offerProject.offerProject);
   const { data, isLoading, error } = useFetchOfferProjectQuery();
   // console.log('offerproject',offerProjects);
 
   const { control, handleSubmit, watch, setValue } = useForm();
+  // const [submittedData, setSubmittedData] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [dropdownVisible, setDropdownVisible] = useState({});
 
-// when data will loaded it will dispatch the setOfferProject action to hold the data
+  // when data will loaded it will dispatch the setOfferProject action to hold the data
   useEffect(() => {
     if (data) {
       dispatch(setOfferProject(data));
@@ -49,16 +52,33 @@ const Hero = () => {
   };
 
   const onSubmit = (data) => {
-    const filteredData = Object.entries(data).filter(
-      ([key, value]) =>
-        value === true || value === "Single Side" || value === "Double Side",
-    ); // Adjusted for matching correct values
-    console.log("Filtered Data:", Object.fromEntries(filteredData));
+    const submittedData = {
+      ...offerProjects,
+      designs: offerProjectsData.map((item) => {
+        // Map through all subcategories and mark the selected one
+        const subCategories = item?.designView.map((subCategory) => {
+          const isSelected = data[`${item.designName}_side`] === subCategory;
+  
+          return {
+            subCategoryName: subCategory.toLowerCase().replace(/\s+/g, ''), // Convert to lowercase and remove spaces for name
+            subCategoryLabel: subCategory,
+            isSelected, // Boolean indicating if this subcategory was selected
+          };
+        });
+  
+        return {
+          categoryName: item.designName.toLowerCase().replace(/\s+/g, ''), // Dynamic category name
+          categoryLabel: item.designName,
+          isSelected: !!data[item.designName], // Boolean indicating if this category was selected
+          subCategories, // Include all subcategories with their selected status
+        };
+      })
+    };
+  
+    navigate('/start-offer-project', { state: submittedData });
   };
-
-  // if (isLoading) return <p>Loading...</p>;
-  // if (error) return <p>Error loading data...</p>;
-
+  
+  
   const offerProjectsData = offerProjects?.designs || [];
   return (
     <section

@@ -67,8 +67,9 @@ function SetupProfile({ from_profile }) {
         setLoading(false);
         if (from_profile) {
           navigate("/");
+        } else {
+          navigate("/social-media");
         }
-        return;
       }
     } catch (error) {
       console.error("Error saving data to the database:", error);

@@ -34,6 +34,7 @@ import Verify from "../pages/Verify";
 import AdminRoute from "./private-route/AdminRoute";
 import PrivateRoute from "./private-route/PrivateRoute";
 import UnAuthenticatedRoute from "./private-route/UnAuthenticatedRoute";
+import SocialMediasForm from "../components/SocialMediasForm";
 
 export const router = createBrowserRouter([
   {
@@ -126,6 +127,14 @@ export const router = createBrowserRouter([
           <PrivateRoute>
             <SetupProfile />
           </PrivateRoute>
+        ),
+      },
+      {
+        path: "/social-media",
+        element: (
+          // <PrivateRoute>
+            <SocialMediasForm />
+          // </PrivateRoute>
         ),
       },
       {
