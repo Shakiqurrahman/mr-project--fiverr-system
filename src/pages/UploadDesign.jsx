@@ -609,15 +609,17 @@ function UploadDesign() {
                 maxCount={10}
                 value={newFolder}
               />
-              {console.log(folders)}
               <div className="mt-3 flex flex-wrap gap-2">
-                <button
-                  className="rounded-[30px] bg-[#e7e7e7] px-3 py-1 text-xs"
-                  value={"MR1DN"}
-                  onClick={addNewFolder}
-                >
-                  MR1DN
-                </button>
+                {folders?.map((v, i) => (
+                  <button
+                    key={i}
+                    className="rounded-[30px] bg-[#e7e7e7] px-3 py-1 text-xs"
+                    value={v}
+                    onClick={addNewFolder}
+                  >
+                    {v}
+                  </button>
+                ))}
               </div>
             </div>
             <div className="mt-5 flex w-full flex-col sm:w-1/2">
@@ -637,13 +639,16 @@ function UploadDesign() {
                 value={newSubFolder}
               />
               <div className="mt-3 flex flex-wrap gap-2">
-                <button
-                  className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
-                  value={"MR1DN"}
-                  onClick={addNewSubFolder}
-                >
-                  MR1DN
-                </button>
+                {subFolders?.map((v, i) => (
+                  <button
+                    key={i}
+                    className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
+                    value={v}
+                    onClick={addNewSubFolder}
+                  >
+                    {v}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
@@ -683,13 +688,16 @@ function UploadDesign() {
                 />
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
-                <button
-                  className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
-                  value={"MR1DN"}
-                  onClick={addIndustrie}
-                >
-                  MR1DN
-                </button>
+                {allIndustries?.map((v, i) => (
+                  <button
+                    key={i}
+                    className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
+                    value={v}
+                    onClick={addIndustrie}
+                  >
+                    {v}
+                  </button>
+                ))}
               </div>
             </div>
             <div className="mt-5 flex w-full flex-col sm:w-1/2">
@@ -727,13 +735,16 @@ function UploadDesign() {
                 />
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
-                <button
-                  className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
-                  value={"MR1DN"}
-                  onClick={addDesign}
-                >
-                  MR1DN
-                </button>
+                {allDesigns?.map((v, i) => (
+                  <button
+                    key={i}
+                    className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
+                    value={v}
+                    onClick={addDesign}
+                  >
+                    {v}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
