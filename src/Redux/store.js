@@ -43,7 +43,7 @@ const store = configureStore({
     category: categorySlice,
     offerProject: persistedOfferProjectReducer,
     [offerProjectApiSlice.reducerPath]: offerProjectApiSlice.reducer,
-    [uploadDesignApiSlice.reducerPath]: offerProjectApiSlice.reducer,
+    [uploadDesignApiSlice.reducerPath]: uploadDesignApiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

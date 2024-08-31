@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useFetchGetUploadQuery } from "../Redux/api/uploadDesignApiSlice";
 
 const useGetCategory = () => {
-  const { data: uploadDesigns, error, isLoading } = useFetchGetUploadQuery();
+  const { data: uploadDesigns, error, isLoading } = useFetchGetUploadQuery();  
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {

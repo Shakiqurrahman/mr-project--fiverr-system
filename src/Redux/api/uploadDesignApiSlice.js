@@ -9,7 +9,7 @@ export const uploadDesignApiSlice = createApi({
   endpoints: (builder) => ({
     fetchGetUpload: builder.query({
       query: () => "upload/get",  
-      transformResponse: (response) => response.data,  
+      transformResponse: (response) => response?.data,
     }),
   }),
 });
