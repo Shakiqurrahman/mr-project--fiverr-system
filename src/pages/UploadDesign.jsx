@@ -7,6 +7,7 @@ import Check from "../assets/svg/Check";
 import Datalist from "../components/Datalist";
 import { configApi } from "../libs/configApi";
 import {
+  useFetchDesignsQuery,
   useFetchFoldersQuery,
   useFetchIndustriesQuery,
   useFetchRelatedTagsQuery,
@@ -255,7 +256,7 @@ function UploadDesign() {
 
   // Designs Operations
   const [designs, setDesigns] = useState([]);
-  const { data: design } = useFetchIndustriesQuery();
+  const { data: design } = useFetchDesignsQuery();
   const [newDesign, setNewDesign] = useState("");
 
   const allDesigns = useMemo(() => design, [design]);
