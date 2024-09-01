@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import Check from "../assets/svg/Check";
@@ -6,16 +7,95 @@ function OfferProject() {
   const { state } = location;
   console.log(state);
 
-  // const fields = [
-  //   {
-  //     categoryName: "doorHanger",
-  //     categoryLabel: "Door Hanger",
-  //     subCategory1Name: "single",
-  //     subCategory1Label: "Single side",
-  //     subCategory2Name: "double",
-  //     subCategory2Label: "Double side",
-  //   }
-  // ];
+  const [categories, setCategories] = useState(state?.designs || []);
+  const [freeDesign, setFreeDesign] = useState({
+    designName: state?.freeDesignName || "",
+    subDesignNames:
+      state?.freeDesignTypographys.map((v) => {
+        return {
+          subDesignName: v,
+          isSelected: false,
+        };
+      }) || [],
+    isDesignSelected: true,
+  });
+  const [isFastDelivery, setIsFastDelivery] = useState(false);
+
+  const handleSubDesignChange = (subName, e) => {
+    setFreeDesign((prevState) => ({
+      ...prevState,
+      subDesignNames: prevState.subDesignNames.map((subItem) => {
+        return {
+          ...subItem,
+          isSelected:
+            subItem.subDesignName === subName ? e.target.checked : false,
+        };
+      }),
+    }));
+  };
+
+  const handleFreeDesignChange = () => {
+    setFreeDesign((prevState) => ({
+      ...prevState,
+      isDesignSelected: !prevState.isDesignSelected,
+    }));
+  };
+
+  const handleCategoryChange = (categoryName, event) => {
+    const isCategorySelected = event.target.checked;
+
+    setCategories((prevItems) => {
+      const selectedCount = prevItems.filter((item) => item.isSelected).length;
+
+      // If trying to select a new category and there are already 3 selected, prevent it
+      if (event.target.checked && selectedCount >= 3) {
+        return prevItems; // No changes made
+      }
+
+      return prevItems.map((item) =>
+        item.categoryName === categoryName
+          ? {
+              ...item,
+              isSelected: isCategorySelected,
+              subCategories: item.subCategories.map((subItem) => ({
+                ...subItem,
+                isSelected: isCategorySelected ? subItem.isSelected : false,
+              })),
+            }
+          : item,
+      );
+    });
+  };
+
+  const handleSubCategoryChange = (categoryName, subCategoryName, event) => {
+    setCategories((prevItems) =>
+      prevItems.map((item) =>
+        item.categoryName === categoryName && item.isSelected
+          ? {
+              ...item,
+              subCategories: item.subCategories.map((subItem) => ({
+                ...subItem,
+                isSelected:
+                  subItem.subCategoryName === subCategoryName
+                    ? event.target.checked
+                    : false,
+              })),
+            }
+          : item,
+      ),
+    );
+  };
+
+  const handleFastDeliveryToggle = () => {
+    setIsFastDelivery(!isFastDelivery);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("handlesubmit", categories);
+  };
+
+  console.log(categories);
   return (
     <div className="max-width">
       <h1 className="my-10 text-center text-lg font-semibold sm:text-2xl">
@@ -23,7 +103,10 @@ function OfferProject() {
       </h1>
 
       {/* Project Form Section */}
-      <form className="mx-auto max-w-[800px] border border-solid bg-lightskyblue">
+      <form
+        onSubmit={handleSubmit}
+        className="mx-auto max-w-[800px] border border-solid bg-lightskyblue"
+      >
         <h1 className="bg-primary p-4 text-center text-lg text-white sm:text-xl">
           You are starting a project
         </h1>
@@ -37,15 +120,15 @@ function OfferProject() {
             <div className="">
               <input
                 type="checkbox"
-                name="businessCard"
-                id="businessCard"
+                name={freeDesign.designName}
+                id={freeDesign.designName}
                 className="is-checked peer"
-                checked
-                readOnly
+                checked={freeDesign?.isDesignSelected}
                 hidden
+                onChange={handleFreeDesignChange}
               />
               <label
-                htmlFor="businessCard"
+                htmlFor={freeDesign.designName}
                 className="flex h-[30px] w-[30px] cursor-pointer items-center justify-center border border-solid border-primary bg-white *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100 sm:h-[40px] sm:w-[40px]"
               >
                 <Check className="h-[14px] sm:h-[18px]" />
@@ -53,41 +136,33 @@ function OfferProject() {
             </div>
             <div className="flex-grow">
               <div className="flex h-[30px] items-center border border-solid bg-white px-3 text-xs font-semibold sm:h-[40px] sm:text-base">
-                Business Card
+                {freeDesign.designName}
               </div>
               <div className="mt-5 flex items-center gap-x-3 sm:gap-x-10">
-                <div className="flex items-center gap-x-3">
-                  <input
-                    type="radio"
-                    name="businessCard"
-                    id="businessCardSingle"
-                    className="is-checked peer"
-                    hidden
-                  />
-                  <label
-                    htmlFor="businessCardSingle"
-                    className="flex h-[16px] w-[16px] cursor-pointer items-center justify-center border border-solid border-primary bg-white *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100 sm:h-[20px] sm:w-[20px]"
-                  >
-                    <Check className="h-[8px] sm:h-[10px]" />
-                  </label>
-                  <p className="text-xs font-medium sm:text-sm">Single side</p>
-                </div>
-                <div className="flex items-center gap-x-3">
-                  <input
-                    type="radio"
-                    name="businessCard"
-                    id="businessCardDouble"
-                    className="is-checked peer"
-                    hidden
-                  />
-                  <label
-                    htmlFor="businessCardDouble"
-                    className="flex h-[16px] w-[16px] cursor-pointer items-center justify-center border border-solid border-primary bg-white *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100 sm:h-[20px] sm:w-[20px]"
-                  >
-                    <Check className="h-[8px] sm:h-[10px]" />
-                  </label>
-                  <p className="text-xs font-medium sm:text-sm">Double side</p>
-                </div>
+                {freeDesign.subDesignNames?.map((sub, i) => (
+                  <div key={i} className="flex items-center gap-x-3">
+                    <input
+                      type="radio"
+                      name={sub.subDesignName}
+                      id={sub.subDesignName}
+                      className="is-checked peer"
+                      checked={sub.isSelected}
+                      onChange={(e) =>
+                        handleSubDesignChange(sub.subDesignName, e)
+                      }
+                      hidden
+                    />
+                    <label
+                      htmlFor={sub.subDesignName}
+                      className="flex h-[16px] w-[16px] cursor-pointer items-center justify-center border border-solid border-primary bg-white *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100 sm:h-[20px] sm:w-[20px]"
+                    >
+                      <Check className="h-[8px] sm:h-[10px]" />
+                    </label>
+                    <p className="text-xs font-medium sm:text-sm">
+                      {sub.subDesignName}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -98,14 +173,16 @@ function OfferProject() {
           </p>
 
           {/* Selectable Fields */}
-          {state?.designs?.map((item) => (
+          {categories?.map((item) => (
             <div className="mb-8 flex items-start gap-3" key={Math.random()}>
               <div className="">
                 <input
                   type="checkbox"
                   name={item.categoryName}
                   id={item.categoryName}
+                  onChange={(e) => handleCategoryChange(item.categoryName, e)}
                   className="is-checked peer"
+                  checked={item.isSelected}
                   hidden
                 />
                 <label
@@ -128,6 +205,15 @@ function OfferProject() {
                         id={item.categoryName + i.subCategoryName}
                         className="is-checked peer"
                         hidden
+                        onChange={(e) =>
+                          handleSubCategoryChange(
+                            item.categoryName,
+                            i.subCategoryName,
+                            e,
+                          )
+                        }
+                        checked={i.isSelected}
+                        value={i.subCategoryName}
                       />
                       <label
                         htmlFor={item.categoryName + i.subCategoryName}
@@ -157,6 +243,8 @@ function OfferProject() {
                   name="extraDelivery"
                   id="extraDelivery"
                   className="is-checked peer"
+                  onChange={handleFastDeliveryToggle}
+                  checked={isFastDelivery}
                   hidden
                 />
                 <label
@@ -186,7 +274,12 @@ function OfferProject() {
               <div className="text-center">
                 <h1 className="font-semibold">Total</h1>
                 <span className="text-xl font-bold text-primary">
-                  ${state?.offerAmount} USD
+                  $
+                  {isFastDelivery
+                    ? parseInt(state?.offerAmount) +
+                      parseInt(state?.extraFastDeliveryAmount)
+                    : parseInt(state?.offerAmount)}{" "}
+                  USD
                 </span>
               </div>
             </div>
@@ -194,7 +287,12 @@ function OfferProject() {
 
           {/* Form Submit Button */}
           <button className="block w-full bg-primary p-2 text-white">
-            Continue ({state?.offerAmount}$)
+            Continue (
+            {isFastDelivery
+              ? parseInt(state?.offerAmount) +
+                parseInt(state?.extraFastDeliveryAmount)
+              : parseInt(state?.offerAmount)}
+            $)
           </button>
 
           {/* Tips message Section */}

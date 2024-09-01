@@ -20,10 +20,8 @@ const Hero = () => {
   const navigate = useNavigate();
   const offerProjects = useSelector((state) => state.offerProject.offerProject);
   const { data, isLoading, error } = useFetchOfferProjectQuery();
-  // console.log('offerproject',offerProjects);
 
   const { control, handleSubmit, watch, setValue } = useForm();
-  // const [submittedData, setSubmittedData] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [dropdownVisible, setDropdownVisible] = useState({});
 
