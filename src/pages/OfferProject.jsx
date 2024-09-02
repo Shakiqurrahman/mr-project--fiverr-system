@@ -106,6 +106,12 @@ function OfferProject() {
     e.preventDefault();
     console.log("handlesubmit", categories);
     console.log("handlesubmit", freeDesign);
+    const data = {
+      freeDesign,
+      designs: categories,
+      isFastDelivery,
+    };
+    console.log(data);
   };
 
   console.log(categories);
