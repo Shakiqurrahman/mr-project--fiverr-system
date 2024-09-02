@@ -22,25 +22,37 @@ function OfferProject() {
   const [isFastDelivery, setIsFastDelivery] = useState(false);
 
   const handleSubDesignChange = (subName, e) => {
+    if (!freeDesign.isDesignSelected) {
+      return;
+    }
     setFreeDesign((prevState) => ({
       ...prevState,
-      subDesignNames: prevState.subDesignNames.map((subItem) => {
-        return {
-          ...subItem,
-          isSelected:
-            subItem.subDesignName === subName ? e.target.checked : false,
-        };
-      }),
+      subDesignNames: prevState.subDesignNames.map((subItem) => ({
+        ...subItem,
+        isSelected:
+          subItem.subDesignName === subName ? e.target.checked : false,
+      })),
     }));
   };
+  
+  
 
   const handleFreeDesignChange = () => {
-    setFreeDesign((prevState) => ({
-      ...prevState,
-      isDesignSelected: !prevState.isDesignSelected,
-    }));
+    setFreeDesign((prevState) => {
+      const newIsDesignSelected = !prevState.isDesignSelected;
+      return {
+        ...prevState,
+        isDesignSelected: newIsDesignSelected,
+        subDesignNames: prevState.subDesignNames.map((subItem) => ({
+          ...subItem,
+          isSelected: newIsDesignSelected ? subItem.isSelected : false,
+        })),
+      };
+    });
   };
-
+  
+  
+  
   const handleCategoryChange = (categoryName, event) => {
     const isCategorySelected = event.target.checked;
 
@@ -49,7 +61,7 @@ function OfferProject() {
 
       // If trying to select a new category and there are already 3 selected, prevent it
       if (event.target.checked && selectedCount >= 3) {
-        return prevItems; // No changes made
+        return prevItems;
       }
 
       return prevItems.map((item) =>
@@ -93,6 +105,7 @@ function OfferProject() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("handlesubmit", categories);
+    console.log("handlesubmit", freeDesign);
   };
 
   console.log(categories);
