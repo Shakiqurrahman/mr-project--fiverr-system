@@ -11,7 +11,7 @@ const ProfileLayout = () => {
     (user) =>
       user.userName.toLowerCase().trim() === userName.toLowerCase().trim(),
   );
-
+  
   useEffect(() => {
     if (user) {
       refetch();

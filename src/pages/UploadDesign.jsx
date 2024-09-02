@@ -433,7 +433,7 @@ function UploadDesign() {
                 onChange={handleCategoryChange}
               >
                 <option value={""}>Select Category</option>
-                {categories.length > 0 &&
+                {categories?.length > 0 &&
                   categories.map((item) => (
                     <option key={item.id} value={item.categoryName}>
                       {item.categoryName}

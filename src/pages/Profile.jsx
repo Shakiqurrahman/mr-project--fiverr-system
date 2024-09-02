@@ -154,7 +154,7 @@ function Profile({ user = {}, slug }) {
         <div className="mt-6 border border-gray-300 bg-[#edf7fd] p-4 py-6">
           <div className="flex items-center justify-between gap-1 pb-3">
             <h2 className="text-base font-bold sm:text-lg">Description</h2>
-            {!showDesqEdit && slug === loggedUser.userName && (
+            {!showDesqEdit && slug === loggedUser?.userName && (
               <LiaEditSolid
                 onClick={handleDesqEdit}
                 className="size-6 cursor-pointer text-xl"

@@ -11,24 +11,22 @@ import offerProjectSlice from "./features/offerProjectSlice";
 import passwordVisibilitySlice from "./features/passwordVisibilitySlice";
 import userSlice from "./features/userSlice";
 
-// Persist config for the "userSlice"
+// Persist configs
 const userPersistConfig = {
   key: "auth",
   version: 1,
   storage,
 };
 
-// Persist config for the "offerProjectApiSlice"
 const offerProjectPersistConfig = {
   key: "offerProject",
   version: 1,
   storage,
 };
 
-// Wrap the "userSlice" reducer with persistReducer
+// Persisted reducers
 const persistedUserReducer = persistReducer(userPersistConfig, userSlice);
 
-// Wrap the "offerProjectApiSlice" reducer with persistReducer
 const persistedOfferProjectReducer = persistReducer(
   offerProjectPersistConfig,
   offerProjectSlice,
