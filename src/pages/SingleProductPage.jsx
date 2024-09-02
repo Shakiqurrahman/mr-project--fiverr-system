@@ -93,20 +93,10 @@ function SingleProductPage() {
             </button>
           </div>
         </div>
-        <div className="mt-10">
-          <h1 className="mb-5 text-lg font-bold sm:text-2xl">
-            {design?.title}
-          </h1>
-          <p>{design?.description}</p>
-        </div>
-        <div className="my-10 text-base font-bold sm:text-xl">
-          If you just want to get the template/source file of this design, then
-          you can{" "}
-          <Link to={"/contact"} className="underline">
-            contact us by clicking here.
-          </Link>{" "}
-          And show us this design.
-        </div>
+        <div
+          className="my-10 overflow-clip"
+          dangerouslySetInnerHTML={{ __html: design?.description }}
+        ></div>
         <Divider className={"h-px w-full bg-[#000!important]"} />
         <div className="mt-10 flex flex-wrap gap-3">
           {design?.tags?.map((btn) => (

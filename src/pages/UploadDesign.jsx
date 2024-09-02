@@ -1,8 +1,10 @@
+import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FaSpinner } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Check from "../assets/svg/Check";
 import Datalist from "../components/Datalist";
 import { configApi } from "../libs/configApi";
@@ -14,9 +16,9 @@ import {
   useFetchSubFoldersQuery,
 } from "../Redux/api/uploadDesignApiSlice";
 import { fetchCategory } from "../Redux/features/category/categoryApi";
-import TextEditor from "../libs/TextEditor";
 
 function UploadDesign() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loading, category, error } = useSelector((state) => state.category);
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -31,15 +33,44 @@ function UploadDesign() {
     thumbnail: "",
   });
 
+  // description related work
+  const editorRef = useRef(null);
+  const [content, setContent] = useState("");
+  const editorInit = {
+    height: 400,
+    placeholder: "Start typing...",
+    menubar: false,
+    plugins: [
+      "advlist",
+      "autolink",
+      "lists",
+      "link",
+      "charmap",
+      "preview",
+      "anchor",
+      "searchreplace",
+      "visualblocks",
+      "fullscreen",
+      "help",
+      "wordcount",
+    ],
+    toolbar:
+      "undo redo blocks fontsize " +
+      "bold italic backcolor forecolor alignleft aligncenter alignright alignjustify" +
+      " link bullist numlist outdent indent  fullscreen " +
+      " help",
+  };
+  const log = () => {
+    if (editorRef.current) {
+      setContent(editorRef.current.getContent());
+    }
+  };
+
   // Sample data for categories and subcategories
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [subCategories, setSubCategories] = useState([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
-
-
-  const [editorContent, setEditorContent] = useState("");
-  console.log(editorContent);
 
   // category fetching
   useEffect(() => {
@@ -310,7 +341,7 @@ function UploadDesign() {
           // setUploading(true);
           const response = await axios.post(uploadUrl, formData);
           console.log(response);
-          const name = response.data.data.name;
+          const name = response.data.data.title;
           const imageUrl = response.data.data.url;
 
           return {
@@ -328,10 +359,11 @@ function UploadDesign() {
       }
     });
     const images = await Promise.all(imagesPromise);
+    console.log(images);
     if (images) {
       const data = {
         title: form.title,
-        description: form.description,
+        description: content,
         category: selectedCategory,
         subCategory: selectedSubCategory,
         fileFormat: form.fileFormat,
@@ -351,6 +383,7 @@ function UploadDesign() {
 
         if (response.data.success) {
           console.log(response.data);
+          navigate("/");
         }
       } catch (error) {
         console.log(error);
@@ -382,14 +415,12 @@ function UploadDesign() {
           </div>
           <div className="mt-2 flex flex-col">
             <label className="block px-2">Description</label>
-            <TextEditor value={editorContent} onChange={setEditorContent} />
-            {/* <textarea
-              type="text"
-              name="description"
-              className="mt-3 block h-[150px] w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
-              onChange={handleChange}
-              required
-            ></textarea> */}
+            <Editor
+              apiKey="58wpfurekzo6c0xguijfdjdm4un9yozey638o61t47zosj2t"
+              onInit={(_evt, editor) => (editorRef.current = editor)}
+              init={editorInit}
+              onChange={log}
+            />
             <p className="mt-2 hidden px-2 text-xs text-red-600">
               There was an error!
             </p>
