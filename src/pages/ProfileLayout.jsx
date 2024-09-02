@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useFetchAllUsersQuery } from "../Redux/api/allUserApiSlice";
 import ErrorPage from "./ErrorPage";
@@ -5,14 +6,23 @@ import Profile from "./Profile";
 
 const ProfileLayout = () => {
   const { userName } = useParams();
-  const { data: usersData } = useFetchAllUsersQuery();
-  console.log(usersData);
-  const user = usersData?.find(user => user.userName === userName);
+  const { data: usersData, refetch } = useFetchAllUsersQuery();
+  const user = usersData?.find(
+    (user) =>
+      user.userName.toLowerCase().trim() === userName.toLowerCase().trim(),
+  );
 
-  // Check if the userName exists in the list of usernames
-  const userExists = usersData?.some(user => user.userName.toLowerCase().trim() === userName.toLowerCase().trim() );
+  useEffect(() => {
+    if (user) {
+      refetch();
+    }
+  }, [user, refetch]);
 
-  return userExists ? <Profile user={user} slug={userName}/> : <ErrorPage />;
+  return user ? (
+    <Profile user={user} slug={userName} />
+  ) : (
+    <ErrorPage message="User not found." />
+  );
 };
 
 export default ProfileLayout;

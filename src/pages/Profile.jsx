@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsInfoCircle } from "react-icons/bs";
 import {
   FaFacebookF,
@@ -23,11 +23,16 @@ function Profile({ user = {}, slug }) {
   const dispatch = useDispatch();
   const { user: loggedUser } = useSelector((state) => state.user);
   const [activeTab, setActiveTab] = useState("active"); // 'active' or 'completed'
+  const [loading, setLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
   const [showDesqEdit, setShowDesqEdit] = useState(false);
   const [description, setDescription] = useState(user?.description || "");
 
-  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    // Update the state when the user prop changes
+    setDescription(user?.description || "");
+  }, [user]);
+
   // for user creating date making readable and formatted
   const date = new Date(user?.createdAt);
   const options = { year: "numeric", month: "long" };

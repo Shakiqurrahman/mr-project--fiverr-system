@@ -23,7 +23,7 @@ const Hero = () => {
   const { user } = useSelector((state) => state.user);
   const adminRole = user?.role === "ADMIN";
 
-  const offerProjects = useSelector((state) => state.offerProject.offerProject);
+  const offerProjects = useSelector((state) => state.offerProject.offerProject);  
   const { data, isLoading, error } = useFetchOfferProjectQuery();
 
   const { control, handleSubmit, watch, setValue } = useForm();
@@ -82,6 +82,7 @@ const Hero = () => {
   };
 
   const offerProjectsData = offerProjects?.designs || [];
+  
   return (
     <section
       className="relative overflow-hidden bg-cover bg-center"
