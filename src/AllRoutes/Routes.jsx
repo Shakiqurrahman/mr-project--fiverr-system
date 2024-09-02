@@ -154,7 +154,7 @@ export const router = createBrowserRouter([
         element: <ChangePassword />,
       },
       {
-        path: "/create-offer-project",
+        path: "/offer-project",
         element: (
           <AdminRoute>
             <CreateOfferProject />

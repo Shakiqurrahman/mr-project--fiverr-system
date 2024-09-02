@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { CiSettings } from "react-icons/ci";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import bigDealIcon from "../assets/images/Big Deal.svg";
 import starBlue from "../assets/images/icons/banner-star-blue.svg";
 import starOrange from "../assets/images/icons/banner-star-orange.svg";
@@ -13,11 +15,14 @@ import cornerShape from "../assets/images/icons/left-bottom-circle-line.svg";
 import triangleOrange from "../assets/images/icons/triangle-orange.svg";
 import { useFetchOfferProjectQuery } from "../Redux/api/offerProjectApiSlice";
 import { setOfferProject } from "../Redux/features/offerProjectSlice";
-import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { user } = useSelector((state) => state.user);
+  const adminRole = user?.role === "ADMIN";
+
   const offerProjects = useSelector((state) => state.offerProject.offerProject);
   const { data, isLoading, error } = useFetchOfferProjectQuery();
 
@@ -56,27 +61,26 @@ const Hero = () => {
         // Map through all subcategories and mark the selected one
         const subCategories = item?.designView.map((subCategory) => {
           const isSelected = data[`${item.designName}_side`] === subCategory;
-  
+
           return {
-            subCategoryName: subCategory.toLowerCase().replace(/\s+/g, ''), // Convert to lowercase and remove spaces for name
+            subCategoryName: subCategory.toLowerCase().replace(/\s+/g, ""), // Convert to lowercase and remove spaces for name
             subCategoryLabel: subCategory,
             isSelected, // Boolean indicating if this subcategory was selected
           };
         });
-  
+
         return {
-          categoryName: item.designName.toLowerCase().replace(/\s+/g, ''), // Dynamic category name
+          categoryName: item.designName.toLowerCase().replace(/\s+/g, ""), // Dynamic category name
           categoryLabel: item.designName,
           isSelected: !!data[item.designName], // Boolean indicating if this category was selected
           subCategories, // Include all subcategories with their selected status
         };
-      })
+      }),
     };
-  
-    navigate('/start-offer-project', { state: submittedData });
+
+    navigate("/start-offer-project", { state: submittedData });
   };
-  
-  
+
   const offerProjectsData = offerProjects?.designs || [];
   return (
     <section
@@ -98,7 +102,7 @@ const Hero = () => {
       <div className="absolute -bottom-48 -left-44 hidden md:block">
         <img src={cornerShape} alt="cornerShape" />
       </div>
-      <div className="absolute -right-60 -top-56 hidden md:block lg:-right-44 lg:-top-48">
+      <div className="absolute -right-60 -top-56 hidden md:block lg:-right-44 lg:-top-44">
         <img src={bottomCenterCircle} alt="bottomCenterCircle" />
       </div>
       <div className="absolute -bottom-64 right-[30%] hidden md:block lg:right-[45%]">
@@ -122,6 +126,10 @@ const Hero = () => {
             </p>
           </div>
           <div className="relative w-[80%] border-2 border-dashed border-primary px-6 py-10 lg:w-full">
+            {/* setting icon  */}
+            {adminRole &&
+              <CiSettings onClick={()=> navigate('/offer-project', {state: offerProjects})} className="absolute right-1.5 top-1.5 cursor-pointer text-2xl" />
+            }
             {/* big deal */}
             <img
               className="md:size-54 absolute -left-16 -top-16 z-[80] ml-2 size-32 sm:-left-20 sm:size-40 md:-left-20 md:-top-20 md:ml-0 xl:-left-28 xl:-top-24 xl:size-60"
@@ -218,10 +226,10 @@ const Hero = () => {
                   )}
                 </div>
               ))}
-              <div className="absolute -bottom-5 right-1/2 md:right-8 translate-x-1/2 md:translate-x-0">
+              <div className="absolute -bottom-5 right-1/2 translate-x-1/2 md:right-8 md:translate-x-0">
                 <button
                   type="submit"
-                  className="rounded-[30px] bg-primary px-2.5 text-xs sm:text-base sm:px-4 py-2 font-bold uppercase text-white"
+                  className="rounded-[30px] bg-primary px-2.5 py-2 text-xs font-bold uppercase text-white sm:px-4 sm:text-base"
                 >
                   Project Start
                 </button>

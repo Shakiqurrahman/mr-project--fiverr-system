@@ -1,24 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { ImPlus } from "react-icons/im";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
+import { useLocation } from "react-router-dom";
 
 function CreateOfferProject() {
+  const { state } = useLocation();
+  console.log("state", state);
+
   // Form state
   const [form, setForm] = useState({
-    image: "",
-    offerAmount: "",
-    originalAmount: "",
-    regularDeliveryDays: "",
-    fastDeliveryDays: "",
-    fdAmount: "",
+    image: state?.projectImage || "",
+    freeBannerName : state?.freeDesignName ||"",
+    offerAmount: state?.offerAmount || "",
+    originalAmount: state?.originalAmount || "",
+    regularDeliveryDays: state?.delivery || "",
+    fastDeliveryDays: state?.extraFastDelivery || "",
+    fdAmount: state?.extraFastDeliveryAmount || "",
   });
 
   // Handle form input change
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     console.log(file);
@@ -26,78 +31,77 @@ function CreateOfferProject() {
   };
 
   // Design sections state
-  const [designs, setDesigns] = useState([
-    {
-      id: 1,
-      name: "Design 1",
-      variant: ["Single Variant", "Double Variant"],
-    },
-  ]);
-  
+  const [designs, setDesigns] = useState(state?.designs || []);
+
   // State for new variant input
   const [newVariant, setNewVariant] = useState({});
 
   // Add new design
   const addDesign = () => {
-    setDesigns([...designs, { id: Date.now(), name: "", variant: ["Single Slider", "Double Slider"] }]);
+    setDesigns([
+      ...designs,
+      { designName: "", designView: ["Single Side", "Double Side"] },
+    ]);
   };
 
   // Remove design
-  const removeDesign = (id) => {
-    setDesigns(designs.filter(design => design.id !== id));
-    const { [id]: _, ...rest } = newVariant;
+  const removeDesign = (designName) => {
+    setDesigns(designs?.filter((design) => design.designName !== designName));
+    const { [designName]: _, ...rest } = newVariant;
     setNewVariant(rest);
   };
 
   // Handle design name change
-  const handleDesignChange = (id, e) => {
-    setDesigns(designs.map(design => 
-      design.id === id ? { ...design, name: e.target.value } : design
-    ));
+  const handleDesignChange = (designName, e) => {
+    setDesigns(
+      designs?.map((design) =>
+        design.designName === designName ? { ...design, designName: e.target.value } : design,
+      ),
+    );
   };
 
   // Add variant to design
-  const addVariant = (designId) => {
-    const variantValue = newVariant[designId] || "";
-    if (variantValue.trim() === "") return; 
+  const addVariant = (designName) => {
+    const variantValue = newVariant[designName] || "";
+    if (variantValue.trim() === "") return;
 
-    setDesigns(designs.map(design => 
-      design.id === designId 
-        ? { ...design, variant: [...design.variant, variantValue] } 
-        : design
-    ));
-    setNewVariant({ ...newVariant, [designId]: "" }); // Clear input after adding
+    setDesigns(
+      designs?.map((design) =>
+        design.designName === designName
+          ? { ...design, designView: [...design.designView, variantValue] }
+          : design,
+      ),
+    );
+    setNewVariant({ ...newVariant, [designName]: "" }); // Clear input after adding
   };
 
   // Remove variant from design
-  const removeVariant = (designId, variant) => {
-    setDesigns(designs.map(design => 
-      design.id === designId 
-        ? { ...design, variant: design.variant.filter(v => v !== variant) } 
-        : design
-    ));
+  const removeVariant = (designName, variant) => {
+    setDesigns(
+      designs?.map((design) =>
+        design.designName === designName
+          ? { ...design, designView: design.designView.filter((v) => v !== variant) }
+          : design,
+      ),
+    );
   };
 
   // Handle Enter key for variant input
-  const createVariantEventHandler = (e, designId) => {
-    if (e.key === 'Enter') {
+  const createVariantEventHandler = (e, designName) => {
+    if (e.key === "Enter") {
       e.preventDefault(); // Prevent form reload
-      addVariant(designId);
+      addVariant(designName);
     }
   };
 
   // Handle variant input change
-  const handleNewVariantChange = (e, designId) => {
-    setNewVariant({ ...newVariant, [designId]: e.target.value });
+  const handleNewVariantChange = (e, designName) => {
+    setNewVariant({ ...newVariant, [designName]: e.target.value });
   };
 
   // Bullet section state
-  const [bullets, setBullets] = useState([
-    "Unlimited Revision", 
-    "PSD Source file", 
-    "Print Ready PDF"
-  ]);
-  
+  const [bullets, setBullets] = useState(state?.bullPoints || []);
+
   // State for new bullet input
   const [newBullet, setNewBullet] = useState("");
 
@@ -108,7 +112,7 @@ function CreateOfferProject() {
     setBullets([...bullets, newBullet]);
     setNewBullet("");
   };
-  
+
   // Remove bullet
   const removeBullet = (index) => {
     setBullets(bullets.filter((_, i) => i !== index));
@@ -116,18 +120,14 @@ function CreateOfferProject() {
 
   // Handle Enter key for bullet input
   const createBulletEventHandler = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault(); // Prevent form reload
       addBullet();
     }
   };
 
   // Requirements section state
-  const [requirements, setRequirements] = useState([
-    "Which industry do you work in?", 
-    "Do you have your own company logo?", 
-    ""
-  ]);
+  const [requirements, setRequirements] = useState(state?.requirements || []);
 
   // Add new requirement
   const addRequirements = () => {
@@ -151,187 +151,225 @@ function CreateOfferProject() {
       fdAmount: form.fdAmount,
       designs,
       bullets,
-      requirements: requirements.filter(req => req.trim() !== "")
+      requirements: requirements.filter((req) => req.trim() !== ""),
     };
     console.log(data);
   };
 
   return (
     <div className="max-width mt-10 sm:mt-20">
-      <form className="w-full max-w-[800px] mx-auto" onSubmit={handleSubmit}>
-        <div className="bg-lightskyblue mt-10">
-          <h1 className="bg-primary text-white p-3">Image</h1>
-          <input type="file" name="image" id="image" className='file-input' onChange={handleFileChange} />
+      <h1 className="text-center text-[28px] font-semibold uppercase">
+        Offer Project Details
+      </h1>
+      <form className="mx-auto w-full max-w-[800px]" onSubmit={handleSubmit}>
+         {/* Image */}
+         <div className="mt-10 bg-lightskyblue">
+          <h1 className="bg-primary p-3 text-white">Image</h1>
+          <input
+            type="file"
+            name="image"
+            id="image"
+            className="file-input"
+            onChange={handleFileChange}
+            hidden
+            // disabled={uploading}g
+          />
+          <div className="flex items-stretch">
+            <label
+              htmlFor="image"
+              className="block flex-shrink-0 bg-[#7c7c7c] px-4 py-2 text-sm text-white sm:text-base"
+            >
+              CHOOSE FILE
+            </label>
+            <div className="overflow-hidden text-ellipsis whitespace-nowrap px-4 py-2">
+              {form?.image || "No file chosen"}
+            </div>
+          </div>
+          {/* {uploading && <p>Uploading...</p>} */}
         </div>
-        <div className="bg-lightskyblue mt-5">
-          <h1 className="bg-primary text-white p-3">Price & Delivery</h1>
+
+        <div className="mt-6 bg-lightskyblue">
+          <h1 className="bg-primary p-3 text-white">Banner Free Design Name</h1>
           <div className="p-3">
-            <div className='flex gap-2'>
-              <div className='flex-grow'>
+            <input
+              type="text"
+              name="originalAmount"
+              value={form.freeBannerName}
+              onChange={handleChange}
+              placeholder="Banner Free Design Name"
+              className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+              required
+            />
+          </div>
+        </div>
+        <div className="mt-5 bg-lightskyblue">
+          <h1 className="bg-primary p-3 text-white">Price & Delivery</h1>
+          <div className="p-3">
+            <div className="flex gap-2">
+              <div className="flex-grow">
                 <input
-                    type="text"
-                    name="offerAmount"
-                    value={form.offerAmount}
-                    onChange={handleChange}
-                    placeholder='Offer Amount'
-                    className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
-                    required
+                  type="text"
+                  name="offerAmount"
+                  value={form.offerAmount}
+                  onChange={handleChange}
+                  placeholder="Offer Amount"
+                  className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+                  required
                 />
-                <p className="text-red-600 text-xs mt-2 px-2 hidden">
-                  There was an error!
-                </p>
               </div>
-              <div className='flex-grow'>
+              <div className="flex-grow">
                 <input
-                    type="text"
-                    name="originalAmount"
-                    value={form.originalAmount}
-                    onChange={handleChange}
-                    placeholder='Original Amount'
-                    className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
-                    required
+                  type="text"
+                  name="originalAmount"
+                  value={form.originalAmount}
+                  onChange={handleChange}
+                  placeholder="Original Amount"
+                  className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+                  required
                 />
-                <p className="text-red-600 text-xs mt-2 px-2 hidden">
-                  There was an error!
-                </p>
               </div>
             </div>
             <input
-                type="text"
-                name="regularDeliveryDays"
-                value={form.regularDeliveryDays}
-                onChange={handleChange}
-                placeholder='Regular Delivery Days'
-                className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
-                required
+              type="text"
+              name="regularDeliveryDays"
+              value={form.regularDeliveryDays}
+              onChange={handleChange}
+              placeholder="Regular Delivery Days"
+              className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+              required
             />
-            <p className="text-red-600 text-xs mt-2 px-2 hidden">
-              There was an error!
-            </p>
-            <div className='flex'>
-              <div className='flex-grow'>
+            <div className="flex">
+              <div className="flex-grow">
                 <input
-                    type="text"
-                    name="fastDeliveryDays"
-                    value={form.fastDeliveryDays}
-                    onChange={handleChange}
-                    placeholder='Fast Delivery Days'
-                    className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
-                    required
+                  type="text"
+                  name="fastDeliveryDays"
+                  value={form.fastDeliveryDays}
+                  onChange={handleChange}
+                  placeholder="Fast Delivery Days"
+                  className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+                  required
                 />
-                <p className="text-red-600 text-xs mt-2 px-2 hidden">
-                  There was an error!
-                </p>
               </div>
-              <div className='w-56'>
+              <div className="w-56">
                 <input
-                    type="text"
-                    name="fdAmount"
-                    value={form.fdAmount}
-                    onChange={handleChange}
-                    placeholder='F.D. Amount'
-                    className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
-                    required
+                  type="text"
+                  name="fdAmount"
+                  value={form.fdAmount}
+                  onChange={handleChange}
+                  placeholder="F.D. Amount"
+                  className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+                  required
                 />
-                <p className="text-red-600 text-xs mt-2 px-2 hidden">
-                  There was an error!
-                </p>
               </div>
             </div>
           </div>
         </div>
-        <div className="bg-lightskyblue mt-5">
-          <div className='bg-primary text-white p-3 flex justify-between'>
+        <div className="mt-5 bg-lightskyblue">
+          <div className="flex justify-between bg-primary p-3 text-white">
             <h1 className="">Design</h1>
             <ImPlus onClick={addDesign} />
           </div>
-          <div className='p-3'>
-            {designs.map(design => (
-              <div key={design.id}>
-                <div className='flex items-center gap-2'>
+          <div className="p-3">
+            {designs?.map((design, idx) => (
+              <div key={idx}>
+                <div className="flex items-center gap-2">
                   <input
                     type="text"
-                    placeholder='Design Name'
-                    value={design.name}
-                    onChange={(e) => handleDesignChange(design.id, e)}
-                    className='bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none'
+                    placeholder="Design Name"
+                    value={design.designName}
+                    onChange={(e) => handleDesignChange(design.designName, e)}
+                    className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
                     required
                   />
                   <RiDeleteBin6Line
-                    className='text-gray-500 mt-2'
-                    onClick={() => removeDesign(design.id)}
+                    className="mt-2 text-gray-500"
+                    onClick={() => removeDesign(design.designName)}
                   />
                 </div>
-                <div className='flex flex-wrap mt-2 gap-2'>
-                  {design.variant.map(variant => (
-                    <small key={variant} className='flex items-center gap-2 bg-white p-2 rounded-sm'>
-                      {variant} <RxCross2 className='text-red-600' onClick={() => removeVariant(design.id, variant)} />
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {design?.designView.map((variant) => (
+                    <small
+                      key={variant}
+                      className="flex items-center gap-2 rounded-sm bg-white p-2"
+                    >
+                      {variant}{" "}
+                      <RxCross2
+                        className="text-red-600"
+                        onClick={() => removeVariant(design.designName, variant)}
+                      />
                     </small>
                   ))}
                   <input
                     type="text"
-                    placeholder='Type Here'
-                    value={newVariant[design.id] || ""}
-                    onChange={(e) => handleNewVariantChange(e, design.id)}
-                    onKeyDown={(e) => createVariantEventHandler(e, design.id)}
-                    className='bg-transparent focus:outline-none'
+                    placeholder="Type Here"
+                    value={newVariant[design.designName] || ""}
+                    onChange={(e) => handleNewVariantChange(e, design.designName)}
+                    onKeyDown={(e) => createVariantEventHandler(e, design.designName)}
+                    className="bg-transparent focus:outline-none"
                   />
                 </div>
               </div>
             ))}
           </div>
         </div>
-        <div className="bg-lightskyblue mt-5">
-          <h1 className="bg-primary text-white p-3">Bullet Point</h1>
+        <div className="mt-5 bg-lightskyblue">
+          <h1 className="bg-primary p-3 text-white">Bullet Point</h1>
           <div className="p-3">
-            <div className='flex flex-wrap mt-2 gap-2'>
+            <div className="mt-2 flex flex-wrap gap-2">
               {bullets.map((bullet, index) => (
-                <small key={index} className='flex items-center gap-2 bg-white p-2 rounded-sm'>
-                  {bullet} 
-                  <RxCross2 className='text-red-600' onClick={() => removeBullet(index)} />
+                <small
+                  key={index}
+                  className="flex items-center gap-2 rounded-sm bg-white p-2"
+                >
+                  {bullet}
+                  <RxCross2
+                    className="text-red-600"
+                    onClick={() => removeBullet(index)}
+                  />
                 </small>
               ))}
-              <input 
-                type="text" 
-                placeholder='Add new bullet'
+              <input
+                type="text"
+                placeholder="Add new bullet"
                 value={newBullet}
                 onChange={(e) => setNewBullet(e.target.value)}
                 onKeyDown={createBulletEventHandler}
-                className='bg-transparent focus:outline-none'
+                className="bg-transparent focus:outline-none"
               />
             </div>
           </div>
         </div>
-        <div className="bg-lightskyblue mt-5">
-          <div className='bg-primary text-white p-3 flex justify-between'>
+        <div className="mt-5 bg-lightskyblue">
+          <div className="flex justify-between bg-primary p-3 text-white">
             <h1 className="">Requirements</h1>
             <ImPlus onClick={addRequirements} />
           </div>
           <div className="p-3">
             {requirements.map((requirement, index) => (
-              <div key={index} className='flex items-center gap-2 mb-2'>
+              <div key={index} className="mb-2 flex items-center gap-2">
                 <input
                   type="text"
-                  placeholder='Type'
+                  placeholder="Type"
                   value={requirement}
                   onChange={(e) => {
                     const newRequirements = [...requirements];
                     newRequirements[index] = e.target.value;
                     setRequirements(newRequirements);
                   }}
-                  className='bg-white block w-full p-2 border border-solid border-[#e7e7e7] outline-none'
+                  className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
                 />
                 <RiDeleteBin6Line
-                  className='text-gray-500 cursor-pointer'
+                  className="cursor-pointer text-gray-500"
                   onClick={() => deleteRequirements(index)}
                 />
               </div>
-          ))}
+            ))}
           </div>
         </div>
         <button
           type="submit"
-          className="p-3 text-center text-white bg-primary rounded-3xl w-1/2 mx-auto block mt-5">
+          className="mx-auto mt-5 block w-1/2 rounded-3xl bg-primary p-3 text-center text-white"
+        >
           Update
         </button>
       </form>
