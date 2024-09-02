@@ -129,7 +129,7 @@ const Hero = () => {
               alt="big deal icon"
             />
             {/* discounts */}
-            <div className="font-Oswald absolute -right-5 top-[50%] sm:-right-10 sm:top-20">
+            <div className="font-Oswald absolute -right-5 top-[50%] sm:right-2 sm:top-20">
               <h4 className="-skew-y-[12deg] select-none bg-primary px-1 py-0.5 text-base font-light uppercase text-white sm:px-2 sm:text-xl">
                 Only{" "}
                 <span className="font-bold">${offerProjects?.offerAmount}</span>
@@ -218,10 +218,10 @@ const Hero = () => {
                   )}
                 </div>
               ))}
-              <div className="absolute -bottom-5 right-8">
+              <div className="absolute -bottom-5 right-1/2 md:right-8 translate-x-1/2 md:translate-x-0">
                 <button
                   type="submit"
-                  className="rounded-[30px] bg-primary px-4 py-2 font-bold uppercase text-white"
+                  className="rounded-[30px] bg-primary px-2.5 text-xs sm:text-base sm:px-4 py-2 font-bold uppercase text-white"
                 >
                   Project Start
                 </button>
