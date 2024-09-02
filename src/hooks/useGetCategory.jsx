@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useFetchGetUploadQuery } from "../Redux/api/uploadDesignApiSlice";
 
 const useGetCategory = () => {
-  const { data: uploadDesigns, error, isLoading } = useFetchGetUploadQuery();  
+  const { data: uploadDesigns, error, isLoading } = useFetchGetUploadQuery();
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -12,8 +12,12 @@ const useGetCategory = () => {
         // Find or create the folder
         let folder = acc.find((item) => item.folder === design.folder);
         if (!folder) {
-          folder = { slug: design.folder.split(" ").join("-").toLowerCase(),folder: design.folder, subFolders: [] };
-          acc.unshift(folder);
+          folder = {
+            slug: design.folder.split(" ").join("-").toLowerCase(),
+            folder: design.folder,
+            subFolders: [],
+          };
+          acc.push(folder);
         }
 
         // Find or create the subfolder
@@ -21,13 +25,17 @@ const useGetCategory = () => {
           (item) => item.subFolder === design.subFolder,
         );
         if (!subFolder) {
-          subFolder = { slug:design.subFolder.split(" ").join("-").toLowerCase(), subFolder: design.subFolder, designs: [] };
-          folder.subFolders.unshift(subFolder);
+          subFolder = {
+            slug: design.subFolder.split(" ").join("-").toLowerCase(),
+            subFolder: design.subFolder,
+            designs: [],
+          };
+          folder.subFolders.push(subFolder);
         }
 
         // Add the design to the appropriate subfolder
         if (!subFolder.designs.find((d) => d.id === design.id)) {
-          subFolder.designs.unshift(design);
+          subFolder.designs.push(design);
         }
 
         return acc;
