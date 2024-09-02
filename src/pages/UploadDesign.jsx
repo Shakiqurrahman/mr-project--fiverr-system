@@ -14,6 +14,7 @@ import {
   useFetchSubFoldersQuery,
 } from "../Redux/api/uploadDesignApiSlice";
 import { fetchCategory } from "../Redux/features/category/categoryApi";
+import TextEditor from "../libs/TextEditor";
 
 function UploadDesign() {
   const dispatch = useDispatch();
@@ -36,8 +37,11 @@ function UploadDesign() {
   const [subCategories, setSubCategories] = useState([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
 
-  // category fetching
 
+  const [editorContent, setEditorContent] = useState("");
+  console.log(editorContent);
+
+  // category fetching
   useEffect(() => {
     dispatch(fetchCategory());
   }, [dispatch]);
@@ -378,13 +382,14 @@ function UploadDesign() {
           </div>
           <div className="mt-2 flex flex-col">
             <label className="block px-2">Description</label>
-            <textarea
+            <TextEditor value={editorContent} onChange={setEditorContent} />
+            {/* <textarea
               type="text"
               name="description"
               className="mt-3 block h-[150px] w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
               onChange={handleChange}
               required
-            ></textarea>
+            ></textarea> */}
             <p className="mt-2 hidden px-2 text-xs text-red-600">
               There was an error!
             </p>
