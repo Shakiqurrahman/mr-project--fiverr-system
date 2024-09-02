@@ -26,11 +26,8 @@ function UploadDesign() {
   // initial state of form
   const [form, setForm] = useState({
     title: "",
-    description: "",
     size: "",
     fileFormat: "",
-    images: "",
-    thumbnail: "",
   });
 
   // description related work

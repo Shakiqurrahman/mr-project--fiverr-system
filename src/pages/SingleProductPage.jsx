@@ -43,6 +43,7 @@ function SingleProductPage() {
                 <Link
                   className="w-full px-3 py-2 hover:bg-slate-100"
                   to={"/edit-design"}
+                  state={design}
                 >
                   Edit
                 </Link>
