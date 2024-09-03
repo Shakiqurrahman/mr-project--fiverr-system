@@ -21,10 +21,8 @@ function EditDesign() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loading, category, error } = useSelector((state) => state.category);
+  const { loading, category } = useSelector((state) => state.category);
   const [submitLoading, setSubmitLoading] = useState(false);
-
-  console.log(state);
 
   useEffect(() => {
     if (state === null) {
@@ -40,8 +38,12 @@ function EditDesign() {
   });
 
   // description related work
+  const initialValue = state?.description;
   const editorRef = useRef(null);
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState(initialValue ?? "");
+
+  useEffect(() => setContent(initialValue ?? ""), [initialValue]);
+
   const editorInit = {
     height: 400,
     placeholder: "Start typing...",
@@ -74,9 +76,13 @@ function EditDesign() {
 
   // Sample data for categories and subcategories
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(
+    state.category || "",
+  );
   const [subCategories, setSubCategories] = useState([]);
-  const [selectedSubCategory, setSelectedSubCategory] = useState("");
+  const [selectedSubCategory, setSelectedSubCategory] = useState(
+    state.subCategory || "",
+  );
 
   // category fetching
   useEffect(() => {
@@ -91,9 +97,9 @@ function EditDesign() {
   // updating subCategories using category state
   useEffect(() => {
     if (selectedCategory) {
-      const fetchSubCategory = categories.filter(
+      const fetchSubCategory = categories?.filter(
         (cat) => cat.categoryName === selectedCategory,
-      )[0].subCategory;
+      )[0]?.subCategory;
       setSubCategories(fetchSubCategory);
     }
   }, [categories, selectedCategory]);
@@ -108,7 +114,16 @@ function EditDesign() {
   };
 
   // Image Uploading Works
-  const [matchingImages, setMatchingImages] = useState(state.images || []);
+  const prevImages = useMemo(() => {
+    let value = 0;
+    return state?.images?.map((img) => {
+      return {
+        ...img,
+        value: value++,
+      };
+    });
+  }, [state?.images]);
+  const [matchingImages, setMatchingImages] = useState(prevImages || []);
   // const [errorImg, setErrorImg] = useState(null);
 
   const getImagesWithDimensions = (files) => {
@@ -336,7 +351,11 @@ function EditDesign() {
   const handleSubmit = async (e) => {
     setSubmitLoading(true);
     e.preventDefault();
-    const imagesPromise = matchingImages?.map(async (file) => {
+    const withoutFiles = matchingImages
+      .filter((file) => !file.file)
+      ?.map(({ value, ...rest }) => rest);
+    const withFiles = matchingImages.filter((file) => file.file);
+    const imagesPromise = withFiles?.map(async (file) => {
       if (file.file) {
         const formData = new FormData();
         formData.append("image", file.file);
@@ -364,8 +383,8 @@ function EditDesign() {
         }
       }
     });
-    const images = await Promise.all(imagesPromise);
-    console.log(images);
+    const withFileImages = await Promise.all(imagesPromise);
+    const images = [...withoutFiles, ...withFileImages];
     if (images) {
       const data = {
         title: form.title,
@@ -383,13 +402,13 @@ function EditDesign() {
         designs,
       };
       try {
-        const url = `${configApi.api}upload/create`;
+        const url = `${configApi.api}upload/udpate/${state.designId}`;
 
-        const response = await axios.post(url, data);
+        const response = await axios.put(url, data);
 
         if (response.data.success) {
           console.log(response.data);
-          navigate("/");
+          navigate(`/design/${state.designId}`);
         }
       } catch (error) {
         console.log(error);
@@ -425,7 +444,7 @@ function EditDesign() {
             <Editor
               apiKey="58wpfurekzo6c0xguijfdjdm4un9yozey638o61t47zosj2t"
               onInit={(_evt, editor) => (editorRef.current = editor)}
-              initialValue={state.description}
+              initialValue={initialValue}
               init={editorInit}
               onChange={log}
             />
@@ -805,7 +824,7 @@ function EditDesign() {
                 <FaSpinner />
               </span>
             ) : (
-              "Upload"
+              "Update"
             )}
           </button>
         </form>

@@ -149,7 +149,7 @@ function SetupProfile({ from_profile }) {
       >
         <div className="text-center">
           <div className="mx-auto mb-10 flex h-[220px] w-[220px] items-center justify-center overflow-hidden rounded-full bg-[#DCEEFA]">
-            <label htmlFor="image">
+            <label htmlFor="image" className="h-full w-full">
               {form.image ? (
                 uploading ? (
                   <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -159,7 +159,7 @@ function SetupProfile({ from_profile }) {
                   <img
                     src={form.image}
                     alt="Profile"
-                    className="cursor-pointer object-cover"
+                    className="h-full w-full cursor-pointer object-cover"
                   />
                 )
               ) : (
@@ -167,7 +167,7 @@ function SetupProfile({ from_profile }) {
                 <img
                   src={Avatar}
                   alt="Profile"
-                  className="cursor-pointer object-contain"
+                  className="h-full w-full cursor-pointer object-cover"
                 />
               )}
             </label>
