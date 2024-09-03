@@ -18,7 +18,18 @@ export const apiSlice = createApi({
     fetchUserData: builder.query({
       query: () => "get-singel-user",
     }),
+    fetchSocialMedias: builder.query({
+      query: () => "social-media-link",
+      transformResponse: (response) => response?.data,
+    }),
+    updateSocialMedias: builder.mutation({
+      query: (socialMediaLinks) => ({
+        url: "social-media-link",
+        method: "POST",
+        body: socialMediaLinks,
+      }),
+    }),
   }),
 });
 
-export const { useFetchUserDataQuery } = apiSlice;
+export const { useFetchUserDataQuery, useFetchSocialMediasQuery, useUpdateSocialMediasMutation } = apiSlice;

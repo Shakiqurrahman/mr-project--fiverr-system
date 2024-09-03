@@ -50,27 +50,13 @@ function SetupProfile({ from_profile }) {
       if (data.success === true) {
         if (from_profile) {
           toast.success("Saved successfully");
-        } else {
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Thank you very much!",
-            html: "<p>for joining us. Your registration is successful.</p>",
-            showConfirmButton: true,
-            timer: 1500,
-            customClass: {
-              confirmButton: "successfull-button",
-            },
-          });
-        }
-        setUploading(false);
-        setLoading(false);
-        if (from_profile) {
           navigate("/");
-        } else {
-          navigate("/social-media");
         }
+      } else {
+        navigate("/social-media");
       }
+      setUploading(false);
+      setLoading(false);
     } catch (error) {
       console.error("Error saving data to the database:", error);
       setUploading(false);
@@ -116,7 +102,7 @@ function SetupProfile({ from_profile }) {
       toast.error("Failed to fetch profile data");
       setLoading(false);
     }
-  }, [token, dataFromLocalStorage]);
+  }, [token, dataFromLocalStorage, dispatch]);
 
   // Fetch data when the component mounts or token changes
   useEffect(() => {
@@ -124,22 +110,15 @@ function SetupProfile({ from_profile }) {
       fetchDataFromApi();
     }
   }, []);
+  
 
   const handleSkip = () => {
     // Save the form data to localStorage
-    localStorage.setItem("profileData", JSON.stringify(form));
-    if (!from_profile) {
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Thank you very much!",
-        html: "<p>for joining us. Your registration is successful.</p>",
-        showConfirmButton: true,
-        timer: 1200,
-        customClass: {
-          confirmButton: "successfull-button",
-        },
-      });
+    // localStorage.setItem("profileData", JSON.stringify(form));
+    if(from_profile){
+      navigate(-1);
+    } else {
+      navigate('/social-media');
     }
   };
 

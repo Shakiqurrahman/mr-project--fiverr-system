@@ -1,319 +1,314 @@
 import React, { useEffect, useState } from "react";
-import { FaFacebookF, FaGoogle, FaInstagram, FaPinterest, FaTiktok, FaTumblr, FaTwitter, FaYelp, FaYoutube } from "react-icons/fa";
+import toast from "react-hot-toast";
+import {
+  FaFacebookF,
+  FaGoogle,
+  FaInstagram,
+  FaPinterest,
+  FaTiktok,
+  FaTumblr,
+  FaTwitter,
+  FaYelp,
+  FaYoutube,
+} from "react-icons/fa";
 import { FaLinkedinIn } from "react-icons/fa6";
-import nextDoorIcon from '../assets/images/nextdoor_icon.png';
-import axios from "axios";
-import { configApi } from "../libs/configApi";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import nextDoorIcon from "../assets/images/nextdoor_icon.png";
+import {
+  useFetchSocialMediasQuery,
+  useUpdateSocialMediasMutation,
+} from "../Redux/api/apiSlice";
 
 const SocialMediasForm = () => {
-    // State to manage form inputs
-    const email = 'sarkarsoumik215@gmail.com';
-    const [socialLinks, setSocialLinks] = useState({
-        facebook: "",
-        instagram: "",
-        linkedin: "",
-        twitter: "",
-        pinterest: "",
-        google: "",
-        tumblr: "",
-        youtube: "",
-        yelp: "",
-        tiktok: "",
-        nextdoor: ""
-});
+  const {
+    data: socialMediasData,
+    isLoading,
+    error,
+  } = useFetchSocialMediasQuery();
+  const [updateSocialMedias] = useUpdateSocialMediasMutation();
+  const navigate = useNavigate();
 
-    // Fetch social media links on component mount
-    useEffect(() => {
-        const fetchSocialLinks = async () => {
-            try {
-                const api = `${configApi.api}social-media-link/${email}`;
-                const { data } = await axios.get(api, { params: { email } });
-                if (data.success) {
-                    const { facebook,
-                        instagram,
-                        linkedin,
-                        twitter,
-                        pinterest,
-                        google,
-                        tumblr,
-                        youtube,
-                        yelp,
-                        tiktok,
-                        nextdoor, } = data.data;
-                    setSocialLinks({
-                        facebook,
-                        instagram,
-                        linkedin,
-                        twitter,
-                        pinterest,
-                        google,
-                        tumblr,
-                        youtube,
-                        yelp,
-                        tiktok,
-                        nextdoor
-                    }); // Assuming the API returns the social links in `data.socialLinks`
-                } else {
-                    console.error('Failed to fetch social media links.');
-                }
-            } catch (error) {
-                console.error('Error fetching social media links:', error);
-            }
-        };
+  // State to manage form inputs
+  const [socialLinks, setSocialLinks] = useState({
+    facebook: "",
+    instagram: "",
+    linkedin: "",
+    twitter: "",
+    pinterest: "",
+    google: "",
+    tumblr: "",
+    youtube: "",
+    yelp: "",
+    tiktok: "",
+    nextdoor: "",
+  });
 
-        fetchSocialLinks();
-    }, []);
+  // Use useEffect to update the state when socialMediasData is fetched
+  useEffect(() => {
+    if (socialMediasData) {
+      setSocialLinks((prevState) => ({
+        ...prevState,
+        ...socialMediasData,
+      }));
+    }
+  }, [socialMediasData]);
 
-    // Handler for input change
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setSocialLinks(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
-    };
+  // Handler for input change
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSocialLinks((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
-    // Handler for form submission
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const api = `${configApi.api}social-media-link`;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await updateSocialMedias(socialLinks).unwrap();
+      console.log(result);
 
-            // Create the request body from the state
-            const requestBody = {
-                facebook: socialLinks.facebook,
-                instagram: socialLinks.instagram,
-                linkedin: socialLinks.linkedin,
-                twitter: socialLinks.twitter,
-                pinterest: socialLinks.pinterest,
-                google: socialLinks.google,
-                tumblr: socialLinks.tumblr,
-                youtube: socialLinks.youtube,
-                yelp: socialLinks.yelp,
-                tiktok: socialLinks.tiktok,
-                nextdoor: socialLinks.nextdoor,
-                email
-            };
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Thank you very much!",
+        html: "<p>for joining us. Your registration is successful.</p>",
+        showConfirmButton: true,
+        timer: 1500,
+        customClass: {
+          confirmButton: "successfull-button",
+        },
+    });
+    navigate('/');
 
-            const { data } = await axios.post(api, requestBody);
-            console.log(data);
+      console.log("Social media links saved successfully!");
+    } catch (error) {
+      console.error("Error saving social media links:", error);
+      toast.error("Unable to save!");
+    }
+  };
 
-            if (data.success) {
-                // Clear the state upon successful submission
-                setSocialLinks({
-                    facebook: "",
-                    instagram: "",
-                    linkedin: "",
-                    twitter: "",
-                    pinterest: "",
-                    google: "",
-                    tumblr: "",
-                    youtube: "",
-                    yelp: "",
-                    tiktok: "",
-                    nextdoor: ""
-                });
-                alert('Social media links saved successfully!');
-            } else {
-                alert('Failed to save social media links.');
-            }
-        } catch (error) {
-            console.error('Error saving social media links:', error);
-            alert('An error occurred while saving social media links.');
-        }
-    };
+  const handleSkip = () => {
+    if (!from_profile) {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Thank you very much!",
+        html: "<p>for joining us. Your registration is successful.</p>",
+        showConfirmButton: true,
+        timer: 1200,
+        customClass: {
+          confirmButton: "successfull-button",
+        },
+      });
+    } else {
+      navigate("/");
+    }
+  };
 
-    return (
-        <section className="max-w-[800px] mx-auto my-20">
-            <h1 className="bg-primary text-white p-4">Social Media Links</h1>
-            <form className="bg-[#edf7fd] p-4" onSubmit={handleSubmit}>
-                {/* Facebook */}
-                <label className="block px-2 pt-2">Facebook</label>
-                <div className="flex mt-1">
-                    <div className="h-[50px] w-[50px] flex-shrink-0 p-2 bg-white border border-[#e7e7e7]">
-                        <FaFacebookF className="flex-shrink-0 text-base border border-primary rounded-full p-1.5 w-full h-full" />
-                    </div>
-                    <input
-                        type="text"
-                        name="facebook"
-                        value={socialLinks.facebook}
-                        onChange={handleChange}
-                        placeholder="https://"
-                        className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
-                    />
-                </div>
+  return (
+    <section className="mx-auto my-20 max-w-[800px]">
+      <h1 className="bg-primary p-4 text-white">Social Media Links</h1>
+      <form className="bg-[#edf7fd] p-4" onSubmit={handleSubmit}>
+        {/* Facebook */}
+        <label className="block px-2 pt-2">Facebook</label>
+        <div className="mt-1 flex">
+          <div className="h-[50px] w-[50px] flex-shrink-0 border border-[#e7e7e7] bg-white p-2">
+            <FaFacebookF className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
+          </div>
+          <input
+            type="text"
+            name="facebook"
+            value={socialLinks.facebook}
+            onChange={handleChange}
+            placeholder="https://"
+            className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 px-3 outline-none sm:p-3 sm:px-4"
+          />
+        </div>
 
-                {/* Instagram */}
-                <label className="block px-2 pt-2">Instagram</label>
-                <div className="flex mt-1">
-                    <div className="h-[50px] w-[50px] flex-shrink-0 p-2 bg-white border border-[#e7e7e7]">
-                        <FaInstagram className="flex-shrink-0 text-base border border-primary rounded-full p-1.5 w-full h-full" />
-                    </div>
-                    <input
-                        type="text"
-                        name="instagram"
-                        value={socialLinks.instagram}
-                        onChange={handleChange}
-                        placeholder="https://"
-                        className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
-                    />
-                </div>
+        {/* Instagram */}
+        <label className="block px-2 pt-2">Instagram</label>
+        <div className="mt-1 flex">
+          <div className="h-[50px] w-[50px] flex-shrink-0 border border-[#e7e7e7] bg-white p-2">
+            <FaInstagram className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
+          </div>
+          <input
+            type="text"
+            name="instagram"
+            value={socialLinks.instagram}
+            onChange={handleChange}
+            placeholder="https://"
+            className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 px-3 outline-none sm:p-3 sm:px-4"
+          />
+        </div>
 
-                {/* LinkedIn */}
-                <label className="block px-2 pt-2">LinkedIn</label>
-                <div className="flex mt-1">
-                    <div className="h-[50px] w-[50px] flex-shrink-0 p-2 bg-white border border-[#e7e7e7]">
-                        <FaLinkedinIn className="flex-shrink-0 text-base border border-primary rounded-full p-1.5 w-full h-full" />
-                    </div>
-                    <input
-                        type="text"
-                        name="linkedin"
-                        value={socialLinks.linkedin}
-                        onChange={handleChange}
-                        placeholder="https://"
-                        className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
-                    />
-                </div>
+        {/* LinkedIn */}
+        <label className="block px-2 pt-2">LinkedIn</label>
+        <div className="mt-1 flex">
+          <div className="h-[50px] w-[50px] flex-shrink-0 border border-[#e7e7e7] bg-white p-2">
+            <FaLinkedinIn className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
+          </div>
+          <input
+            type="text"
+            name="linkedin"
+            value={socialLinks.linkedin}
+            onChange={handleChange}
+            placeholder="https://"
+            className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 px-3 outline-none sm:p-3 sm:px-4"
+          />
+        </div>
 
-                {/* Twitter */}
-                <label className="block px-2 pt-2">Twitter</label>
-                <div className="flex mt-1">
-                    <div className="h-[50px] w-[50px] flex-shrink-0 p-2 bg-white border border-[#e7e7e7]">
-                        <FaTwitter className="flex-shrink-0 text-base border border-primary rounded-full p-1.5 w-full h-full" />
-                    </div>
-                    <input
-                        type="text"
-                        name="twitter"
-                        value={socialLinks.twitter}
-                        onChange={handleChange}
-                        placeholder="https://"
-                        className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
-                    />
-                </div>
+        {/* Twitter */}
+        <label className="block px-2 pt-2">Twitter</label>
+        <div className="mt-1 flex">
+          <div className="h-[50px] w-[50px] flex-shrink-0 border border-[#e7e7e7] bg-white p-2">
+            <FaTwitter className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
+          </div>
+          <input
+            type="text"
+            name="twitter"
+            value={socialLinks.twitter}
+            onChange={handleChange}
+            placeholder="https://"
+            className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 px-3 outline-none sm:p-3 sm:px-4"
+          />
+        </div>
 
-                {/* Pinterest */}
-                <label className="block px-2 pt-2">Pinterest</label>
-                <div className="flex mt-1">
-                    <div className="h-[50px] w-[50px] flex-shrink-0 p-2 bg-white border border-[#e7e7e7]">
-                        <FaPinterest className="flex-shrink-0 text-base border border-primary rounded-full p-1.5 w-full h-full" />
-                    </div>
-                    <input
-                        type="text"
-                        name="pinterest"
-                        value={socialLinks.pinterest}
-                        onChange={handleChange}
-                        placeholder="https://"
-                        className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
-                    />
-                </div>
+        {/* Pinterest */}
+        <label className="block px-2 pt-2">Pinterest</label>
+        <div className="mt-1 flex">
+          <div className="h-[50px] w-[50px] flex-shrink-0 border border-[#e7e7e7] bg-white p-2">
+            <FaPinterest className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
+          </div>
+          <input
+            type="text"
+            name="pinterest"
+            value={socialLinks.pinterest}
+            onChange={handleChange}
+            placeholder="https://"
+            className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 px-3 outline-none sm:p-3 sm:px-4"
+          />
+        </div>
 
-                {/* Google */}
-                <label className="block px-2 pt-2">Google</label>
-                <div className="flex mt-1">
-                    <div className="h-[50px] w-[50px] flex-shrink-0 p-2 bg-white border border-[#e7e7e7]">
-                        <FaGoogle className="flex-shrink-0 text-base border border-primary rounded-full p-1.5 w-full h-full" />
-                    </div>
-                    <input
-                        type="text"
-                        name="google"
-                        value={socialLinks.google}
-                        onChange={handleChange}
-                        placeholder="https://"
-                        className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
-                    />
-                </div>
+        {/* Google */}
+        <label className="block px-2 pt-2">Google</label>
+        <div className="mt-1 flex">
+          <div className="h-[50px] w-[50px] flex-shrink-0 border border-[#e7e7e7] bg-white p-2">
+            <FaGoogle className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
+          </div>
+          <input
+            type="text"
+            name="google"
+            value={socialLinks.google}
+            onChange={handleChange}
+            placeholder="https://"
+            className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 px-3 outline-none sm:p-3 sm:px-4"
+          />
+        </div>
 
-                {/* Tumblr */}
-                <label className="block px-2 pt-2">Tumblr</label>
-                <div className="flex mt-1">
-                    <div className="h-[50px] w-[50px] flex-shrink-0 p-2 bg-white border border-[#e7e7e7]">
-                        <FaTumblr className="flex-shrink-0 text-base border border-primary rounded-full p-1.5 w-full h-full" />
-                    </div>
-                    <input
-                        type="text"
-                        name="tumblr"
-                        value={socialLinks.tumblr}
-                        onChange={handleChange}
-                        placeholder="https://"
-                        className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
-                    />
-                </div>
+        {/* Tumblr */}
+        <label className="block px-2 pt-2">Tumblr</label>
+        <div className="mt-1 flex">
+          <div className="h-[50px] w-[50px] flex-shrink-0 border border-[#e7e7e7] bg-white p-2">
+            <FaTumblr className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
+          </div>
+          <input
+            type="text"
+            name="tumblr"
+            value={socialLinks.tumblr}
+            onChange={handleChange}
+            placeholder="https://"
+            className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 px-3 outline-none sm:p-3 sm:px-4"
+          />
+        </div>
 
-                {/* YouTube */}
-                <label className="block px-2 pt-2">YouTube</label>
-                <div className="flex mt-1">
-                    <div className="h-[50px] w-[50px] flex-shrink-0 p-2 bg-white border border-[#e7e7e7]">
-                        <FaYoutube className="flex-shrink-0 text-base border border-primary rounded-full p-1.5 w-full h-full" />
-                    </div>
-                    <input
-                        type="text"
-                        name="youtube"
-                        value={socialLinks.youtube}
-                        onChange={handleChange}
-                        placeholder="https://"
-                        className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
-                    />
-                </div>
+        {/* YouTube */}
+        <label className="block px-2 pt-2">YouTube</label>
+        <div className="mt-1 flex">
+          <div className="h-[50px] w-[50px] flex-shrink-0 border border-[#e7e7e7] bg-white p-2">
+            <FaYoutube className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
+          </div>
+          <input
+            type="text"
+            name="youtube"
+            value={socialLinks.youtube}
+            onChange={handleChange}
+            placeholder="https://"
+            className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 px-3 outline-none sm:p-3 sm:px-4"
+          />
+        </div>
 
-                {/* Yelp */}
-                <label className="block px-2 pt-2">Yelp</label>
-                <div className="flex mt-1">
-                    <div className="h-[50px] w-[50px] flex-shrink-0 p-2 bg-white border border-[#e7e7e7]">
-                        <FaYelp className="flex-shrink-0 text-base border border-primary rounded-full p-1.5 w-full h-full" />
-                    </div>
-                    <input
-                        type="text"
-                        name="yelp"
-                        value={socialLinks.yelp}
-                        onChange={handleChange}
-                        placeholder="https://"
-                        className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
-                    />
-                </div>
+        {/* Yelp */}
+        <label className="block px-2 pt-2">Yelp</label>
+        <div className="mt-1 flex">
+          <div className="h-[50px] w-[50px] flex-shrink-0 border border-[#e7e7e7] bg-white p-2">
+            <FaYelp className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
+          </div>
+          <input
+            type="text"
+            name="yelp"
+            value={socialLinks.yelp}
+            onChange={handleChange}
+            placeholder="https://"
+            className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 px-3 outline-none sm:p-3 sm:px-4"
+          />
+        </div>
 
-                {/* TikTok */}
-                <label className="block px-2 pt-2">TikTok</label>
-                <div className="flex mt-1">
-                    <div className="h-[50px] w-[50px] flex-shrink-0 p-2 bg-white border border-[#e7e7e7]">
-                        <FaTiktok className="flex-shrink-0 text-base border border-primary rounded-full p-1.5 w-full h-full" />
-                    </div>
-                    <input
-                        type="text"
-                        name="tiktok"
-                        value={socialLinks.tiktok}
-                        onChange={handleChange}
-                        placeholder="https://"
-                        className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
-                    />
-                </div>
+        {/* TikTok */}
+        <label className="block px-2 pt-2">TikTok</label>
+        <div className="mt-1 flex">
+          <div className="h-[50px] w-[50px] flex-shrink-0 border border-[#e7e7e7] bg-white p-2">
+            <FaTiktok className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
+          </div>
+          <input
+            type="text"
+            name="tiktok"
+            value={socialLinks.tiktok}
+            onChange={handleChange}
+            placeholder="https://"
+            className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 px-3 outline-none sm:p-3 sm:px-4"
+          />
+        </div>
 
-                {/* Nextdoor */}
-                <label className="block px-2 pt-2">Nextdoor</label>
-                <div className="flex mt-1">
-                    <div className="h-[50px] w-[50px] flex-shrink-0 p-2 bg-white border border-[#e7e7e7]">
-                        <img src={nextDoorIcon} alt="Nextdoor" className="flex-shrink-0 border border-primary rounded-full p-1.5 w-full h-full" />
-                    </div>
-                    <input
-                        type="text"
-                        name="nextdoor"
-                        value={socialLinks.nextdoor}
-                        onChange={handleChange}
-                        placeholder="https://"
-                        className="bg-white block w-full p-2 sm:p-3 px-3 sm:px-4 border border-solid border-[#e7e7e7] outline-none"
-                    />
-                </div>
+        {/* Nextdoor */}
+        <label className="block px-2 pt-2">Nextdoor</label>
+        <div className="mt-1 flex">
+          <div className="h-[50px] w-[50px] flex-shrink-0 border border-[#e7e7e7] bg-white p-2">
+            <img
+              src={nextDoorIcon}
+              alt="Nextdoor"
+              className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5"
+            />
+          </div>
+          <input
+            type="text"
+            name="nextdoor"
+            value={socialLinks.nextdoor}
+            onChange={handleChange}
+            placeholder="https://"
+            className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 px-3 outline-none sm:p-3 sm:px-4"
+          />
+        </div>
 
-                <div className="flex gap-4 mt-4">
-                    <button type="submit" className="flex-1 py-2.5 px-4 bg-primary text-white rounded-[30px]">
-                        Save
-                    </button>
-                    <button type="button" className="flex-1 py-2.5 px-4 bg-[#7c7c7c] text-white rounded-[30px]">
-                        Skip
-                    </button>
-                </div>
-            </form>
-        </section>
-    );
+        <div className="mt-4 flex gap-4">
+          <button
+            type="submit"
+            className="flex-1 rounded-[30px] bg-primary px-4 py-2.5 text-white"
+          >
+            Save
+          </button>
+          <button
+          onClick={handleSkip}
+            type="button"
+            className="flex-1 rounded-[30px] bg-[#7c7c7c] px-4 py-2.5 text-white"
+          >
+            Skip
+          </button>
+        </div>
+      </form>
+    </section>
+  );
 };
 
 export default SocialMediasForm;
