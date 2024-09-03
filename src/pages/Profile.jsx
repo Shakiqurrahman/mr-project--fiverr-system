@@ -66,6 +66,22 @@ function Profile({ user = {}, slug }) {
     setDescription(user?.description || "");
   };
 
+  console.log(user);
+
+  const {
+    facebook,
+    instagram,
+    twitter,
+    google,
+    linkedin,
+    yelp,
+    thumblr,
+    youtube,
+    nextdoor,
+    pinterest,
+    tiktok,
+  } = user.SocialMediaLinks || {};
+
   return (
     <section className="max-width mt-10 flex flex-col gap-10 md:flex-row lg:gap-16">
       <div className="min-w-[260px] md:w-1/4">
@@ -130,23 +146,59 @@ function Profile({ user = {}, slug }) {
           </div>
 
           {/* social medias icons  */}
-          <p className="mb-4 pt-4 text-center">Social Media Links</p>
-          <div className="flex flex-wrap items-center justify-center gap-4 pb-4">
-            <Link className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white">
-              <FaFacebookF />
+          <div className="relative">
+            <p className="mb-4 pt-4 text-center">Social Media Links</p>
+            {slug === loggedUser?.userName && (
+            <Link className="absolute top-4 right-0" to='/social-media'>
+              <LiaEditSolid className="size-6 cursor-pointer text-xl" />
             </Link>
-            <Link className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white">
-              <FaInstagram />
-            </Link>
-            <Link className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white">
-              <FaTwitter />
-            </Link>
-            <Link className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white">
-              <FaPinterestP />
-            </Link>
-            <Link className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white">
-              <FaLinkedinIn />
-            </Link>
+            )}
+            <div className="flex flex-wrap items-center justify-center gap-4 pb-4">
+              {facebook && (
+                <Link
+                  to={facebook}
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  <FaFacebookF />
+                </Link>
+              )}
+
+              {instagram && (
+                <Link
+                  to={instagram}
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  <FaInstagram />
+                </Link>
+              )}
+
+              {twitter && (
+                <Link
+                  to={twitter}
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  <FaTwitter />
+                </Link>
+              )}
+
+              {pinterest && (
+                <Link
+                  to={pinterest}
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  <FaPinterestP />
+                </Link>
+              )}
+
+              {linkedin && (
+                <Link
+                  to={linkedin}
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  <FaLinkedinIn />
+                </Link>
+              )}
+            </div>
           </div>
         </div>
 

@@ -12,7 +12,7 @@ import {
   FaYoutube,
 } from "react-icons/fa";
 import { FaLinkedinIn } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import nextDoorIcon from "../assets/images/nextdoor_icon.png";
 import {
@@ -21,6 +21,7 @@ import {
 } from "../Redux/api/apiSlice";
 
 const SocialMediasForm = () => {
+  const {state} = useLocation();  
   const {
     data: socialMediasData,
     isLoading,
@@ -69,19 +70,23 @@ const SocialMediasForm = () => {
       const result = await updateSocialMedias(socialLinks).unwrap();
       console.log(result);
 
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Thank you very much!",
-        html: "<p>for joining us. Your registration is successful.</p>",
-        showConfirmButton: true,
-        timer: 1500,
-        customClass: {
-          confirmButton: "successfull-button",
-        },
-    });
-    navigate('/');
-
+      if(state === 'newUser'){
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Thank you very much!",
+          html: "<p>for joining us. Your registration is successful.</p>",
+          showConfirmButton: true,
+          timer: 1500,
+          customClass: {
+            confirmButton: "successfull-button",
+          },
+      });
+      navigate('/');
+    } else {
+      toast.success("Saved Successfully!")
+      navigate(-1);
+      }
       console.log("Social media links saved successfully!");
     } catch (error) {
       console.error("Error saving social media links:", error);
@@ -90,7 +95,7 @@ const SocialMediasForm = () => {
   };
 
   const handleSkip = () => {
-    if (!from_profile) {
+    if (state === "newUser") {
       Swal.fire({
         position: "center",
         icon: "success",
@@ -102,8 +107,9 @@ const SocialMediasForm = () => {
           confirmButton: "successfull-button",
         },
       });
-    } else {
       navigate("/");
+    } else {
+      navigate(-1);
     }
   };
 

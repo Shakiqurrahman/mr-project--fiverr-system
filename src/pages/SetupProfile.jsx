@@ -6,7 +6,6 @@ import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
 import Avatar from "../assets/images/camera.jpg";
 import CountryList from "../components/CountryList";
 import { configApi } from "../libs/configApi";
@@ -46,14 +45,11 @@ function SetupProfile({ from_profile }) {
       // Example API endpoint
       const { data } = await axios.post(`${configApi.api}/update-user`, form);
       dispatch(setUser({ user: data.data }));
-
-      if (data.success === true) {
-        if (from_profile) {
-          toast.success("Saved successfully");
-          navigate("/");
-        }
+      if (from_profile) {
+        toast.success("Saved successfully");
+        navigate("/");
       } else {
-        navigate("/social-media");
+        navigate("/social-media", { state: "newUser" });
       }
       setUploading(false);
       setLoading(false);
@@ -110,15 +106,14 @@ function SetupProfile({ from_profile }) {
       fetchDataFromApi();
     }
   }, []);
-  
 
   const handleSkip = () => {
     // Save the form data to localStorage
     // localStorage.setItem("profileData", JSON.stringify(form));
-    if(from_profile){
+    if (from_profile) {
       navigate(-1);
     } else {
-      navigate('/social-media');
+      navigate("/social-media", { state: "newUser" });
     }
   };
 
