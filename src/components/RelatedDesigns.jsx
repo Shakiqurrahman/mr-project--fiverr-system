@@ -6,7 +6,7 @@ import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
 import thumbnail from "../assets/images/project-thumbnail.jpg";
 import ProjectCard from "./categories//ProjectCard";
 
-function RelatedDesigns({ bgColor, color, img }) {
+function RelatedDesigns({ bgColor, color, img, items = [] }) {
   const settings = {
     dots: false,
     infinite: false,
@@ -70,26 +70,35 @@ function RelatedDesigns({ bgColor, color, img }) {
     <div
       className={`${
         bgColor ? bgColor : "bg-lightskyblue"
-      } -mb-10 sm:-mb-20 relative`}
+      } relative -mb-10 sm:-mb-20`}
     >
-      <div className="max-width py-10 mt-10">
+      <div className="max-width mt-10 py-10">
         <h1
           className={`${
             color ? color : "text-primary"
-          } text-2xl font-bold text-center`}
+          } text-center text-2xl font-bold`}
         >
           Related Designs
         </h1>
         <div className="mt-8">
-          <Slider {...settings}>
-            {categories.map((category) => (
-              <ProjectCard
-                key={Math.random()}
-                thumbnail={img ? img : category.thumbnail}
-                title={category.title}
-              />
-            ))}
-          </Slider>
+          {items?.length > 0 ? (
+            <Slider {...settings}>
+              {items?.map((design, i) => {
+                const thumbnail = design?.images?.find((d) => d.thumbnail);
+                return (
+                  <ProjectCard
+                    key={i}
+                    thumbnail={thumbnail?.url}
+                    thumbnailName={thumbnail?.name}
+                    title={design.title}
+                    slug={`/design/${design?.designId}`}
+                  />
+                );
+              })}
+            </Slider>
+          ) : (
+            <div className="text-center">No Related Designs Found</div>
+          )}
         </div>
       </div>
     </div>
@@ -101,7 +110,7 @@ function NextArrow({ onClick }) {
   return (
     <div
       onClick={onClick}
-      className="slick-arrow before:content-none h-[35px] w-[35px] border cursor-pointer flex items-center justify-center rounded-full absolute top-[35%] -right-[15px] z-10"
+      className="slick-arrow absolute -right-[15px] top-[35%] z-10 flex h-[35px] w-[35px] cursor-pointer items-center justify-center rounded-full border before:content-none"
     >
       <img src={RightArrowIcon} alt="" />
     </div>
@@ -112,7 +121,7 @@ function PrevArrow({ onClick }) {
   return (
     <div
       onClick={onClick}
-      className="slick-arrow before:content-none h-[35px] w-[35px] border cursor-pointer flex items-center justify-center rounded-full absolute top-[35%] -left-[15px] z-10"
+      className="slick-arrow absolute -left-[15px] top-[35%] z-10 flex h-[35px] w-[35px] cursor-pointer items-center justify-center rounded-full border before:content-none"
     >
       <img src={LeftArrowIcon} alt="" />
     </div>

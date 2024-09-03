@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import Slider from "react-slick";
+import LeftArrowIcon from "../assets/images/icons/Left Arrow.svg";
+import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
 import ButtonSecondary from "../components/ButtonSecondary";
 import Divider from "../components/Divider";
 import RelatedDesigns from "../components/RelatedDesigns";
@@ -12,6 +15,29 @@ function SingleProductPage() {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
   const [isClicked, setIsClicked] = useState(false);
+  const [images, setImages] = useState([]);
+  const [showAll, setShowAll] = useState(false);
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    // className: "category-cards",
+    slidesToScroll: 1,
+    arrows: true,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    responsive: [
+      {
+        breakpoint: 576,
+        settings: {
+          arrows: false,
+        },
+      },
+    ],
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+  };
 
   const {
     data: uploadDesigns,
@@ -19,8 +45,29 @@ function SingleProductPage() {
     isLoading,
     refetch,
   } = useFetchGetUploadQuery();
-  const design = uploadDesigns?.find((d) => d.designId === slug);
-  const thumbnail = design?.images?.find((d) => d.thumbnail);
+
+  const design = useMemo(
+    () => uploadDesigns?.find((d) => d.designId === slug),
+    [uploadDesigns, slug],
+  );
+
+  const relatedDesigns = useMemo(
+    () =>
+      uploadDesigns?.filter((obj) =>
+        design?.relatedDesigns?.includes(obj.designId),
+      ),
+    [uploadDesigns, design?.relatedDesigns],
+  );
+
+  useEffect(() => {
+    if (design) {
+      const images = design.images;
+      const sortedImages = [...images].sort(
+        (a, b) => b.thumbnail - a.thumbnail,
+      );
+      setImages(sortedImages);
+    }
+  }, [design]);
 
   useEffect(() => {
     if (uploadDesigns) {
@@ -40,6 +87,14 @@ function SingleProductPage() {
 
   // handling edit and delete button state
   const handleIsClicked = () => setIsClicked(!isClicked);
+
+  // Function to handle the toggle between showing all tags and showing just the first 10
+  const handleToggle = () => {
+    setShowAll(!showAll);
+  };
+
+  // Determine which tags to show
+  const tagsToShow = showAll ? design?.tags : design?.tags?.slice(0, 10);
 
   return (
     <>
@@ -67,7 +122,24 @@ function SingleProductPage() {
         )}
         <div className="mt-5 flex flex-wrap gap-4 sm:mt-10 md:flex-nowrap">
           <div className="w-full md:w-2/3 lg:w-3/4">
-            <img src={thumbnail?.url} alt="" className="w-full" />
+            {images?.length === 1 ? (
+              <img
+                src={images[0].url}
+                alt=""
+                className="w-full object-contain"
+              />
+            ) : (
+              <Slider {...settings}>
+                {images?.map((image, i) => (
+                  <img
+                    key={i}
+                    src={image.url}
+                    alt=""
+                    className="w-full object-contain"
+                  />
+                ))}
+              </Slider>
+            )}
           </div>
           <div className="w-full bg-lightskyblue px-4 py-5 md:w-1/3 lg:w-1/4">
             <h1 className="text-lg font-bold sm:text-2xl">{design?.title}</h1>
@@ -111,13 +183,42 @@ function SingleProductPage() {
         ></div>
         <Divider className={"h-px w-full bg-[#000!important]"} />
         <div className="mt-10 flex flex-wrap gap-3">
-          {design?.tags?.map((btn) => (
-            <ButtonSecondary key={Math.random()}>{btn}</ButtonSecondary>
+          {tagsToShow?.map((tag, index) => (
+            <ButtonSecondary key={index}>{tag}</ButtonSecondary>
           ))}
+          <button
+            className="rounded-[30px] bg-[#ffefef] px-2 py-1 text-sm font-medium duration-300 hover:bg-secondary hover:text-white sm:px-4 sm:py-2 sm:text-base"
+            onClick={handleToggle}
+          >
+            {showAll ? "Show Less" : "See All"}
+          </button>
         </div>
       </div>
-      <RelatedDesigns />
+      <RelatedDesigns items={relatedDesigns} />
     </>
+  );
+}
+
+// Custom arrows design components
+function NextArrow({ onClick }) {
+  return (
+    <div
+      onClick={onClick}
+      className="slick-arrow absolute -right-[15px] top-[50%] z-10 flex h-[35px] w-[35px] -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border before:content-none"
+    >
+      <img src={RightArrowIcon} alt="" />
+    </div>
+  );
+}
+
+function PrevArrow({ onClick }) {
+  return (
+    <div
+      onClick={onClick}
+      className="slick-arrow absolute -left-[15px] top-[50%] z-10 flex h-[35px] w-[35px] -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border before:content-none"
+    >
+      <img src={LeftArrowIcon} alt="" />
+    </div>
   );
 }
 
