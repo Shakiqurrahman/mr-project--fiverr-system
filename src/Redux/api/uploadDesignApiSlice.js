@@ -43,6 +43,10 @@ export const uploadDesignApiSlice = createApi({
         return [...new Set(industries)];
       },
     }),
+    fetchProductById: builder.query({
+      query: (productId) => `upload/get/${productId}`,
+      transformResponse: (response) => response?.data,
+    }),
   }),
 });
 
@@ -53,4 +57,5 @@ export const {
   useFetchSubFoldersQuery,
   useFetchIndustriesQuery,
   useFetchDesignsQuery,
+  useFetchProductByIdQuery,
 } = uploadDesignApiSlice;
