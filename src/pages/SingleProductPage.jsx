@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -13,9 +13,20 @@ function SingleProductPage() {
   const { user } = useSelector((state) => state.user);
   const [isClicked, setIsClicked] = useState(false);
 
-  const { data: uploadDesigns, error, isLoading } = useFetchGetUploadQuery();
+  const {
+    data: uploadDesigns,
+    error,
+    isLoading,
+    refetch,
+  } = useFetchGetUploadQuery();
   const design = uploadDesigns?.find((d) => d.designId === slug);
   const thumbnail = design?.images?.find((d) => d.thumbnail);
+
+  useEffect(() => {
+    if (uploadDesigns) {
+      refetch();
+    }
+  }, [uploadDesigns, refetch]);
 
   const [addCartBtn, setAddCartBtn] = useState(false);
   const handleAddCartBtn = () => {
@@ -95,7 +106,7 @@ function SingleProductPage() {
           </div>
         </div>
         <div
-          className="my-10 overflow-clip"
+          className="my-10 overflow-clip break-words"
           dangerouslySetInnerHTML={{ __html: design?.description }}
         ></div>
         <Divider className={"h-px w-full bg-[#000!important]"} />
