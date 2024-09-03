@@ -46,11 +46,11 @@ function SetupProfile({ from_profile }) {
       const { data } = await axios.post(`${configApi.api}/update-user`, form);
       dispatch(setUser({ user: data.data }));
       if (from_profile) {
-        toast.success("Saved successfully");
         navigate("/");
       } else {
         navigate("/social-media", { state: "newUser" });
       }
+      toast.success("Saved successfully");
       setUploading(false);
       setLoading(false);
     } catch (error) {
