@@ -402,7 +402,7 @@ function EditDesign() {
         designs,
       };
       try {
-        const url = `${configApi.api}upload/udpate/${state.designId}`;
+        const url = `${configApi.api}upload/update/${state.designId}`;
 
         const response = await axios.put(url, data);
 
