@@ -19,6 +19,7 @@ import {
   useFetchSocialMediasQuery,
   useUpdateSocialMediasMutation,
 } from "../Redux/api/apiSlice";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 const SocialMediasForm = () => {
   const {state} = useLocation();  
@@ -27,7 +28,7 @@ const SocialMediasForm = () => {
     isLoading,
     error,
   } = useFetchSocialMediasQuery();
-  const [updateSocialMedias] = useUpdateSocialMediasMutation();
+  const [updateSocialMedias, {isLoading: isUpdating}] = useUpdateSocialMediasMutation();
   const navigate = useNavigate();
 
   // State to manage form inputs
@@ -87,7 +88,6 @@ const SocialMediasForm = () => {
       toast.success("Saved Successfully!")
       navigate(-1);
       }
-      console.log("Social media links saved successfully!");
     } catch (error) {
       console.error("Error saving social media links:", error);
       toast.error("Unable to save!");
@@ -313,6 +313,17 @@ const SocialMediasForm = () => {
           </button>
         </div>
       </form>
+      {(isLoading || isUpdating) && (
+                <Backdrop
+                  sx={{
+                    color: "#fff",
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                  }}
+                  open
+                >
+                  <CircularProgress color="inherit" />
+                </Backdrop>
+              )}
     </section>
   );
 };

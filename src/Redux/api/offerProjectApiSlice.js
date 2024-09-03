@@ -8,10 +8,17 @@ export const offerProjectApiSlice = createApi({
   }),
   endpoints: (builder) => ({
     fetchOfferProject: builder.query({
-      query: () => "create-project/get",
+      query: () => "create-offer-project/get",
       transformResponse: (response) => response?.data[0],
+    }),
+    updateOfferProject: builder.mutation({
+      query: (projectData) => ({
+        url: "create-offer-project/create",
+        method: "POST",
+        body: projectData,
+      }),
     }),
   }),
 });
 
-export const { useFetchOfferProjectQuery } = offerProjectApiSlice;
+export const { useFetchOfferProjectQuery, useUpdateOfferProjectMutation } = offerProjectApiSlice;
