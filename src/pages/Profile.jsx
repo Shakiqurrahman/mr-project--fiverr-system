@@ -15,16 +15,16 @@ import {
   FaYoutube,
 } from "react-icons/fa";
 // import nextDoorIcon from "../assets/images/nextdoor_icon.png";
-import { PiNotionLogoBold } from "react-icons/pi";
 import { LiaEditSolid } from "react-icons/lia";
+import { PiNotionLogoBold } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { setUser } from "../Redux/features/userSlice";
 import defaultImg from "../assets/images/default_user.png";
 import ActiveProjects from "../components/customer-profile/ActiveProjects";
 import AllReviews from "../components/customer-profile/AllReviews";
 import CompletedProjects from "../components/customer-profile/CompletedProjects";
 import { configApi } from "../libs/configApi";
-import { setUser } from "../Redux/features/userSlice";
 
 function Profile({ user = {}, slug }) {
   const dispatch = useDispatch();
@@ -97,7 +97,7 @@ function Profile({ user = {}, slug }) {
           <div className="pb-4">
             <div className="relative mx-auto size-32 rounded-full border border-gray-300">
               <img
-                className="rounded-full object-cover"
+                className="h-full w-full rounded-full object-cover"
                 src={user?.image ? user.image : defaultImg}
                 alt="user image"
               />
