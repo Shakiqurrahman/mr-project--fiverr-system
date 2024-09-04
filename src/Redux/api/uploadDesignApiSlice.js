@@ -47,6 +47,18 @@ export const uploadDesignApiSlice = createApi({
       query: (productId) => `upload/get/${productId}`,
       transformResponse: (response) => response?.data,
     }),
+    fetchAllDesignKeywords: builder.query({
+      query: () => `designs/get`,
+      transformResponse: (response) => [...new Set(response?.data)],
+    }),
+    fetchAllIndustryKeywords: builder.query({
+      query: () => `industrys/get`,
+      transformResponse: (response) => [...new Set(response?.data)],
+    }),
+    fetchDesignByKey: builder.query({
+      query: (key) => `designs/filter/get?name=${key}`,
+      transformResponse: (response) => response?.data,
+    }),
   }),
 });
 
@@ -58,4 +70,7 @@ export const {
   useFetchIndustriesQuery,
   useFetchDesignsQuery,
   useFetchProductByIdQuery,
+  useFetchAllDesignKeywordsQuery,
+  useFetchAllIndustryKeywordsQuery,
+  useFetchDesignByKeyQuery,
 } = uploadDesignApiSlice;

@@ -5,6 +5,7 @@ import PageHeader from "../components/PageHeader";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import Stack from "@mui/material/Stack";
+import { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import prevBtn from "../assets/images/icons/Left Arrow.svg";
 import nextBtn from "../assets/images/icons/Right Arrow.svg";
@@ -27,8 +28,24 @@ function AllDesign() {
 
   // Extract the designs and title
   const designs = subFolder?.designs;
-  const title = designs?.[0]?.title;
-  console.log('dseigin',designs);
+  const title = subFolder?.subFolder;
+
+  // Filtering relatedDesign
+  const relatedDesigns = useMemo(
+    () =>
+      categories
+        ?.filter((folder) => folder.slug !== catSlug) // Filter out folders without catSlag
+        .flatMap((folder) =>
+          folder.subFolders
+            .filter((subFolder) => subFolder.slug === slug) // Find subfolders with slug
+            .map((subFolder) => ({
+              subFolder: { ...subFolder },
+              folder: folder.folder,
+              slug: folder.slug,
+            })),
+        ),
+    [catSlug, categories, slug],
+  );
 
   return (
     <>
@@ -45,16 +62,20 @@ function AllDesign() {
           </button>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {designs?.map((design) => (
-            <ProjectCard
-              cart={true}
-              key={design.id}
-              thumbnail={design.images.find((img) => img.thumbnail).url}
-              title={design.title}
-              designs={design}
-              slug={`/design/${design?.designId}`}
-            />
-          ))}
+          {designs?.map((design) => {
+            const thumbnail = design.images.find((img) => img.thumbnail);
+            return (
+              <ProjectCard
+                cart={true}
+                key={design.id}
+                thumbnail={thumbnail.url}
+                thumbnailName={thumbnail.name}
+                title={design.title}
+                designs={design}
+                slug={`/design/${design?.designId}`}
+              />
+            );
+          })}
         </div>
 
         <div className="mt-10 flex justify-center">
@@ -75,6 +96,7 @@ function AllDesign() {
         bgColor={"bg-lightcream"}
         color={"text-[#f1592a]"}
         img={thumbnailAlt}
+        relatedDesigns={relatedDesigns}
       />
     </>
   );
