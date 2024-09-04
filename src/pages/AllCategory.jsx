@@ -1,6 +1,7 @@
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import Stack from "@mui/material/Stack";
+import { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import prevBtn from "../assets/images/icons/Left Arrow.svg";
 import nextBtn from "../assets/images/icons/Right Arrow.svg";
@@ -15,12 +16,18 @@ function AllCategory() {
   const navigate = useNavigate();
   const { categories, isLoading } = useGetCategory();
   console.log(categories);
-  
+
   const selectedCategory = (categories || []).find(
     (data) => data.slug === slug,
   );
   const subFolders = selectedCategory?.subFolders;
   const title = selectedCategory?.folder;
+
+  // filtering related folders
+  const relatedFolders = useMemo(
+    () => categories?.filter((cat) => cat.slug !== slug),
+    [categories, slug],
+  );
   return (
     <>
       <PageHeader>{title}</PageHeader>
@@ -64,7 +71,7 @@ function AllCategory() {
           </Stack>
         </div>
       </div>
-      <RelatedDesigns />
+      <RelatedDesigns relatedFolders={relatedFolders} />
     </>
   );
 }

@@ -20,7 +20,7 @@ function SingleProductPage() {
   const settings = {
     dots: false,
     infinite: true,
-    speed: 500,
+    speed: 800,
     slidesToShow: 1,
     // className: "category-cards",
     slidesToScroll: 1,
