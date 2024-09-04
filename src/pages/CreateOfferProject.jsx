@@ -1,4 +1,5 @@
 import { Backdrop, CircularProgress } from "@mui/material";
+import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { ImPlus } from "react-icons/im";
@@ -13,10 +14,13 @@ function CreateOfferProject() {
   const offerProjects = useSelector((state) => state.offerProject.offerProject);
   const [updateOfferProject, { isLoading, error }] =
     useUpdateOfferProjectMutation();
+  const [projectImage, setProjectImage] = useState(
+    offerProjects?.projectImage || {},
+  );
+  console.log(projectImage);
 
   // Form state
   const [form, setForm] = useState({
-    image: offerProjects?.projectImage || "",
     freeBannerName: offerProjects?.freeDesignName || "",
     offerAmount: offerProjects?.offerAmount || "",
     originalAmount: offerProjects?.originalAmount || "",
@@ -32,8 +36,7 @@ function CreateOfferProject() {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    console.log(file);
-    setForm({ ...form, image: file });
+    setProjectImage({ file: file, name: file.name });
   };
 
   // Design sections state
@@ -196,27 +199,66 @@ function CreateOfferProject() {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = {
-      projectImage: form.image,
-      offerAmount: form.offerAmount,
-      originalAmount: form.originalAmount,
-      delivery: form.regularDeliveryDays,
-      extraFastDelivery: form.fastDeliveryDays,
-      extraFastDeliveryAmount: form.fdAmount,
-      freeDesignName: form.freeBannerName,
-      freeDesignTypographys,
-      designs,
-      bullPoints: bullets,
-      requirements: requirements.filter((req) => req.trim() !== ""),
+    let uploadSuccess = true;
+    const imageRes = async () => {
+      if (projectImage.file) {
+        const formData = new FormData();
+        formData.append("image", projectImage.file);
+
+        const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
+        const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+        try {
+          const response = await axios.post(uploadUrl, formData);
+          const name = response.data.data.title;
+          const imageUrl = response.data.data.url;
+          setProjectImage({ name, url: imageUrl });
+          return {
+            url: imageUrl,
+            name,
+          };
+        } catch (error) {
+          console.error("Error uploading image:", error);
+          // You can use a library like react-toastify to display error messages
+          // toast.error("Failed to upload image");
+          uploadSuccess = false;
+        } finally {
+          // setUploading(false);
+        }
+      }
     };
-    try {
-      // Call the mutation function with the constructed data
-      await updateOfferProject(data).unwrap();
-      toast.success("Updated Successfully!");
-      navigate(-1);
-    } catch (error) {
-      toast.error("Update failed!");
-      console.error("Update failed:", error);
+    const imageResult = await imageRes();
+
+    const image = { ...projectImage, ...imageResult };
+
+    console.log(image, imageResult);
+
+    if (image) {
+      const data = {
+        projectImage: imageResult,
+        offerAmount: form.offerAmount,
+        originalAmount: form.originalAmount,
+        delivery: form.regularDeliveryDays,
+        extraFastDelivery: form.fastDeliveryDays,
+        extraFastDeliveryAmount: form.fdAmount,
+        freeDesignName: form.freeBannerName,
+        freeDesignTypographys,
+        designs,
+        bullPoints: bullets,
+        requirements: requirements.filter((req) => req.trim() !== ""),
+      };
+      try {
+        // Call the mutation function with the constructed data
+        const response = await updateOfferProject(data).unwrap();
+        console.log(response);
+        if (!uploadSuccess) {
+          toast.error("Failed to upload image");
+        }
+        toast.success("Updated Successfully!");
+        navigate(-1);
+      } catch (error) {
+        toast.error("Update failed!");
+        console.error("Update failed:", error);
+      }
     }
   };
 
@@ -246,7 +288,7 @@ function CreateOfferProject() {
               CHOOSE FILE
             </label>
             <div className="overflow-hidden text-ellipsis whitespace-nowrap px-4 py-2">
-              {form?.image || "No file chosen"}
+              {projectImage?.name || "No file chosen"}
             </div>
           </div>
         </div>
