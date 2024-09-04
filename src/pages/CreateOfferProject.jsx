@@ -1,13 +1,18 @@
+import { Backdrop, CircularProgress } from "@mui/material";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { ImPlus } from "react-icons/im";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { useUpdateOfferProjectMutation } from "../Redux/api/offerProjectApiSlice";
+import { setOfferProject } from "../Redux/features/offerProjectSlice";
 
 function CreateOfferProject() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const offerProjects = useSelector((state) => state.offerProject.offerProject);
-  // console.log("offer",offerProjects);
   const [updateOfferProject, { isLoading, error }] =
     useUpdateOfferProjectMutation();
 
@@ -206,14 +211,15 @@ function CreateOfferProject() {
       bullPoints: bullets,
       requirements: requirements.filter((req) => req.trim() !== ""),
     };
-    console.log("data", data);
     try {
       // Call the mutation function with the constructed data
       const result = await updateOfferProject(data).unwrap();
-      // Handle successful response
+      dispatch(setOfferProject(data));
       console.log("Update successful:", result);
+      toast.success("Updated Successfully!");
+      navigate(-1);
     } catch (err) {
-      // Handle error
+      toast.error("Update failed!");
       console.error("Update failed:", err);
     }
   };
@@ -466,6 +472,17 @@ function CreateOfferProject() {
           Update
         </button>
       </form>
+      {isLoading && (
+        <Backdrop
+          sx={{
+            color: "#fff",
+            zIndex: (theme) => theme.zIndex.drawer + 1,
+          }}
+          open
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
     </div>
   );
 }

@@ -6,10 +6,12 @@ export const offerProjectApiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${configApi.api}`,
   }),
+  tagTypes: ['offerProject'],
   endpoints: (builder) => ({
     fetchOfferProject: builder.query({
       query: () => "create-offer-project/get",
       transformResponse: (response) => response?.data[0],
+      providesTags: ['OfferProject'],
     }),
     updateOfferProject: builder.mutation({
       query: (projectData) => ({
@@ -17,6 +19,7 @@ export const offerProjectApiSlice = createApi({
         method: "POST",
         body: projectData,
       }),
+      invalidatesTags: ['OfferProject'],
     }),
   }),
 });
