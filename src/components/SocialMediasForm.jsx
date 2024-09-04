@@ -124,7 +124,7 @@ const SocialMediasForm = () => {
             <FaFacebookF className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
           </div>
           <input
-            type="text"
+            type="url"
             name="facebook"
             value={socialLinks.facebook}
             onChange={handleChange}
@@ -140,7 +140,7 @@ const SocialMediasForm = () => {
             <FaInstagram className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
           </div>
           <input
-            type="text"
+            type="url"
             name="instagram"
             value={socialLinks.instagram}
             onChange={handleChange}
@@ -156,7 +156,7 @@ const SocialMediasForm = () => {
             <FaLinkedinIn className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
           </div>
           <input
-            type="text"
+            type="url"
             name="linkedin"
             value={socialLinks.linkedin}
             onChange={handleChange}
@@ -172,7 +172,7 @@ const SocialMediasForm = () => {
             <FaTwitter className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
           </div>
           <input
-            type="text"
+            type="url"
             name="twitter"
             value={socialLinks.twitter}
             onChange={handleChange}
@@ -188,7 +188,7 @@ const SocialMediasForm = () => {
             <FaPinterest className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
           </div>
           <input
-            type="text"
+            type="url"
             name="pinterest"
             value={socialLinks.pinterest}
             onChange={handleChange}
@@ -204,7 +204,7 @@ const SocialMediasForm = () => {
             <FaGoogle className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
           </div>
           <input
-            type="text"
+            type="url"
             name="google"
             value={socialLinks.google}
             onChange={handleChange}
@@ -220,7 +220,7 @@ const SocialMediasForm = () => {
             <FaTumblr className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
           </div>
           <input
-            type="text"
+            type="url"
             name="tumblr"
             value={socialLinks.tumblr}
             onChange={handleChange}
@@ -236,7 +236,7 @@ const SocialMediasForm = () => {
             <FaYoutube className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
           </div>
           <input
-            type="text"
+            type="url"
             name="youtube"
             value={socialLinks.youtube}
             onChange={handleChange}
@@ -252,7 +252,7 @@ const SocialMediasForm = () => {
             <FaYelp className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
           </div>
           <input
-            type="text"
+            type="url"
             name="yelp"
             value={socialLinks.yelp}
             onChange={handleChange}
@@ -268,7 +268,7 @@ const SocialMediasForm = () => {
             <FaTiktok className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
           </div>
           <input
-            type="text"
+            type="url"
             name="tiktok"
             value={socialLinks.tiktok}
             onChange={handleChange}
@@ -288,7 +288,7 @@ const SocialMediasForm = () => {
             />
           </div>
           <input
-            type="text"
+            type="url"
             name="nextdoor"
             value={socialLinks.nextdoor}
             onChange={handleChange}

@@ -14,6 +14,7 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
+  tagTypes: "socialMedia",
   endpoints: (builder) => ({
     fetchUserData: builder.query({
       query: () => "get-singel-user",
@@ -21,6 +22,7 @@ export const apiSlice = createApi({
     fetchSocialMedias: builder.query({
       query: () => "social-media-link",
       transformResponse: (response) => response?.data,
+      providesTags: ['socialMedia'],
     }),
     updateSocialMedias: builder.mutation({
       query: (socialMediaLinks) => ({
@@ -28,6 +30,7 @@ export const apiSlice = createApi({
         method: "POST",
         body: socialMediaLinks,
       }),
+      invalidatesTags: ['socialMedia'],
     }),
   }),
 });

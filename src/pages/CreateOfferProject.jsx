@@ -4,13 +4,11 @@ import toast from "react-hot-toast";
 import { ImPlus } from "react-icons/im";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useUpdateOfferProjectMutation } from "../Redux/api/offerProjectApiSlice";
-import { setOfferProject } from "../Redux/features/offerProjectSlice";
 
 function CreateOfferProject() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const offerProjects = useSelector((state) => state.offerProject.offerProject);
   const [updateOfferProject, { isLoading, error }] =
@@ -213,14 +211,12 @@ function CreateOfferProject() {
     };
     try {
       // Call the mutation function with the constructed data
-      const result = await updateOfferProject(data).unwrap();
-      dispatch(setOfferProject(data));
-      console.log("Update successful:", result);
+      await updateOfferProject(data).unwrap();
       toast.success("Updated Successfully!");
       navigate(-1);
-    } catch (err) {
+    } catch (error) {
       toast.error("Update failed!");
-      console.error("Update failed:", err);
+      console.error("Update failed:", error);
     }
   };
 

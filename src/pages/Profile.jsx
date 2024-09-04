@@ -3,12 +3,19 @@ import { useEffect, useState } from "react";
 import { BsInfoCircle } from "react-icons/bs";
 import {
   FaFacebookF,
+  FaGoogle,
   FaInstagram,
   FaLinkedinIn,
   FaPinterestP,
   FaSpinner,
+  FaTiktok,
+  FaTumblr,
   FaTwitter,
+  FaYelp,
+  FaYoutube,
 } from "react-icons/fa";
+// import nextDoorIcon from "../assets/images/nextdoor_icon.png";
+import { PiNotionLogoBold } from "react-icons/pi";
 import { LiaEditSolid } from "react-icons/lia";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -149,14 +156,15 @@ function Profile({ user = {}, slug }) {
           <div className="relative">
             <p className="mb-4 pt-4 text-center">Social Media Links</p>
             {slug === loggedUser?.userName && (
-            <Link className="absolute top-4 right-0" to='/social-media'>
-              <LiaEditSolid className="size-6 cursor-pointer text-xl" />
-            </Link>
+              <Link className="absolute right-0 top-4" to="/social-media">
+                <LiaEditSolid className="size-6 cursor-pointer text-xl" />
+              </Link>
             )}
             <div className="flex flex-wrap items-center justify-center gap-4 pb-4">
               {facebook && (
                 <Link
                   to={facebook}
+                  target="_blank"
                   className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
                 >
                   <FaFacebookF />
@@ -166,6 +174,7 @@ function Profile({ user = {}, slug }) {
               {instagram && (
                 <Link
                   to={instagram}
+                  target="_blank"
                   className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
                 >
                   <FaInstagram />
@@ -175,6 +184,7 @@ function Profile({ user = {}, slug }) {
               {twitter && (
                 <Link
                   to={twitter}
+                  target="_blank"
                   className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
                 >
                   <FaTwitter />
@@ -184,6 +194,7 @@ function Profile({ user = {}, slug }) {
               {pinterest && (
                 <Link
                   to={pinterest}
+                  target="_blank"
                   className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
                 >
                   <FaPinterestP />
@@ -193,9 +204,69 @@ function Profile({ user = {}, slug }) {
               {linkedin && (
                 <Link
                   to={linkedin}
+                  target="_blank"
                   className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
                 >
                   <FaLinkedinIn />
+                </Link>
+              )}
+              {google && (
+                <Link
+                  to={google}
+                  target="_blank"
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  <FaGoogle />
+                </Link>
+              )}
+              {thumblr && (
+                <Link
+                  to={thumblr}
+                  target="_blank"
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  <FaTumblr />
+                </Link>
+              )}
+              {youtube && (
+                <Link
+                  to={youtube}
+                  target="_blank"
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  <FaYoutube />
+                </Link>
+              )}
+              {tiktok && (
+                <Link
+                  to={tiktok}
+                  target="_blank"
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  <FaTiktok />
+                </Link>
+              )}
+              {yelp && (
+                <Link
+                  to={yelp}
+                  target="_blank"
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  <FaYelp />
+                </Link>
+              )}
+              {nextdoor && (
+                <Link
+                  to={nextdoor}
+                  target="_blank"
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  {/* <img
+                    src={nextDoorIcon}
+                    alt="Nextdoor"
+                    className="size-5 flex-shrink- rounded-full"
+                  /> */}
+                  <PiNotionLogoBold />
                 </Link>
               )}
             </div>
