@@ -13,7 +13,7 @@ function ButtonPrimary({
         className ? className : ""
       } ${selectedValue === value ? "bg-primary text-white" : ""} rounded-[30px] bg-[#edf7fd] px-2 py-1 text-sm font-medium duration-300 hover:bg-primary hover:text-white sm:px-4 sm:py-2 sm:text-base`}
     >
-      {children} {items && `(${items})`}
+      {children} ({items && items})
     </button>
   );
 }

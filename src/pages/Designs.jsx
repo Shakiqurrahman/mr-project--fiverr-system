@@ -14,6 +14,7 @@ import {
   useFetchAllDesignKeywordsQuery,
   useFetchAllIndustryKeywordsQuery,
   useFetchDesignByKeyQuery,
+  useFetchDesignNdIndustryByKeyQuery,
   useFetchGetUploadQuery,
   useFetchIndustryByKeyQuery,
 } from "../Redux/api/uploadDesignApiSlice";
@@ -32,48 +33,138 @@ function Designs() {
   const { data: filterDesignData } = useFetchDesignByKeyQuery(selectedValue, {
     skip: !selectedValue,
   });
-  const { data: filterIndustryData } = useFetchIndustryByKeyQuery(industrySelectedValue, {
-    skip: !industrySelectedValue,
-  });
+  const { data: filterIndustryData } = useFetchIndustryByKeyQuery(
+    industrySelectedValue,
+    {
+      skip: !industrySelectedValue,
+    },
+  );
+  const { data: filterBothData } = useFetchDesignNdIndustryByKeyQuery(
+    {
+      dKey: selectedValue,
+      iKey: industrySelectedValue,
+    },
+    {
+      skip: !selectedValue && !industrySelectedValue,
+    },
+  );
+
+  console.log("filtered", filterBothData);
 
   useEffect(() => {
-    if (designsData) setDesigns(designsData);
-    if (filterDesignData && selectedValue) setDesigns(filterDesignData);
-    if (filterIndustryData && industrySelectedValue) setDesigns(filterIndustryData);
+    if (!designsData) return; // Return early if no designs data is available
 
-    if (designsData)
-      updateKeywordsData(designsData, designKeyWordsData, industryKeyWordsData);
+    // Check if both design and industry keywords are selected
+    if (selectedValue && industrySelectedValue) {
+      // updateKeywordsData(filterBothData, designKeyWordsData, industryKeyWordsData);
+      setDesigns(filterBothData);
+    }
+    // Check if only design keyword is selected
+    else if (filterDesignData && selectedValue) {
+      const updatedDesignKeywords = designKeyWordsData?.map((key) => ({
+        name: key,
+        quantity: designsData?.filter((design) =>
+          design?.designs?.includes(key),
+        ).length,
+      }));
+      setDesignKeywords(updatedDesignKeywords);
+      const updatedIndustryKeywords = industryKeyWordsData?.map((key) => ({
+        name: key,
+        quantity: filterDesignData?.filter((design) =>
+          design?.industrys?.includes(key),
+        ).length,
+      }));
+      setIndustryKeywords(updatedIndustryKeywords);
+      setDesigns(filterDesignData);
+    }
+    // Check if only industry keyword is selected
+    else if (filterIndustryData && industrySelectedValue) {
+      const updatedDesignKeywords = designKeyWordsData?.map((key) => ({
+        name: key,
+        quantity: filterIndustryData?.filter((design) =>
+          design?.designs?.includes(key),
+        ).length,
+      }));
+      setDesignKeywords(updatedDesignKeywords);
+
+      const updatedIndustryKeywords = industryKeyWordsData?.map((key) => ({
+        name: key,
+        quantity: designsData?.filter((design) =>
+          design?.industrys?.includes(key),
+        ).length,
+      }));
+      setIndustryKeywords(updatedIndustryKeywords);
+      setDesigns(filterIndustryData);
+    }
+    // Default case: no keywords selected, set original designs and update keywords
+    else {
+      setDesigns(designsData);
+      const updatedDesignKeywords = designKeyWordsData?.map((key) => ({
+        name: key,
+        quantity: designsData?.filter((design) =>
+          design?.designs?.includes(key),
+        ).length,
+      }));
+      setDesignKeywords(updatedDesignKeywords);
+      const updatedIndustryKeywords = industryKeyWordsData?.map((key) => ({
+        name: key,
+        quantity: designsData?.filter((design) =>
+          design?.industrys?.includes(key),
+        ).length,
+      }));
+      setIndustryKeywords(updatedIndustryKeywords);
+    }
   }, [
     designsData,
     filterDesignData,
     filterIndustryData,
-    selectedValue,
+    filterBothData,
     industrySelectedValue,
+    selectedValue,
     designKeyWordsData,
     industryKeyWordsData,
   ]);
 
-  const updateKeywordsData = (
-    designQuantity,
-    designKeyWords,
-    industryKeyWords,
-  ) => {
-    const updatedDesignKeywords = designKeyWords?.map((key) => ({
-      name: key,
-      quantity: designQuantity?.filter((design) =>
-        design?.designs?.includes(key),
-      ).length,
-    }));
-    setDesignKeywords(updatedDesignKeywords);
+  // const updateKeywordsData = (
+  //   designQuantity,
+  //   designKeyWords,
+  //   industryKeyWords,
+  // ) => {
+  //   if (designKeyWords && !industryKeyWords) {
+  //     const updatedDesignKeywords = designKeyWords?.map((key) => ({
+  //       name: key,
+  //       quantity: designQuantity?.filter((design) =>
+  //         design?.designs?.includes(key),
+  //       ).length,
+  //     }));
+  //     setDesignKeywords(updatedDesignKeywords);
+  //   }
 
-    const updatedIndustryKeywords = industryKeyWords?.map((key) => ({
-      name: key,
-      quantity: designQuantity?.filter((design) =>
-        design?.industrys?.includes(key),
-      ).length,
-    }));
-    setIndustryKeywords(updatedIndustryKeywords);
-  };
+  //   else if(!designKeyWords && industryKeyWords){
+  //     const updatedIndustryKeywords = industryKeyWords?.map((key) => ({
+  //       name: key,
+  //       quantity: designQuantity?.filter((design) =>
+  //         design?.industrys?.includes(key),
+  //       ).length,
+  //     }));
+  //     setIndustryKeywords(updatedIndustryKeywords);
+  //   } else {
+  //     const updatedDesignKeywords = designKeyWords?.map((key) => ({
+  //       name: key,
+  //       quantity: designQuantity?.filter((design) =>
+  //         design?.designs?.includes(key),
+  //       ).length,
+  //     }));
+  //     setDesignKeywords(updatedDesignKeywords);
+  //     const updatedIndustryKeywords = industryKeyWords?.map((key) => ({
+  //       name: key,
+  //       quantity: designQuantity?.filter((design) =>
+  //         design?.industrys?.includes(key),
+  //       ).length,
+  //     }));
+  //     setIndustryKeywords(updatedIndustryKeywords);
+  //   }
+  //   }
 
   const handleDesignClick = useCallback((value) => {
     setSelectedValue((prev) => (prev === value ? null : value));
