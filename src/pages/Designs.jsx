@@ -3,7 +3,7 @@ import ProjectCard from "../components/categories/ProjectCard";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import Stack from "@mui/material/Stack";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import prevBtn from "../assets/images/icons/Left Arrow.svg";
 import nextBtn from "../assets/images/icons/Right Arrow.svg";
 import ButtonPrimary from "../components/ButtonPrimary";
@@ -15,12 +15,13 @@ import {
   useFetchAllIndustryKeywordsQuery,
   useFetchDesignByKeyQuery,
   useFetchGetUploadQuery,
+  useFetchIndustryByKeyQuery,
 } from "../Redux/api/uploadDesignApiSlice";
 
 function Designs() {
   const { data: designKeyWordsData } = useFetchAllDesignKeywordsQuery();
   const { data: industryKeyWordsData } = useFetchAllIndustryKeywordsQuery();
-  const { data: designsData, isLoading } = useFetchGetUploadQuery();
+  const { data: designsData } = useFetchGetUploadQuery();
 
   const [designs, setDesigns] = useState([]);
   const [designKeywords, setDesignKeywords] = useState([]);
@@ -28,77 +29,65 @@ function Designs() {
 
   const [selectedValue, setSelectedValue] = useState(null);
   const [industrySelectedValue, setIndustrySelectedValue] = useState(null);
-  const { data: filterData } = useFetchDesignByKeyQuery(selectedValue, {
+  const { data: filterDesignData } = useFetchDesignByKeyQuery(selectedValue, {
     skip: !selectedValue,
+  });
+  const { data: filterIndustryData } = useFetchIndustryByKeyQuery(industrySelectedValue, {
+    skip: !industrySelectedValue,
   });
 
   useEffect(() => {
-    if (designsData) {
-      setDesigns(designsData);
-    }
-    if (filterData) {
-      setDesigns(filterData);
-    }
-    if (designKeyWordsData) {
-      setDesignKeywords(designKeyWordsData);
-    }
-    if (industryKeyWordsData) {
-      setIndustryKeywords(industryKeyWordsData);
-    }
-  }, [designsData, designKeyWordsData, industryKeyWordsData, filterData]);
+    if (designsData) setDesigns(designsData);
+    if (filterDesignData && selectedValue) setDesigns(filterDesignData);
+    if (filterIndustryData && industrySelectedValue) setDesigns(filterIndustryData);
 
-  // setDesigns(filterData);
-  console.log("filter", filterData);
+    if (designsData)
+      updateKeywordsData(designsData, designKeyWordsData, industryKeyWordsData);
+  }, [
+    designsData,
+    filterDesignData,
+    filterIndustryData,
+    selectedValue,
+    industrySelectedValue,
+    designKeyWordsData,
+    industryKeyWordsData,
+  ]);
 
-  // const QueryData = (design, industry) => {
-  //   if (design && !industry) {
-  //     const response = fetchDesignByKey(design);
-  //     console.log("resss", response);
-  //   }
-  // };
+  const updateKeywordsData = (
+    designQuantity,
+    designKeyWords,
+    industryKeyWords,
+  ) => {
+    const updatedDesignKeywords = designKeyWords?.map((key) => ({
+      name: key,
+      quantity: designQuantity?.filter((design) =>
+        design?.designs?.includes(key),
+      ).length,
+    }));
+    setDesignKeywords(updatedDesignKeywords);
 
-  const handleDesignClick = (value) => {
-    setSelectedValue(value === selectedValue ? null : value);
-    // QueryData(value);
+    const updatedIndustryKeywords = industryKeyWords?.map((key) => ({
+      name: key,
+      quantity: designQuantity?.filter((design) =>
+        design?.industrys?.includes(key),
+      ).length,
+    }));
+    setIndustryKeywords(updatedIndustryKeywords);
   };
 
-  const handleIndustryClick = (value) => {
-    setIndustrySelectedValue(value === industrySelectedValue ? null : value);
-  };
+  const handleDesignClick = useCallback((value) => {
+    setSelectedValue((prev) => (prev === value ? null : value));
+  }, []);
+
+  const handleIndustryClick = useCallback((value) => {
+    setIndustrySelectedValue((prev) => (prev === value ? null : value));
+  }, []);
 
   const sortingOptions = [
     "Default Designs",
     "Newest Designs",
     "Oldest Designs",
   ];
-
-  useEffect(() => {
-    if (designs) {
-      const response = designKeyWordsData?.map((key) => {
-        const returnData = designs?.filter((design) =>
-          design?.designs?.includes(key),
-        );
-        return {
-          name: key,
-          quantity: returnData.length,
-        };
-      });
-      setDesignKeywords(response);
-    }
-
-    if (designs) {
-      const response = industryKeyWordsData?.map((key) => {
-        const returnData = designs?.filter((design) =>
-          design?.industrys?.includes(key),
-        );
-        return {
-          name: key,
-          quantity: returnData.length,
-        };
-      });
-      setIndustryKeywords(response);
-    }
-  }, [designKeyWordsData, designs, industryKeyWordsData]);
 
   const handleSortChange = (option) => {
     // console.log("Selected sorting option:", option);

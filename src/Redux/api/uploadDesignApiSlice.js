@@ -59,6 +59,10 @@ export const uploadDesignApiSlice = createApi({
       query: (key) => `designs/filter/get?name=${key}`,
       transformResponse: (response) => response?.data,
     }),
+    fetchIndustryByKey: builder.query({
+      query: (key) => `industrys/filter/get?name=${key}`,
+      transformResponse: (response) => response?.data,
+    }),
   }),
 });
 
@@ -73,4 +77,5 @@ export const {
   useFetchAllDesignKeywordsQuery,
   useFetchAllIndustryKeywordsQuery,
   useFetchDesignByKeyQuery,
+  useFetchIndustryByKeyQuery,
 } = uploadDesignApiSlice;
