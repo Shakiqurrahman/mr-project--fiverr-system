@@ -49,6 +49,7 @@ function RelatedDesigns({
       },
     ],
   };
+
   return (
     <div
       className={`${
