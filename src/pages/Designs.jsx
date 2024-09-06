@@ -4,12 +4,6 @@ import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import Stack from "@mui/material/Stack";
 import { useCallback, useEffect, useState } from "react";
-import prevBtn from "../assets/images/icons/Left Arrow.svg";
-import nextBtn from "../assets/images/icons/Right Arrow.svg";
-import ButtonPrimary from "../components/ButtonPrimary";
-import ButtonSecondary from "../components/ButtonSecondary";
-import Divider from "../components/Divider";
-import SortDropdown from "../components/SortDropdown";
 import {
   useFetchAllDesignKeywordsQuery,
   useFetchAllIndustryKeywordsQuery,
@@ -18,6 +12,12 @@ import {
   useFetchGetUploadQuery,
   useFetchIndustryByKeyQuery,
 } from "../Redux/api/uploadDesignApiSlice";
+import prevBtn from "../assets/images/icons/Left Arrow.svg";
+import nextBtn from "../assets/images/icons/Right Arrow.svg";
+import ButtonPrimary from "../components/ButtonPrimary";
+import ButtonSecondary from "../components/ButtonSecondary";
+import Divider from "../components/Divider";
+import SortDropdown from "../components/SortDropdown";
 
 function Designs() {
   const { data: designKeyWordsData } = useFetchAllDesignKeywordsQuery();
@@ -241,19 +241,21 @@ function Designs() {
           })}
         </div>
 
-        <div className="mt-10 flex justify-center">
-          <Stack spacing={2}>
-            <Pagination
-              count={10}
-              renderItem={(item) => (
-                <PaginationItem
-                  slots={{ previous: prevBtnIcon, next: nextBtnIcon }}
-                  {...item}
-                />
-              )}
-            />
-          </Stack>
-        </div>
+        {designs?.length > 20 && (
+          <div className="mt-10 flex justify-center">
+            <Stack spacing={2}>
+              <Pagination
+                count={10}
+                renderItem={(item) => (
+                  <PaginationItem
+                    slots={{ previous: prevBtnIcon, next: nextBtnIcon }}
+                    {...item}
+                  />
+                )}
+              />
+            </Stack>
+          </div>
+        )}
       </div>
     </>
   );

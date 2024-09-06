@@ -18,7 +18,7 @@ function ProjectCard({
         className="relative block h-full cursor-pointer border bg-white"
       >
         {cart && (
-          <button className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-md bg-white">
+          <button className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-md bg-white">
             <GiShoppingCart />
           </button>
         )}

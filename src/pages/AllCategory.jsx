@@ -5,9 +5,9 @@ import { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import prevBtn from "../assets/images/icons/Left Arrow.svg";
 import nextBtn from "../assets/images/icons/Right Arrow.svg";
-import ProjectCard from "../components/categories/ProjectCard";
 import PageHeader from "../components/PageHeader";
 import RelatedDesigns from "../components/RelatedDesigns";
+import ProjectCard from "../components/categories/ProjectCard";
 import useGetCategory from "../hooks/useGetCategory";
 
 function AllCategory() {
@@ -57,19 +57,21 @@ function AllCategory() {
           })}
         </div>
 
-        <div className="mt-10 flex justify-center">
-          <Stack spacing={2}>
-            <Pagination
-              count={10}
-              renderItem={(item) => (
-                <PaginationItem
-                  slots={{ previous: prevBtnIcon, next: nextBtnIcon }}
-                  {...item}
-                />
-              )}
-            />
-          </Stack>
-        </div>
+        {subFolders?.length > 20 && (
+          <div className="mt-10 flex justify-center">
+            <Stack spacing={2}>
+              <Pagination
+                count={10}
+                renderItem={(item) => (
+                  <PaginationItem
+                    slots={{ previous: prevBtnIcon, next: nextBtnIcon }}
+                    {...item}
+                  />
+                )}
+              />
+            </Stack>
+          </div>
+        )}
       </div>
       <RelatedDesigns relatedFolders={relatedFolders} />
     </>

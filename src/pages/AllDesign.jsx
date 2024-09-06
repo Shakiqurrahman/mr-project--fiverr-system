@@ -78,19 +78,21 @@ function AllDesign() {
           })}
         </div>
 
-        <div className="mt-10 flex justify-center">
-          <Stack spacing={2}>
-            <Pagination
-              count={10}
-              renderItem={(item) => (
-                <PaginationItem
-                  slots={{ previous: prevBtnIcon, next: nextBtnIcon }}
-                  {...item}
-                />
-              )}
-            />
-          </Stack>
-        </div>
+        {designs?.length > 20 && (
+          <div className="mt-10 flex justify-center">
+            <Stack spacing={2}>
+              <Pagination
+                count={10}
+                renderItem={(item) => (
+                  <PaginationItem
+                    slots={{ previous: prevBtnIcon, next: nextBtnIcon }}
+                    {...item}
+                  />
+                )}
+              />
+            </Stack>
+          </div>
+        )}
       </div>
       <RelatedDesigns
         bgColor={"bg-lightcream"}

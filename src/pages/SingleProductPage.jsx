@@ -3,12 +3,11 @@ import { BsThreeDots } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Slider from "react-slick";
+import { useFetchGetUploadQuery } from "../Redux/api/uploadDesignApiSlice";
 import LeftArrowIcon from "../assets/images/icons/Left Arrow.svg";
 import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
-import ButtonSecondary from "../components/ButtonSecondary";
 import Divider from "../components/Divider";
 import RelatedDesigns from "../components/RelatedDesigns";
-import { useFetchGetUploadQuery } from "../Redux/api/uploadDesignApiSlice";
 
 function SingleProductPage() {
   const { slug } = useParams();
@@ -184,7 +183,12 @@ function SingleProductPage() {
         <Divider className={"h-px w-full bg-[#000!important]"} />
         <div className="mt-10 flex flex-wrap gap-3">
           {tagsToShow?.map((tag, index) => (
-            <ButtonSecondary key={index}>{tag}</ButtonSecondary>
+            <button
+              key={index}
+              className="rounded-[30px] bg-[#ffefef] px-2 py-1 text-sm font-medium duration-300 hover:bg-secondary hover:text-white sm:px-4 sm:py-2 sm:text-base"
+            >
+              {tag}
+            </button>
           ))}
           <button
             className="rounded-[30px] bg-[#ffefef] px-2 py-1 text-sm font-medium duration-300 hover:bg-secondary hover:text-white sm:px-4 sm:py-2 sm:text-base"

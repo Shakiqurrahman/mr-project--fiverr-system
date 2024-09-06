@@ -11,6 +11,16 @@ function Home() {
       {/* hero section */}
       <Hero />
 
+      <div className="bg-lightcream py-5">
+        <div className="max-width">
+          <p className="text-center text-base font-medium sm:text-lg">
+            We do not own the images used in our designs. We used those images
+            from Google/Stock Marketplace. You must give us the images to use in
+            your design.
+          </p>
+        </div>
+      </div>
+
       {/* Homepage Category Keywords section */}
       <HomeKeywords />
 

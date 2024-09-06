@@ -22,25 +22,26 @@ function Contact() {
 
   // Image Uploading Works
   const [matchingImages, setMatchingImages] = useState([]);
-  const [errorImg, setErrorImg] = useState(null);
+  // const [errorImg, setErrorImg] = useState(null);
   const fileInputRef = useRef(); // Add a ref for the file input
 
   const getImagesWithDimensions = (files) => {
     const images = [];
 
     const handleImageLoad = (file, img) => {
-      if (img.width === 2700 && img.height === 2000) {
-        images.push({
-          file: file,
-          url: img.src,
-        });
-      }
+      // if (img.width === 2700 && img.height === 2000) {
+      images.push({
+        file: file,
+        url: img.src,
+      });
+      // }
       if (images.length === files.length) {
         setMatchingImages(images);
-        setErrorImg(null);
-      } else {
-        setErrorImg("Resolution does not match. Expected 2700x2000");
+        // setErrorImg(null);
       }
+      // else {
+      //   setErrorImg("Resolution does not match. Expected 2700x2000");
+      // }
     };
 
     const processFile = (file) => {
@@ -192,7 +193,7 @@ function Contact() {
             </div>
           ))}
         </div>
-        {errorImg && <p className="text-sm text-red-600">{errorImg}</p>}
+        {/* {errorImg && <p className="text-sm text-red-600">{errorImg}</p>} */}
 
         <textarea
           name="Message"

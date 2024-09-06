@@ -2,9 +2,10 @@ import { Reorder } from "framer-motion";
 import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { useSelector } from "react-redux";
-import DownArrow from "../../assets/images/icons/Down Arrow.svg";
-import Check from "../../assets/svg/Check";
 import FeatureCategorySkeleton from "../../CustomSkeleton/FeatureCategorySkeleton";
+import DownArrow from "../../assets/images/icons/Down Arrow.svg";
+import UpArrow from "../../assets/images/icons/Upper Arrow.svg";
+import Check from "../../assets/svg/Check";
 import useGetCategory from "../../hooks/useGetCategory";
 import Sidebar from "../Sidebar";
 import CategoryCards from "./CategoryCards";
@@ -61,9 +62,9 @@ function FeatureCategory() {
           )}
         </div>
       )}
-      <div className="flex flex-wrap gap-3 sm:flex-nowrap">
+      <div className="flex flex-wrap items-start gap-3 sm:flex-nowrap">
         <div className="relative w-full sm:w-2/3 md:w-3/4 lg:w-4/5">
-          {isLoading && categories.length > 0? (
+          {isLoading && categories.length > 0 ? (
             <>
               <FeatureCategorySkeleton />
               <FeatureCategorySkeleton />
@@ -116,16 +117,27 @@ function FeatureCategory() {
               </Reorder.Group>
             </div>
           )}
-          {!expand && (
-            <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
-              <button
-                className="rounded-full bg-white"
-                onClick={() => setExpand(true)}
-              >
-                <img src={DownArrow} alt="" className="h-[50px] w-[50px]" />
-              </button>
-            </div>
-          )}
+
+          {categories?.length > 5 &&
+            (!expand ? (
+              <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
+                <button
+                  className="rounded-full bg-white"
+                  onClick={() => setExpand(!expand)}
+                >
+                  <img src={DownArrow} alt="" className="h-[50px] w-[50px]" />
+                </button>
+              </div>
+            ) : (
+              <div className="relative z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-5">
+                <button
+                  className="rounded-full border bg-white"
+                  onClick={() => setExpand(!expand)}
+                >
+                  <img src={UpArrow} alt="" className="h-[50px] w-[50px]" />
+                </button>
+              </div>
+            ))}
         </div>
         <Sidebar />
       </div>
