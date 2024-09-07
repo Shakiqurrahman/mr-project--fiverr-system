@@ -28,7 +28,7 @@ const Layout = () => {
       <Outlet />
       <ScrollRestoration />
       <Footer />
-      <Toaster position="top-right" />
+      <Toaster position="top-center" />
       </div>
     </>
   );

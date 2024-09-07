@@ -21,7 +21,7 @@ const ProfileLayout = () => {
   return user ? (
     <Profile user={user} slug={userName} />
   ) : (
-    <ErrorPage message="User not found." />
+    <ErrorPage />
   );
 };
 

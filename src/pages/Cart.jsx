@@ -18,7 +18,7 @@ function Cart() {
       }
       return item;
     });
-    setCart(updatedCart);
+    // setCart(updatedCart);
   }
 
   // Handle checkout
@@ -58,7 +58,7 @@ function Cart() {
             </label>
           </div>
           <img
-            src={item.image}
+            src={item?.images?.find(image => image?.thumbnail === true)?.url}
             alt="Design Image"
             className="h-[80px] w-[120px] object-cover"
           />
@@ -85,8 +85,7 @@ function Cart() {
         </div>
       )) : <p className='text-center'>No items in cart</p>}
       {cart.length > 0 && <p className="font-bold text-slate-500 text-center">
-        {cart.filter((item) => item.checked).length} Item
-        {cart.filter((item) => item.checked).length > 1 && "s"} Selected
+        {cart.filter(item => item.checked).length} Item{cart.filter(item => item.checked).length > 1 && 's'} ready for checkout.
       </p>}
       <div className="flex items-center justify-center gap-6">
         <button

@@ -1,4 +1,4 @@
-import { Drawer } from "@mui/material";
+// import { Drawer } from "@mui/material";
 import React, { useState } from "react";
 import { BiX } from "react-icons/bi";
 import { BsCart4 } from "react-icons/bs";
@@ -11,14 +11,22 @@ import CartDrawer from "./CartDrawer";
 import Navbar from "./Navbar";
 import UserBox from "./UserBox";
 
+import Drawer from "react-modern-drawer";
+//react-drawer css
+import "react-modern-drawer/dist/index.css";
+
 function Header() {
   const { user, loading } = useSelector((state) => state.user);
-  const {items: cartItems} = useSelector((state) => state.cart);
+  const { items: cartItems } = useSelector((state) => state.cart);
   const [activeMenu, setActiveMenu] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const handleClose = () => {
     setActiveMenu(false);
+  };
+
+  const toggleDrawer = () => {
+    setOpenDrawer((prevState) => !prevState);
   };
   return (
     <>
@@ -119,11 +127,12 @@ function Header() {
                     </span>
                   </div>
                   <Drawer
-                    anchor="right"
                     open={openDrawer}
                     onClose={() => setOpenDrawer(false)}
+                    direction="right"
+                    className="!w-full !max-w-[450px] !bg-slate-100"
                   >
-                    <CartDrawer close={() => setOpenDrawer(false)}/>
+                    <CartDrawer close={() => setOpenDrawer(false)} />
                   </Drawer>
                   {/* </NavLink> */}
                 </li>

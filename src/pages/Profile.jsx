@@ -34,7 +34,6 @@ function Profile({ user = {}, slug }) {
   const [isOnline, setIsOnline] = useState(true);
   const [showDesqEdit, setShowDesqEdit] = useState(false);
   const [description, setDescription] = useState(user?.description || "");
-
   useEffect(() => {
     // Update the state when the user prop changes
     setDescription(user?.description || "");

@@ -32,21 +32,3 @@ const cartSlice = createSlice({
 
 export const { addToCart, removeFromCart } = cartSlice.actions;
 export default cartSlice.reducer;
-
-// Thunk action for toast notifications
-export const addToCartWithToast = (item) => (dispatch, getState) => {
-  const state = getState().cart;
-  const existingItem = state.items.find((i) => i.designId === item.designId);
-
-  if (existingItem) {
-    toast.error("This item is already in your cart.");
-  } else {
-    dispatch(addToCart(item));
-    toast.success("Item added to cart!");
-  }
-};
-
-export const removeFromCartWithToast = (itemId) => (dispatch) => {
-  dispatch(removeFromCart(itemId));
-  toast.success("Item removed from cart.");
-};
