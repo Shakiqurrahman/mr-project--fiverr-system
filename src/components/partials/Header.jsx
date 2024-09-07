@@ -1,3 +1,4 @@
+import { Drawer } from "@mui/material";
 import React, { useState } from "react";
 import { BiX } from "react-icons/bi";
 import { BsCart4 } from "react-icons/bs";
@@ -6,12 +7,15 @@ import { GoSearch } from "react-icons/go";
 import { useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import logo from "../../assets/images/MR Logo White.png";
+import CartDrawer from "./CartDrawer";
 import Navbar from "./Navbar";
 import UserBox from "./UserBox";
 
 function Header() {
   const { user, loading } = useSelector((state) => state.user);
+  const {items: cartItems} = useSelector((state) => state.cart);
   const [activeMenu, setActiveMenu] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
 
   const handleClose = () => {
     setActiveMenu(false);
@@ -101,17 +105,27 @@ function Header() {
                   {user ? <UserBox /> : <NavLink to="/join">Join</NavLink>}
                 </li>
                 <li>
-                  <NavLink to="/cart">
-                    <div className="relative">
-                      <BsCart4
-                        className="text-white hover:text-gray-300"
-                        size={30}
-                      />
-                      <span className="absolute text-xs -right-2 -top-2 size-6 leading-[24px] rounded-full bg-primary text-center text-white">
-                        2
-                      </span>
-                    </div>
-                  </NavLink>
+                  {/* <NavLink to="/cart"> */}
+                  <div
+                    className="relative cursor-pointer"
+                    onClick={() => setOpenDrawer(true)}
+                  >
+                    <BsCart4
+                      className="text-white hover:text-gray-300"
+                      size={30}
+                    />
+                    <span className="absolute -right-2 -top-2 size-6 rounded-full bg-primary text-center text-xs leading-[24px] text-white">
+                      {cartItems.length}
+                    </span>
+                  </div>
+                  <Drawer
+                    anchor="right"
+                    open={openDrawer}
+                    onClose={() => setOpenDrawer(false)}
+                  >
+                    <CartDrawer close={() => setOpenDrawer(false)}/>
+                  </Drawer>
+                  {/* </NavLink> */}
                 </li>
               </ul>
               <div>

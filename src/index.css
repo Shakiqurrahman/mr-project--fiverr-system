@@ -122,6 +122,7 @@ textarea:placeholder-shown {
   stroke-width: 20;
 }
 
+
 /* Custom styles for SweetAlert2 buttons */
 .swal2-confirm.successfull-button {
   background-color: #1b8cdc;

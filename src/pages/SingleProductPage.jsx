@@ -1,21 +1,27 @@
 import { useEffect, useMemo, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Slider from "react-slick";
-import { useFetchGetUploadQuery } from "../Redux/api/uploadDesignApiSlice";
 import LeftArrowIcon from "../assets/images/icons/Left Arrow.svg";
 import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
 import Divider from "../components/Divider";
 import RelatedDesigns from "../components/RelatedDesigns";
+import { useFetchGetUploadQuery } from "../Redux/api/uploadDesignApiSlice";
+import { addToCart, removeFromCart } from "../Redux/features/cartSlice";
 
 function SingleProductPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const { user } = useSelector((state) => state.user);
+  const { items : cartItems } = useSelector((state) => state.cart); 
+
   const [isClicked, setIsClicked] = useState(false);
   const [images, setImages] = useState([]);
   const [showAll, setShowAll] = useState(false);
+
   const settings = {
     dots: false,
     infinite: true,
@@ -74,11 +80,6 @@ function SingleProductPage() {
     }
   }, [uploadDesigns, refetch]);
 
-  const [addCartBtn, setAddCartBtn] = useState(false);
-  const handleAddCartBtn = () => {
-    setAddCartBtn(!addCartBtn);
-  };
-
   if (!design && !isLoading) {
     navigate("/not-found", { replace: true });
     return null;
@@ -94,7 +95,6 @@ function SingleProductPage() {
 
   // Determine which tags to show
   const tagsToShow = showAll ? design?.tags : design?.tags?.slice(0, 10);
-
   return (
     <>
       <div className="max-width">
@@ -156,17 +156,17 @@ function SingleProductPage() {
                 <b>Subcategory:</b> {design?.subCategory}
               </li>
             </ul>
-            {addCartBtn ? (
+            {cartItems.some((item) => item?.designId === design?.designId) ? (
               <button
                 className="w-full rounded-[30px] bg-red-800 p-2 font-medium text-white sm:p-3"
-                onClick={handleAddCartBtn}
+                onClick={() => dispatch(removeFromCart(design.designId))}
               >
                 REMOVE FROM CART
               </button>
             ) : (
               <button
                 className="w-full rounded-[30px] bg-[#f1592a] p-2 font-medium text-white sm:p-3"
-                onClick={handleAddCartBtn}
+                onClick={() => dispatch(addToCart(design))}
               >
                 ADD TO CART
               </button>

@@ -125,47 +125,6 @@ function Designs() {
     industryKeyWordsData,
   ]);
 
-  // const updateKeywordsData = (
-  //   designQuantity,
-  //   designKeyWords,
-  //   industryKeyWords,
-  // ) => {
-  //   if (designKeyWords && !industryKeyWords) {
-  //     const updatedDesignKeywords = designKeyWords?.map((key) => ({
-  //       name: key,
-  //       quantity: designQuantity?.filter((design) =>
-  //         design?.designs?.includes(key),
-  //       ).length,
-  //     }));
-  //     setDesignKeywords(updatedDesignKeywords);
-  //   }
-
-  //   else if(!designKeyWords && industryKeyWords){
-  //     const updatedIndustryKeywords = industryKeyWords?.map((key) => ({
-  //       name: key,
-  //       quantity: designQuantity?.filter((design) =>
-  //         design?.industrys?.includes(key),
-  //       ).length,
-  //     }));
-  //     setIndustryKeywords(updatedIndustryKeywords);
-  //   } else {
-  //     const updatedDesignKeywords = designKeyWords?.map((key) => ({
-  //       name: key,
-  //       quantity: designQuantity?.filter((design) =>
-  //         design?.designs?.includes(key),
-  //       ).length,
-  //     }));
-  //     setDesignKeywords(updatedDesignKeywords);
-  //     const updatedIndustryKeywords = industryKeyWords?.map((key) => ({
-  //       name: key,
-  //       quantity: designQuantity?.filter((design) =>
-  //         design?.industrys?.includes(key),
-  //       ).length,
-  //     }));
-  //     setIndustryKeywords(updatedIndustryKeywords);
-  //   }
-  //   }
-
   const handleDesignClick = useCallback((value) => {
     setSelectedValue((prev) => (prev === value ? null : value));
   }, []);
