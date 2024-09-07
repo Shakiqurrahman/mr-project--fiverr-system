@@ -13,7 +13,7 @@ function SocialMediaLinks() {
     <motion.div
       drag
       dragMomentum={false}
-      className="fixed bottom-5 right-5 z-[99999] flex h-[70px] items-stretch overflow-clip rounded-lg bg-lightskyblue shadow-xl sm:bottom-[100px] sm:h-auto"
+      className="fixed bottom-5 right-5 z-[99999] flex h-[70px] items-stretch overflow-clip rounded-lg bg-lightskyblue shadow-xl sm:h-auto"
     >
       <div
         className={`${expend ? "visible w-[220px] translate-x-0 p-2 opacity-100 sm:w-[300px]" : "invisible w-0 translate-x-full p-0 opacity-0"}`}

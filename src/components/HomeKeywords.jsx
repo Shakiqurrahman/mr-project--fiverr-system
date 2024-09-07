@@ -33,7 +33,7 @@ function HomeKeywords() {
           )}
         </div>
       </div>
-      <Divider className={"my-8 h-1 w-full bg-[#1b8cdc!important]"} />
+      <Divider className={"my-8 h-px w-full bg-[#1b8cdc!important]"} />
       <div className="max-width">
         <div className="flex flex-wrap gap-3">
           {industryKeywordsData?.slice(0, 10).map((value, i) => (
