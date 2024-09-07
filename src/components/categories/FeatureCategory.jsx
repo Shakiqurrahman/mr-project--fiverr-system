@@ -122,7 +122,7 @@ function FeatureCategory() {
             (!expand ? (
               <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
                 <button
-                  className="rounded-full bg-white"
+                  className="rounded-full border bg-white"
                   onClick={() => setExpand(!expand)}
                 >
                   <img src={DownArrow} alt="" className="h-[50px] w-[50px]" />

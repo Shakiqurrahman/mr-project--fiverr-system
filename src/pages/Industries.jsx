@@ -4,6 +4,7 @@ import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import Stack from "@mui/material/Stack";
 import { useCallback, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import {
   useFetchAllDesignKeywordsQuery,
   useFetchAllIndustryKeywordsQuery,
@@ -20,6 +21,7 @@ import Divider from "../components/Divider";
 import SortDropdown from "../components/SortDropdown";
 
 function Industries() {
+  const { state } = useLocation();
   const { data: designKeyWordsData } = useFetchAllDesignKeywordsQuery();
   const { data: industryKeyWordsData } = useFetchAllIndustryKeywordsQuery();
   const { data: designsData } = useFetchGetUploadQuery();
@@ -29,7 +31,9 @@ function Industries() {
   const [industryKeywords, setIndustryKeywords] = useState([]);
 
   const [selectedValue, setSelectedValue] = useState(null);
-  const [industrySelectedValue, setIndustrySelectedValue] = useState(null);
+  const [industrySelectedValue, setIndustrySelectedValue] = useState(
+    state || null,
+  );
   const { data: filterDesignData } = useFetchDesignByKeyQuery(selectedValue, {
     skip: !selectedValue,
   });

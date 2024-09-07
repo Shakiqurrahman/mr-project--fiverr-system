@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Reorder } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -8,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import Check from "../assets/svg/Check";
+import { configApi } from "../libs/configApi";
 import {
   deleteCategory,
   fetchCategory,
@@ -33,8 +35,20 @@ function PriceList() {
     }
   }, [category]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setIsDraggable(false);
+    try {
+      // Send the full list of items to the backend
+      await axios.post(`${configApi.api}category/update/all`, {
+        items: categoryList,
+      });
+      alert("Items saved successfully!");
+    } catch (error) {
+      console.error("Error saving items:", error);
+      alert("Failed to save items.");
+    } finally {
+      // setIsSaving(false);
+    }
     console.log(categoryList);
   };
 
@@ -168,7 +182,7 @@ function PriceList() {
               >
                 <div
                   key={category.id}
-                  className="mt-8 overflow-hidden rounded-lg border-2 border-solid border-gray-300"
+                  className="mt-8 overflow-hidden rounded-lg border-2 border-solid border-gray-300 bg-white"
                 >
                   <div className="flex items-center justify-between bg-lightcream p-2">
                     <div className="relative flex items-center gap-1 sm:gap-4">

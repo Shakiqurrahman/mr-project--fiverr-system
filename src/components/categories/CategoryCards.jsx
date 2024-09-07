@@ -5,7 +5,7 @@ import LeftArrowIcon from "../../assets/images/icons/Left Arrow.svg";
 import RightArrowIcon from "../../assets/images/icons/Right Arrow.svg";
 import CategoryLayout from "./CategoryLayout";
 import ProjectCard from "./ProjectCard";
-function CategoryCards({ title, path, subCategory = [] , titleSlug}) {
+function CategoryCards({ title, path, subCategory = [], titleSlug }) {
   const settings = {
     dots: false,
     infinite: false,
@@ -44,7 +44,6 @@ function CategoryCards({ title, path, subCategory = [] , titleSlug}) {
       },
     ],
   };
-  
 
   return (
     <CategoryLayout title={title} path={path}>
@@ -77,7 +76,7 @@ function NextArrow({ onClick }) {
   return (
     <div
       onClick={onClick}
-      className="slick-arrow absolute -right-[15px] top-[30%] z-10 flex h-[35px] w-[35px] cursor-pointer items-center justify-center rounded-full border before:content-none"
+      className="slick-arrow absolute -right-[15px] top-[40%] z-10 flex h-[35px] w-[35px] cursor-pointer items-center justify-center rounded-full border before:content-none"
     >
       <img src={RightArrowIcon} alt="" />
     </div>
@@ -88,7 +87,7 @@ function PrevArrow({ onClick }) {
   return (
     <div
       onClick={onClick}
-      className="slick-arrow absolute -left-[15px] top-[30%] z-10 flex h-[35px] w-[35px] cursor-pointer items-center justify-center rounded-full border before:content-none"
+      className="slick-arrow absolute -left-[15px] top-[40%] z-10 flex h-[35px] w-[35px] cursor-pointer items-center justify-center rounded-full border before:content-none"
     >
       <img src={LeftArrowIcon} alt="" />
     </div>

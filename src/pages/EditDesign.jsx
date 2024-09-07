@@ -814,19 +814,29 @@ function EditDesign() {
               </div>
             </div>
           </div>
-          <button
-            type="submit"
-            disabled={submitLoading}
-            className="mx-auto mt-5 flex h-[45px] w-1/2 items-center justify-center rounded-3xl bg-primary text-white disabled:cursor-not-allowed"
-          >
-            {submitLoading ? (
-              <span className="animate-spin text-xl">
-                <FaSpinner />
-              </span>
-            ) : (
-              "Update"
-            )}
-          </button>
+          <div className="flex justify-center gap-5">
+            <button
+              type="submit"
+              disabled={submitLoading}
+              className="mt-5 flex h-[45px] w-1/2 max-w-[200px] items-center justify-center rounded-3xl bg-primary text-white disabled:cursor-not-allowed"
+            >
+              {submitLoading ? (
+                <span className="animate-spin text-xl">
+                  <FaSpinner />
+                </span>
+              ) : (
+                "Update"
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              disabled={submitLoading}
+              className="mt-5 flex h-[45px] w-1/2 max-w-[200px] items-center justify-center rounded-3xl bg-canceled text-white disabled:cursor-not-allowed"
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       </div>
     </div>
