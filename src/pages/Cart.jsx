@@ -10,9 +10,6 @@ function Cart() {
 
   const {items : cart} = useSelector((state) => state.cart);
 
-  // Initialize cart state with useState
-  // const [cart, setCart] = useState(items || []);
-
   // Handle checkbox toggle
   function handleCheckboxChange(index) {
     const updatedCart = cart.map((item, i) => {
