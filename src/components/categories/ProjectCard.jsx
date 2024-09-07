@@ -1,5 +1,7 @@
 import { GiShoppingCart } from "react-icons/gi";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { addToCart } from "../../Redux/features/cartSlice";
 
 function ProjectCard({
   thumbnail,
@@ -11,6 +13,7 @@ function ProjectCard({
   cart,
   slug,
 }) {
+  const dispatch = useDispatch();
   return (
     <div className="h-full px-[5px]">
       <Link
@@ -18,7 +21,10 @@ function ProjectCard({
         className="relative block h-full cursor-pointer border bg-white"
       >
         {cart && (
-          <button className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-md bg-white">
+          <button
+            onClick={() => dispatch(addToCart(thumbnail))}
+            className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-md bg-white"
+          >
             <GiShoppingCart />
           </button>
         )}

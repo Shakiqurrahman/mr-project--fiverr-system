@@ -10,10 +10,17 @@ import categorySlice from "./features/category/categorySlice";
 import offerProjectSlice from "./features/offerProjectSlice";
 import passwordVisibilitySlice from "./features/passwordVisibilitySlice";
 import userSlice from "./features/userSlice";
+import cartSlice from "./features/cartSlice";
 
 // Persist configs
 const userPersistConfig = {
   key: "auth",
+  version: 1,
+  storage,
+};
+
+const cartPersistConfig = {
+  key: "cart",
   version: 1,
   storage,
 };
@@ -27,6 +34,8 @@ const offerProjectPersistConfig = {
 // Persisted reducers
 const persistedUserReducer = persistReducer(userPersistConfig, userSlice);
 
+const persistedCartReducer = persistReducer(cartPersistConfig, cartSlice);
+
 const persistedOfferProjectReducer = persistReducer(
   offerProjectPersistConfig,
   offerProjectSlice,
@@ -37,6 +46,7 @@ const store = configureStore({
     user: persistedUserReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
     [allUserApiSlice.reducerPath]: allUserApiSlice.reducer,
+    cart : persistedCartReducer,
     passwordVisibility: passwordVisibilitySlice,
     category: categorySlice,
     offerProject: persistedOfferProjectReducer,
