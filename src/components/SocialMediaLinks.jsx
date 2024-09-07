@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { FaSkype, FaTelegramPlane, FaWhatsapp } from "react-icons/fa";
 import { PiDotsSixBold } from "react-icons/pi";
-import { RiPlayReverseLargeFill } from "react-icons/ri";
+import { RiPlayLargeFill, RiPlayReverseLargeFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import gmailIcon from "../assets/images/icons/Gmail.png";
 import messengerLogo from "../assets/images/icons/messenger.png";
@@ -53,7 +53,11 @@ function SocialMediaLinks() {
       </div>
       <div className="relative z-[10] flex cursor-pointer flex-col items-center justify-center rounded-lg bg-primary p-2 text-white">
         <button onClick={() => setExpend(!expend)}>
-          <RiPlayReverseLargeFill className="text-xl sm:text-3xl" />
+          {expend ? (
+            <RiPlayLargeFill className="text-xl sm:text-3xl" />
+          ) : (
+            <RiPlayReverseLargeFill className="text-xl sm:text-3xl" />
+          )}
         </button>
         <PiDotsSixBold className="text-2xl sm:text-[40px]" />
       </div>
