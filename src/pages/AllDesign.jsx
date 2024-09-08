@@ -71,7 +71,7 @@ function AllDesign() {
                 thumbnail={thumbnail.url}
                 thumbnailName={thumbnail.name}
                 title={design.title}
-                designs={design}
+                design={design}
                 slug={`/design/${design?.designId}`}
               />
             );

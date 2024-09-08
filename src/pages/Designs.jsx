@@ -197,6 +197,7 @@ function Designs() {
                 thumbnail={thumbnail.url}
                 thumbnailName={thumbnail.name}
                 title={design.title}
+                design={design}
                 slug={`/design/${design.designId}`}
               />
             );

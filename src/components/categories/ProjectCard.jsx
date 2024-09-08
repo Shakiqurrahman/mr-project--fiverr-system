@@ -1,5 +1,6 @@
 import { GiShoppingCart } from "react-icons/gi";
-import { useDispatch } from "react-redux";
+import { MdCheck } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { addToCart } from "../../Redux/features/cartSlice";
 
@@ -7,6 +8,7 @@ function ProjectCard({
   thumbnail,
   thumbnailName,
   title,
+  design,
   clientLogo,
   clientName,
   timeStamp,
@@ -14,20 +16,26 @@ function ProjectCard({
   slug,
 }) {
   const dispatch = useDispatch();
+  const { items: cartItems } = useSelector((state) => state.cart);
   return (
-    <div className="h-full px-[5px]">
+    <div className="relative h-full px-[5px]">
+      {cart && (
+        <button
+          type="button"
+          onClick={() => dispatch(addToCart(design))}
+          className="absolute right-4 top-2.5 z-10 flex h-8 w-8 items-center justify-center rounded-md border bg-white text-xl"
+        >
+          {cartItems.some((item) => item?.designId === design?.designId) ? (
+            <MdCheck className="text-primary"/>
+          ) : (
+            <GiShoppingCart />
+          )}
+        </button>
+      )}
       <Link
         to={slug}
         className="relative block h-full cursor-pointer border bg-white"
       >
-        {cart && (
-          <button
-            onClick={() => dispatch(addToCart(thumbnail))}
-            className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-md bg-white"
-          >
-            <GiShoppingCart />
-          </button>
-        )}
         <div className="relative">
           <img
             src={thumbnail}
