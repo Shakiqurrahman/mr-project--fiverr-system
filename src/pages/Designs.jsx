@@ -12,6 +12,7 @@ import {
   useFetchDesignNdIndustryByKeyQuery,
   useFetchGetUploadQuery,
   useFetchIndustryByKeyQuery,
+  useFetchSortedUploadsQuery,
 } from "../Redux/api/uploadDesignApiSlice";
 import prevBtn from "../assets/images/icons/Left Arrow.svg";
 import nextBtn from "../assets/images/icons/Right Arrow.svg";
@@ -29,6 +30,12 @@ function Designs() {
   const [designs, setDesigns] = useState([]);
   const [designKeywords, setDesignKeywords] = useState([]);
   const [industryKeywords, setIndustryKeywords] = useState([]);
+  const sortingOptions = [
+    "Default Designs",
+    "Newest Designs",
+    "Oldest Designs",
+  ];
+  const [sortedBy, setSortedBy] = useState("DefaultDesigns");
 
   const [selectedValue, setSelectedValue] = useState(state || null);
   const [industrySelectedValue, setIndustrySelectedValue] = useState(null);
@@ -50,8 +57,6 @@ function Designs() {
       skip: !selectedValue && !industrySelectedValue,
     },
   );
-
-  console.log("filtered", filterBothData);
 
   useEffect(() => {
     if (!designsData) return; // Return early if no designs data is available
@@ -135,16 +140,12 @@ function Designs() {
     setIndustrySelectedValue((prev) => (prev === value ? null : value));
   }, []);
 
-  const sortingOptions = [
-    "Default Designs",
-    "Newest Designs",
-    "Oldest Designs",
-  ];
-
+ 
   const handleSortChange = (option) => {
-    // console.log("Selected sorting option:", option);
-    // Implement sorting logic here
+    setSortedBy(option);
+    console.log("óptions",option)
   };
+  
 
   return (
     <>

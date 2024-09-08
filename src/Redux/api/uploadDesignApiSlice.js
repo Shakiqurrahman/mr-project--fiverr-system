@@ -55,6 +55,16 @@ export const uploadDesignApiSlice = createApi({
       query: () => `industrys/get`,
       transformResponse: (response) => [...new Set(response?.data)],
     }),
+    // fetchSortedUploads: builder.query({
+    //   query: ({
+    //     limit = 5,
+    //     page = 1,
+    //     sortBy = "createdAt",
+    //     sortOrder = "desc",
+    //   }) =>
+    //     `upload/get?limit=${limit}&page=${page}&sortBy=${sortBy}&sortOrder=${sortOrder}`,
+    //   transformResponse: (response) => response?.data,
+    // }),
     fetchDesignByKey: builder.query({
       query: (key) => `designs/filter/get?name=${key}`,
       transformResponse: (response) => response?.data,
@@ -64,7 +74,8 @@ export const uploadDesignApiSlice = createApi({
       transformResponse: (response) => response?.data,
     }),
     fetchDesignNdIndustryByKey: builder.query({
-      query: ({dKey, iKey}) => `getTogether/get?design=${dKey}&industry=${iKey}`,
+      query: ({ dKey, iKey }) =>
+        `getTogether/get?design=${dKey}&industry=${iKey}`,
       transformResponse: (response) => response?.data,
     }),
   }),
@@ -77,10 +88,11 @@ export const {
   useFetchSubFoldersQuery,
   useFetchIndustriesQuery,
   useFetchDesignsQuery,
+  useFetchSortedUploadsQuery,
   useFetchProductByIdQuery,
   useFetchAllDesignKeywordsQuery,
   useFetchAllIndustryKeywordsQuery,
   useFetchDesignByKeyQuery,
   useFetchIndustryByKeyQuery,
-  useFetchDesignNdIndustryByKeyQuery
+  useFetchDesignNdIndustryByKeyQuery,
 } = uploadDesignApiSlice;
