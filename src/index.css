@@ -4,17 +4,23 @@
 @tailwind utilities;
 
 /* Custom Scroll bar */
-::-webkit-scrollbar {
-  width: 12px;
+body::-webkit-scrollbar {
+  width: 10px;
 }
 
-::-webkit-scrollbar-track {
+body::-webkit-scrollbar-track {
   background: #e2e2e2;
 }
-::-webkit-scrollbar-thumb {
+body::-webkit-scrollbar-thumb {
   @apply bg-primary;
   border-radius: 4px;
 }
+
+
+/* for cart drawer */
+.drawer-scroller::-webkit-scrollbar {
+  width: 0px;
+} 
 
 body {
   font-family: "Montserrat", sans-serif;

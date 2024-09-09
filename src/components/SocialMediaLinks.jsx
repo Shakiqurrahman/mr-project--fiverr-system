@@ -27,7 +27,7 @@ function SocialMediaLinks() {
     <motion.div
       drag
       dragMomentum={false}
-      className="fixed bottom-[100px] right-5 z-[99999] flex h-[70px] items-stretch overflow-clip rounded-lg bg-lightskyblue shadow-xl"
+      className="fixed bottom-[100px] right-5 z-[100] flex h-[70px] items-stretch overflow-clip rounded-lg bg-lightskyblue shadow-xl"
     >
       <div
         className={`${expend ? "visible w-[220px] translate-x-0 p-2 opacity-100" : "invisible w-0 translate-x-full p-0 opacity-0"}`}
@@ -73,7 +73,7 @@ function SocialMediaLinks() {
             <RiPlayReverseLargeFill className="text-xl" />
           )}
         </button>
-        <PiDotsSixBold className="text-2xl" />
+        <PiDotsSixBold className="text-2xl cursor-move" />
       </div>
     </motion.div>
   );

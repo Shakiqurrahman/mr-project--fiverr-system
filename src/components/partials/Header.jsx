@@ -130,7 +130,7 @@ function Header() {
                     open={openDrawer}
                     onClose={() => setOpenDrawer(false)}
                     direction="right"
-                    className="!w-full !max-w-[450px] !bg-slate-100"
+                    className="!w-full !max-w-[450px] !bg-slate-100 !overflow-y-auto drawer-scroller"
                   >
                     <CartDrawer close={() => setOpenDrawer(false)} />
                   </Drawer>

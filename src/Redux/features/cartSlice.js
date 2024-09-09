@@ -27,8 +27,11 @@ const cartSlice = createSlice({
       state.alreadyAdded = false;
       toast.success("Item removed from cart.");
     },
+    setCart: (state, action) => {
+      state.items = action.payload;
+    }
   },
 });
 
-export const { addToCart, removeFromCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, setCart } = cartSlice.actions;
 export default cartSlice.reducer;

@@ -3,7 +3,7 @@ import { RxCross2 } from "react-icons/rx";
 import Check from "../assets/svg/Check";
 import { RiCloseLargeFill } from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeFromCart } from '../Redux/features/cartSlice';
+import { removeFromCart, setCart } from '../Redux/features/cartSlice';
 
 function Cart() {
   const dispatch = useDispatch();
@@ -11,14 +11,14 @@ function Cart() {
   const {items : cart} = useSelector((state) => state.cart);
 
   // Handle checkbox toggle
-  function handleCheckboxChange(index) {
-    const updatedCart = cart.map((item, i) => {
-      if (i === index) {
+  function handleCheckboxChange(id) {
+    const updatedCart = cart.map((item) => {
+      if (item.designId === id) {
         return { ...item, checked: !item.checked };
       }
       return item;
     });
-    // setCart(updatedCart);
+    dispatch(setCart(updatedCart));
   }
 
   // Handle checkout
@@ -44,8 +44,8 @@ function Cart() {
               name={`cartItem-${item.designId}`}
               id={`cartItem-${item.designId}`}
               className="is-checked peer"
-              checked={item.checked}
-              onChange={() => handleCheckboxChange(index)}
+              checked={item.checked || false}
+              onChange={() => handleCheckboxChange(item.designId)}
               hidden
             />
             <label
