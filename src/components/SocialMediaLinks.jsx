@@ -66,7 +66,7 @@ function SocialMediaLinks() {
         </div>
       </div>
       <div className="relative z-[10] flex cursor-pointer flex-col items-center justify-center rounded-lg bg-primary p-2 text-white">
-        <button onClick={handleExpend}>
+        <button type="button" onClick={handleExpend}>
           {expend ? (
             <RiPlayLargeFill className="text-xl" />
           ) : (
