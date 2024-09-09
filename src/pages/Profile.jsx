@@ -74,8 +74,6 @@ function Profile({ user = {}, slug }) {
     setDescription(user?.description || "");
   };
 
-  console.log(user);
-
   const {
     facebook,
     instagram,

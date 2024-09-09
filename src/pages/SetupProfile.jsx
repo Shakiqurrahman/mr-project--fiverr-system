@@ -38,7 +38,16 @@ function SetupProfile({ from_profile }) {
 
   const handleUpdateProfileData = async (e) => {
     e.preventDefault();
-
+     // Check if any of the fields have changed
+     
+    //  const hasChanges = Object.keys(form).some(
+    //   (key) => form[key] !== form[key],
+    // );
+    // if (!hasChanges) {
+    //   toast.error("Nothing to update!");
+    //   navigate(-1);
+    //   return;
+    // }
     try {
       setUploading(true);
       setLoading(true);
@@ -199,9 +208,6 @@ function SetupProfile({ from_profile }) {
               onChange={handleChange}
               className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
             />
-            <p className="mt-2 hidden px-2 text-xs text-red-600">
-              There was an error!
-            </p>
             <label className="block px-2 pt-2">Username</label>
             <input
               type="text"
@@ -211,9 +217,6 @@ function SetupProfile({ from_profile }) {
               onChange={handleChange}
               className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
             />
-            <p className="mt-2 hidden px-2 text-xs text-red-600">
-              There was an error!
-            </p>
             <label className="block px-2 pt-2">Industry Name</label>
             <input
               type="text"
@@ -222,9 +225,6 @@ function SetupProfile({ from_profile }) {
               onChange={handleChange}
               className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
             />
-            <p className="mt-2 hidden px-2 text-xs text-red-600">
-              There was an error!
-            </p>
             <div className="flex gap-3">
               <div className="w-1/2">
                 <CountryList
@@ -241,9 +241,6 @@ function SetupProfile({ from_profile }) {
                   onChange={handleChange}
                   className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
                 />
-                <p className="mt-2 hidden px-2 text-xs text-red-600">
-                  There was an error!
-                </p>
               </div>
             </div>
             <label className="block px-2 pt-2">Address</label>
@@ -254,9 +251,6 @@ function SetupProfile({ from_profile }) {
               onChange={handleChange}
               className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
             />
-            <p className="mt-2 hidden px-2 text-xs text-red-600">
-              There was an error!
-            </p>
             <label className="block px-2 pt-2">Email</label>
             <input
               type="email"
@@ -266,9 +260,6 @@ function SetupProfile({ from_profile }) {
               onChange={handleChange}
               className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
             />
-            <p className="mt-2 hidden px-2 text-xs text-red-600">
-              There was an error!
-            </p>
             <label className="block px-2 pt-2">Phone Number</label>
             <div className="mt-1 flex">
               <div className="flex flex-shrink-0 select-none items-center border border-r-0 border-[#e7e7e7] bg-white p-1 sm:p-2">
@@ -295,9 +286,6 @@ function SetupProfile({ from_profile }) {
               onChange={handleChange}
               className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
             />
-            <p className="mt-2 hidden px-2 text-xs text-red-600">
-              There was an error!
-            </p>
           </div>
         </div>
         <div className="mt-5 bg-[#DCEEFA]">
@@ -322,7 +310,7 @@ function SetupProfile({ from_profile }) {
                 onClick={handleSkip}
                 className="flex-grow rounded-3xl bg-gray-500 p-3 text-center text-white"
               >
-                Skip
+               {from_profile ? "Cancel" : "Skip"}
               </button>
               {loading && (
                 <Backdrop

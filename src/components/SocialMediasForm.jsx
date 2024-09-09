@@ -1,3 +1,4 @@
+import { Backdrop, CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import {
@@ -7,12 +8,10 @@ import {
   FaPinterest,
   FaTiktok,
   FaTumblr,
-  FaTwitter,
   FaYelp,
   FaYoutube,
 } from "react-icons/fa";
-import { FaLinkedinIn } from "react-icons/fa6";
-import { FaXTwitter } from "react-icons/fa6";
+import { FaLinkedinIn, FaXTwitter } from "react-icons/fa6";
 import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import nextDoorIcon from "../assets/images/nextdoor_icon.png";
@@ -20,16 +19,16 @@ import {
   useFetchSocialMediasQuery,
   useUpdateSocialMediasMutation,
 } from "../Redux/api/apiSlice";
-import { Backdrop, CircularProgress } from "@mui/material";
 
 const SocialMediasForm = () => {
-  const {state} = useLocation();  
+  const { state } = useLocation();
   const {
     data: socialMediasData,
     isLoading,
     error,
   } = useFetchSocialMediasQuery();
-  const [updateSocialMedias, {isLoading: isUpdating}] = useUpdateSocialMediasMutation();
+  const [updateSocialMedias, { isLoading: isUpdating }] =
+    useUpdateSocialMediasMutation();
   const navigate = useNavigate();
 
   // State to manage form inputs
@@ -68,11 +67,21 @@ const SocialMediasForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Check if any of the fields have changed
+    const hasChanges = Object.keys(socialLinks).some(
+      (key) => socialLinks[key] !== socialMediasData[key],
+    );
+    if (!hasChanges) {
+      toast.error("Nothing to update!");
+      navigate(-1);
+      return;
+    }
     try {
       const result = await updateSocialMedias(socialLinks).unwrap();
       console.log(result);
 
-      if(state === 'newUser'){
+      if (state === "newUser") {
         Swal.fire({
           position: "center",
           icon: "success",
@@ -83,11 +92,11 @@ const SocialMediasForm = () => {
           customClass: {
             confirmButton: "successfull-button",
           },
-      });
-      navigate('/');
-    } else {
-      toast.success("Saved Successfully!")
-      navigate(-1);
+        });
+        navigate("/");
+      } else {
+        toast.success("Saved Successfully!");
+        navigate(-1);
       }
     } catch (error) {
       console.error("Error saving social media links:", error);
@@ -306,25 +315,25 @@ const SocialMediasForm = () => {
             Save
           </button>
           <button
-          onClick={handleSkip}
+            onClick={handleSkip}
             type="button"
             className="flex-1 rounded-[30px] bg-[#7c7c7c] px-4 py-2.5 text-white"
           >
-            Skip
+            {state === "newUser" ? "Skip" : "Cancel"}
           </button>
         </div>
       </form>
       {(isLoading || isUpdating) && (
-                <Backdrop
-                  sx={{
-                    color: "#fff",
-                    zIndex: (theme) => theme.zIndex.drawer + 1,
-                  }}
-                  open
-                >
-                  <CircularProgress color="inherit" />
-                </Backdrop>
-              )}
+        <Backdrop
+          sx={{
+            color: "#fff",
+            zIndex: (theme) => theme.zIndex.drawer + 1,
+          }}
+          open
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
     </section>
   );
 };
