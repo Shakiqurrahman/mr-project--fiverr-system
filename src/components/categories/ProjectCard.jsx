@@ -26,16 +26,13 @@ function ProjectCard({
           className="absolute right-4 top-2.5 z-10 flex h-8 w-8 items-center justify-center rounded-md border bg-white text-xl"
         >
           {cartItems.some((item) => item?.designId === design?.designId) ? (
-            <MdCheck className="text-primary"/>
+            <MdCheck className="text-primary" />
           ) : (
             <GiShoppingCart />
           )}
         </button>
       )}
-      <Link
-        to={slug}
-        className="relative block h-full cursor-pointer border bg-white"
-      >
+      <Link to={slug} className="block cursor-pointer border bg-white">
         <div className="relative">
           <img
             src={thumbnail}

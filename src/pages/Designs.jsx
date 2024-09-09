@@ -56,6 +56,22 @@ function Designs() {
     },
   );
 
+  const selectedOption = useCallback(
+    (data) => {
+      if (data) {
+        const prevDesigns = [...data];
+        if (sortedBy === "NewestDesigns") {
+          setDesigns(prevDesigns.reverse());
+        } else if (sortedBy === "OldestDesigns") {
+          setDesigns(prevDesigns);
+        } else {
+          setDesigns(prevDesigns);
+        }
+      }
+    },
+    [sortedBy],
+  );
+
   useEffect(() => {
     if (!designsData) return; // Return early if no designs data is available
 
@@ -63,6 +79,7 @@ function Designs() {
     if (selectedValue && industrySelectedValue) {
       // updateKeywordsData(filterBothData, designKeyWordsData, industryKeyWordsData);
       setDesigns(filterBothData);
+      selectedOption(filterBothData);
       setCurrentPage(1);
     }
     // Check if only design keyword is selected
@@ -82,6 +99,7 @@ function Designs() {
       }));
       setIndustryKeywords(updatedIndustryKeywords);
       setDesigns(filterDesignData);
+      selectedOption(filterDesignData);
       setCurrentPage(1);
     }
     // Check if only industry keyword is selected
@@ -102,11 +120,13 @@ function Designs() {
       }));
       setIndustryKeywords(updatedIndustryKeywords);
       setDesigns(filterIndustryData);
+      selectedOption(filterIndustryData);
       setCurrentPage(1);
     }
     // Default case: no keywords selected, set original designs and update keywords
     else {
       setDesigns(designsData);
+      selectedOption(designsData);
       const updatedDesignKeywords = designKeyWordsData?.map((key) => ({
         name: key,
         quantity: designsData?.filter((design) =>
@@ -132,6 +152,7 @@ function Designs() {
     selectedValue,
     designKeyWordsData,
     industryKeyWordsData,
+    selectedOption,
   ]);
 
   const handleDesignClick = useCallback((value) => {
@@ -144,13 +165,11 @@ function Designs() {
 
   const handleSortChange = (option) => {
     setSortedBy(option);
-    console.log("options", option);
   };
 
   // Pagination related work
   const limit = 20;
   const totalPages = Math.ceil(designs?.length / limit) || 0;
-  console.log(totalPages);
   const startIndex = (currentPage - 1) * limit;
   const currentPageData = designs?.slice(startIndex, startIndex + limit);
 
@@ -234,10 +253,22 @@ function Designs() {
 }
 
 const prevBtnIcon = () => {
-  return <img src={prevBtn} alt="" className="h-8 w-8 rounded-full" />;
+  return (
+    <img
+      src={prevBtn}
+      alt=""
+      className="h-8 w-8 rounded-full border border-solid shadow-md"
+    />
+  );
 };
 const nextBtnIcon = () => {
-  return <img src={nextBtn} alt="" className="h-8 w-8 rounded-full" />;
+  return (
+    <img
+      src={nextBtn}
+      alt=""
+      className="h-8 w-8 rounded-full border border-solid shadow-md"
+    />
+  );
 };
 
 export default Designs;

@@ -12,10 +12,10 @@ function AllCompletedProjects() {
   return (
     <>
       <div className="max-width">
-        <h1 className="text-center text-xl md:text-3xl my-10 font-semibold">
+        <h1 className="my-10 text-center text-xl font-semibold md:text-3xl">
           Completed Projects
         </h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 gap-x-3 gap-y-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {data.map(() => (
             <ProjectCard
               key={Math.random()}
@@ -28,7 +28,7 @@ function AllCompletedProjects() {
           ))}
         </div>
 
-        <div className="flex justify-center mt-10">
+        <div className="mt-10 flex justify-center">
           <Stack spacing={2}>
             <Pagination
               count={10}
@@ -47,10 +47,22 @@ function AllCompletedProjects() {
 }
 
 const prevBtnIcon = () => {
-  return <img src={prevBtn} alt="" className="h-8 w-8 rounded-full" />;
+  return (
+    <img
+      src={prevBtn}
+      alt=""
+      className="h-8 w-8 rounded-full border border-solid shadow-md"
+    />
+  );
 };
 const nextBtnIcon = () => {
-  return <img src={nextBtn} alt="" className="h-8 w-8 rounded-full" />;
+  return (
+    <img
+      src={nextBtn}
+      alt=""
+      className="h-8 w-8 rounded-full border border-solid shadow-md"
+    />
+  );
 };
 
 export default AllCompletedProjects;
