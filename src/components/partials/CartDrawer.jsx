@@ -19,14 +19,15 @@ const CartDrawer = ({ close }) => {
       }
       return item;
     });
-    dispatch(setCart(updatedCart));
+    dispatch(setCart(updatedCart)); 
   }
 
   // Handle checkout
   const handleCheckout = () => {
     const selectedItems = cart.filter((item) => item.checked);
-    console.log("Items ready for checkout:", selectedItems);
+      console.log("Items ready for checkout:", selectedItems);
   }
+  const hasSelectedItems = cart.some((item) => item.checked);
 
   return (
     <div className="ml-auto h-full w-full max-w-[450px] p-4 pt-0">
@@ -121,7 +122,8 @@ const CartDrawer = ({ close }) => {
             </Link>
             <button
               onClick={handleCheckout}
-              className="rounded-full bg-primary px-10 py-2 font-semibold text-white"
+              disabled={!hasSelectedItems}
+              className={`rounded-full ${hasSelectedItems ? 'bg-primary' : 'bg-primary/70 cursor-not-allowed'} px-10 py-2 font-semibold text-white`}
             >
               Checkout
             </button>

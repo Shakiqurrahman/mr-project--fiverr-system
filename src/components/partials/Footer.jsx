@@ -104,9 +104,9 @@ function Footer() {
                   </li>
                 </ul>
               </div>
-              <Divider className="my-5 h-[1px] w-[100px]" />
+              <Divider className="mx-auto my-5 h-[1px] w-[100px] sm:mx-0" />
               <div className="my-5 flex flex-wrap justify-between gap-y-3 md:flex-nowrap md:gap-y-0">
-                <p className="w-full md:w-auto">
+                <p className="w-full text-center sm:text-left md:w-auto">
                   Email:-{" "}
                   <Link
                     className="duration-300 hover:text-primary"
@@ -115,7 +115,7 @@ function Footer() {
                     mahfujurrahm535@gmail.com
                   </Link>
                 </p>
-                <div className="flex w-full items-center gap-x-3 md:w-auto">
+                <div className="flex w-full items-center justify-center gap-x-3 sm:justify-start md:w-auto">
                   <Link
                     to="https://facebook.com/mahfuj535"
                     className="flex h-[30px] w-[30px] items-center justify-center rounded-full border-2 border-solid border-white text-base duration-300 hover:border-primary hover:text-primary"
