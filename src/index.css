@@ -23,6 +23,37 @@ body {
   scroll-behavior: smooth;
 }
 
+/* Resetting heading tags to default design for product description */
+.product-description h1 {
+  font-size: 2em; /* Adjust size as needed */
+  font-weight: 700; /* Adjust weight as needed */
+}
+
+.product-description h2 {
+  font-size: 1.5em; /* Adjust size as needed */
+  font-weight: 700; /* Adjust weight as needed */
+}
+
+.product-description h3 {
+  font-size: 1.17em; /* Adjust size as needed */
+  font-weight: 700; /* Adjust weight as needed */
+}
+
+.product-description h4 {
+  font-size: 1em; /* Adjust size as needed */
+  font-weight: 700; /* Adjust weight as needed */
+}
+
+.product-description h5 {
+  font-size: 0.83em; /* Adjust size as needed */
+  font-weight: 700; /* Adjust weight as needed */
+}
+
+.product-description h6 {
+  font-size: 0.67em; /* Adjust size as needed */
+  font-weight: 700; /* Adjust weight as needed */
+}
+
 .font-Oswald {
   font-family: "Oswald", sans-serif;
 }

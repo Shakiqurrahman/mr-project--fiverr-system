@@ -22,6 +22,7 @@ import SortDropdown from "../components/SortDropdown";
 
 function Industries() {
   const { state } = useLocation();
+  const [currentPage, setCurrentPage] = useState(1);
   const { data: designKeyWordsData } = useFetchAllDesignKeywordsQuery();
   const { data: industryKeyWordsData } = useFetchAllIndustryKeywordsQuery();
   const { data: designsData } = useFetchGetUploadQuery();
@@ -53,8 +54,6 @@ function Industries() {
     },
   );
 
-  console.log("filtered", filterBothData);
-
   useEffect(() => {
     if (!designsData) return; // Return early if no designs data is available
 
@@ -62,6 +61,7 @@ function Industries() {
     if (selectedValue && industrySelectedValue) {
       // updateKeywordsData(filterBothData, designKeyWordsData, industryKeyWordsData);
       setDesigns(filterBothData);
+      setCurrentPage(1);
     }
     // Check if only design keyword is selected
     else if (filterDesignData && selectedValue) {
@@ -80,6 +80,7 @@ function Industries() {
       }));
       setIndustryKeywords(updatedIndustryKeywords);
       setDesigns(filterDesignData);
+      setCurrentPage(1);
     }
     // Check if only industry keyword is selected
     else if (filterIndustryData && industrySelectedValue) {
@@ -99,6 +100,7 @@ function Industries() {
       }));
       setIndustryKeywords(updatedIndustryKeywords);
       setDesigns(filterIndustryData);
+      setCurrentPage(1);
     }
     // Default case: no keywords selected, set original designs and update keywords
     else {
@@ -117,6 +119,7 @@ function Industries() {
         ).length,
       }));
       setIndustryKeywords(updatedIndustryKeywords);
+      setCurrentPage(1);
     }
   }, [
     designsData,
@@ -147,6 +150,11 @@ function Industries() {
     // console.log("Selected sorting option:", option);
     // Implement sorting logic here
   };
+  // Pagination related work
+  const limit = 20;
+  const totalPages = Math.ceil(designs?.length / limit) || 0;
+  const startIndex = (currentPage - 1) * limit;
+  const currentPageData = designs?.slice(startIndex, startIndex + limit);
 
   return (
     <>
@@ -189,7 +197,7 @@ function Industries() {
           />
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {designs?.map((design, idx) => {
+          {currentPageData?.map((design, idx) => {
             const thumbnail = design.images.find((i) => i.thumbnail);
             return (
               <ProjectCard
@@ -209,7 +217,9 @@ function Industries() {
           <div className="mt-10 flex justify-center">
             <Stack spacing={2}>
               <Pagination
-                count={10}
+                count={totalPages}
+                page={currentPage}
+                onChange={(_, page) => setCurrentPage(page)}
                 renderItem={(item) => (
                   <PaginationItem
                     slots={{ previous: prevBtnIcon, next: nextBtnIcon }}
