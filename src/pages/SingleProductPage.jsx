@@ -16,7 +16,7 @@ function SingleProductPage() {
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.user);
-  const { items : cartItems } = useSelector((state) => state.cart); 
+  const { items: cartItems } = useSelector((state) => state.cart);
 
   const [isClicked, setIsClicked] = useState(false);
   const [images, setImages] = useState([]);
@@ -177,7 +177,7 @@ function SingleProductPage() {
           </div>
         </div>
         <div
-          className="my-10 overflow-clip break-words"
+          className="product-description my-10 overflow-clip break-words"
           dangerouslySetInnerHTML={{ __html: design?.description }}
         ></div>
         <Divider className={"h-px w-full bg-[#000!important]"} />

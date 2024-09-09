@@ -1,7 +1,7 @@
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import Stack from "@mui/material/Stack";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import prevBtn from "../assets/images/icons/Left Arrow.svg";
 import nextBtn from "../assets/images/icons/Right Arrow.svg";
@@ -11,8 +11,8 @@ import ProjectCard from "../components/categories/ProjectCard";
 import useGetCategory from "../hooks/useGetCategory";
 
 function AllCategory() {
-  // const filterredCategories = categories.filter(d => d.slug === id);
   const { slug } = useParams();
+  const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
   const { categories, isLoading } = useGetCategory();
   console.log(categories);
@@ -28,6 +28,13 @@ function AllCategory() {
     () => categories?.filter((cat) => cat.slug !== slug),
     [categories, slug],
   );
+
+  // Pagination related work
+  const limit = 20;
+  const totalPages = Math.ceil(subFolders?.length / limit) || 0;
+  const startIndex = (currentPage - 1) * limit;
+  const currentPageData = subFolders?.slice(startIndex, startIndex + limit);
+
   return (
     <>
       <PageHeader>{title}</PageHeader>
@@ -41,7 +48,7 @@ function AllCategory() {
           </button>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {subFolders?.map((subFolder, idx) => {
+          {currentPageData?.map((subFolder, idx) => {
             const design = subFolder?.designs[0];
             const thumbnail = design.images.filter(
               (img) => img?.thumbnail === true,
@@ -61,7 +68,9 @@ function AllCategory() {
           <div className="mt-10 flex justify-center">
             <Stack spacing={2}>
               <Pagination
-                count={10}
+                count={totalPages}
+                page={currentPage}
+                onChange={(_, page) => setCurrentPage(page)}
                 renderItem={(item) => (
                   <PaginationItem
                     slots={{ previous: prevBtnIcon, next: nextBtnIcon }}
@@ -79,10 +88,22 @@ function AllCategory() {
 }
 
 const prevBtnIcon = () => {
-  return <img src={prevBtn} alt="" className="h-8 w-8 rounded-full" />;
+  return (
+    <img
+      src={prevBtn}
+      alt=""
+      className="h-8 w-8 rounded-full border border-solid shadow-md"
+    />
+  );
 };
 const nextBtnIcon = () => {
-  return <img src={nextBtn} alt="" className="h-8 w-8 rounded-full" />;
+  return (
+    <img
+      src={nextBtn}
+      alt=""
+      className="h-8 w-8 rounded-full border border-solid shadow-md"
+    />
+  );
 };
 
 export default AllCategory;
