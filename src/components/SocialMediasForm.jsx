@@ -12,6 +12,7 @@ import {
   FaYoutube,
 } from "react-icons/fa";
 import { FaLinkedinIn } from "react-icons/fa6";
+import { FaXTwitter } from "react-icons/fa6";
 import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import nextDoorIcon from "../assets/images/nextdoor_icon.png";
@@ -149,6 +150,22 @@ const SocialMediasForm = () => {
           />
         </div>
 
+        {/* Twitter */}
+        <label className="block px-2 pt-2">Twitter</label>
+        <div className="mt-1 flex">
+          <div className="h-[50px] w-[50px] flex-shrink-0 border border-[#e7e7e7] bg-white p-2">
+            <FaXTwitter className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
+          </div>
+          <input
+            type="url"
+            name="twitter"
+            value={socialLinks.twitter}
+            onChange={handleChange}
+            placeholder="https://"
+            className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 px-3 outline-none sm:p-3 sm:px-4"
+          />
+        </div>
+
         {/* LinkedIn */}
         <label className="block px-2 pt-2">LinkedIn</label>
         <div className="mt-1 flex">
@@ -159,22 +176,6 @@ const SocialMediasForm = () => {
             type="url"
             name="linkedin"
             value={socialLinks.linkedin}
-            onChange={handleChange}
-            placeholder="https://"
-            className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 px-3 outline-none sm:p-3 sm:px-4"
-          />
-        </div>
-
-        {/* Twitter */}
-        <label className="block px-2 pt-2">Twitter</label>
-        <div className="mt-1 flex">
-          <div className="h-[50px] w-[50px] flex-shrink-0 border border-[#e7e7e7] bg-white p-2">
-            <FaTwitter className="h-full w-full flex-shrink-0 rounded-full border border-primary p-1.5 text-base" />
-          </div>
-          <input
-            type="url"
-            name="twitter"
-            value={socialLinks.twitter}
             onChange={handleChange}
             placeholder="https://"
             className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 px-3 outline-none sm:p-3 sm:px-4"

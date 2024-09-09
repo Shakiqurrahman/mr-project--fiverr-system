@@ -10,10 +10,10 @@ import {
   FaSpinner,
   FaTiktok,
   FaTumblr,
-  FaTwitter,
   FaYelp,
   FaYoutube,
 } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 // import nextDoorIcon from "../assets/images/nextdoor_icon.png";
 import { LiaEditSolid } from "react-icons/lia";
 import { PiNotionLogoBold } from "react-icons/pi";
@@ -43,6 +43,8 @@ function Profile({ user = {}, slug }) {
   const date = new Date(user?.createdAt);
   const options = { year: "numeric", month: "long" };
   const monthYear = date.toLocaleDateString("en-US", options);
+
+  const letterLogo = user?.userName?.trim().charAt(0).toUpperCase();
 
   const handleDesqEdit = () => {
     setShowDesqEdit(true);
@@ -94,12 +96,14 @@ function Profile({ user = {}, slug }) {
         <div className="relative border border-gray-300 bg-[#edf7fd] p-4 py-6">
           <BsInfoCircle className="absolute right-4 top-4 text-base text-gray-500" />
           <div className="pb-4">
-            <div className="relative mx-auto size-32 rounded-full border border-gray-300">
-              <img
+            <div className="relative mx-auto size-32 bg-[#ffefef]/30 rounded-full border border-gray-300 flex justify-center items-center">
+              {user.image ? <img
                 className="h-full w-full rounded-full object-cover"
-                src={user?.image ? user.image : defaultImg}
-                alt="user image"
-              />
+                src={user.image}
+                alt={user?.fullName}
+              /> : <div className="text-[80px] font-bold text-[#7c7c7c]/50">
+              {letterLogo}
+            </div>}
               <span
                 className={`absolute bottom-1.5 right-4 size-4 rounded-full border border-white bg-primary ${!isOnline && "hidden"}`}
               ></span>
@@ -186,7 +190,7 @@ function Profile({ user = {}, slug }) {
                   target="_blank"
                   className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
                 >
-                  <FaTwitter />
+                  <FaXTwitter />
                 </Link>
               )}
 

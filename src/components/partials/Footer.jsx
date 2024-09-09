@@ -131,7 +131,7 @@ function Footer() {
                     <FaInstagram />
                   </Link>
                   <Link
-                    to="https://twitter.com/mahfujurrahm535"
+                    to="https://x.com/mahfujurrahm535"
                     className="flex h-[30px] w-[30px] items-center justify-center rounded-full border-2 border-solid border-white text-base duration-300 hover:border-primary hover:text-primary"
                     target="_blank"
                   >
