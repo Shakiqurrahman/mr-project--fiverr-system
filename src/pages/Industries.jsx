@@ -31,6 +31,13 @@ function Industries() {
   const [designKeywords, setDesignKeywords] = useState([]);
   const [industryKeywords, setIndustryKeywords] = useState([]);
 
+  const sortingOptions = [
+    "Default Designs",
+    "Newest Designs",
+    "Oldest Designs",
+  ];
+  const [sortedBy, setSortedBy] = useState("DefaultDesigns");
+
   const [selectedValue, setSelectedValue] = useState(null);
   const [industrySelectedValue, setIndustrySelectedValue] = useState(
     state || null,
@@ -54,6 +61,22 @@ function Industries() {
     },
   );
 
+  const selectedOption = useCallback(
+    (data) => {
+      if (data) {
+        const prevDesigns = [...data];
+        if (sortedBy === "NewestDesigns") {
+          setDesigns(prevDesigns.reverse());
+        } else if (sortedBy === "OldestDesigns") {
+          setDesigns(prevDesigns);
+        } else {
+          setDesigns(prevDesigns);
+        }
+      }
+    },
+    [sortedBy],
+  );
+
   useEffect(() => {
     if (!designsData) return; // Return early if no designs data is available
 
@@ -61,6 +84,7 @@ function Industries() {
     if (selectedValue && industrySelectedValue) {
       // updateKeywordsData(filterBothData, designKeyWordsData, industryKeyWordsData);
       setDesigns(filterBothData);
+      selectedOption(filterBothData);
       setCurrentPage(1);
     }
     // Check if only design keyword is selected
@@ -80,6 +104,7 @@ function Industries() {
       }));
       setIndustryKeywords(updatedIndustryKeywords);
       setDesigns(filterDesignData);
+      selectedOption(filterDesignData);
       setCurrentPage(1);
     }
     // Check if only industry keyword is selected
@@ -100,11 +125,13 @@ function Industries() {
       }));
       setIndustryKeywords(updatedIndustryKeywords);
       setDesigns(filterIndustryData);
+      selectedOption(filterIndustryData);
       setCurrentPage(1);
     }
     // Default case: no keywords selected, set original designs and update keywords
     else {
       setDesigns(designsData);
+      selectedOption(designsData);
       const updatedDesignKeywords = designKeyWordsData?.map((key) => ({
         name: key,
         quantity: designsData?.filter((design) =>
@@ -130,6 +157,7 @@ function Industries() {
     selectedValue,
     designKeyWordsData,
     industryKeyWordsData,
+    selectedOption,
   ]);
 
   const handleDesignClick = useCallback((value) => {
@@ -140,15 +168,8 @@ function Industries() {
     setIndustrySelectedValue((prev) => (prev === value ? null : value));
   }, []);
 
-  const sortingOptions = [
-    "Default Designs",
-    "Newest Designs",
-    "Oldest Designs",
-  ];
-
   const handleSortChange = (option) => {
-    // console.log("Selected sorting option:", option);
-    // Implement sorting logic here
+    setSortedBy(option);
   };
   // Pagination related work
   const limit = 20;
@@ -236,10 +257,22 @@ function Industries() {
 }
 
 const prevBtnIcon = () => {
-  return <img src={prevBtn} alt="" className="h-8 w-8 rounded-full" />;
+  return (
+    <img
+      src={prevBtn}
+      alt=""
+      className="h-8 w-8 rounded-full border border-solid shadow-md"
+    />
+  );
 };
 const nextBtnIcon = () => {
-  return <img src={nextBtn} alt="" className="h-8 w-8 rounded-full" />;
+  return (
+    <img
+      src={nextBtn}
+      alt=""
+      className="h-8 w-8 rounded-full border border-solid shadow-md"
+    />
+  );
 };
 
 export default Industries;

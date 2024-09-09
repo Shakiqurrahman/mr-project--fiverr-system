@@ -176,3 +176,11 @@ textarea:placeholder-shown {
 .swal2-confirm.swal2-styled {
   background-color: #1b8cdc !important;
 }
+
+/* Pagination button customize */
+.MuiPaginationItem-previousNext:hover {
+  @apply !bg-transparent;
+}
+.MuiPaginationItem-previousNext > span {
+  @apply !hidden;
+}

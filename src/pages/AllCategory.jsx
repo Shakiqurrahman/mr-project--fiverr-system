@@ -88,10 +88,22 @@ function AllCategory() {
 }
 
 const prevBtnIcon = () => {
-  return <img src={prevBtn} alt="" className="h-8 w-8 rounded-full" />;
+  return (
+    <img
+      src={prevBtn}
+      alt=""
+      className="h-8 w-8 rounded-full border border-solid shadow-md"
+    />
+  );
 };
 const nextBtnIcon = () => {
-  return <img src={nextBtn} alt="" className="h-8 w-8 rounded-full" />;
+  return (
+    <img
+      src={nextBtn}
+      alt=""
+      className="h-8 w-8 rounded-full border border-solid shadow-md"
+    />
+  );
 };
 
 export default AllCategory;

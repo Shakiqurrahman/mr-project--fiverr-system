@@ -57,7 +57,8 @@ function CompletedProject() {
     {
       thumbnail,
       clientLogo: logo,
-      title: "Pressure and Soft Washing Door Hanger Design",
+      title:
+        "Pressure and Soft Washing Door Hanger Design Pressure and Soft Washing Door Hanger Design",
       clientName: "clientname",
       timeStamp: "5 days ago",
     },
@@ -113,7 +114,7 @@ function NextArrow({ onClick }) {
   return (
     <div
       onClick={onClick}
-      className="slick-arrow before:content-none h-[35px] w-[35px] border cursor-pointer flex items-center justify-center rounded-full absolute top-[30%] -right-[15px] z-10"
+      className="slick-arrow absolute -right-[15px] top-[30%] z-10 flex h-[35px] w-[35px] cursor-pointer items-center justify-center rounded-full border before:content-none"
     >
       <img src={RightArrowIcon} alt="" />
     </div>
@@ -124,7 +125,7 @@ function PrevArrow({ onClick }) {
   return (
     <div
       onClick={onClick}
-      className="slick-arrow before:content-none h-[35px] w-[35px] border cursor-pointer flex items-center justify-center rounded-full absolute top-[30%] -left-[15px] z-10"
+      className="slick-arrow absolute -left-[15px] top-[30%] z-10 flex h-[35px] w-[35px] cursor-pointer items-center justify-center rounded-full border before:content-none"
     >
       <img src={LeftArrowIcon} alt="" />
     </div>
