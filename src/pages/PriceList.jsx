@@ -14,6 +14,7 @@ import {
   deleteCategory,
   fetchCategory,
 } from "../Redux/features/category/categoryApi";
+import toast from "react-hot-toast";
 
 function PriceList() {
   const dispatch = useDispatch();
@@ -42,10 +43,9 @@ function PriceList() {
       await axios.post(`${configApi.api}category/update/all`, {
         newOrder: categoryList,
       });
-      alert("Items saved successfully!");
+      toast.success("List updated successfully!");
     } catch (error) {
-      console.error("Error saving items:", error);
-      alert("Failed to save items.");
+      toast.error("Failed to update list.");
     }
   };
 

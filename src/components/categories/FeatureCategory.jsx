@@ -18,6 +18,8 @@ function FeatureCategory() {
   const { categories, error, isLoading, handleReorder } = useGetCategory();
   const [tempCategoryList, setTempCategoryList] = useState([]);
 
+  console.log(categories);
+
   useEffect(() => {
     // When isDraggable is turned off, save or discard changes
     if (!isDraggable) {
