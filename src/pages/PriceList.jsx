@@ -40,16 +40,13 @@ function PriceList() {
     try {
       // Send the full list of items to the backend
       await axios.post(`${configApi.api}category/update/all`, {
-        items: categoryList,
+        newOrder: categoryList,
       });
       alert("Items saved successfully!");
     } catch (error) {
       console.error("Error saving items:", error);
       alert("Failed to save items.");
-    } finally {
-      // setIsSaving(false);
     }
-    console.log(categoryList);
   };
 
   const handleCancel = () => {
