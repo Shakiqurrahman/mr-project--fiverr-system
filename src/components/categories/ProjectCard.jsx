@@ -1,8 +1,8 @@
 import { GiShoppingCart } from "react-icons/gi";
-import { MdCheck } from "react-icons/md";
+import { MdClose } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { addToCart } from "../../Redux/features/cartSlice";
+import { addToCart, removeFromCart } from "../../Redux/features/cartSlice";
 
 function ProjectCard({
   thumbnail,
@@ -19,17 +19,21 @@ function ProjectCard({
   const { items: cartItems } = useSelector((state) => state.cart);
   return (
     <div className="relative h-full px-[5px]">
-      {cart && (
+      {cart && cartItems.some((item) => item?.designId === design?.designId) ? (
+        <button
+          type="button"
+          onClick={() => dispatch(removeFromCart(design?.designId))}
+          className="absolute right-4 top-2.5 z-10 flex h-8 w-8 items-center justify-center rounded-md border bg-white text-xl"
+        >
+          <MdClose />
+        </button>
+      ) : (
         <button
           type="button"
           onClick={() => dispatch(addToCart(design))}
           className="absolute right-4 top-2.5 z-10 flex h-8 w-8 items-center justify-center rounded-md border bg-white text-xl"
         >
-          {cartItems.some((item) => item?.designId === design?.designId) ? (
-            <MdCheck className="text-primary" />
-          ) : (
-            <GiShoppingCart />
-          )}
+          <GiShoppingCart />
         </button>
       )}
       <Link to={slug} className="block cursor-pointer border bg-white">

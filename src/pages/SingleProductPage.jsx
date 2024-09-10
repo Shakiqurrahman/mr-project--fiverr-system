@@ -56,6 +56,7 @@ function SingleProductPage() {
     refetch,
   } = useFetchGetUploadQuery();
 
+
   const design = useMemo(
     () => uploadDesigns?.find((d) => d.designId === slug),
     [uploadDesigns, slug],
@@ -68,6 +69,7 @@ function SingleProductPage() {
       ),
     [uploadDesigns, design?.relatedDesigns],
   );
+  
 
   useEffect(() => {
     if (design) {
@@ -113,9 +115,7 @@ function SingleProductPage() {
         await deleteDesign(id).unwrap();
         navigate("/");
         Swal.fire("Deleted!", "Your design has been deleted.", "success");
-        console.log("Product deleted successfully!");
       } catch (error) {
-        console.error("Failed to delete design:", error);
         Swal.fire(
           "Not Deleted!",
           "Your design has not been deleted.",

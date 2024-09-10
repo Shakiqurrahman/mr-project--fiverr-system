@@ -5,7 +5,6 @@ const cartSlice = createSlice({
   name: "cart",
   initialState: {
     items: [],
-    alreadyAdded: false,
     // totalPrice: 0,
   },
   reducers: {
@@ -20,18 +19,23 @@ const cartSlice = createSlice({
         state.items.push(action.payload);
         toast.success("Item added to cart!");
       }
-      state.alreadyAdded = true;
     },
     removeFromCart: (state, action) => {
       state.items = state.items.filter((d) => d.designId !== action.payload);
-      state.alreadyAdded = false;
       toast.success("Item removed from cart.");
     },
     setCart: (state, action) => {
       state.items = action.payload;
-    }
+    },
+    syncCartWithDesigns: (state, action) => {
+      const availableProducts = action.payload;
+      state.items = state.items.filter((item) =>
+        availableProducts.some((product) => product.designId === item.designId),
+      );
+    },
   },
 });
 
-export const { addToCart, removeFromCart, setCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, setCart, syncCartWithDesigns } =
+  cartSlice.actions;
 export default cartSlice.reducer;

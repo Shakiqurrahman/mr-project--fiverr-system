@@ -14,6 +14,7 @@ import UserBox from "./UserBox";
 import Drawer from "react-modern-drawer";
 //react-drawer css
 import "react-modern-drawer/dist/index.css";
+import useSyncCart from "../../hooks/useSyncCart";
 
 function Header() {
   const { user, loading } = useSelector((state) => state.user);
@@ -25,9 +26,7 @@ function Header() {
     setActiveMenu(false);
   };
 
-  const toggleDrawer = () => {
-    setOpenDrawer((prevState) => !prevState);
-  };
+  useSyncCart();
   return (
     <>
       <header className="sticky top-0 z-[99]">

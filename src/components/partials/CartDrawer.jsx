@@ -4,29 +4,31 @@ import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Check from "../../assets/svg/Check";
+import useSyncCart from "../../hooks/useSyncCart";
 import { removeFromCart, setCart } from "../../Redux/features/cartSlice";
 
 const CartDrawer = ({ close }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { items: cart } = useSelector((state) => state.cart);
+  useSyncCart();
 
   // Handle checkbox toggle
-  const handleCheckboxChange = (id) => {    
+  const handleCheckboxChange = (id) => {
     const updatedCart = cart.map((item) => {
       if (item.designId === id) {
         return { ...item, checked: !item.checked };
       }
       return item;
     });
-    dispatch(setCart(updatedCart)); 
-  }
+    dispatch(setCart(updatedCart));
+  };
 
   // Handle checkout
   const handleCheckout = () => {
     const selectedItems = cart.filter((item) => item.checked);
-      console.log("Items ready for checkout:", selectedItems);
-  }
+    console.log("Items ready for checkout:", selectedItems);
+  };
   const hasSelectedItems = cart.some((item) => item.checked);
 
   return (
@@ -106,7 +108,7 @@ const CartDrawer = ({ close }) => {
         )}
         <div className="sticky bottom-0 left-0 w-full bg-slate-100 pb-8">
           {cart.length > 0 && (
-            <p className="text-center font-bold text-slate-500 pt-4">
+            <p className="pt-4 text-center font-bold text-slate-500">
               {cart.filter((item) => item.checked).length} Item
               {cart.filter((item) => item.checked).length > 1 && "s"} ready for
               checkout.
@@ -123,7 +125,7 @@ const CartDrawer = ({ close }) => {
             <button
               onClick={handleCheckout}
               disabled={!hasSelectedItems}
-              className={`rounded-full ${hasSelectedItems ? 'bg-primary' : 'bg-primary/70 cursor-not-allowed'} px-10 py-2 font-semibold text-white`}
+              className={`rounded-full ${hasSelectedItems ? "bg-primary" : "cursor-not-allowed bg-primary/70"} px-10 py-2 font-semibold text-white`}
             >
               Checkout
             </button>

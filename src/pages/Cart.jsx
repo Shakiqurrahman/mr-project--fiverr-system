@@ -3,11 +3,13 @@ import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
 import Check from "../assets/svg/Check";
 import { removeFromCart, setCart } from "../Redux/features/cartSlice";
+import useSyncCart from "../hooks/useSyncCart";
 
 function Cart() {
   const dispatch = useDispatch();
 
   const { items: cart } = useSelector((state) => state.cart);
+  useSyncCart();
 
   // Handle checkbox toggle
   function handleCheckboxChange(id) {

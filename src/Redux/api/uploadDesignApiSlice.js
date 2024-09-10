@@ -6,10 +6,12 @@ export const uploadDesignApiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${configApi.api}`,
   }),
+  tagTypes: ['Design'],
   endpoints: (builder) => ({
     fetchGetUpload: builder.query({
       query: () => "upload/get",
       transformResponse: (response) => response?.data,
+      providesTags: ['Design'],
     }),
     fetchRelatedTags: builder.query({
       query: () => "upload/get",
@@ -73,6 +75,7 @@ export const uploadDesignApiSlice = createApi({
         url:  `upload/delete/${id}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['Design'],
     }),
   }),
 });
