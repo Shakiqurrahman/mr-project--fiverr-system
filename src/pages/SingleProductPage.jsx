@@ -3,11 +3,15 @@ import { BsThreeDots } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Slider from "react-slick";
+import Swal from "sweetalert2";
 import LeftArrowIcon from "../assets/images/icons/Left Arrow.svg";
 import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
 import Divider from "../components/Divider";
 import RelatedDesigns from "../components/RelatedDesigns";
-import { useFetchGetUploadQuery } from "../Redux/api/uploadDesignApiSlice";
+import {
+  useDeleteDesignByIdMutation,
+  useFetchGetUploadQuery,
+} from "../Redux/api/uploadDesignApiSlice";
 import { addToCart, removeFromCart } from "../Redux/features/cartSlice";
 
 function SingleProductPage() {
@@ -17,6 +21,7 @@ function SingleProductPage() {
 
   const { user } = useSelector((state) => state.user);
   const { items: cartItems } = useSelector((state) => state.cart);
+  const [deleteDesign] = useDeleteDesignByIdMutation();
 
   const [isClicked, setIsClicked] = useState(false);
   const [images, setImages] = useState([]);
@@ -93,6 +98,33 @@ function SingleProductPage() {
     setShowAll(!showAll);
   };
 
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#1b8cdc",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    });
+    if (result.isConfirmed) {
+      try {
+        await deleteDesign(id).unwrap();
+        navigate("/");
+        Swal.fire("Deleted!", "Your design has been deleted.", "success");
+        console.log("Product deleted successfully!");
+      } catch (error) {
+        console.error("Failed to delete design:", error);
+        Swal.fire(
+          "Not Deleted!",
+          "Your design has not been deleted.",
+          "error",
+        );
+      }
+    }
+  };
+
   // Determine which tags to show
   const tagsToShow = showAll ? design?.tags : design?.tags?.slice(0, 10);
   return (
@@ -112,7 +144,11 @@ function SingleProductPage() {
                 >
                   Edit
                 </Link>
-                <button className="w-full px-3 py-2 hover:bg-slate-100">
+                <button
+                  type="button"
+                  onClick={() => handleDelete(design?.id)}
+                  className="w-full px-3 py-2 hover:bg-slate-100"
+                >
                   Delete
                 </button>
               </div>

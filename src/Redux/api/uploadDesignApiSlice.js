@@ -55,16 +55,6 @@ export const uploadDesignApiSlice = createApi({
       query: () => `industrys/get`,
       transformResponse: (response) => [...new Set(response?.data)],
     }),
-    // fetchSortedUploads: builder.query({
-    //   query: ({
-    //     limit = 5,
-    //     page = 1,
-    //     sortBy = "createdAt",
-    //     sortOrder = "desc",
-    //   }) =>
-    //     `upload/get?limit=${limit}&page=${page}&sortBy=${sortBy}&sortOrder=${sortOrder}`,
-    //   transformResponse: (response) => response?.data,
-    // }),
     fetchDesignByKey: builder.query({
       query: (key) => `designs/filter/get?name=${key}`,
       transformResponse: (response) => response?.data,
@@ -77,6 +67,12 @@ export const uploadDesignApiSlice = createApi({
       query: ({ dKey, iKey }) =>
         `getTogether/get?design=${dKey}&industry=${iKey}`,
       transformResponse: (response) => response?.data,
+    }),
+    deleteDesignById : builder.mutation({
+      query: (id) =>  ({
+        url:  `upload/delete/${id}`,
+        method: 'DELETE',
+      }),
     }),
   }),
 });
@@ -95,4 +91,5 @@ export const {
   useFetchDesignByKeyQuery,
   useFetchIndustryByKeyQuery,
   useFetchDesignNdIndustryByKeyQuery,
+  useDeleteDesignByIdMutation
 } = uploadDesignApiSlice;
