@@ -170,38 +170,46 @@ function Testimonials() {
             </div>
           </Slider>
         </div>
-        <div className="mt-10 flex flex-wrap items-center justify-start gap-y-4 lg:justify-between">
-          <h1 className="order-1 text-sm font-semibold sm:text-2xl lg:order-none">
-            Sort By
-          </h1>
+        <div className="mt-10 flex flex-wrap-reverse items-center gap-y-5 md:flex-nowrap md:gap-0">
+          <div className="flex w-full flex-wrap items-center justify-start gap-x-3 gap-y-4 md:w-3/4">
+            <h1 className="text-sm font-semibold sm:text-base lg:order-none lg:text-2xl">
+              Sort By
+            </h1>
 
-          <button
-            value="Most relevant"
-            onClick={handleSortBtn}
-            type="button"
-            className={`sortingBtn order-2 mx-4 rounded border border-transparent p-1 text-xs font-medium sm:px-3 sm:py-2 sm:text-lg lg:order-none lg:mx-0 ${sortBtn === "Most relevant" ? "active" : ""}`}
-          >
-            Most relevant
-          </button>
+            <button
+              value="Most relevant"
+              onClick={handleSortBtn}
+              type="button"
+              className={`sortingBtn rounded border border-transparent p-1 text-xs font-medium sm:px-3 sm:py-2 lg:order-none lg:mx-0 lg:text-base ${sortBtn === "Most relevant" ? "active" : ""}`}
+            >
+              Most relevant
+            </button>
 
-          <button
-            value="Most recent"
-            onClick={handleSortBtn}
-            type="button"
-            className={`sortingBtn order-3 rounded border border-transparent p-1 text-xs font-medium sm:px-3 sm:py-2 sm:text-lg lg:order-none ${sortBtn === "Most recent" ? "active" : ""}`}
-          >
-            Most recent
-          </button>
-
-          <h1 className="w-full text-base font-medium sm:w-1/2 sm:text-lg lg:w-auto">
-            Delivery images (23)
-          </h1>
-
-          <form className="flex w-full items-stretch overflow-hidden rounded bg-white sm:w-1/2 lg:w-auto">
-            <input type="search" className="flex-grow px-3 py-2 outline-none" />
+            <button
+              value="Most recent"
+              onClick={handleSortBtn}
+              type="button"
+              className={`sortingBtn rounded border border-transparent p-1 text-xs font-medium sm:px-3 sm:py-2 lg:order-none lg:text-base ${sortBtn === "Most recent" ? "active" : ""}`}
+            >
+              Most recent
+            </button>
+            <button
+              value="Delivery images"
+              onClick={handleSortBtn}
+              type="button"
+              className={`sortingBtn rounded border border-transparent p-1 text-xs font-medium sm:px-3 sm:py-2 lg:order-none lg:text-base ${sortBtn === "Delivery images" ? "active" : ""}`}
+            >
+              Delivery images (23)
+            </button>
+          </div>
+          <form className="flex w-full items-stretch rounded bg-white md:w-1/4">
+            <input
+              type="search"
+              className="block w-full rounded px-3 py-2 outline-none"
+            />
             <button
               type="submit"
-              className="rounded bg-primary px-3 text-base text-white sm:p-2 sm:text-2xl"
+              className="block shrink-0 rounded bg-primary px-3 py-2 text-base text-white sm:p-2 sm:text-2xl"
             >
               <IoSearch />
             </button>
@@ -210,92 +218,6 @@ function Testimonials() {
         <Divider className="my-5 h-px w-full bg-[#000!important] sm:my-10" />
         <div className="mb-5">
           <Slider {...testimonialSetting}>
-            <div className="px-0 md:px-10">
-              <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:items-start">
-                <p className="text-center text-base leading-[40px] sm:text-start md:text-lg lg:text-[24px]">
-                  <span>
-                    <FaQuoteLeft className="mb-3 mr-1 inline text-xs text-red-500" />
-                  </span>
-                  Top class service, Very nice, and responds very fast. He had
-                  two days to finish but finished in one day. I 100% coming back
-                  to him in future. He is the real deal. HE IS AMAZING!!!
-                  <span>
-                    <FaQuoteRight className="mb-3 ml-1 inline text-xs text-red-500" />
-                  </span>
-                </p>
-                <img
-                  src={Camera}
-                  alt=""
-                  className="h-[150px] w-[150px] rounded-xl object-[100%_100%]"
-                />
-              </div>
-              <div className="mt-10 flex flex-col items-center justify-between lg:flex-row">
-                <div className="flex flex-col items-center gap-2 sm:gap-4 lg:flex-row">
-                  <img
-                    src={Logo}
-                    alt=""
-                    className="h-[30px] w-[30px] rounded-full sm:h-[50px] sm:w-[50px]"
-                  />
-                  <h1 className="text-base font-semibold sm:text-2xl">
-                    clientusername
-                  </h1>
-                  <div className="ml-0 flex justify-center gap-3 text-lg text-[#C8E3F6] sm:text-3xl lg:ml-3">
-                    <IoStar className="text-primary" />
-                    <IoStar className="text-primary" />
-                    <IoStar className="text-primary" />
-                    <IoStar className="text-primary" />
-                    <IoStar className="text-primary" />
-                  </div>
-                  <p className="ml-0 text-base sm:text-lg lg:ml-3">
-                    United States
-                  </p>
-                </div>
-                <p className="mt-2 text-xs sm:text-base lg:mt-0">5 days ago</p>
-              </div>
-            </div>
-            <div className="px-0 md:px-10">
-              <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:items-start">
-                <p className="text-center text-base leading-[40px] sm:text-start md:text-lg lg:text-[24px]">
-                  <span>
-                    <FaQuoteLeft className="mb-3 mr-1 inline text-xs text-red-500" />
-                  </span>
-                  Top class service, Very nice, and responds very fast. He had
-                  two days to finish but finished in one day. I 100% coming back
-                  to him in future. He is the real deal. HE IS AMAZING!!!
-                  <span>
-                    <FaQuoteRight className="mb-3 ml-1 inline text-xs text-red-500" />
-                  </span>
-                </p>
-                <img
-                  src={Camera}
-                  alt=""
-                  className="h-[150px] w-[150px] rounded-xl object-[100%_100%]"
-                />
-              </div>
-              <div className="mt-10 flex flex-col items-center justify-between lg:flex-row">
-                <div className="flex flex-col items-center gap-2 sm:gap-4 lg:flex-row">
-                  <img
-                    src={Logo}
-                    alt=""
-                    className="h-[30px] w-[30px] rounded-full sm:h-[50px] sm:w-[50px]"
-                  />
-                  <h1 className="text-base font-semibold sm:text-2xl">
-                    clientusername
-                  </h1>
-                  <div className="ml-0 flex justify-center gap-3 text-lg text-[#C8E3F6] sm:text-3xl lg:ml-3">
-                    <IoStar className="text-primary" />
-                    <IoStar className="text-primary" />
-                    <IoStar className="text-primary" />
-                    <IoStar className="text-primary" />
-                    <IoStar className="text-primary" />
-                  </div>
-                  <p className="ml-0 text-base sm:text-lg lg:ml-3">
-                    United States
-                  </p>
-                </div>
-                <p className="mt-2 text-xs sm:text-base lg:mt-0">5 days ago</p>
-              </div>
-            </div>
             <div className="px-0 md:px-10">
               <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:items-start">
                 <p className="text-center text-base leading-[40px] sm:text-start md:text-lg">
@@ -322,30 +244,28 @@ function Testimonials() {
                     alt=""
                     className="h-[30px] w-[30px] rounded-full sm:h-[40px] sm:w-[40px]"
                   />
-                  <h1 className="text-base font-semibold sm:text-xl">
+                  <h1 className="text-base font-semibold md:text-xl">
                     clientusername
                   </h1>
-                  <div className="ml-0 flex justify-center gap-2 text-lg text-[#C8E3F6] sm:text-2xl lg:ml-3">
+                  <div className="ml-0 flex justify-center gap-2 text-lg text-[#C8E3F6] md:text-2xl lg:ml-3">
                     <IoStar className="text-primary" />
                     <IoStar className="text-primary" />
                     <IoStar className="text-primary" />
                     <IoStar className="text-primary" />
                     <IoStar className="text-primary" />
                   </div>
-                  <p className="ml-0 text-base sm:text-lg lg:ml-3">
+                  <p className="ml-0 text-base md:text-lg lg:ml-3">
                     United States
                   </p>
                 </div>
-                <p className="mt-2 text-xs sm:text-base lg:mt-0">5 days ago</p>
+                <p className="mt-2 text-xs md:text-base lg:mt-0">5 days ago</p>
               </div>
             </div>
           </Slider>
         </div>
-        {/* <div className="mt-10 text-center lg:text-end"> */}
         <Link className="absolute bottom-0 right-1/2 translate-x-1/2 translate-y-1/2 rounded-2xl bg-primary px-4 py-1 text-white sm:right-5 sm:translate-x-0">
           See all <RiArrowRightDoubleFill className="inline" />
         </Link>
-        {/* </div> */}
       </div>
     </div>
   );
