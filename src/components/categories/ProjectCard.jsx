@@ -19,22 +19,24 @@ function ProjectCard({
   const { items: cartItems } = useSelector((state) => state.cart);
   return (
     <div className="relative h-full px-[5px]">
-      {cart && cartItems.some((item) => item?.designId === design?.designId) ? (
-        <button
-          type="button"
-          onClick={() => dispatch(removeFromCart(design?.designId))}
-          className="absolute right-4 top-2.5 z-10 flex h-8 w-8 items-center justify-center rounded-md border bg-white text-xl"
-        >
-          <MdClose />
-        </button>
-      ) : (
-        <button
-          type="button"
-          onClick={() => dispatch(addToCart(design))}
-          className="absolute right-4 top-2.5 z-10 flex h-8 w-8 items-center justify-center rounded-md border bg-white text-xl"
-        >
-          <GiShoppingCart />
-        </button>
+      {cart && (
+        cartItems.some((item) => item?.designId === design?.designId) ? (
+          <button
+            type="button"
+            onClick={() => dispatch(removeFromCart(design?.designId))}
+            className="absolute right-4 top-2.5 z-10 flex h-8 w-8 items-center justify-center rounded-md border bg-white text-xl"
+          >
+            <MdClose />
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => dispatch(addToCart(design))}
+            className="absolute right-4 top-2.5 z-10 flex h-8 w-8 items-center justify-center rounded-md border bg-white text-xl"
+          >
+            <GiShoppingCart />
+          </button>
+        )
       )}
       <Link to={slug} className="block cursor-pointer border bg-white">
         <div className="relative">
