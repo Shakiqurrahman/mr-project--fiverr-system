@@ -1,5 +1,5 @@
-import { Reorder } from "framer-motion";
 import { useEffect, useState } from "react";
+import FlipMove from "react-flip-move";
 import { IoMdClose } from "react-icons/io";
 import { useSelector } from "react-redux";
 import FeatureCategorySkeleton from "../../CustomSkeleton/FeatureCategorySkeleton";
@@ -13,26 +13,76 @@ import CategoryCards from "./CategoryCards";
 function FeatureCategory() {
   const { user } = useSelector((state) => state.user);
   const [expand, setExpand] = useState(false);
-  const [isDraggable, setIsDraggable] = useState(false);
+  // const [isDraggable, setIsDraggable] = useState(false);
   // const [categoryList, setCategoryList] = useState([]);
   const { categories, error, isLoading, handleReorder } = useGetCategory();
-  const [tempCategoryList, setTempCategoryList] = useState([]);
+  // const [tempCategoryList, setTempCategoryList] = useState([]);
+
+  // useEffect(() => {
+  //   // When isDraggable is turned off, save or discard changes
+  //   if (!isDraggable) {
+  //     // setCategoryList(tempCategoryList);
+  //   }
+  // }, [isDraggable, tempCategoryList]);
+
+  // const handleSave = () => {
+  //   setIsDraggable(false);
+  //   // setTempCategoryList(categoryList);
+  // };
+
+  // const handleCancel = () => {
+  //   setIsDraggable(false);
+  //   // setCategoryList(tempCategoryList); // Discard changes by resetting to tempCategoryList
+  // };
+
+  const [products, setProducts] = useState([]);
+  const [draggedIndex, setDraggedIndex] = useState(null);
+  const [isCustomizing, setIsCustomizing] = useState(false);
+  const [tempProducts, setTempProducts] = useState([]);
+  console.log("updated", tempProducts);
 
   useEffect(() => {
-    // When isDraggable is turned off, save or discard changes
-    if (!isDraggable) {
-      // setCategoryList(tempCategoryList);
+    if (categories) {
+      setProducts(categories);
     }
-  }, [isDraggable, tempCategoryList]);
+  }, [categories]);
+  useEffect(() => {
+    if (products) {
+      setTempProducts([...products]);
+    }
+  }, [categories, products]);
+
+  const handleDragStart = (index) => {
+    setDraggedIndex(index);
+  };
+
+  const handleDragEnter = (index) => {
+    if (index !== draggedIndex) {
+      const updatedProducts = [...tempProducts];
+      const draggedProduct = updatedProducts[draggedIndex];
+      updatedProducts.splice(draggedIndex, 1);
+      updatedProducts.splice(index, 0, draggedProduct);
+      setTempProducts(updatedProducts);
+      setDraggedIndex(index);
+    }
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+  };
+
+  const handleCustomize = () => {
+    setIsCustomizing(true);
+  };
 
   const handleSave = () => {
-    setIsDraggable(false);
-    // setTempCategoryList(categoryList);
+    setProducts(tempProducts); // Save the reordered products
+    setIsCustomizing(false);
   };
 
   const handleCancel = () => {
-    setIsDraggable(false);
-    // setCategoryList(tempCategoryList); // Discard changes by resetting to tempCategoryList
+    setTempProducts([...products]); // Reset to original order
+    setIsCustomizing(false);
   };
   return (
     <div className="max-width">
@@ -40,11 +90,11 @@ function FeatureCategory() {
         <div className="mt-10 flex items-center justify-between">
           <button
             className="rounded-[30px] border-2 border-solid border-primary bg-[#EEF7FE] p-[6px_15px]"
-            onClick={() => setIsDraggable(true)}
+            onClick={handleCustomize}
           >
             CUSTOMISE
           </button>
-          {isDraggable && (
+          {isCustomizing && (
             <div className="flex gap-4">
               <button
                 className="flex h-[35px] w-[35px] items-center justify-center rounded-full border-2 border-solid border-primary bg-[#EEF7FE]"
@@ -64,45 +114,29 @@ function FeatureCategory() {
       )}
       <div className="flex flex-wrap items-start gap-3 sm:flex-nowrap">
         <div className="relative w-full sm:w-2/3 md:w-3/4 lg:w-4/5">
-          {isLoading && categories.length > 0 ? (
+          {isLoading && products.length > 0 ? (
             <>
               <FeatureCategorySkeleton />
               <FeatureCategorySkeleton />
               <FeatureCategorySkeleton />
             </>
           ) : (
-            <div>
-              <Reorder.Group
-                axis="y"
-                values={categories}
-                onReorder={handleReorder}
-              >
-                {categories.map((category, idx) => {
-                  if (!expand) {
-                    if (idx <= 4) {
-                      return (
-                        <Reorder.Item
-                          key={idx}
-                          value={category}
-                          drag={isDraggable ? true : false}
-                          style={{ cursor: isDraggable ? "grab" : "default" }}
-                        >
-                          <CategoryCards
-                            title={category.folder}
-                            path={`categories/${category.slug}`}
-                            titleSlug={category.slug}
-                            subCategory={category.subFolders}
-                          />
-                        </Reorder.Item>
-                      );
-                    }
-                  } else {
+            <FlipMove>
+              {tempProducts.map((category, idx) => {
+                if (!expand) {
+                  if (idx <= 4) {
                     return (
-                      <Reorder.Item
+                      <div
                         key={idx}
-                        value={category}
-                        drag={isDraggable ? true : false}
-                        style={{ cursor: isDraggable ? "grab" : "default" }}
+                        draggable={isCustomizing}
+                        onDragStart={() => handleDragStart(idx)}
+                        onDragEnter={() => handleDragEnter(idx)}
+                        onDragEnd={handleDragEnd}
+                        className={`${
+                          draggedIndex === idx
+                            ? "bg-gray-200"
+                            : "hover:bg-gray-50"
+                        }`}
                       >
                         <CategoryCards
                           title={category.folder}
@@ -110,12 +144,34 @@ function FeatureCategory() {
                           titleSlug={category.slug}
                           subCategory={category.subFolders}
                         />
-                      </Reorder.Item>
+                      </div>
                     );
                   }
-                })}
-              </Reorder.Group>
-            </div>
+                } else {
+                  return (
+                    <div
+                      key={idx}
+                      draggable={isCustomizing} // Only draggable when customizing is enabled
+                      onDragStart={() => handleDragStart(idx)}
+                      onDragEnter={() => handleDragEnter(idx)}
+                      onDragEnd={handleDragEnd}
+                      className={`cursor-move rounded-md border bg-white p-4 shadow-md ${
+                        draggedIndex === idx
+                          ? "bg-gray-200"
+                          : "hover:bg-gray-50"
+                      }`}
+                    >
+                      <CategoryCards
+                        title={category.folder}
+                        path={`categories/${category.slug}`}
+                        titleSlug={category.slug}
+                        subCategory={category.subFolders}
+                      />
+                    </div>
+                  );
+                }
+              })}
+            </FlipMove>
           )}
 
           {categories?.length > 5 &&
