@@ -19,8 +19,8 @@ function ProjectCard({
   const { items: cartItems } = useSelector((state) => state.cart);
   return (
     <div className="relative h-full px-[5px]">
-      {cart && (
-        cartItems.some((item) => item?.designId === design?.designId) ? (
+      {cart &&
+        (cartItems.some((item) => item?.designId === design?.designId) ? (
           <button
             type="button"
             onClick={() => dispatch(removeFromCart(design?.designId))}
@@ -36,8 +36,7 @@ function ProjectCard({
           >
             <GiShoppingCart />
           </button>
-        )
-      )}
+        ))}
       <Link to={slug} className="block cursor-pointer border bg-white">
         <div className="relative">
           <img
@@ -54,7 +53,7 @@ function ProjectCard({
         </h1>
       </Link>
       {clientLogo && (
-        <div className="mt-3 flex items-center justify-between">
+        <div className="mt-3 flex items-center justify-between px-3">
           <div className="flex items-center gap-1">
             <img src={clientLogo} alt="" className="h-[25px] w-[25px]" />
             <Link className="text-sm font-semibold">{clientName}</Link>

@@ -1,23 +1,40 @@
 import { useEffect, useState } from "react";
-import { useFetchGetUploadQuery } from "../Redux/api/uploadDesignApiSlice";
+import {
+  useFetchGetAllFoldersQuery,
+  useFetchGetUploadQuery,
+} from "../Redux/api/uploadDesignApiSlice";
 
 const useGetCategory = () => {
   const { data: uploadDesigns, error, isLoading } = useFetchGetUploadQuery();
+  const { data: folders } = useFetchGetAllFoldersQuery();
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    if (uploadDesigns) {
-      // Process the designs to organize into folders and subfolders
-      const processedFolders = uploadDesigns.reduce((acc, design) => {
+    if (folders && uploadDesigns) {
+      // Initialize folders with empty subfolders and designs
+      const processedFolders = folders.map((folder) => ({
+        id: folder.id,
+        slug: folder.slug,
+        folder: folder.folder,
+        order: folder.order,
+        subFolders: [], // Initialize subFolders
+      }));
+
+      // Process designs to populate folders and subfolders
+      uploadDesigns.forEach((design) => {
         // Find or create the folder
-        let folder = acc.find((item) => item.folder === design.folder);
+        let folder = processedFolders.find(
+          (item) => item.folder === design.folder,
+        );
         if (!folder) {
           folder = {
-            slug: design.folder.split(" ").join("-").toLowerCase(),
+            id: design.folderId, // Use a unique identifier if available
+            slug: design.folderSlug, // Assuming this is available in the design data
             folder: design.folder,
+            order: 0, // Default order, or assign based on your needs
             subFolders: [],
           };
-          acc.push(folder);
+          processedFolders.push(folder);
         }
 
         // Find or create the subfolder
@@ -26,8 +43,8 @@ const useGetCategory = () => {
         );
         if (!subFolder) {
           subFolder = {
-            slug: design.subFolder.split(" ").join("-").toLowerCase(),
             subFolder: design.subFolder,
+            slug: design.subFolderSlug, // Assuming this is available in the design data
             designs: [],
           };
           folder.subFolders.push(subFolder);
@@ -37,20 +54,13 @@ const useGetCategory = () => {
         if (!subFolder.designs.find((d) => d.id === design.id)) {
           subFolder.designs.push(design);
         }
-
-        return acc;
-      }, []);
+      });
 
       setCategories(processedFolders);
     }
-  }, [uploadDesigns]);
+  }, [folders, uploadDesigns]);
 
-  // Function to handle reordering of folders
-  const handleReorder = (newFolders) => {
-    setCategories(newFolders);
-  };
-
-  return { categories, error, isLoading, handleReorder };
+  return { categories, error, isLoading };
 };
 
 export default useGetCategory;

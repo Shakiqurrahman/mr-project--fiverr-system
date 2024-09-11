@@ -1,5 +1,7 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import FlipMove from "react-flip-move";
+import toast from "react-hot-toast";
 import { IoMdClose } from "react-icons/io";
 import { useSelector } from "react-redux";
 import FeatureCategorySkeleton from "../../CustomSkeleton/FeatureCategorySkeleton";
@@ -7,39 +9,19 @@ import DownArrow from "../../assets/images/icons/Down Arrow.svg";
 import UpArrow from "../../assets/images/icons/Upper Arrow.svg";
 import Check from "../../assets/svg/Check";
 import useGetCategory from "../../hooks/useGetCategory";
+import { configApi } from "../../libs/configApi";
 import Sidebar from "../Sidebar";
 import CategoryCards from "./CategoryCards";
 
 function FeatureCategory() {
   const { user } = useSelector((state) => state.user);
   const [expand, setExpand] = useState(false);
-  // const [isDraggable, setIsDraggable] = useState(false);
-  // const [categoryList, setCategoryList] = useState([]);
-  const { categories, error, isLoading, handleReorder } = useGetCategory();
-  // const [tempCategoryList, setTempCategoryList] = useState([]);
-
-  // useEffect(() => {
-  //   // When isDraggable is turned off, save or discard changes
-  //   if (!isDraggable) {
-  //     // setCategoryList(tempCategoryList);
-  //   }
-  // }, [isDraggable, tempCategoryList]);
-
-  // const handleSave = () => {
-  //   setIsDraggable(false);
-  //   // setTempCategoryList(categoryList);
-  // };
-
-  // const handleCancel = () => {
-  //   setIsDraggable(false);
-  //   // setCategoryList(tempCategoryList); // Discard changes by resetting to tempCategoryList
-  // };
+  const { categories, error, isLoading } = useGetCategory();
 
   const [products, setProducts] = useState([]);
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [isCustomizing, setIsCustomizing] = useState(false);
   const [tempProducts, setTempProducts] = useState([]);
-  console.log("updated", tempProducts);
 
   useEffect(() => {
     if (categories) {
@@ -75,9 +57,22 @@ function FeatureCategory() {
     setIsCustomizing(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setProducts(tempProducts); // Save the reordered products
     setIsCustomizing(false);
+    const newArr = tempProducts.map((folder) => ({ id: folder.id }));
+    console.log("New Array", newArr);
+    try {
+      const response = await axios.post(
+        `${configApi.api}/upload/feature-folder`,
+        { newOrder: newArr },
+      );
+      if (response.status === 200) {
+        toast.success("Updated Successfully!");
+      }
+    } catch (error) {
+      toast.error("Update Failed!");
+    }
   };
 
   const handleCancel = () => {

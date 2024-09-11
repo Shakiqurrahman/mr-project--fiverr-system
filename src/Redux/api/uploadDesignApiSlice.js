@@ -6,12 +6,12 @@ export const uploadDesignApiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${configApi.api}`,
   }),
-  tagTypes: ['Design'],
+  tagTypes: ["Design"],
   endpoints: (builder) => ({
     fetchGetUpload: builder.query({
       query: () => "upload/get",
       transformResponse: (response) => response?.data,
-      providesTags: ['Design'],
+      providesTags: ["Design"],
     }),
     fetchRelatedTags: builder.query({
       query: () => "upload/get",
@@ -70,12 +70,16 @@ export const uploadDesignApiSlice = createApi({
         `getTogether/get?design=${dKey}&industry=${iKey}`,
       transformResponse: (response) => response?.data,
     }),
-    deleteDesignById : builder.mutation({
-      query: (id) =>  ({
-        url:  `upload/delete/${id}`,
-        method: 'DELETE',
+    deleteDesignById: builder.mutation({
+      query: (id) => ({
+        url: `upload/delete/${id}`,
+        method: "DELETE",
       }),
-      invalidatesTags: ['Design'],
+      invalidatesTags: ["Design"],
+    }),
+    fetchGetAllFolders: builder.query({
+      query: () => "upload/feature-folder",
+      transformResponse: (response) => response?.data,
     }),
   }),
 });
@@ -94,5 +98,6 @@ export const {
   useFetchDesignByKeyQuery,
   useFetchIndustryByKeyQuery,
   useFetchDesignNdIndustryByKeyQuery,
-  useDeleteDesignByIdMutation
+  useDeleteDesignByIdMutation,
+  useFetchGetAllFoldersQuery,
 } = uploadDesignApiSlice;
