@@ -118,35 +118,35 @@ function Footer() {
                 <div className="flex w-full items-center justify-center gap-x-3 sm:justify-start md:w-auto">
                   <Link
                     to="https://facebook.com/mahfuj535"
-                    className="flex h-[30px] w-[30px] items-center justify-center rounded-full border-2 border-solid border-white text-base duration-300 hover:border-primary hover:text-primary"
+                    className="flex h-[30px] w-[30px] items-center justify-center rounded-full border-[1.5px] border-solid border-white text-base duration-300 hover:border-primary hover:text-primary"
                     target="_blank"
                   >
                     <FaFacebookF />
                   </Link>
                   <Link
                     to="https://www.instagram.com/mahfujurrahm535"
-                    className="flex h-[30px] w-[30px] items-center justify-center rounded-full border-2 border-solid border-white text-base duration-300 hover:border-primary hover:text-primary"
+                    className="flex h-[30px] w-[30px] items-center justify-center rounded-full border-[1.5px] border-solid border-white text-base duration-300 hover:border-primary hover:text-primary"
                     target="_blank"
                   >
                     <FaInstagram />
                   </Link>
                   <Link
                     to="https://x.com/mahfujurrahm535"
-                    className="flex h-[30px] w-[30px] items-center justify-center rounded-full border-2 border-solid border-white text-base duration-300 hover:border-primary hover:text-primary"
+                    className="flex h-[30px] w-[30px] items-center justify-center rounded-full border-[1.5px] border-solid border-white text-base duration-300 hover:border-primary hover:text-primary"
                     target="_blank"
                   >
                     <BsTwitterX />
                   </Link>
                   <Link
                     to="https://www.pinterest.com/mahfujurrahm535"
-                    className="flex h-[30px] w-[30px] items-center justify-center rounded-full border-2 border-solid border-white text-base duration-300 hover:border-primary hover:text-primary"
+                    className="flex h-[30px] w-[30px] items-center justify-center rounded-full border-[1.5px] border-solid border-white text-base duration-300 hover:border-primary hover:text-primary"
                     target="_blank"
                   >
                     <FaPinterestP />
                   </Link>
                   <Link
                     to="https://www.linkedin.com/in/mahfujurrahm535"
-                    className="flex h-[30px] w-[30px] items-center justify-center rounded-full border-2 border-solid border-white text-base duration-300 hover:border-primary hover:text-primary"
+                    className="flex h-[30px] w-[30px] items-center justify-center rounded-full border-[1.5px] border-solid border-white text-base duration-300 hover:border-primary hover:text-primary"
                     target="_blank"
                   >
                     <FaLinkedinIn />
