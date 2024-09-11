@@ -1,98 +1,60 @@
-import React, { useState } from "react";
-import FlipMove from "react-flip-move";
-import { FaCheck, FaTimes } from 'react-icons/fa'; // Icons for check and cross
+import { Dialog, Slide } from "@mui/material";
+import React from "react";
 
-const ReorderableProducts = () => {
-  const initialProducts = [
-    { id: 1, name: "Product 1" },
-    { id: 2, name: "Product 2" },
-    { id: 3, name: "Product 3" },
-    { id: 4, name: "Product 4" },
-  ];
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="down" ref={ref} {...props} />;
+});
 
-  const [products, setProducts] = useState(initialProducts);
-  const [draggedIndex, setDraggedIndex] = useState(null);
-  const [isCustomizing, setIsCustomizing] = useState(false);
-  const [tempProducts, setTempProducts] = useState([...products]); 
-  console.log('updated',products);
-  
-  const handleDragStart = (index) => {
-    setDraggedIndex(index);
+const ProfileInfo = () => {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
   };
 
-  const handleDragEnter = (index) => {
-    if (index !== draggedIndex) {
-      const updatedProducts = [...tempProducts];
-      const draggedProduct = updatedProducts[draggedIndex];
-      updatedProducts.splice(draggedIndex, 1);
-      updatedProducts.splice(index, 0, draggedProduct);
-      setTempProducts(updatedProducts);
-      setDraggedIndex(index);
-    }
-  };
-
-  const handleDragEnd = () => {
-    setDraggedIndex(null);
-  };
-
-  const handleCustomize = () => {
-    setIsCustomizing(true);
-  };
-
-  const handleSave = () => {
-    setProducts(tempProducts); // Save the reordered products
-    setIsCustomizing(false);
-  };
-
-  const handleCancel = () => {
-    setTempProducts([...products]); // Reset to original order
-    setIsCustomizing(false);
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
-    <div className="mx-auto my-20 max-w-[400px]">
-      <button
-        onClick={handleCustomize}
-        className="mb-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+    <>
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description"
       >
-        Customize
-      </button>
-
-      {isCustomizing && (
-        <div className="mb-4 flex justify-between">
-          <button
-            onClick={handleSave}
-            className="rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600"
-          >
-            <FaCheck />
-          </button>
-          <button
-            onClick={handleCancel}
-            className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
-          >
-            <FaTimes />
-          </button>
+        <div>
+        <h1 className="bg-primary p-4 text-white">Client Information</h1>
+        <div>
+            <p>Full Name</p>
+            <h4>Client Name</h4>
         </div>
-      )}
-
-      <FlipMove className="flex flex-col gap-4">
-        {tempProducts.map((product, index) => (
-          <div
-            key={product.id}
-            draggable={isCustomizing} // Only draggable when customizing is enabled
-            onDragStart={() => handleDragStart(index)}
-            onDragEnter={() => handleDragEnter(index)}
-            onDragEnd={handleDragEnd}
-            className={`cursor-move rounded-md border bg-white p-4 shadow-md ${
-              draggedIndex === index ? "bg-gray-200" : "hover:bg-gray-50"
-            }`}
-          >
-            {product.name}
-          </div>
-        ))}
-      </FlipMove>
-    </div>
+        <div>
+            <p>Username</p>
+            <h4>Client userName</h4>
+        </div>
+        <div>
+            <p>Industry Name</p>
+            <h4>Client Name</h4>
+        </div>
+        <div>
+            <p>Website</p>
+            <h4>Client Name</h4>
+        </div>
+        <div>
+            <p>Country</p>
+            <h4>Bangladesh</h4>
+        </div>
+        <div>
+            <p>City</p>
+            <h4>Sylhet</h4>
+        </div>
+        </div>
+      </Dialog>
+    </>
   );
 };
 
-export default ReorderableProducts;
+export default ProfileInfo;

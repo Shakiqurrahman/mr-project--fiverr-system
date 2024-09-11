@@ -20,10 +20,10 @@ import { PiNotionLogoBold } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { setUser } from "../Redux/features/userSlice";
-import defaultImg from "../assets/images/default_user.png";
 import ActiveProjects from "../components/customer-profile/ActiveProjects";
 import AllReviews from "../components/customer-profile/AllReviews";
 import CompletedProjects from "../components/customer-profile/CompletedProjects";
+import ProfileInfo from "../components/customer-profile/ProfileInfo";
 import { configApi } from "../libs/configApi";
 
 function Profile({ user = {}, slug }) {
@@ -31,6 +31,7 @@ function Profile({ user = {}, slug }) {
   const { user: loggedUser } = useSelector((state) => state.user);
   const [activeTab, setActiveTab] = useState("active"); // 'active' or 'completed'
   const [loading, setLoading] = useState(false);
+  const [profileInfo, setProfileInfo] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
   const [showDesqEdit, setShowDesqEdit] = useState(false);
   const [description, setDescription] = useState(user?.description || "");
@@ -45,6 +46,11 @@ function Profile({ user = {}, slug }) {
   const monthYear = date.toLocaleDateString("en-US", options);
 
   const letterLogo = user?.userName?.trim().charAt(0).toUpperCase();
+
+  const handleProfileInfo = () => {
+    setProfileInfo(!profileInfo);
+    console.log("clicked");
+  };
 
   const handleDesqEdit = () => {
     setShowDesqEdit(true);
@@ -92,16 +98,25 @@ function Profile({ user = {}, slug }) {
     <section className="max-width mt-10 flex flex-col gap-10 md:flex-row lg:gap-16">
       <div className="min-w-[260px] md:w-1/4">
         <div className="relative border border-gray-300 bg-[#edf7fd] p-4 py-6">
-          <BsInfoCircle className="absolute right-4 top-4 text-base text-gray-500" />
+          {/* profile info  */}
+          <BsInfoCircle
+            className="absolute right-4 top-4 text-base text-gray-500 cursor-pointer"
+            onClick={handleProfileInfo}
+          />
+          {profileInfo && <ProfileInfo handleProfileInfo={handleProfileInfo} profileInfo={profileInfo}/>}
           <div className="pb-4">
-            <div className="relative mx-auto size-32 bg-[#ffefef]/30 rounded-full border border-gray-300 flex justify-center items-center">
-              {user.image ? <img
-                className="h-full w-full rounded-full object-cover"
-                src={user.image}
-                alt={user?.fullName}
-              /> : <div className="text-[80px] font-bold text-[#7c7c7c]/50">
-              {letterLogo}
-            </div>}
+            <div className="relative mx-auto flex size-32 items-center justify-center rounded-full border border-gray-300 bg-[#ffefef]/30">
+              {user.image ? (
+                <img
+                  className="h-full w-full rounded-full object-cover"
+                  src={user.image}
+                  alt={user?.fullName}
+                />
+              ) : (
+                <div className="text-[80px] font-bold text-[#7c7c7c]/50">
+                  {letterLogo}
+                </div>
+              )}
               <span
                 className={`absolute bottom-1.5 right-4 size-4 rounded-full border border-white bg-primary ${!isOnline && "hidden"}`}
               ></span>

@@ -39,15 +39,15 @@ function Header() {
                 alt="MR Logo"
               />
             </Link>
-            <form className="hidden lg:block">
-              <div className="relative flex items-center justify-center">
+            <form className="hidden lg:block min-w-[400px]  bg-white rounded-md">
+              <div className="relative flex items-stretch">
                 <input
-                  className="min-w-[400px] rounded-md bg-white px-4 py-2 outline"
+                  className=" rounded-md px-4 py-2 outline-none w-full"
                   type="text"
                   placeholder="What design you are looking for today?"
                 />
                 <button
-                  className="absolute right-0.5 rounded-md bg-primary p-2"
+                  className="rounded-md bg-primary p-2 m-px"
                   type="submit"
                 >
                   <GoSearch className="text-xl text-white" />

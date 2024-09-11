@@ -61,7 +61,6 @@ function FeatureCategory() {
     setProducts(tempProducts); // Save the reordered products
     setIsCustomizing(false);
     const newArr = tempProducts.map((folder) => ({ id: folder.id }));
-    console.log("New Array", newArr);
     try {
       const response = await axios.post(
         `${configApi.api}/upload/feature-folder`,
