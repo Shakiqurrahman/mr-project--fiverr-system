@@ -1,39 +1,55 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsInfoCircle } from "react-icons/bs";
 import {
   FaFacebookF,
+  FaGoogle,
   FaInstagram,
   FaLinkedinIn,
   FaPinterestP,
   FaSpinner,
-  FaTwitter,
+  FaTiktok,
+  FaTumblr,
+  FaYelp,
+  FaYoutube,
 } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+// import nextDoorIcon from "../assets/images/nextdoor_icon.png";
 import { LiaEditSolid } from "react-icons/lia";
+import { PiNotionLogoBold } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import defaultImg from "../assets/images/default_user.png";
+import { setUser } from "../Redux/features/userSlice";
 import ActiveProjects from "../components/customer-profile/ActiveProjects";
 import AllReviews from "../components/customer-profile/AllReviews";
 import CompletedProjects from "../components/customer-profile/CompletedProjects";
+import ProfileInfo from "../components/customer-profile/ProfileInfo";
 import { configApi } from "../libs/configApi";
-import { setUser } from "../Redux/features/userSlice";
 
-function Profile() {
+function Profile({ user = {}, slug }) {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.user);
+  const { user: loggedUser } = useSelector((state) => state.user);
   const [activeTab, setActiveTab] = useState("active"); // 'active' or 'completed'
+  const [loading, setLoading] = useState(false);
+  const [profileInfo, setProfileInfo] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
   const [showDesqEdit, setShowDesqEdit] = useState(false);
   const [description, setDescription] = useState(user?.description || "");
-
-  const [loading, setLoading] = useState(false);
-  console.log("profile-page", user);
+  useEffect(() => {
+    // Update the state when the user prop changes
+    setDescription(user?.description || "");
+  }, [user]);
 
   // for user creating date making readable and formatted
   const date = new Date(user?.createdAt);
   const options = { year: "numeric", month: "long" };
   const monthYear = date.toLocaleDateString("en-US", options);
+
+  const letterLogo = user?.userName?.trim().charAt(0).toUpperCase();
+
+  const handleProfileInfo = () => {
+    setProfileInfo(!profileInfo);
+  };
 
   const handleDesqEdit = () => {
     setShowDesqEdit(true);
@@ -63,18 +79,49 @@ function Profile() {
     setDescription(user?.description || "");
   };
 
+  const {
+    facebook,
+    instagram,
+    twitter,
+    google,
+    linkedin,
+    yelp,
+    thumblr,
+    youtube,
+    nextdoor,
+    pinterest,
+    tiktok,
+  } = user.SocialMediaLinks || {};
+
   return (
     <section className="max-width mt-10 flex flex-col gap-10 md:flex-row lg:gap-16">
       <div className="min-w-[260px] md:w-1/4">
         <div className="relative border border-gray-300 bg-[#edf7fd] p-4 py-6">
-          <BsInfoCircle className="absolute right-4 top-4 text-base text-gray-500" />
+          {/* profile info  */}
+          <BsInfoCircle
+            className="absolute right-4 top-4 cursor-pointer text-base text-gray-500"
+            onClick={handleProfileInfo}
+          />
+          {profileInfo && (
+            <ProfileInfo
+              handleProfileInfo={handleProfileInfo}
+              profileInfo={profileInfo}
+              user={user}
+            />
+          )}
           <div className="pb-4">
-            <div className="relative mx-auto size-32 rounded-full border border-gray-300">
-              <img
-                className="rounded-full object-cover"
-                src={user?.image ? user.image : defaultImg}
-                alt="user image"
-              />
+            <div className="relative mx-auto flex size-32 items-center justify-center rounded-full border border-gray-300 bg-[#ffefef]/30">
+              {user.image ? (
+                <img
+                  className="h-full w-full rounded-full object-cover"
+                  src={user.image}
+                  alt={user?.fullName}
+                />
+              ) : (
+                <div className="text-[80px] font-bold text-[#7c7c7c]/50">
+                  {letterLogo}
+                </div>
+              )}
               <span
                 className={`absolute bottom-1.5 right-4 size-4 rounded-full border border-white bg-primary ${!isOnline && "hidden"}`}
               ></span>
@@ -127,23 +174,123 @@ function Profile() {
           </div>
 
           {/* social medias icons  */}
-          <p className="mb-4 pt-4 text-center">Social Media Links</p>
-          <div className="flex flex-wrap items-center justify-center gap-4 pb-4">
-            <Link className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white">
-              <FaFacebookF />
-            </Link>
-            <Link className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white">
-              <FaInstagram />
-            </Link>
-            <Link className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white">
-              <FaTwitter />
-            </Link>
-            <Link className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white">
-              <FaPinterestP />
-            </Link>
-            <Link className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white">
-              <FaLinkedinIn />
-            </Link>
+          <div className="relative">
+            <p className="mb-4 pt-4 text-center">Social Media Links</p>
+            {slug === loggedUser?.userName && (
+              <Link className="absolute right-0 top-4" to="/social-media">
+                <LiaEditSolid className="size-6 cursor-pointer text-xl" />
+              </Link>
+            )}
+            <div className="flex flex-wrap items-center justify-center gap-4 pb-4">
+              {facebook && (
+                <Link
+                  to={facebook}
+                  target="_blank"
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  <FaFacebookF />
+                </Link>
+              )}
+
+              {instagram && (
+                <Link
+                  to={instagram}
+                  target="_blank"
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  <FaInstagram />
+                </Link>
+              )}
+
+              {twitter && (
+                <Link
+                  to={twitter}
+                  target="_blank"
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  <FaXTwitter />
+                </Link>
+              )}
+
+              {pinterest && (
+                <Link
+                  to={pinterest}
+                  target="_blank"
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  <FaPinterestP />
+                </Link>
+              )}
+
+              {linkedin && (
+                <Link
+                  to={linkedin}
+                  target="_blank"
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  <FaLinkedinIn />
+                </Link>
+              )}
+              {google && (
+                <Link
+                  to={google}
+                  target="_blank"
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  <FaGoogle />
+                </Link>
+              )}
+              {thumblr && (
+                <Link
+                  to={thumblr}
+                  target="_blank"
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  <FaTumblr />
+                </Link>
+              )}
+              {youtube && (
+                <Link
+                  to={youtube}
+                  target="_blank"
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  <FaYoutube />
+                </Link>
+              )}
+              {tiktok && (
+                <Link
+                  to={tiktok}
+                  target="_blank"
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  <FaTiktok />
+                </Link>
+              )}
+              {yelp && (
+                <Link
+                  to={yelp}
+                  target="_blank"
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  <FaYelp />
+                </Link>
+              )}
+              {nextdoor && (
+                <Link
+                  to={nextdoor}
+                  target="_blank"
+                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                >
+                  {/* <img
+                    src={nextDoorIcon}
+                    alt="Nextdoor"
+                    className="size-5 flex-shrink- rounded-full"
+                  /> */}
+                  <PiNotionLogoBold />
+                </Link>
+              )}
+            </div>
           </div>
         </div>
 
@@ -151,7 +298,7 @@ function Profile() {
         <div className="mt-6 border border-gray-300 bg-[#edf7fd] p-4 py-6">
           <div className="flex items-center justify-between gap-1 pb-3">
             <h2 className="text-base font-bold sm:text-lg">Description</h2>
-            {!showDesqEdit && (
+            {!showDesqEdit && slug === loggedUser?.userName && (
               <LiaEditSolid
                 onClick={handleDesqEdit}
                 className="size-6 cursor-pointer text-xl"

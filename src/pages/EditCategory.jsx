@@ -289,13 +289,23 @@ function EditCategory() {
           </div>
         </div>
 
-        {/* Submit */}
-        <button
-          type="submit"
-          className="mx-auto mt-5 block w-1/2 rounded-3xl bg-primary p-3 text-center text-white"
-        >
-          Update
-        </button>
+        <div className="flex justify-center gap-5">
+          {/* Submit */}
+          <button
+            type="submit"
+            className="mt-5 block w-1/2 max-w-[200px] rounded-3xl bg-primary p-3 text-center text-white"
+          >
+            Update
+          </button>
+          {/* cancel */}
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="mt-5 block w-1/2 max-w-[200px] rounded-3xl bg-canceled p-3 text-center text-white"
+          >
+            Cancel
+          </button>
+        </div>
       </form>
     </div>
   );

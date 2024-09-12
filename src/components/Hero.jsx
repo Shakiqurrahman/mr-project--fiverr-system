@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { CiSettings } from "react-icons/ci";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import bigDealIcon from "../assets/images/Big Deal.svg";
 import starBlue from "../assets/images/icons/banner-star-blue.svg";
 import starOrange from "../assets/images/icons/banner-star-orange.svg";
@@ -10,11 +13,29 @@ import circleOrange from "../assets/images/icons/circle-orange.svg";
 import heroBanner from "../assets/images/icons/heroBanner.jpg";
 import cornerShape from "../assets/images/icons/left-bottom-circle-line.svg";
 import triangleOrange from "../assets/images/icons/triangle-orange.svg";
+import { useFetchOfferProjectQuery } from "../Redux/api/offerProjectApiSlice";
+import { setOfferProject } from "../Redux/features/offerProjectSlice";
 
 const Hero = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { user } = useSelector((state) => state.user);
+  const adminRole = user?.role === "ADMIN";
+
+  const offerProjects = useSelector((state) => state.offerProject.offerProject);  
+  const { data, isLoading, error } = useFetchOfferProjectQuery();
+
   const { control, handleSubmit, watch, setValue } = useForm();
   const [selectedItems, setSelectedItems] = useState([]);
   const [dropdownVisible, setDropdownVisible] = useState({});
+
+  // when data will loaded it will dispatch the setOfferProject action to hold the data
+  useEffect(() => {
+    if (data) {
+      dispatch(setOfferProject(data));
+    }
+  }, [data, dispatch]);
 
   const watchAllFields = watch();
 
@@ -34,49 +55,58 @@ const Hero = () => {
   };
 
   const onSubmit = (data) => {
-    const filteredData = Object.entries(data).filter(
-      ([key, value]) =>
-        value === true || value === "single_side" || value === "double_side"
-    ); // for showing only those values are true or a side is selected
-    console.log("Filtered Data:", Object.fromEntries(filteredData));
+    const submittedData = {
+      ...offerProjects,
+      designs: offerProjectsData.map((item) => {
+        // Map through all subcategories and mark the selected one
+        const subCategories = item?.designView.map((subCategory) => {
+          const isSelected = data[`${item.designName}_side`] === subCategory;
+
+          return {
+            subCategoryName: subCategory.toLowerCase().replace(/\s+/g, ""), // Convert to lowercase and remove spaces for name
+            subCategoryLabel: subCategory,
+            isSelected, // Boolean indicating if this subcategory was selected
+          };
+        });
+
+        return {
+          categoryName: item.designName.toLowerCase().replace(/\s+/g, ""), // Dynamic category name
+          categoryLabel: item.designName,
+          isSelected: !!data[item.designName], // Boolean indicating if this category was selected
+          subCategories, // Include all subcategories with their selected status
+        };
+      }),
+    };
+
+    navigate("/start-offer-project", { state: submittedData });
   };
 
-  const checkboxData = [
-    { name: "door_hanger", label: "Door Hanger" },
-    { name: "rack_card", label: "Rack Card" },
-    { name: "billboard", label: "Billboard" },
-    { name: "flyer", label: "Flyer" },
-    { name: "Social_Media_Post", label: "Social Media" },
-    { name: "yard_sign", label: "Yard Sign" },
-    { name: "postcard", label: "Postcard" },
-    { name: "facebook_cover", label: "Facebook Cover" },
-    { name: "roll_up_Banner", label: "Roll-up Banner" },
-  ];
-
+  const offerProjectsData = offerProjects?.designs || [];
+  
   return (
     <section
-      className="bg-cover bg-center relative overflow-hidden"
+      className="relative overflow-hidden bg-cover bg-center"
       style={{ backgroundImage: `url(${heroBanner})` }}
     >
-      <div className="absolute -top-24 md:-top-32 left-4 md:left-6 w-44 md:w-full">
+      <div className="absolute -top-24 left-4 w-44 md:-top-32 md:left-6 md:w-full">
         <img src={bulletDotOrange} alt="bullet-dot-orange" />
       </div>
-      <div className="absolute -bottom-28 md:-bottom-40 right-3 w-44 md:w-auto">
+      <div className="absolute -bottom-28 right-3 w-44 md:-bottom-40 md:w-auto">
         <img src={bulletDotBlue} alt="bullet-dot-blue" />
       </div>
-      <div className="absolute top-6 right-5 md:top-36 md:left-5 lg:top-20 lg:left-[25%]">
+      <div className="absolute right-5 top-6 md:left-5 md:top-36 lg:left-[25%] lg:top-20">
         <img src={starBlue} alt="star blue" />
       </div>
-      <div className="absolute  top-10 left-[40%] hidden md:block">
+      <div className="absolute left-[40%] top-10 hidden md:block">
         <img src={circleOrange} alt="circleOrange" />
       </div>
       <div className="absolute -bottom-48 -left-44 hidden md:block">
         <img src={cornerShape} alt="cornerShape" />
       </div>
-      <div className="absolute -top-56 lg:-top-48 -right-60 lg:-right-44 hidden md:block">
+      <div className="absolute -right-60 -top-56 hidden md:block lg:-right-44 lg:-top-44">
         <img src={bottomCenterCircle} alt="bottomCenterCircle" />
       </div>
-      <div className="absolute -bottom-64 right-[30%] lg:right-[45%] hidden md:block">
+      <div className="absolute -bottom-64 right-[30%] hidden md:block lg:right-[45%]">
         <img src={cornerShape} alt="bottomCenterCircle" />
       </div>
       <div className="absolute bottom-10 left-[15%]">
@@ -85,121 +115,122 @@ const Hero = () => {
       <div className="absolute bottom-16 left-[35%] hidden md:block">
         <img src={starOrange} alt="starOrange" />
       </div>
-      <div className="py-20 flex items-center relative z-20">
-        <div className="max-width pr-0 lg:pr-24 2xl:pr-0 flex flex-col lg:flex-row gap-16 lg:gap-10 items-center">
+      <div className="relative z-20 flex items-center py-20">
+        <div className="max-width flex flex-col items-center gap-16 pr-0 lg:flex-row lg:gap-10 lg:pr-24 2xl:pr-0">
           <div className="w-full">
-            <h2 className="text-center lg:text-left text-2xl sm:text-[36px] font-bold uppercase text-primary leading-snug mb-4">
+            <h2 className="mb-4 text-center text-2xl font-bold uppercase leading-snug text-primary sm:text-[36px] lg:text-left">
               WE specialize in creating advertisement designs.
             </h2>
-            <p className="text-center lg:text-left text-lg sm:text-2xl">
+            <p className="text-center text-lg sm:text-2xl lg:text-left">
               You can create any advertising design for your business through
               us.
             </p>
           </div>
-          <div className="relative w-[80%] lg:w-full border-2 border-dashed border-primary px-6 py-10">
+          <div className="relative w-[80%] border-2 border-dashed border-primary px-6 py-10 lg:w-full">
+            {/* setting icon  */}
+            {adminRole &&
+              <CiSettings onClick={()=> navigate('/offer-project', {state: offerProjects})} className="absolute right-1.5 top-1.5 cursor-pointer text-2xl" />
+            }
             {/* big deal */}
             <img
-              className="size-32 sm:size-40 md:size-54 xl:size-60 absolute ml-2 md:ml-0 -top-16 -left-16 sm:-left-20 md:-top-20 xl:-top-24 md:-left-20 xl:-left-28 z-[80]"
+              className="md:size-54 absolute -left-16 -top-16 z-[80] ml-2 size-32 sm:-left-20 sm:size-40 md:-left-20 md:-top-20 md:ml-0 xl:-left-28 xl:-top-24 xl:size-60"
               src={bigDealIcon}
               alt="big deal icon"
             />
             {/* discounts */}
-            <div className="absolute -right-5 sm:-right-10 top-[50%] sm:top-20 font-Oswald">
-              <h4 className="bg-primary text-base sm:text-xl text-white px-1 sm:px-2 py-0.5 -skew-y-[12deg] uppercase font-light select-none">
-                Only <span className="font-bold">$120</span>
+            <div className="font-Oswald absolute -right-5 top-[50%] sm:right-2 sm:top-20">
+              <h4 className="-skew-y-[12deg] select-none bg-primary px-1 py-0.5 text-base font-light uppercase text-white sm:px-2 sm:text-xl">
+                Only{" "}
+                <span className="font-bold">${offerProjects?.offerAmount}</span>
               </h4>
-              <h4 className="bg-[#E85426] text-base sm:text-xl text-white px-1 sm:px-2 py-0.5 uppercase -skew-y-[12deg] relative sm:left-10 left-5  font-light select-none">
-                Orig <span className="font-bold line-through">$160</span>
+              <h4 className="relative left-5 -skew-y-[12deg] select-none bg-[#E85426] px-1 py-0.5 text-base font-light uppercase text-white sm:left-10 sm:px-2 sm:text-xl">
+                Orig{" "}
+                <span className="font-bold line-through">
+                  ${offerProjects?.originalAmount}
+                </span>
               </h4>
             </div>
 
-            <h3 className="uppercase font-bold text-2xl sm:text-3xl text-center relative z-[90]">
-              business card design is
+            <h3 className="relative z-[90] text-center text-2xl font-bold uppercase sm:text-3xl">
+              {offerProjects?.freeDesignName} is
             </h3>
-            <h1 className="text-primary text-4xl my-2 sm:text-7xl font-bold text-center">
+            <h1 className="my-2 text-center text-4xl font-bold text-primary sm:text-7xl">
               FREE
             </h1>
-            <p className="font-medium text-lg sm:text-2xl text-center">
+            <p className="text-center text-lg font-medium sm:text-2xl">
               if you create any <span className="font-bold">3 designs</span>{" "}
               below together
             </p>
 
             <form
               onSubmit={handleSubmit(onSubmit)}
-              className="grid sm:grid-cols-2 lg:grid-cols-3 mt-4 gap-2"
+              className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3"
             >
-              {checkboxData.map((item) => (
-                <div className="flex flex-col gap-2" key={item.name}>
+              {offerProjectsData.map((item, idx) => (
+                <div className="flex flex-col gap-2" key={idx}>
                   <div className="flex items-center gap-2">
                     <Controller
-                      name={item.name}
+                      name={item?.designName}
                       control={control}
                       render={({ field }) => (
-                        <label className="flex items-center gap-2 cursor-pointer">
+                        <label className="flex cursor-pointer items-center gap-2">
                           <input
                             className="size-4 accent-[#ed8864]"
                             type="checkbox"
-                            id={item.name}
+                            id={item.designName}
                             {...field}
                             onChange={(e) => {
                               field.onChange(e);
-                              handleCheckboxChange(item.name, e.target.checked);
+                              handleCheckboxChange(
+                                item.designName,
+                                e.target.checked,
+                              );
                             }}
-                            disabled={isDisabled(item.name)}
+                            disabled={isDisabled(item.designName)}
                           />
-                          <span className="text-[17px] select-none">
-                            {item.label}
+                          <span className="select-none text-[17px]">
+                            {item.designName}
                           </span>
                         </label>
                       )}
                     />
                   </div>
-                  {dropdownVisible[item.name] && (
+                  {dropdownVisible[item.designName] && (
                     <div
                       className={`ml-6 space-y-1 transition-all duration-300 ease-in-out ${
-                        dropdownVisible[item.name]
+                        dropdownVisible[item.designName]
                           ? "max-h-20 opacity-100"
                           : "max-h-0 opacity-0"
                       } overflow-hidden`}
                     >
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <Controller
-                          name={`${item.name}_side`}
-                          control={control}
-                          render={({ field }) => (
-                            <input
-                              type="radio"
-                              {...field}
-                              value="single_side"
-                              className="accent-[#ed8864]"
-                            />
-                          )}
-                        />
-                        <span className="select-none text-sm">Single Side</span>
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <Controller
-                          name={`${item.name}_side`}
-                          control={control}
-                          render={({ field }) => (
-                            <input
-                              type="radio"
-                              {...field}
-                              value="double_side"
-                              className="accent-[#ed8864]"
-                            />
-                          )}
-                        />
-                        <span className="select-none text-sm">Double Side</span>
-                      </label>
+                      {item?.designView.map((type) => (
+                        <label
+                          key={type}
+                          className="flex cursor-pointer items-center gap-2"
+                        >
+                          <Controller
+                            name={`${item.designName}_side`}
+                            control={control}
+                            render={({ field }) => (
+                              <input
+                                type="radio"
+                                {...field}
+                                value={type}
+                                className="accent-[#ed8864]"
+                              />
+                            )}
+                          />
+                          <span className="select-none text-sm">{type}</span>
+                        </label>
+                      ))}
                     </div>
                   )}
                 </div>
               ))}
-              <div className="absolute -bottom-5 right-8">
+              <div className="absolute -bottom-5 right-1/2 translate-x-1/2 md:right-8 md:translate-x-0">
                 <button
                   type="submit"
-                  className="bg-primary uppercase text-white py-2 px-4 font-bold rounded-[30px]"
+                  className="rounded-[30px] bg-primary px-2.5 py-2 text-xs font-bold uppercase text-white sm:px-4 sm:text-base"
                 >
                   Project Start
                 </button>

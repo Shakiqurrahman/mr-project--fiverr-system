@@ -13,7 +13,7 @@ export const fetchCategory = createAsyncThunk("getData/category", async () => {
 });
 
 export const deleteCategory = createAsyncThunk(
-  "delete/cataegory",
+  "delete/category",
   async (id) => {
     try {
       const api = `${configApi.api}category/delete/${id}`;

@@ -20,7 +20,7 @@ const userSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
-      storage.removeItem('persist:root');
+      storage.removeItem("persist:root");
       localStorage.removeItem("profileData");
       removeCookie("authToken");
     },

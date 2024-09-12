@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../AllRoutes/Layout";
+import SocialMediasForm from "../components/SocialMediasForm";
 import About from "../pages/About";
 import Affiliate from "../pages/Affiliate";
 import AllCategory from "../pages/AllCategory";
@@ -9,9 +10,10 @@ import Cart from "../pages/Cart";
 import ChangePassword from "../pages/ChangePassword";
 import Contact from "../pages/Contact";
 import CreateCategory from "../pages/CreateCategory";
-import CreateProject from "../pages/CreateProject";
+import CreateOfferProject from "../pages/CreateOfferProject";
 import Designs from "../pages/Designs";
 import EditCategory from "../pages/EditCategory";
+import EditDesign from "../pages/EditDesign";
 import ErrorPage from "../pages/ErrorPage";
 import Feedback from "../pages/Feedback";
 import ForgetPassword from "../pages/ForgetPassword";
@@ -21,7 +23,7 @@ import Join from "../pages/Join";
 import OfferProject from "../pages/OfferProject";
 import PriceList from "../pages/PriceList";
 import PrivacyAndPolicy from "../pages/PrivacyAndPolicy";
-import Profile from "../pages/Profile";
+import ProfileLayout from "../pages/ProfileLayout";
 import Project from "../pages/Project";
 import SetupProfile from "../pages/SetupProfile";
 import SingleProductPage from "../pages/SingleProductPage";
@@ -30,9 +32,11 @@ import Tips from "../pages/Tips";
 import UpdatePassword from "../pages/UpdatePassword";
 import UploadDesign from "../pages/UploadDesign";
 import Verify from "../pages/Verify";
+import ChatLayout from "./ChatLayout";
 import AdminRoute from "./private-route/AdminRoute";
 import PrivateRoute from "./private-route/PrivateRoute";
 import UnAuthenticatedRoute from "./private-route/UnAuthenticatedRoute";
+import InboxPage from "../pages/InboxPage";
 
 export const router = createBrowserRouter([
   {
@@ -64,15 +68,15 @@ export const router = createBrowserRouter([
         element: <Industries />,
       },
       {
-        path: "/all-designs",
+        path: "/designs/:catSlug/:slug",
         element: <AllDesign />,
       },
       {
-        path: "/all-caterogy",
+        path: "/categories/:slug",
         element: <AllCategory />,
       },
       {
-        path: "/category/single-product",
+        path: "/design/:slug",
         element: <SingleProductPage />,
       },
       {
@@ -128,10 +132,18 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/profile",
+        path: "/social-media",
         element: (
           // <PrivateRoute>
-            <Profile />
+          <SocialMediasForm />
+          // </PrivateRoute>
+        ),
+      },
+      {
+        path: "/:userName",
+        element: (
+          // <PrivateRoute>
+          <ProfileLayout />
           // </PrivateRoute>
         ),
       },
@@ -144,10 +156,10 @@ export const router = createBrowserRouter([
         element: <ChangePassword />,
       },
       {
-        path: "/create-project",
+        path: "/offer-project",
         element: (
           <AdminRoute>
-            <CreateProject />
+            <CreateOfferProject />
           </AdminRoute>
         ),
       },
@@ -186,13 +198,31 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/cart",
-        element: <Cart />,
+        path: "/edit-design",
+        element: (
+          <AdminRoute>
+            <EditDesign />
+          </AdminRoute>
+        ),
       },
       {
-        path: "*",
-        element: <ErrorPage />,
+        path: "/cart",
+        element: <Cart />,
+      }
+    ],
+  },
+  {
+    path: "/inbox",
+    element: <ChatLayout />,
+    children: [
+      {
+        path: "/inbox",
+        element: <InboxPage />,
       },
     ],
+  },
+  {
+    path: "*",
+    element: <ErrorPage />,
   },
 ]);

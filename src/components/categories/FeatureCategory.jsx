@@ -1,126 +1,193 @@
-import { Reorder } from "framer-motion";
+import axios from "axios";
 import { useEffect, useState } from "react";
+import FlipMove from "react-flip-move";
+import toast from "react-hot-toast";
 import { IoMdClose } from "react-icons/io";
 import { useSelector } from "react-redux";
+import FeatureCategorySkeleton from "../../CustomSkeleton/FeatureCategorySkeleton";
 import DownArrow from "../../assets/images/icons/Down Arrow.svg";
+import UpArrow from "../../assets/images/icons/Upper Arrow.svg";
 import Check from "../../assets/svg/Check";
+import useGetCategory from "../../hooks/useGetCategory";
+import { configApi } from "../../libs/configApi";
 import Sidebar from "../Sidebar";
 import CategoryCards from "./CategoryCards";
 
 function FeatureCategory() {
   const { user } = useSelector((state) => state.user);
   const [expand, setExpand] = useState(false);
-  const [isDraggable, setIsDraggable] = useState(false);
-  const [categoryList, setCategoryList] = useState([
-    { id: 1, title: "Door Hanger Designs", path: "/" },
-    { id: 2, title: "Flyer Designs", path: "/" },
-    { id: 3, title: "Postcard Designs", path: "/" },
-    { id: 4, title: "Business Card Designs", path: "/" },
-    { id: 5, title: "Brochure Designs", path: "/" },
-    { id: 6, title: "Social Media Post Designs", path: "/" },
-    { id: 7, title: "Facebook Cover Designs", path: "/" },
-    { id: 8, title: "Billboard Designs", path: "/" },
-    { id: 9, title: "Podcast Cover Designs", path: "/" },
-  ]);
-  const [tempCategoryList, setTempCategoryList] = useState([...categoryList]);
+  const { categories, error, isLoading } = useGetCategory();
+
+  const [products, setProducts] = useState([]);
+  const [draggedIndex, setDraggedIndex] = useState(null);
+  const [isCustomizing, setIsCustomizing] = useState(false);
+  const [tempProducts, setTempProducts] = useState([]);
 
   useEffect(() => {
-    // When isDraggable is turned off, save or discard changes
-    if (!isDraggable) {
-      setCategoryList(tempCategoryList);
+    if (categories) {
+      setProducts(categories);
     }
-  }, [isDraggable, tempCategoryList]);
+  }, [categories]);
+  useEffect(() => {
+    if (products) {
+      setTempProducts([...products]);
+    }
+  }, [categories, products]);
 
-  const handleSave = () => {
-    setIsDraggable(false);
-    setTempCategoryList(categoryList);
+  const handleDragStart = (index) => {
+    setDraggedIndex(index);
+  };
+
+  const handleDragEnter = (index) => {
+    if (index !== draggedIndex) {
+      const updatedProducts = [...tempProducts];
+      const draggedProduct = updatedProducts[draggedIndex];
+      updatedProducts.splice(draggedIndex, 1);
+      updatedProducts.splice(index, 0, draggedProduct);
+      setTempProducts(updatedProducts);
+      setDraggedIndex(index);
+    }
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+  };
+
+  const handleCustomize = () => {
+    setIsCustomizing(true);
+  };
+
+  const handleSave = async () => {
+    setProducts(tempProducts); // Save the reordered products
+    setIsCustomizing(false);
+    const newArr = tempProducts.map((folder) => ({ id: folder.id }));
+    try {
+      const response = await axios.post(
+        `${configApi.api}/upload/feature-folder`,
+        { newOrder: newArr },
+      );
+      if (response.status === 200) {
+        toast.success("Updated Successfully!");
+      }
+    } catch (error) {
+      toast.error("Update Failed!");
+    }
   };
 
   const handleCancel = () => {
-    setIsDraggable(false);
-    setCategoryList(tempCategoryList); // Discard changes by resetting to tempCategoryList
+    setTempProducts([...products]); // Reset to original order
+    setIsCustomizing(false);
   };
   return (
     <div className="max-width">
       {user?.role === "ADMIN" && (
-        <div className="flex items-center justify-between mt-10">
+        <div className="mt-10 flex items-center justify-between">
           <button
-            className="p-[6px_15px] bg-[#EEF7FE] border-2 border-solid border-primary rounded-[30px]"
-            onClick={() => setIsDraggable(true)}
+            className="rounded-[30px] border-2 border-solid border-primary bg-[#EEF7FE] p-[6px_15px]"
+            onClick={handleCustomize}
           >
             CUSTOMISE
           </button>
-          {isDraggable && (
+          {isCustomizing && (
             <div className="flex gap-4">
               <button
-                className="h-[35px] w-[35px] rounded-full bg-[#EEF7FE] border-2 border-solid border-primary flex items-center justify-center"
+                className="flex h-[35px] w-[35px] items-center justify-center rounded-full border-2 border-solid border-primary bg-[#EEF7FE]"
                 onClick={handleSave}
               >
                 <Check className={"h-4 w-4"} />
               </button>
               <button
-                className="h-[35px] w-[35px] rounded-full bg-[#EEF7FE] border-2 border-solid border-canceled flex items-center justify-center"
+                className="flex h-[35px] w-[35px] items-center justify-center rounded-full border-2 border-solid border-canceled bg-[#EEF7FE]"
                 onClick={handleCancel}
               >
-                <IoMdClose className="text-canceled text-xl" />
+                <IoMdClose className="text-xl text-canceled" />
               </button>
             </div>
           )}
         </div>
       )}
-      <div className="flex gap-3 flex-wrap sm:flex-nowrap">
-        <div className="w-full sm:w-2/3 md:w-3/4 lg:w-4/5 relative">
-          <div>
-            <Reorder.Group
-              axis="y"
-              values={categoryList}
-              onReorder={setCategoryList}
-            >
-              {categoryList.map((category) => {
+      <div className="flex flex-wrap items-start gap-3 sm:flex-nowrap">
+        <div className="relative w-full sm:w-2/3 md:w-3/4 lg:w-4/5">
+          {isLoading && products.length > 0 ? (
+            <>
+              <FeatureCategorySkeleton />
+              <FeatureCategorySkeleton />
+              <FeatureCategorySkeleton />
+            </>
+          ) : (
+            <FlipMove>
+              {tempProducts.map((category, idx) => {
                 if (!expand) {
-                  if (category.id <= 5) {
+                  if (idx <= 4) {
                     return (
-                      <Reorder.Item
-                        key={category.id}
-                        value={category}
-                        drag={isDraggable ? true : false}
-                        style={{ cursor: isDraggable ? "grab" : "default" }}
+                      <div
+                        key={idx}
+                        draggable={isCustomizing}
+                        onDragStart={() => handleDragStart(idx)}
+                        onDragEnter={() => handleDragEnter(idx)}
+                        onDragEnd={handleDragEnd}
+                        className={`${
+                          draggedIndex === idx
+                            ? "bg-gray-200"
+                            : "hover:bg-gray-50"
+                        }`}
                       >
                         <CategoryCards
-                          title={category.title}
-                          path={category.path}
+                          title={category.folder}
+                          path={`categories/${category.slug}`}
+                          titleSlug={category.slug}
+                          subCategory={category.subFolders}
                         />
-                      </Reorder.Item>
+                      </div>
                     );
                   }
                 } else {
                   return (
-                    <Reorder.Item
-                      key={category.id}
-                      value={category}
-                      drag={isDraggable ? true : false}
-                      style={{ cursor: isDraggable ? "grab" : "default" }}
+                    <div
+                      key={idx}
+                      draggable={isCustomizing} // Only draggable when customizing is enabled
+                      onDragStart={() => handleDragStart(idx)}
+                      onDragEnter={() => handleDragEnter(idx)}
+                      onDragEnd={handleDragEnd}
+                      className={`cursor-move rounded-md border bg-white p-4 shadow-md ${
+                        draggedIndex === idx
+                          ? "bg-gray-200"
+                          : "hover:bg-gray-50"
+                      }`}
                     >
                       <CategoryCards
-                        title={category.title}
-                        path={category.path}
+                        title={category.folder}
+                        path={`categories/${category.slug}`}
+                        titleSlug={category.slug}
+                        subCategory={category.subFolders}
                       />
-                    </Reorder.Item>
+                    </div>
                   );
                 }
               })}
-            </Reorder.Group>
-          </div>
-          {!expand && (
-            <div className="absolute inset-x-0 bottom-0 flex justify-center bg-gradient-to-t from-white pt-40 pb-8 z-10">
-              <button
-                className="bg-white rounded-full"
-                onClick={() => setExpand(true)}
-              >
-                <img src={DownArrow} alt="" className="h-[50px] w-[50px]" />
-              </button>
-            </div>
+            </FlipMove>
           )}
+
+          {categories?.length > 5 &&
+            (!expand ? (
+              <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
+                <button
+                  className="rounded-full border bg-white"
+                  onClick={() => setExpand(!expand)}
+                >
+                  <img src={DownArrow} alt="" className="h-[50px] w-[50px]" />
+                </button>
+              </div>
+            ) : (
+              <div className="relative z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-5">
+                <button
+                  className="rounded-full border bg-white"
+                  onClick={() => setExpand(!expand)}
+                >
+                  <img src={UpArrow} alt="" className="h-[50px] w-[50px]" />
+                </button>
+              </div>
+            ))}
         </div>
         <Sidebar />
       </div>

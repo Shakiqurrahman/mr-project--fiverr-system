@@ -1,6 +1,5 @@
 import { Divider, Menu, MenuItem, Skeleton } from "@mui/material";
 import React from "react";
-import { CgProfile } from "react-icons/cg";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../Redux/features/userSlice";
@@ -9,12 +8,11 @@ function UserBox() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user, loading } = useSelector((state) => state.user);
-  console.log("user", user);
 
-  const handleLogout  = () => {
+  const handleLogout = () => {
     dispatch(logout());
     navigate("/join");
-  }
+  };
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -24,6 +22,8 @@ function UserBox() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const letterLogo = user?.userName?.trim().charAt(0).toUpperCase();
 
   let content;
   if (user.image) {
@@ -35,7 +35,11 @@ function UserBox() {
       />
     );
   } else {
-    content = <CgProfile size={32} />;
+    content = (
+      <div className="flex size-10 items-center justify-center rounded-full border bg-[#ffefef]/80  object-cover text-3xl font-bold text-[#3b3b3b]/50">
+        {letterLogo}
+      </div>
+    );
   }
   return (
     <>
@@ -90,7 +94,7 @@ function UserBox() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <Link to="/profile">
+        <Link to={`/${user?.userName}`}>
           <MenuItem onClick={handleClose}>Profile</MenuItem>
         </Link>
         <Link to="/billing-information">

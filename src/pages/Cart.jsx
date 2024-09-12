@@ -1,103 +1,122 @@
-import React, { useState } from 'react';
+import React from "react";
 import { RxCross2 } from "react-icons/rx";
+import { useDispatch, useSelector } from "react-redux";
 import Check from "../assets/svg/Check";
+import { removeFromCart, setCart } from "../Redux/features/cartSlice";
+import useSyncCart from "../hooks/useSyncCart";
 
 function Cart() {
-  // Initialize cart state with useState
-  const [cart, setCart] = useState([
-    {
-      id: 1,
-      title: 'Pressure and soft washing door hanger design.',
-      category: 'Door Hanger Design',
-      subcategory: 'Single Slide',
-      image: 'https://placehold.co/600x400',
-      checked: true
-    },
-    {
-      id: 2,
-      title: 'Pressure and soft washing door hanger design.',
-      category: 'Door Hanger Design',
-      subcategory: 'Single Slide',
-      image: 'https://placehold.co/600x400',
-      checked: true
-    }
-  ]);
+  const dispatch = useDispatch();
 
-  // Remove item from cart
-  function removeItem(index) {
-    const updatedCart = cart.filter((item, i) => i !== index);
-    setCart(updatedCart); 
-  }
+  const { items: cart } = useSelector((state) => state.cart);
+  useSyncCart();
 
   // Handle checkbox toggle
-  function handleCheckboxChange(index) {
-    const updatedCart = cart.map((item, i) => {
-      if (i === index) {
+  function handleCheckboxChange(id) {
+    const updatedCart = cart.map((item) => {
+      if (item.designId === id) {
         return { ...item, checked: !item.checked };
       }
       return item;
     });
-    setCart(updatedCart);
+    dispatch(setCart(updatedCart));
   }
 
   // Handle checkout
-  function handleCheckout() {
-    const selectedItems = cart.filter(item => item.checked);
+  const handleCheckout = () => {
+    const selectedItems = cart.filter((item) => item.checked);
     console.log("Items ready for checkout:", selectedItems);
-  }
+  };
+  const hasSelectedItems = cart.some((item) => item.checked);
 
   return (
-    <div className='max-w-[800px] mx-auto p-4 bg-slate-100 sm:mt-0 md:mt-10'>
-      <h1 className='font-bold text-xl'>Your Cart &#40; {cart.length} Item{cart.length > 1 && 's'} &#41;</h1>
-      <div className='flex flex-col gap-5 mt-5'>
-        {cart.map((item, index) => (
-          <div key={index} className='flex gap-2 items-start'>
-            <div className="">
-              <input
-                type="checkbox"
-                name={`cartItem-${item.id}`}
-                id={`cartItem-${item.id}`}
-                className="is-checked peer"
-                checked={item.checked}
-                onChange={() => handleCheckboxChange(index)}
-                hidden
-              />
-              <label
-                htmlFor={`cartItem-${item.id}`}
-                className={`h-[20px] w-[20px] p-1 bg-white flex items-center justify-center cursor-pointer border border-solid ${
-                  item.checked ? 'border-primary' : 'border-gray-300'
-                } *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100`}
-              >
-                <Check className="h-[14px] sm:h-[18px]" />
-              </label>
-            </div>
-            <img src={item.image} alt="Design Image" className='h-[80px] w-[120px] object-cover'/>
-            <div className='flex-grow'>
-              <h1 className='font-bold'>{item.title}</h1>
-              <p className='text-sm'><span className='font-bold text-slate-500'>Category :</span> {item.category}</p>
-              <p className='text-sm'><span className='font-bold text-slate-500'>Subcategory :</span> {item.subcategory}</p>
-            </div>
-            <button
-              type='button'
-              onClick={() => removeItem(index)}
-              className='min-h-6 min-w-6 grid place-content-center border border-slate-500 rounded-full'
+    <div className="mx-auto max-w-[800px] bg-slate-100 p-4 sm:mt-0 md:mt-10">
+      <div className="flex justify-between border-b border-black/20 pb-4">
+        <h1 className="text-xl font-bold text-primary">
+          Your Cart &#40; {cart.length} Item{cart.length > 1 && "s"} &#41;
+        </h1>
+        {/* <RiCloseLargeFill onClick={close} className="cursor-pointer text-2xl" /> */}
+      </div>
+      <div className="mt-6 flex flex-col gap-5">
+        {cart.length > 0 ? (
+          cart.map((item, index) => (
+            <div
+              key={index}
+              className="flex items-start gap-2 border-b border-black/20 pb-4"
             >
-              <RxCross2 className='text-slate-500' />
-            </button>
-          </div>
-        ))}
-        <div className='flex justify-between items-center'>
-          <p className='font-bold text-slate-500'>{cart.filter(item => item.checked).length} Item{cart.filter(item => item.checked).length > 1 && 's'} ready for checkout.</p>
-          <button 
-            onClick={handleCheckout} 
-            className="bg-primary text-white py-2 px-10 rounded-full"
+              <div className="">
+                <input
+                  type="checkbox"
+                  name={`cartItem-${item.designId}`}
+                  id={`cartItem-${item.designId}`}
+                  className="is-checked peer"
+                  checked={item.checked || false}
+                  onChange={() => handleCheckboxChange(item.designId)}
+                  hidden
+                />
+                <label
+                  htmlFor={`cartItem-${item.designId}`}
+                  className={`flex h-[20px] w-[20px] cursor-pointer items-center justify-center border border-solid bg-white p-1 ${
+                    item.checked ? "border-primary" : "border-gray-300"
+                  } *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100`}
+                >
+                  <Check className="h-[14px] sm:h-[18px]" />
+                </label>
+              </div>
+              <img
+                src={
+                  item?.images?.find((image) => image?.thumbnail === true)?.url
+                }
+                alt="Design Image"
+                className="h-[80px] w-[120px] object-cover"
+              />
+              <div className="flex-grow">
+                <h1 className="font-bold">{item.title}</h1>
+                <p className="text-sm">
+                  <span className="font-semibold text-slate-500">
+                    Category :
+                  </span>{" "}
+                  {item.category}
+                </p>
+                <p className="text-sm">
+                  <span className="font-semibold text-slate-500">
+                    Subcategory :
+                  </span>{" "}
+                  {item.subCategory}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => dispatch(removeFromCart(item.designId))}
+                className="grid min-h-6 min-w-6 place-content-center rounded-full border border-slate-500"
+              >
+                <RxCross2 className="text-slate-500" />
+              </button>
+            </div>
+          ))
+        ) : (
+          <p className="text-center">No items in cart</p>
+        )}
+        {cart.length > 0 && (
+          <p className="text-center font-bold text-slate-500">
+            {cart.filter((item) => item.checked).length} Item
+            {cart.filter((item) => item.checked).length > 1 && "s"} ready for
+            checkout.
+          </p>
+        )}
+        <div className="flex items-center justify-center gap-6">
+          <button
+            type="button"
+            disabled={!hasSelectedItems}
+            onClick={handleCheckout}
+            className={`rounded-full ${hasSelectedItems ? 'bg-primary' : 'bg-primary/70 cursor-not-allowed'} px-10 py-2 font-semibold text-white`}
           >
             Checkout
           </button>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default Cart;

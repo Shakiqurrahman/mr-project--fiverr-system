@@ -1,24 +1,67 @@
+import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { FaSpinner } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Check from "../assets/svg/Check";
+import Datalist from "../components/Datalist";
 import { configApi } from "../libs/configApi";
+import {
+  useFetchDesignsQuery,
+  useFetchFoldersQuery,
+  useFetchIndustriesQuery,
+  useFetchRelatedTagsQuery,
+  useFetchSubFoldersQuery,
+} from "../Redux/api/uploadDesignApiSlice";
 import { fetchCategory } from "../Redux/features/category/categoryApi";
 
 function UploadDesign() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loading, category, error } = useSelector((state) => state.category);
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   // initial state of form
   const [form, setForm] = useState({
     title: "",
-    description: "",
     size: "",
     fileFormat: "",
-    images: "",
-    thumbnail: "",
   });
+
+  // description related work
+  const editorRef = useRef(null);
+  const [content, setContent] = useState("");
+  const editorInit = {
+    height: 400,
+    placeholder: "Start typing...",
+    menubar: false,
+    plugins: [
+      "advlist",
+      "autolink",
+      "lists",
+      "link",
+      "charmap",
+      "preview",
+      "anchor",
+      "searchreplace",
+      "visualblocks",
+      "fullscreen",
+      "help",
+      "wordcount",
+    ],
+    toolbar:
+      "undo redo blocks fontsize " +
+      "bold italic backcolor forecolor alignleft aligncenter alignright alignjustify" +
+      " link bullist numlist outdent indent  fullscreen " +
+      " help",
+  };
+  const log = () => {
+    if (editorRef.current) {
+      setContent(editorRef.current.getContent());
+    }
+  };
 
   // Sample data for categories and subcategories
   const [categories, setCategories] = useState([]);
@@ -27,7 +70,6 @@ function UploadDesign() {
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
 
   // category fetching
-
   useEffect(() => {
     dispatch(fetchCategory());
   }, [dispatch]);
@@ -56,48 +98,57 @@ function UploadDesign() {
     setSelectedSubCategory(e.target.value);
   };
 
-  // Image Operations
-  const [selectedImages, setSelectedImages] = useState([]);
+  // Image Uploading Works
+  const [matchingImages, setMatchingImages] = useState([]);
+  // const [errorImg, setErrorImg] = useState(null);
 
-  const handleImageUpload = async (e) => {
-    const files = Array.from(e.target.files);
-    const imagesPromise = files.map(async (file, index) => {
-      if (file) {
-        const formData = new FormData();
-        formData.append("image", file);
+  const getImagesWithDimensions = (files) => {
+    const images = [];
+    let isError = false;
 
-        const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
-        const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
-        try {
-          // setUploading(true);
-          const response = await axios.post(uploadUrl, formData);
-          const name = response.data.data.title;
-          const imageUrl = response.data.data.url;
-
-          // Update the form state with the new image URL
-          const value = selectedImages.length + index;
-          return {
-            url: imageUrl,
-            name,
-            thumbnail: selectedImages.length === 0 && index === 0,
-            value,
-          };
-        } catch (error) {
-          console.error("Error uploading image:", error);
-          // You can use a library like react-toastify to display error messages
-          // toast.error("Failed to upload image");
-        } finally {
-          // setUploading(false);
-        }
+    const handleImageLoad = (file, img, index) => {
+      const value = matchingImages.length + index;
+      // if (img.width === 2700 && img.height === 2000) {
+      images.push({
+        file: file,
+        url: img.src,
+        thumbnail: matchingImages.length === 0 && index === 0,
+        value,
+      });
+      // }
+      if (images.length === files.length && !isError) {
+        setMatchingImages((prevImages) => [...prevImages, ...images]);
+        // setErrorImg(null);
       }
-    });
-    const images = await Promise.all(imagesPromise);
-    console.log(images);
-    setSelectedImages((prevImages) => [...prevImages, ...images]);
+      // else {
+      //   setErrorImg("Resolution does not match. Expected 2700x2000");
+      // }
+    };
+
+    const processFile = (file, i) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          handleImageLoad(file, img, i);
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    for (let i = 0; i < files.length; i++) {
+      processFile(files[i], i);
+    }
+  };
+
+  const handleFileChange = (event) => {
+    const files = Array.from(event.target.files);
+    getImagesWithDimensions(files);
   };
 
   const handleImageRemove = (index) => {
-    setSelectedImages((prevImages) =>
+    setMatchingImages((prevImages) =>
       prevImages
         .filter((_, i) => i !== index)
         .map((v, i) => ({ ...v, value: i })),
@@ -106,7 +157,7 @@ function UploadDesign() {
 
   const handleRadioChange = (e) => {
     const selectedValue = parseInt(e.target.value, 10);
-    setSelectedImages((prevImages) =>
+    setMatchingImages((prevImages) =>
       prevImages.map((obj) => ({
         ...obj,
         thumbnail: obj.value === selectedValue,
@@ -116,6 +167,22 @@ function UploadDesign() {
 
   // Tags Operations
   const [tags, setTags] = useState([]);
+  const [newTag, setNewTag] = useState("");
+
+  const addTag = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (newTag) {
+        const newTagsArr = newTag
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter((tag) => tag); // Clean up and remove empty tags
+        setTags([...tags, ...newTagsArr]);
+        setNewTag("");
+      }
+    }
+  };
+
   const removeTag = (indexToRemove, e) => {
     e.preventDefault();
     setTags((prevTags) =>
@@ -123,24 +190,30 @@ function UploadDesign() {
     );
   };
 
-  const [newTag, setNewTag] = useState("");
-
-  const addTag = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      if (newTag) {
-        setTags([...tags, newTag]);
-        setNewTag("");
-      }
-    }
-  };
   // Related Designs Operations
   const [relatedTags, setRelatedTags] = useState([]);
-  const removeRelatedTag = (indexToRemove, e) => {
+  const [newRelatedTag, setNewRelatedTag] = useState("");
+  const { data: relatedDesign } = useFetchRelatedTagsQuery();
+
+  const relatedDesigns = useMemo(() => relatedDesign, [relatedDesign]);
+
+  const handleNewRelatedTag = (e) => {
     e.preventDefault();
-    setRelatedTags((prevTag) =>
-      prevTag.filter((_, index) => index !== indexToRemove),
-    );
+    setNewRelatedTag(e.target.value);
+  };
+
+  const addNewRelatedTag = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (newRelatedTag) {
+        const newRelatedTagArr = newRelatedTag
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter((tag) => tag); // Clean up and remove empty tags
+        setRelatedTags([...relatedTags, ...newRelatedTagArr]);
+        setNewRelatedTag("");
+      }
+    }
   };
 
   const addRelatedTag = (e) => {
@@ -151,8 +224,18 @@ function UploadDesign() {
     }
   };
 
+  const removeRelatedTag = (indexToRemove, e) => {
+    e.preventDefault();
+    setRelatedTags((prevTag) =>
+      prevTag.filter((_, index) => index !== indexToRemove),
+    );
+  };
+
   // Folder Operations
   const [newFolder, setNewFolder] = useState("");
+  const { data: folder } = useFetchFoldersQuery();
+
+  const folders = useMemo(() => folder, [folder]);
 
   const addNewFolder = (e) => {
     e.preventDefault();
@@ -161,6 +244,9 @@ function UploadDesign() {
 
   // SubFolder Operations
   const [newSubFolder, setNewSubFolder] = useState("");
+  const { data: subFolder } = useFetchSubFoldersQuery();
+
+  const subFolders = useMemo(() => subFolder, [subFolder]);
 
   const addNewSubFolder = (e) => {
     e.preventDefault();
@@ -169,6 +255,10 @@ function UploadDesign() {
 
   // Industries Operations
   const [industries, setIndustries] = useState([]);
+  const { data: industrie } = useFetchIndustriesQuery();
+
+  const allIndustries = useMemo(() => industrie, [industrie]);
+
   const removeIndustrie = (indexToRemove, e) => {
     e.preventDefault();
     setIndustries((prevTags) =>
@@ -198,14 +288,10 @@ function UploadDesign() {
 
   // Designs Operations
   const [designs, setDesigns] = useState([]);
-  const removeDesign = (indexToRemove, e) => {
-    e.preventDefault();
-    setDesigns((prevTags) =>
-      prevTags.filter((_, index) => index !== indexToRemove),
-    );
-  };
-
+  const { data: design } = useFetchDesignsQuery();
   const [newDesign, setNewDesign] = useState("");
+
+  const allDesigns = useMemo(() => design, [design]);
 
   const addDesign = (e) => {
     e.preventDefault();
@@ -225,6 +311,13 @@ function UploadDesign() {
     }
   };
 
+  const removeDesign = (indexToRemove, e) => {
+    e.preventDefault();
+    setDesigns((prevTags) =>
+      prevTags.filter((_, index) => index !== indexToRemove),
+    );
+  };
+
   // Global Operations
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -232,34 +325,69 @@ function UploadDesign() {
   };
 
   const handleSubmit = async (e) => {
+    setSubmitLoading(true);
     e.preventDefault();
-    const data = {
-      title: form.title,
-      description: form.description,
-      category: selectedCategory,
-      subCategory: selectedSubCategory,
-      fileFormat: form.fileFormat,
-      size: form.size,
-      images: selectedImages,
-      tags,
-      relatedDesigns: relatedTags,
-      folder: newFolder,
-      subFolder: newSubFolder,
-      industries,
-      designs,
-    };
-    try {
-      const url = `${configApi.api}upload/create`;
+    const imagesPromise = matchingImages?.map(async (file) => {
+      if (file.file) {
+        const formData = new FormData();
+        formData.append("fileName", file.file);
 
-      const response = await axios.post(url, data);
+        // const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
+        const uploadUrl = `${configApi.api}upload-image`;
+        try {
+          // setUploading(true);
+          const response = await axios.post(uploadUrl, formData);
+          console.log(response);
+          const name = response.data.data.title;
+          const imageUrl = response.data.data.url;
 
-      if (response.data.success) {
-        console.log(response.data);
+          return {
+            url: imageUrl,
+            name,
+            thumbnail: file.thumbnail,
+          };
+        } catch (error) {
+          console.error("Error uploading image:", error);
+          // You can use a library like react-toastify to display error messages
+          // toast.error("Failed to upload image");
+        } finally {
+          // setUploading(false);
+        }
       }
-    } catch (error) {
-      console.log(error);
+    });
+    const images = await Promise.all(imagesPromise);
+    console.log(images);
+    if (images) {
+      const data = {
+        title: form.title,
+        description: content,
+        category: selectedCategory,
+        subCategory: selectedSubCategory,
+        fileFormat: form.fileFormat,
+        size: form.size,
+        images: images,
+        tags,
+        relatedDesigns: relatedTags,
+        folder: newFolder,
+        subFolder: newSubFolder,
+        industries,
+        designs,
+      };
+      try {
+        const url = `${configApi.api}upload/create`;
+
+        const response = await axios.post(url, data);
+
+        if (response.data.success) {
+          console.log(response.data);
+          navigate("/");
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
-    // console.log(data);
+
+    setSubmitLoading(false);
   };
 
   return (
@@ -284,13 +412,12 @@ function UploadDesign() {
           </div>
           <div className="mt-2 flex flex-col">
             <label className="block px-2">Description</label>
-            <textarea
-              type="text"
-              name="description"
-              className="mt-3 block h-[150px] w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
-              onChange={handleChange}
-              required
-            ></textarea>
+            <Editor
+              apiKey="58wpfurekzo6c0xguijfdjdm4un9yozey638o61t47zosj2t"
+              onInit={(_evt, editor) => (editorRef.current = editor)}
+              init={editorInit}
+              onChange={log}
+            />
             <p className="mt-2 hidden px-2 text-xs text-red-600">
               There was an error!
             </p>
@@ -306,7 +433,7 @@ function UploadDesign() {
                 onChange={handleCategoryChange}
               >
                 <option value={""}>Select Category</option>
-                {categories.length > 0 &&
+                {categories?.length > 0 &&
                   categories.map((item) => (
                     <option key={item.id} value={item.categoryName}>
                       {item.categoryName}
@@ -372,7 +499,7 @@ function UploadDesign() {
               name="images"
               type="file"
               id="images"
-              onChange={handleImageUpload}
+              onChange={handleFileChange}
               accept="image/*"
               multiple
               hidden
@@ -387,7 +514,7 @@ function UploadDesign() {
               There was an error!
             </p>
             <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2">
-              {selectedImages.map((item, index) => (
+              {matchingImages.map((item, index) => (
                 <div key={index} className="flex items-start gap-3 p-2">
                   <div>
                     <input
@@ -412,7 +539,7 @@ function UploadDesign() {
                     alt={item.name}
                     className="h-[100px] w-[150px] object-cover"
                   />
-                  <h1 className="flex-grow">{item.name}</h1>
+                  <h1 className="flex-grow">{item.file.name}</h1>
                   <button
                     type="button"
                     className="grid min-h-6 min-w-6 place-content-center rounded-full border border-slate-500"
@@ -423,6 +550,7 @@ function UploadDesign() {
                 </div>
               ))}
             </div>
+            {/* {errorImg && <p className="text-sm text-red-400">{errorImg}</p>} */}
           </div>
           <div className="mt-2 flex flex-col">
             <label className="block px-2">Tags</label>
@@ -445,7 +573,7 @@ function UploadDesign() {
                 type="text"
                 name="tag"
                 placeholder="Add tag"
-                className="outline-none"
+                className="flex-grow outline-none"
                 value={newTag}
                 onChange={(e) => setNewTag(e.target.value)}
                 onKeyDown={addTag}
@@ -455,7 +583,7 @@ function UploadDesign() {
           <div className="mt-5 flex flex-col">
             <label className="block px-2">Related Designs</label>
             <div className="mt-3 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none">
-              {relatedTags.map((item, index) => (
+              {relatedTags?.map((item, index) => (
                 <span
                   key={index}
                   className="flex items-center gap-2 rounded-full bg-[#FFEFEF] px-2 py-1 text-sm"
@@ -469,15 +597,33 @@ function UploadDesign() {
                   </button>
                 </span>
               ))}
+              <input
+                type="text"
+                list="relatedTags"
+                className="w-full appearance-none outline-none"
+                placeholder="Search related design"
+                value={newRelatedTag}
+                onChange={handleNewRelatedTag}
+                onKeyDown={addNewRelatedTag}
+              />
+              <Datalist
+                id={"relatedTags"}
+                options={relatedDesigns}
+                maxCount={10}
+                value={newRelatedTag}
+              />
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
-              <button
-                className="rounded-[30px] bg-lightcream px-4 py-1 text-sm"
-                value={"MR1DN"}
-                onClick={addRelatedTag}
-              >
-                MR1DN
-              </button>
+              {relatedDesigns?.map((d) => (
+                <button
+                  key={d}
+                  className="rounded-[30px] bg-lightcream px-4 py-1 text-sm"
+                  value={d}
+                  onClick={addRelatedTag}
+                >
+                  {d}
+                </button>
+              ))}
             </div>
           </div>
           <div className="flex flex-wrap gap-2 sm:flex-nowrap">
@@ -486,18 +632,28 @@ function UploadDesign() {
               <input
                 type="text"
                 name="folder"
+                list="folder"
                 value={newFolder}
                 onChange={(e) => setNewFolder(e.target.value)}
                 className="mt-3 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
               />
+              <Datalist
+                id={"folder"}
+                options={folders}
+                maxCount={10}
+                value={newFolder}
+              />
               <div className="mt-3 flex flex-wrap gap-2">
-                <button
-                  className="rounded-[30px] bg-[#e7e7e7] px-3 py-1 text-xs"
-                  value={"MR1DN"}
-                  onClick={addNewFolder}
-                >
-                  MR1DN
-                </button>
+                {folders?.map((v, i) => (
+                  <button
+                    key={i}
+                    className="rounded-[30px] bg-[#e7e7e7] px-3 py-1 text-xs"
+                    value={v}
+                    onClick={addNewFolder}
+                  >
+                    {v}
+                  </button>
+                ))}
               </div>
             </div>
             <div className="mt-5 flex w-full flex-col sm:w-1/2">
@@ -505,18 +661,28 @@ function UploadDesign() {
               <input
                 type="text"
                 name="subFolder"
+                list="subFolder"
                 value={newSubFolder}
                 onChange={addNewSubFolder}
                 className="mt-3 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
               />
+              <Datalist
+                id={"subFolder"}
+                options={subFolders}
+                maxCount={10}
+                value={newSubFolder}
+              />
               <div className="mt-3 flex flex-wrap gap-2">
-                <button
-                  className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
-                  value={"MR1DN"}
-                  onClick={addNewSubFolder}
-                >
-                  MR1DN
-                </button>
+                {subFolders?.map((v, i) => (
+                  <button
+                    key={i}
+                    className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
+                    value={v}
+                    onClick={addNewSubFolder}
+                  >
+                    {v}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
@@ -541,21 +707,31 @@ function UploadDesign() {
                 <input
                   type="text"
                   name="industries"
-                  className="outline-none"
+                  list="industries"
+                  className="w-full outline-none"
                   placeholder="Add industries"
                   value={newIndustrie}
                   onChange={(e) => setNewIndustrie(e.target.value)}
                   onKeyDown={addNewIndusTrie}
                 />
+                <Datalist
+                  id={"industries"}
+                  options={allIndustries}
+                  maxCount={10}
+                  value={newIndustrie}
+                />
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
-                <button
-                  className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
-                  value={"MR1DN"}
-                  onClick={addIndustrie}
-                >
-                  MR1DN
-                </button>
+                {allIndustries?.map((v, i) => (
+                  <button
+                    key={i}
+                    className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
+                    value={v}
+                    onClick={addIndustrie}
+                  >
+                    {v}
+                  </button>
+                ))}
               </div>
             </div>
             <div className="mt-5 flex w-full flex-col sm:w-1/2">
@@ -578,27 +754,57 @@ function UploadDesign() {
                 <input
                   type="text"
                   name="design"
-                  className="outline-none"
+                  list="design"
+                  className="w-full outline-none"
                   placeholder="Add Design"
                   value={newDesign}
                   onChange={(e) => setNewDesign(e.target.value)}
                   onKeyDown={addNewDesign}
                 />
+                <Datalist
+                  id={"design"}
+                  options={allDesigns}
+                  maxCount={10}
+                  value={newDesign}
+                />
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
-                <button
-                  className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
-                  value={"MR1DN"}
-                  onClick={addDesign}
-                >
-                  MR1DN
-                </button>
+                {allDesigns?.map((v, i) => (
+                  <button
+                    key={i}
+                    className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
+                    value={v}
+                    onClick={addDesign}
+                  >
+                    {v}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
-          <button className="mx-auto mt-5 block w-1/2 rounded-3xl bg-primary p-3 text-center text-white">
-            Upload
-          </button>
+          <div className="flex justify-center gap-5">
+            <button
+              type="submit"
+              disabled={submitLoading}
+              className="mt-5 flex h-[45px] w-1/2 max-w-[200px] items-center justify-center rounded-3xl bg-primary text-white disabled:cursor-not-allowed"
+            >
+              {submitLoading ? (
+                <span className="animate-spin text-xl">
+                  <FaSpinner />
+                </span>
+              ) : (
+                "Upload"
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              disabled={submitLoading}
+              className="mt-5 flex h-[45px] w-1/2 max-w-[200px] items-center justify-center rounded-3xl bg-canceled text-white disabled:cursor-not-allowed"
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       </div>
     </div>

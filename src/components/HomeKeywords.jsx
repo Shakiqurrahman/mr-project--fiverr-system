@@ -1,42 +1,59 @@
-import ButtonPrimary from "./ButtonPrimary";
-import ButtonSecondary from "./ButtonSecondary";
+import { Link } from "react-router-dom";
+import {
+  useFetchAllDesignKeywordsQuery,
+  useFetchAllIndustryKeywordsQuery,
+} from "../Redux/api/uploadDesignApiSlice";
 import Divider from "./Divider";
 
 function HomeKeywords() {
-  const designBtns = [
-    "Bussiness Card",
-    "Door Hanger",
-    "Flyer",
-    "Postcard",
-    "Brochure",
-    "Billboard",
-    "Yard Sign",
-    "See More",
-  ];
-  const industryBtns = [
-    "Solar",
-    "Pressure Washing",
-    "Real Estate",
-    "Lawn Care",
-    "Moving",
-    "Cleaning Services",
-    "See More",
-  ];
+  const { data: designKeywordsData } = useFetchAllDesignKeywordsQuery();
+  const { data: industryKeywordsData } = useFetchAllIndustryKeywordsQuery();
+
   return (
     <>
       <div className="max-width mt-10">
-        <div className="flex gap-3 flex-wrap">
-          {designBtns.map((value) => (
-            <ButtonPrimary key={Math.random()}>{value}</ButtonPrimary>
+        <div className="flex flex-wrap gap-3">
+          {designKeywordsData?.slice(0, 10).map((value, i) => (
+            <Link
+              key={i}
+              to={"/designs"}
+              state={value}
+              className="rounded-[30px] bg-[#edf7fd] px-2 py-1 text-sm font-medium duration-300 hover:bg-primary hover:text-white sm:px-4 sm:py-2 sm:text-base"
+            >
+              {value}
+            </Link>
           ))}
+          {designKeywordsData?.length >= 10 && (
+            <Link
+              to={"/designs"}
+              className="rounded-[30px] bg-[#edf7fd] px-2 py-1 text-sm font-medium duration-300 hover:bg-primary hover:text-white sm:px-4 sm:py-2 sm:text-base"
+            >
+              See More
+            </Link>
+          )}
         </div>
       </div>
-      <Divider className={"bg-[#1b8cdc!important] h-1 w-full my-8"} />
+      <Divider className={"my-8 h-px w-full !bg-primary"} />
       <div className="max-width">
-        <div className="flex gap-3 flex-wrap">
-          {industryBtns.map((value) => (
-            <ButtonSecondary key={Math.random()}>{value}</ButtonSecondary>
+        <div className="flex flex-wrap gap-3">
+          {industryKeywordsData?.slice(0, 10).map((value, i) => (
+            <Link
+              key={i}
+              to={"/industries"}
+              state={value}
+              className="rounded-[30px] bg-[#ffefef] px-2 py-1 text-sm font-medium duration-300 hover:bg-secondary hover:text-white sm:px-4 sm:py-2 sm:text-base"
+            >
+              {value}
+            </Link>
           ))}
+          {industryKeywordsData?.length >= 10 && (
+            <Link
+              to={"/industries"}
+              className="rounded-[30px] bg-[#ffefef] px-2 py-1 text-sm font-medium duration-300 hover:bg-secondary hover:text-white sm:px-4 sm:py-2 sm:text-base"
+            >
+              See More
+            </Link>
+          )}
         </div>
       </div>
     </>

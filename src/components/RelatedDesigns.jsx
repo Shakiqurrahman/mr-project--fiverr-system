@@ -3,10 +3,15 @@ import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 import LeftArrowIcon from "../assets/images/icons/Left Arrow.svg";
 import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
-import thumbnail from "../assets/images/project-thumbnail.jpg";
-import ProjectCard from "./categories//ProjectCard";
+import ProjectCard from "./categories/ProjectCard";
 
-function RelatedDesigns({ bgColor, color, img }) {
+function RelatedDesigns({
+  bgColor,
+  color,
+  items,
+  relatedFolders,
+  relatedDesigns,
+}) {
   const settings = {
     dots: false,
     infinite: false,
@@ -44,52 +49,87 @@ function RelatedDesigns({ bgColor, color, img }) {
       },
     ],
   };
-  const categories = [
-    {
-      thumbnail,
-      title: "Pressure and Soft Washing Door Hanger Design",
-    },
-    {
-      thumbnail,
-      title: "Pressure and Soft Washing Door Hanger Design",
-    },
-    {
-      thumbnail,
-      title: "Pressure and Soft Washing Door Hanger Design",
-    },
-    {
-      thumbnail,
-      title: "Pressure and Soft Washing Door Hanger Design",
-    },
-    {
-      thumbnail,
-      title: "Pressure and Soft Washing Door Hanger Design",
-    },
-  ];
+
   return (
     <div
       className={`${
         bgColor ? bgColor : "bg-lightskyblue"
-      } -mb-10 sm:-mb-20 relative`}
+      } relative -mb-10 sm:-mb-20`}
     >
-      <div className="max-width py-10 mt-10">
+      <div className="max-width mt-10 py-10">
         <h1
           className={`${
             color ? color : "text-primary"
-          } text-2xl font-bold text-center`}
+          } text-center text-2xl font-bold`}
         >
           Related Designs
         </h1>
         <div className="mt-8">
-          <Slider {...settings}>
-            {categories.map((category) => (
-              <ProjectCard
-                key={Math.random()}
-                thumbnail={img ? img : category.thumbnail}
-                title={category.title}
-              />
+          {items &&
+            (items?.length > 0 ? (
+              <Slider {...settings}>
+                {items?.map((design, i) => {
+                  const thumbnail = design?.images?.find((d) => d.thumbnail);
+                  return (
+                    <ProjectCard
+                      key={i}
+                      thumbnail={thumbnail?.url}
+                      thumbnailName={thumbnail?.name}
+                      title={design.title}
+                      slug={`/design/${design?.designId}`}
+                    />
+                  );
+                })}
+              </Slider>
+            ) : (
+              <div className="text-center">No Related Designs Found</div>
             ))}
-          </Slider>
+          {relatedFolders &&
+            (relatedFolders?.length > 0 ? (
+              <Slider {...settings}>
+                {relatedFolders?.map((folder, idx) => {
+                  const subFolder = folder?.subFolders[0];
+                  const design = subFolder?.designs[0];
+                  const thumbnail = design?.images?.filter(
+                    (img) => img?.thumbnail === true,
+                  )[0];
+                  return (
+                    <ProjectCard
+                      key={idx}
+                      thumbnail={thumbnail?.url}
+                      title={design?.title}
+                      thumbnailName={thumbnail?.name}
+                      slug={`/categories/${folder.slug}/`}
+                    />
+                  );
+                })}
+              </Slider>
+            ) : (
+              <div className="text-center">No Related Designs Found</div>
+            ))}
+          {relatedDesigns &&
+            (relatedDesigns?.length > 0 ? (
+              <Slider {...settings}>
+                {relatedDesigns?.map((folder, idx) => {
+                  const subFolder = folder?.subFolder;
+                  const design = subFolder?.designs[0];
+                  const thumbnail = design?.images?.filter(
+                    (img) => img?.thumbnail === true,
+                  )[0];
+                  return (
+                    <ProjectCard
+                      key={idx}
+                      thumbnail={thumbnail?.url}
+                      title={design?.title}
+                      thumbnailName={thumbnail?.name}
+                      slug={`/designs/${folder.slug}/${subFolder.slug}`}
+                    />
+                  );
+                })}
+              </Slider>
+            ) : (
+              <div className="text-center">No Related Designs Found</div>
+            ))}
         </div>
       </div>
     </div>
@@ -101,7 +141,7 @@ function NextArrow({ onClick }) {
   return (
     <div
       onClick={onClick}
-      className="slick-arrow before:content-none h-[35px] w-[35px] border cursor-pointer flex items-center justify-center rounded-full absolute top-[35%] -right-[15px] z-10"
+      className="slick-arrow absolute -right-[15px] top-[35%] z-10 flex h-[35px] w-[35px] cursor-pointer items-center justify-center rounded-full border before:content-none"
     >
       <img src={RightArrowIcon} alt="" />
     </div>
@@ -112,7 +152,7 @@ function PrevArrow({ onClick }) {
   return (
     <div
       onClick={onClick}
-      className="slick-arrow before:content-none h-[35px] w-[35px] border cursor-pointer flex items-center justify-center rounded-full absolute top-[35%] -left-[15px] z-10"
+      className="slick-arrow absolute -left-[15px] top-[35%] z-10 flex h-[35px] w-[35px] cursor-pointer items-center justify-center rounded-full border before:content-none"
     >
       <img src={LeftArrowIcon} alt="" />
     </div>

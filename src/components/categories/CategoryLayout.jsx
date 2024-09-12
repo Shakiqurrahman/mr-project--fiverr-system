@@ -2,12 +2,12 @@ import { Link } from "react-router-dom";
 
 function CategoryLayout({ children, title, path }) {
   return (
-    <div className="p-4 border border-solid rounded-lg mt-10">
-      <div className="flex items-center justify-between mb-5">
-        <h1 className="text-base sm:text-xl font-semibold">{title}</h1>
+    <div className="mt-10 rounded-lg border border-solid bg-white p-4">
+      <div className="mb-5 flex items-center justify-between">
+        <h1 className="text-base font-semibold sm:text-xl">{title}</h1>
         <Link
           to={path}
-          className="text-primary text-base sm:text-lg font-medium"
+          className="text-base font-medium text-primary sm:text-lg"
         >
           All Designs
         </Link>

@@ -1,7 +1,6 @@
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import useLogout from "../components/useLogout";
 import { useFetchUserDataQuery } from "../Redux/api/apiSlice";
 import { logout, setUser } from "../Redux/features/userSlice";
 

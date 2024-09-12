@@ -3,11 +3,61 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom Scroll bar */
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+body::-webkit-scrollbar-track {
+  background: #e2e2e2;
+}
+body::-webkit-scrollbar-thumb {
+  @apply bg-primary;
+  border-radius: 4px;
+}
+
+
+/* for cart drawer */
+.drawer-scroller::-webkit-scrollbar {
+  width: 0px;
+} 
+
 body {
   font-family: "Montserrat", sans-serif;
   max-width: 100%;
   overflow-x: hidden;
   scroll-behavior: smooth;
+}
+
+/* Resetting heading tags to default design for product description */
+.product-description h1 {
+  font-size: 2em; /* Adjust size as needed */
+  font-weight: 700; /* Adjust weight as needed */
+}
+
+.product-description h2 {
+  font-size: 1.5em; /* Adjust size as needed */
+  font-weight: 700; /* Adjust weight as needed */
+}
+
+.product-description h3 {
+  font-size: 1.17em; /* Adjust size as needed */
+  font-weight: 700; /* Adjust weight as needed */
+}
+
+.product-description h4 {
+  font-size: 1em; /* Adjust size as needed */
+  font-weight: 700; /* Adjust weight as needed */
+}
+
+.product-description h5 {
+  font-size: 0.83em; /* Adjust size as needed */
+  font-weight: 700; /* Adjust weight as needed */
+}
+
+.product-description h6 {
+  font-size: 0.67em; /* Adjust size as needed */
+  font-weight: 700; /* Adjust weight as needed */
 }
 
 .font-Oswald {
@@ -61,15 +111,27 @@ textarea:placeholder-shown {
 }
 
 /* homeactivitycard slider design */
-.homeactivitycard .slick-track {
+.slick-track {
   display: flex;
   align-items: stretch;
 }
-.homeactivitycard .slick-track > div {
-  height: auto;
+.slick-track > div {
+  height: auto !important;
 }
-.homeactivitycard .slick-track > div > div {
+.slick-track > div > div {
   height: 100%;
+}
+
+/* category cards slider design */
+.category-cards .slick-track {
+  margin-left: 0 !important;
+  display: flex !important;
+  justify-content: start !important;
+  align-items: stretch !important;
+}
+
+.profile-info .MuiPaper-root.MuiPaper-elevation {
+  @apply !w-full !max-w-[500px] !m-4
 }
 
 /* Form Error Handling Design */
@@ -123,4 +185,12 @@ textarea:placeholder-shown {
 
 .swal2-confirm.swal2-styled {
   background-color: #1b8cdc !important;
+}
+
+/* Pagination button customize */
+.MuiPaginationItem-previousNext:hover {
+  @apply !bg-transparent;
+}
+.MuiPaginationItem-previousNext > span {
+  @apply !hidden;
 }
