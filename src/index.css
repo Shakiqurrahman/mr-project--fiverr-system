@@ -131,7 +131,7 @@ textarea:placeholder-shown {
 }
 
 .profile-info .MuiPaper-root.MuiPaper-elevation {
-  @apply !w-full !max-w-[500px]
+  @apply !w-full !max-w-[500px] !m-4
 }
 
 /* Form Error Handling Design */
