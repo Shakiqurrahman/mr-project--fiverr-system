@@ -130,6 +130,10 @@ textarea:placeholder-shown {
   align-items: stretch !important;
 }
 
+.profile-info .MuiPaper-root.MuiPaper-elevation {
+  @apply !w-full !max-w-[500px]
+}
+
 /* Form Error Handling Design */
 .isError {
   @apply border-red-600;

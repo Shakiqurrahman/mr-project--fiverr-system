@@ -49,7 +49,6 @@ function Profile({ user = {}, slug }) {
 
   const handleProfileInfo = () => {
     setProfileInfo(!profileInfo);
-    console.log("clicked");
   };
 
   const handleDesqEdit = () => {
@@ -100,10 +99,16 @@ function Profile({ user = {}, slug }) {
         <div className="relative border border-gray-300 bg-[#edf7fd] p-4 py-6">
           {/* profile info  */}
           <BsInfoCircle
-            className="absolute right-4 top-4 text-base text-gray-500 cursor-pointer"
+            className="absolute right-4 top-4 cursor-pointer text-base text-gray-500"
             onClick={handleProfileInfo}
           />
-          {profileInfo && <ProfileInfo handleProfileInfo={handleProfileInfo} profileInfo={profileInfo}/>}
+          {profileInfo && (
+            <ProfileInfo
+              handleProfileInfo={handleProfileInfo}
+              profileInfo={profileInfo}
+              user={user}
+            />
+          )}
           <div className="pb-4">
             <div className="relative mx-auto flex size-32 items-center justify-center rounded-full border border-gray-300 bg-[#ffefef]/30">
               {user.image ? (
