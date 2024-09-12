@@ -44,7 +44,7 @@ const useGetCategory = () => {
         if (!subFolder) {
           subFolder = {
             subFolder: design.subFolder,
-            slug: design.subFolderSlug, // Assuming this is available in the design data
+            slug: design.subFolder.split(' ').join("-").toLowerCase(), // Assuming this is available in the design data
             designs: [],
           };
           folder.subFolders.push(subFolder);
