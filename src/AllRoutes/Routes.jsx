@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../AllRoutes/Layout";
+import SocialMediasForm from "../components/SocialMediasForm";
 import About from "../pages/About";
 import Affiliate from "../pages/Affiliate";
 import AllCategory from "../pages/AllCategory";
@@ -31,10 +32,11 @@ import Tips from "../pages/Tips";
 import UpdatePassword from "../pages/UpdatePassword";
 import UploadDesign from "../pages/UploadDesign";
 import Verify from "../pages/Verify";
+import ChatLayout from "./ChatLayout";
 import AdminRoute from "./private-route/AdminRoute";
 import PrivateRoute from "./private-route/PrivateRoute";
 import UnAuthenticatedRoute from "./private-route/UnAuthenticatedRoute";
-import SocialMediasForm from "../components/SocialMediasForm";
+import InboxPage from "../pages/InboxPage";
 
 export const router = createBrowserRouter([
   {
@@ -133,7 +135,7 @@ export const router = createBrowserRouter([
         path: "/social-media",
         element: (
           // <PrivateRoute>
-            <SocialMediasForm />
+          <SocialMediasForm />
           // </PrivateRoute>
         ),
       },
@@ -206,11 +208,21 @@ export const router = createBrowserRouter([
       {
         path: "/cart",
         element: <Cart />,
-      },
+      }
+    ],
+  },
+  {
+    path: "/inbox",
+    element: <ChatLayout />,
+    children: [
       {
-        path: "*",
-        element: <ErrorPage />,
+        path: "/inbox",
+        element: <InboxPage />,
       },
     ],
+  },
+  {
+    path: "*",
+    element: <ErrorPage />,
   },
 ]);

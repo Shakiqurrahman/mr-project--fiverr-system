@@ -330,10 +330,10 @@ function UploadDesign() {
     const imagesPromise = matchingImages?.map(async (file) => {
       if (file.file) {
         const formData = new FormData();
-        formData.append("image", file.file);
+        formData.append("fileName", file.file);
 
-        const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
-        const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+        // const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
+        const uploadUrl = `${configApi.api}upload-image`;
         try {
           // setUploading(true);
           const response = await axios.post(uploadUrl, formData);
