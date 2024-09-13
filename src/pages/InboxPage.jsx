@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import ChatBox from "../components/chat/ChatBox";
 
 const InboxPage = () => {
   const { user } = useSelector((state) => state.user);
@@ -23,7 +24,9 @@ const InboxPage = () => {
         className={`${isAdmin ? "" : "mx-auto max-w-[600px]"} flex h-full justify-center rounded-lg border shadow-md`}
       >
         {isAdmin && <div className="w-1/3">hello</div>}
-        <div className={`${isAdmin ? "w-2/3" : "w-full"}`}>hi</div>
+        <div className={`${isAdmin ? "w-2/3" : "w-full"}`}>
+          <ChatBox />
+        </div>
       </div>
     </section>
   );
