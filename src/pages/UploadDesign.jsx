@@ -5,9 +5,6 @@ import { FaSpinner } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Check from "../assets/svg/Check";
-import Datalist from "../components/Datalist";
-import { configApi } from "../libs/configApi";
 import {
   useFetchDesignsQuery,
   useFetchFoldersQuery,
@@ -16,6 +13,9 @@ import {
   useFetchSubFoldersQuery,
 } from "../Redux/api/uploadDesignApiSlice";
 import { fetchCategory } from "../Redux/features/category/categoryApi";
+import Check from "../assets/svg/Check";
+import Datalist from "../components/Datalist";
+import { configApi } from "../libs/configApi";
 
 function UploadDesign() {
   const navigate = useNavigate();
@@ -338,8 +338,8 @@ function UploadDesign() {
           // setUploading(true);
           const response = await axios.post(uploadUrl, formData);
           console.log(response);
-          const name = response.data.data.title;
-          const imageUrl = response.data.data.url;
+          const name = response.data.data[0].result.original_filename;
+          const imageUrl = response.data.data[0].result.url;
 
           return {
             url: imageUrl,
@@ -373,6 +373,7 @@ function UploadDesign() {
         industries,
         designs,
       };
+      console.log(data);
       try {
         const url = `${configApi.api}upload/create`;
 
