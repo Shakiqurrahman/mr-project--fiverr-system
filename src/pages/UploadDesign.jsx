@@ -396,7 +396,7 @@ function UploadDesign() {
         <h1 className="m-auto block w-56 rounded-full border border-primary px-4 py-2 text-center text-lg font-bold text-primary">
           Upload Design
         </h1>
-        <form action="" className="p-3" onSubmit={handleSubmit}>
+        <form className="p-3" onSubmit={handleSubmit}>
           <div className="flex flex-col">
             <label className="block px-2">Title</label>
             <input

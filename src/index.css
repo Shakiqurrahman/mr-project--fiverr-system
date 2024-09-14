@@ -22,6 +22,20 @@ body::-webkit-scrollbar-thumb {
   width: 0px;
 } 
 
+/* for chat scrolling */
+
+.chat-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.chat-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-primary/20;
+}
+
+.chat-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 body {
   font-family: "Montserrat", sans-serif;
   max-width: 100%;
