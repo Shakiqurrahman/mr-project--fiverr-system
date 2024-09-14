@@ -123,7 +123,7 @@ function Profile({ user = {}, slug }) {
                 </div>
               )}
               <span
-                className={`absolute bottom-1.5 right-4 size-4 rounded-full border border-white bg-primary ${!isOnline && "hidden"}`}
+                className={`absolute bottom-1.5 right-4 size-4 rounded-full border border-white  ${isOnline ? "bg-primary" : "bg-gray-400"}`}
               ></span>
             </div>
             <h2 className="mt-3 text-center text-lg font-semibold sm:text-xl">
