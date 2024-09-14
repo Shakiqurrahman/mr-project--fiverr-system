@@ -18,7 +18,6 @@ const AllConversation = () => {
   const handleSelectChange = (e) => {
     setSelectedOption(e.target.value);
   };
-  console.log(selectedOption);
 
   const [chatList, setChatList] = useState([
     {
@@ -26,7 +25,7 @@ const AllConversation = () => {
       name: "John Doe",
       lastMessage: "Hi there!",
       lastMessageTime: new Date(Date.now() - 48920000005), //1 year ago
-      unreadMessages: 2,
+      unreadMessages: 0,
       starred: false,
       isOnline: true,
       isRepeatedClient: true,
@@ -39,7 +38,7 @@ const AllConversation = () => {
       name: "Shakespeare",
       lastMessage: "Hi there!",
       lastMessageTime: new Date(Date.now() - 3600000), // 1 hour ago
-      unreadMessages: 2,
+      unreadMessages: 0,
       starred: true,
       archived: false,
       customOffer: true,
@@ -49,7 +48,7 @@ const AllConversation = () => {
       name: "Mark Zuckerburg",
       lastMessage: "Hi there!",
       lastMessageTime: new Date(Date.now() - 60000), // 1 minute ago
-      unreadMessages: 2,
+      unreadMessages: 0,
       starred: true,
       archived: false,
       customOffer: true,
@@ -59,7 +58,7 @@ const AllConversation = () => {
       name: "Donald Trump",
       lastMessage: "Hi there!",
       lastMessageTime: new Date(Date.now()), // just now
-      unreadMessages: 2,
+      unreadMessages: 0,
       starred: true,
       archived: false,
       isOnline: true,
@@ -70,18 +69,18 @@ const AllConversation = () => {
       name: "Puthin",
       lastMessage: "Hi there!",
       lastMessageTime: new Date(Date.now() - 1209600000), // 14 days ago
-      unreadMessages: 2,
-      starred: true,
+      unreadMessages: 0,
+      starred: false,
       archived: false,
       customOffer: true,
     },
     {
       id: 6,
       name: "Mudi",
-      lastMessage: "Hi there!",
+      lastMessage: "Hi Hashuuu!",
       lastMessageTime: new Date(Date.now() - 1209600000), // 14 days ago
       unreadMessages: 2,
-      starred: true,
+      starred: false,
       isRepeatedClient: true,
       archived: false,
       customOffer: true,
@@ -89,67 +88,88 @@ const AllConversation = () => {
     {
       id: 7,
       name: "Sheikh Hasina",
-      lastMessage: "Hi there!",
+      lastMessage: "Hello Modhuu!",
       lastMessageTime: new Date(Date.now() - 1209600000), // 14 days ago
-      unreadMessages: 2,
-      starred: true,
+      unreadMessages: 3,
+      starred: false,
       isOnline: true,
       archived: false,
-      customOffer: true,
+      customOffer: false,
     },
     {
       id: 8,
       name: "John Doe",
       lastMessage: "Hi there!",
       lastMessageTime: new Date(Date.now() - 1209600000), // 14 days ago
-      unreadMessages: 2,
-      starred: true,
+      unreadMessages: 0,
+      starred: false,
       isOnline: true,
       archived: false,
       isNewClient: true,
-      customOffer: true,
+      customOffer: false,
     },
     {
       id: 9,
       name: "John Doe",
       lastMessage: "Hi there!",
       lastMessageTime: new Date(Date.now() - 1209600000), // 14 days ago
-      unreadMessages: 2,
-      starred: true,
+      unreadMessages: 0,
+      starred: false,
       archived: false,
-      customOffer: true,
+      customOffer: false,
     },
     {
       id: 10,
       name: "John Doe",
       lastMessage: "Hi there!",
       lastMessageTime: new Date(Date.now() - 1209600000), // 14 days ago
-      unreadMessages: 2,
-      starred: true,
+      unreadMessages: 0,
+      starred: false,
       archived: false,
-      customOffer: true,
+      customOffer: false,
     },
     {
       id: 11,
       name: "John Doe",
       lastMessage: "Hi there!",
       lastMessageTime: new Date(Date.now() - 1209600000), // 14 days ago
-      unreadMessages: 2,
-      starred: true,
+      unreadMessages: 0,
+      starred: false,
       archived: false,
-      customOffer: true,
+      customOffer: false,
     },
     {
       id: 12,
       name: "John Doe",
       lastMessage: "Hi there!",
       lastMessageTime: new Date(Date.now() - 1209600000), // 14 days ago
-      unreadMessages: 2,
-      starred: true,
+      unreadMessages: 0,
+      starred: false,
       archived: false,
-      customOffer: true,
+      customOffer: false,
     },
   ]);
+
+  // Filter chat list based on selected option
+  const getFilteredChatList = () => {
+    switch (selectedOption) {
+      case "unread":
+        return chatList.filter((chat) => chat.unreadMessages > 0);
+      case "starred":
+        return chatList.filter((chat) => chat.starred);
+      case "blockList":
+        return chatList.filter((chat) => chat.blockList);
+      case "archived":
+        return chatList.filter((chat) => chat.archived);
+      case "customOffers":
+        return chatList.filter((chat) => chat.customOffer);
+      case "AllConversations":
+      default:
+        return chatList; // No filtering, show all conversations
+    }
+  };
+
+  const filteredChatList = getFilteredChatList();
 
   return (
     <div className="flex h-full flex-col">
@@ -190,38 +210,57 @@ const AllConversation = () => {
           <option value="customOffers">Custom Offers</option>
         </select>
       </div>
+
       <div className="chat-scrollbar flex-1 overflow-y-auto">
-        {chatList.map((chat) => (
-          <div
-            key={chat.id}
-            className="flex cursor-pointer items-center justify-between border-b p-4 hover:bg-lightcream/50"
-          >
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <img className="size-8 object-cover" src={logo} alt="logo" />
-                {chat?.isRepeatedClient && (
-                  <img
-                    className={`absolute -top-1 left-1 size-2.5`}
-                    src={repeatIcon}
-                    alt="repeat icon"
-                  />
-                )}
-                <span
-                  className={`absolute bottom-0 right-0 size-2 rounded-full border border-white ${chat?.isOnline ? "bg-primary" : "bg-gray-400"}`}
-                ></span>
+        {filteredChatList.length > 0 ? (
+          filteredChatList.map((chat) => (
+            <div
+              key={chat.id}
+              className="flex cursor-pointer items-center justify-between border-b p-4 hover:bg-lightcream/50"
+            >
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <img className="size-8 object-cover" src={logo} alt="logo" />
+                  {chat?.isRepeatedClient && (
+                    <img
+                      className={`absolute -top-1 left-1 size-2.5`}
+                      src={repeatIcon}
+                      alt="repeat icon"
+                    />
+                  )}
+                  <span
+                    className={`absolute bottom-0 right-0 size-2 rounded-full border border-white ${chat?.isOnline ? "bg-primary" : "bg-gray-400"}`}
+                  ></span>
+                </div>
+                <div>
+                  <p className="flex items-center gap-2 font-semibold">
+                    {chat.name}{" "}
+                    <span className="text-secondary">
+                      {chat?.isNewClient && <LuClock3 />}
+                    </span>
+                  </p>
+                  <p
+                    className={`${chat.unreadMessages > 0 && "font-bold"} text-sm`}
+                  >
+                    {chat.lastMessage}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="flex items-center gap-2 font-semibold">
-                  {chat.name} <span className="text-secondary">{chat?.isNewClient && <LuClock3 />}</span>
+              <div className="flex flex-col gap-1 items-end">
+                <p className="text-[12px] text-gray-500">
+                  {formatTimeAgo(chat.lastMessageTime)}
                 </p>
-                <p className="text-sm">{chat.lastMessage}</p>
+                {chat.unreadMessages > 0 && (
+                  <span className="size-6 rounded-full bg-primary text-center text-[10px] leading-[24px] text-white">
+                    {chat.unreadMessages}
+                  </span>
+                )}
               </div>
             </div>
-            <p className="text-sm text-gray-500">
-              {formatTimeAgo(chat.lastMessageTime)}
-            </p>
-          </div>
-        ))}
+          ))
+        ) : (
+          <div className="p-4 text-center text-gray-500">No chats found</div>
+        )}
       </div>
     </div>
   );
