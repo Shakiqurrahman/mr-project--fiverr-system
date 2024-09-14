@@ -8,10 +8,12 @@ const InboxPage = () => {
   const sectionRef = useRef(null);
   const [offSetTop, setOffSetTop] = useState(0);
   useEffect(() => {
-    setOffSetTop(sectionRef.current.offsetTop);
-    window.addEventListener("resize", () => {
+    if (sectionRef.current) {
       setOffSetTop(sectionRef.current.offsetTop);
-    });
+      window.addEventListener("resize", () => {
+        setOffSetTop(sectionRef.current.offsetTop);
+      });
+    }
   }, []);
 
   return (
@@ -23,7 +25,7 @@ const InboxPage = () => {
       <div
         className={`${isAdmin ? "" : "mx-auto max-w-[600px]"} flex h-full justify-center rounded-lg border shadow-md`}
       >
-        {isAdmin && <div className="w-1/3">hello</div>}
+        {isAdmin && <div className="w-1/3 border-r">hello</div>}
         <div className={`${isAdmin ? "w-2/3" : "w-full"}`}>
           <ChatBox />
         </div>
