@@ -25,7 +25,7 @@ const InboxPage = () => {
         className={`${isAdmin ? "" : "mx-auto max-w-[600px]"} flex h-full justify-center rounded-lg border shadow-md`}
       >
         {isAdmin && (
-          <div className="w-1/3 rounded-lg overflow-hidden">
+          <div className="w-1/3 rounded-tl-lg overflow-hidden">
             <AllConversation />
           </div>
         )}
