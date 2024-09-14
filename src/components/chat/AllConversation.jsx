@@ -223,7 +223,7 @@ const AllConversation = () => {
                   <img className="size-8 object-cover" src={logo} alt="logo" />
                   {chat?.isRepeatedClient && (
                     <img
-                      className={`absolute -top-1 left-1 size-2.5`}
+                      className={`absolute -top-1 left-1 size-3`}
                       src={repeatIcon}
                       alt="repeat icon"
                     />
