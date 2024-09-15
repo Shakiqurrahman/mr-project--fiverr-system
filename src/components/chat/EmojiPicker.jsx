@@ -1,6 +1,7 @@
 import data from "@emoji-mart/data"; // Emoji-mart data
 import Picker from "@emoji-mart/react"; // Note the updated import for v4+
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
+import useOutsideClick from "../../hooks/useOutSideClick";
 
 const EmojiPicker = ({ onEmojiSelect }) => {
   const [showPicker, setShowPicker] = useState(false);
@@ -17,22 +18,7 @@ const EmojiPicker = ({ onEmojiSelect }) => {
     setShowPicker(false);
   };
 
-  // by clicking outside picker should be disabled
-  const handleClickOutside = (event) => {
-    if (pickerRef.current && !pickerRef.current.contains(event.target)) {
-      setShowPicker(false); // Close the picker if clicked outside
-    }
-  };
-
-  useEffect(() => {
-    // Add event listener to document
-    document.addEventListener("mousedown", handleClickOutside);
-
-    // Clean up event listener on component unmount
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  useOutsideClick(pickerRef, togglePicker);
 
   return (
     <div className="relative h-full">
@@ -45,7 +31,11 @@ const EmojiPicker = ({ onEmojiSelect }) => {
           ref={pickerRef}
           className="absolute bottom-full z-10 mt-2 rounded-lg border border-gray-300 bg-white p-2 shadow-lg"
         >
-          <Picker data={data} onEmojiSelect={handleEmojiSelect}  previewPosition="none"/>
+          <Picker
+            data={data}
+            onEmojiSelect={handleEmojiSelect}
+            previewPosition="none"
+          />
         </div>
       )}
     </div>

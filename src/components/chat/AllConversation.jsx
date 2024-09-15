@@ -172,7 +172,7 @@ const AllConversation = () => {
     }
 
     // Apply search filter if search is active
-    if (searchQuery.trim() !== "") {
+    if (searchQuery.trim() !== "") {      
       filteredChats = filteredChats.filter((chat) =>
         chat.name.toLowerCase().includes(searchQuery.toLowerCase())
       );

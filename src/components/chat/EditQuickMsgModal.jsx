@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
+import useOutsideClick from "../../hooks/useOutSideClick";
 
 const EditQuickMsgModal = ({ handleClose, onMsgSubmit, value }) => {
+  const editQuickMsgRef = useRef(null);
   const [form, setForm] = useState({
     id: value.id,
     title: value.title,
@@ -17,6 +19,8 @@ const EditQuickMsgModal = ({ handleClose, onMsgSubmit, value }) => {
       handleClose(null);
     }
   };
+
+  useOutsideClick(editQuickMsgRef, () => handleClose(null));
   return (
     <div className="fixed left-0 top-0 !z-[9999999] !flex h-screen w-full items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
       <button
@@ -28,6 +32,7 @@ const EditQuickMsgModal = ({ handleClose, onMsgSubmit, value }) => {
       <form
         className="w-full max-w-[600px] rounded-md bg-white px-4 py-5"
         onSubmit={handleSubmit}
+        ref={editQuickMsgRef}
       >
         <h1 className="text-center text-lg font-semibold">Add Quick Message</h1>
         <label className="block w-full font-medium">Title</label>

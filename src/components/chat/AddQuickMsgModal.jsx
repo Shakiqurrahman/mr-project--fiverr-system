@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
+import useOutsideClick from "../../hooks/useOutSideClick";
 
 const AddQuickMsgModal = ({ handleClose, onMsgSubmit }) => {
   const formRef = useRef(null);
@@ -17,6 +18,8 @@ const AddQuickMsgModal = ({ handleClose, onMsgSubmit }) => {
       handleClose(false);
     }
   };
+
+  useOutsideClick(formRef, () => handleClose(false));
   return (
     <div className="fixed left-0 top-0 z-[9999999] flex h-screen w-full items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
       <button

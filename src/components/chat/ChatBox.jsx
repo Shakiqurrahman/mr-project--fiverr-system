@@ -11,11 +11,12 @@ import Divider from "../Divider";
 import AddQuickMsgModal from "./AddQuickMsgModal";
 import EditQuickMsgModal from "./EditQuickMsgModal";
 import EmojiPicker from "./EmojiPicker";
+import useOutsideClick from "../../hooks/useOutSideClick";
 
 const ChatBox = () => {
   const { user } = useSelector((state) => state.user);
   const isAdmin = user?.role === "ADMIN";
-  // const menuRef = useRef(null);
+  const menuRef = useRef(null);
   const [selectedImages, setSelectedImages] = useState([]);
   const [quickResponse, setQuickResponse] = useState(false);
   const [qucikMsgBtnController, setQucikMsgBtnController] = useState(null);
@@ -82,6 +83,8 @@ const ChatBox = () => {
   const handleTextChange = (e) => {
     setTextValue(e.target.value);
   };
+
+  useOutsideClick(menuRef, () => setQucikMsgBtnController(null));
 
   return (
     <div className="h-full">
@@ -165,8 +168,7 @@ const ChatBox = () => {
                   {qucikMsgBtnController === msg.id && (
                     <div
                       className="absolute top-full z-10 rounded-lg border border-solid bg-white py-2 text-center *:block *:p-[5px_15px]"
-                      // ref={menuRef}
-                      // onBlur={() => setQucikMsgBtnController(null)}
+                      ref={menuRef}
                     >
                       <button
                         type="button"

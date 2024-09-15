@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Reorder } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaCircleCheck } from "react-icons/fa6";
 import { ImSpinner9 } from "react-icons/im";
@@ -9,12 +10,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import Check from "../assets/svg/Check";
+import useOutsideClick from "../hooks/useOutSideClick";
 import { configApi } from "../libs/configApi";
 import {
   deleteCategory,
   fetchCategory,
 } from "../Redux/features/category/categoryApi";
-import toast from "react-hot-toast";
 
 function PriceList() {
   const dispatch = useDispatch();
@@ -58,16 +59,7 @@ function PriceList() {
     setController(controller === id ? null : id);
   };
 
-  const handleClickOutside = (event) => {
-    if (menuRef.current && !menuRef.current.contains(event.target)) {
-      setController(null);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  useOutsideClick(menuRef, () => setController(false));
 
   const handleDelete = (id) => {
     Swal.fire({
