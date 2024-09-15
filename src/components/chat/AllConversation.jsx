@@ -9,11 +9,7 @@ import { formatTimeAgo } from "../../libs/timeFormatter";
 const AllConversation = () => {
   const [selectedOption, setSelectedOption] = useState("AllConversations");
   const [openSearch, setOpenSearch] = useState(false);
-
-  const handleCancelSearch = () => {
-    setOpenSearch(false);
-    // TODO : handle the search text clearing
-  };
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleSelectChange = (e) => {
     setSelectedOption(e.target.value);
@@ -152,23 +148,43 @@ const AllConversation = () => {
 
   // Filter chat list based on selected option
   const getFilteredChatList = () => {
+    let filteredChats = chatList;
+
     switch (selectedOption) {
       case "unread":
-        return chatList.filter((chat) => chat.unreadMessages > 0);
+        filteredChats = filteredChats.filter((chat) => chat.unreadMessages > 0);
+        break;
       case "starred":
-        return chatList.filter((chat) => chat.starred);
+        filteredChats = filteredChats.filter((chat) => chat.starred);
+        break;
       case "blockList":
-        return chatList.filter((chat) => chat.blockList);
+        filteredChats = filteredChats.filter((chat) => chat.archived);
+        break;
       case "archived":
-        return chatList.filter((chat) => chat.archived);
+        filteredChats = filteredChats.filter((chat) => chat.archived);
+        break;
       case "customOffers":
-        return chatList.filter((chat) => chat.customOffer);
+        filteredChats = filteredChats.filter((chat) => chat.customOffer);
+        break;
       case "AllConversations":
       default:
-        return chatList; // No filtering, show all conversations
+        break;
     }
+
+    // Apply search filter if search is active
+    if (searchQuery.trim() !== "") {
+      filteredChats = filteredChats.filter((chat) =>
+        chat.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    return filteredChats;
   };
 
+  const handleCancelSearch = () => {
+    setOpenSearch(false);
+    setSearchQuery("");
+  };
   const filteredChatList = getFilteredChatList();
 
   return (
@@ -186,6 +202,8 @@ const AllConversation = () => {
               type="text"
               className="w-full p-2 text-sm font-medium outline-none"
               placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
             <button
               className="border-l bg-white px-1"
