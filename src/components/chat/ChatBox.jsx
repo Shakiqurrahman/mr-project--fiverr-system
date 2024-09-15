@@ -7,16 +7,17 @@ import {
   IoMdClose,
 } from "react-icons/io";
 import { useSelector } from "react-redux";
+import useOutsideClick from "../../hooks/useOutSideClick";
 import Divider from "../Divider";
 import AddQuickMsgModal from "./AddQuickMsgModal";
 import EditQuickMsgModal from "./EditQuickMsgModal";
 import EmojiPicker from "./EmojiPicker";
-import useOutsideClick from "../../hooks/useOutSideClick";
 
 const ChatBox = () => {
   const { user } = useSelector((state) => state.user);
   const isAdmin = user?.role === "ADMIN";
   const menuRef = useRef(null);
+  const fileInputRef = useRef(null);
   const [selectedImages, setSelectedImages] = useState([]);
   const [quickResponse, setQuickResponse] = useState(false);
   const [qucikMsgBtnController, setQucikMsgBtnController] = useState(null);
@@ -30,7 +31,6 @@ const ChatBox = () => {
       text: "Thank you very much for choosing my service!",
     },
   ]);
-  console.log(quickMsgs);
   // Selected Images Handler
   const handleChangeSelectedImage = (e) => {
     const imagesArr = Array.from(e.target.files);
@@ -82,6 +82,15 @@ const ChatBox = () => {
 
   const handleTextChange = (e) => {
     setTextValue(e.target.value);
+  };
+  const handleResetImages = () => {
+    // Clear the state
+    setSelectedImages([]);
+
+    // Reset the file input value
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   useOutsideClick(menuRef, () => setQucikMsgBtnController(null));
@@ -230,6 +239,7 @@ const ChatBox = () => {
                   id="select-images"
                   hidden
                   onChange={handleChangeSelectedImage}
+                  ref={fileInputRef}
                 />
                 <label htmlFor="select-images" className="cursor-pointer">
                   <IoIosAttach className="text-2xl" />
@@ -246,7 +256,7 @@ const ChatBox = () => {
               {selectedImages.length > 0 && (
                 <div className="flex items-center gap-2 text-sm">
                   {selectedImages.length} file selected{" "}
-                  <button onClick={() => setSelectedImages([])}>
+                  <button onClick={handleResetImages}>
                     <IoMdClose className="text-lg" />
                   </button>
                 </div>
