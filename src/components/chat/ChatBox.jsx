@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { FaThumbsUp } from "react-icons/fa6";
 import {
   IoIosArrowDown,
   IoIosArrowUp,
@@ -11,6 +10,7 @@ import { useSelector } from "react-redux";
 import Divider from "../Divider";
 import AddQuickMsgModal from "./AddQuickMsgModal";
 import EditQuickMsgModal from "./EditQuickMsgModal";
+import EmojiPicker from "./EmojiPicker";
 
 const ChatBox = () => {
   const { user } = useSelector((state) => state.user);
@@ -21,6 +21,7 @@ const ChatBox = () => {
   const [qucikMsgBtnController, setQucikMsgBtnController] = useState(null);
   const [openAddMsgModal, setOpenAddMsgModal] = useState(false);
   const [openEditMsgModal, setOpenEditMsgModal] = useState(null);
+
   const [quickMsgs, setQuickMsgs] = useState([
     {
       id: 1,
@@ -28,6 +29,7 @@ const ChatBox = () => {
       text: "Thank you very much for choosing my service!",
     },
   ]);
+  console.log(quickMsgs);
   // Selected Images Handler
   const handleChangeSelectedImage = (e) => {
     const imagesArr = Array.from(e.target.files);
@@ -39,7 +41,10 @@ const ChatBox = () => {
     setQucikMsgBtnController(qucikMsgBtnController === id ? null : id);
   };
   const handleAddQuickMsg = (msg) => {
-    const maxId = Math.max(...quickMsgs.map((item) => item.id)) + 1;
+    const maxId =
+      quickMsgs.length > 0
+        ? Math.max(...quickMsgs.map((item) => item.id)) + 1
+        : 1;
     const newMsg = { id: maxId, ...msg };
     setQuickMsgs((prevMsg) => [...prevMsg, newMsg]);
   };
@@ -49,6 +54,35 @@ const ChatBox = () => {
   const handleDeleteQuickMsg = (id) => {
     setQuickMsgs((prevMsg) => prevMsg.filter((v) => v.id !== id));
   };
+
+  // input handling
+  const [textValue, setTextValue] = useState("");
+  const textareaRef = useRef(null);
+
+  const handleEmojiSelect = (emoji) => {
+    const textarea = textareaRef.current;
+    const startPos = textarea.selectionStart;
+    const endPos = textarea.selectionEnd;
+
+    // Insert the emoji at the cursor position
+    const newText =
+      textValue.substring(0, startPos) +
+      emoji +
+      textValue.substring(endPos, textValue.length);
+
+    setTextValue(newText);
+
+    // Move the cursor position after the emoji
+    setTimeout(() => {
+      textarea.selectionStart = textarea.selectionEnd = startPos + emoji.length;
+      textarea.focus();
+    }, 0);
+  };
+
+  const handleTextChange = (e) => {
+    setTextValue(e.target.value);
+  };
+
   return (
     <div className="h-full">
       {/* Header Part */}
@@ -176,12 +210,16 @@ const ChatBox = () => {
             name=""
             className="block h-[90px] w-full resize-none p-3 outline-none"
             placeholder="Type a message..."
+            ref={textareaRef}
+            value={textValue}
+            onChange={handleTextChange}
           ></textarea>
           <div className="flex h-[50px] items-center justify-between border-t border-slate-300">
             <div className="flex items-center gap-3 pl-3">
-              <button type="button">
+              {/* <button type="button">
                 <FaThumbsUp className="text-2xl text-yellow-400" />
-              </button>
+              </button> */}
+              <EmojiPicker onEmojiSelect={handleEmojiSelect} />
               <Divider className={"h-[30px] w-px !bg-gray-400"} />
               <div>
                 <input
