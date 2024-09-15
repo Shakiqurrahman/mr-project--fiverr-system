@@ -9,6 +9,8 @@ import {
 } from "react-icons/io";
 import { useSelector } from "react-redux";
 import Divider from "../Divider";
+import AddQuickMsgModal from "./AddQuickMsgModal";
+import EditQuickMsgModal from "./EditQuickMsgModal";
 
 const ChatBox = () => {
   const { user } = useSelector((state) => state.user);
@@ -17,6 +19,8 @@ const ChatBox = () => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [quickResponse, setQuickResponse] = useState(false);
   const [qucikMsgBtnController, setQucikMsgBtnController] = useState(null);
+  const [openAddMsgModal, setOpenAddMsgModal] = useState(false);
+  const [openEditMsgModal, setOpenEditMsgModal] = useState(null);
   const [quickMsgs, setQuickMsgs] = useState([
     {
       id: 1,
@@ -33,6 +37,17 @@ const ChatBox = () => {
   // Quick Messages Handlers
   const handleQuickMsgs = (id) => {
     setQucikMsgBtnController(qucikMsgBtnController === id ? null : id);
+  };
+  const handleAddQuickMsg = (msg) => {
+    const maxId = Math.max(...quickMsgs.map((item) => item.id)) + 1;
+    const newMsg = { id: maxId, ...msg };
+    setQuickMsgs((prevMsg) => [...prevMsg, newMsg]);
+  };
+  const handleUpdateQuickMsg = (msg) => {
+    setQuickMsgs((prevMsg) => prevMsg.map((v) => (v.id === msg.id ? msg : v)));
+  };
+  const handleDeleteQuickMsg = (id) => {
+    setQuickMsgs((prevMsg) => prevMsg.filter((v) => v.id !== id));
   };
   return (
     <div className="h-full">
@@ -106,10 +121,10 @@ const ChatBox = () => {
                   <button
                     type="button"
                     onClick={() => handleQuickMsgs(msg.id)}
-                    onBlur={(e) => {
-                      e.preventDefault();
-                      setQucikMsgBtnController(null);
-                    }}
+                    // onBlur={(e) => {
+                    //   e.preventDefault();
+                    //   setQucikMsgBtnController(null);
+                    // }}
                   >
                     <IoIosArrowDown className="text-base text-gray-400" />
                   </button>
@@ -120,17 +135,15 @@ const ChatBox = () => {
                       // onBlur={() => setQucikMsgBtnController(null)}
                     >
                       <button
-                        to="/edit-category"
                         type="button"
                         className="w-full text-xs hover:bg-gray-200"
-                        onClick={() => console.log("edit button")}
+                        onClick={() => setOpenEditMsgModal(msg)}
                       >
                         Edit
                       </button>
                       <button
                         type="button"
-                        // onClick={() => handleDelete(category.id)}
-                        onClick={() => console.log("delete button")}
+                        onClick={() => handleDeleteQuickMsg(msg.id)}
                         className="w-full text-xs hover:bg-gray-200"
                       >
                         Delete
@@ -140,8 +153,23 @@ const ChatBox = () => {
                 </div>
               ))}
               <div className="flex items-center gap-2 border border-gray-400 px-2 py-1 text-xs hover:bg-primary/10">
-                <button type="button">+ Add New</button>
+                <button type="button" onClick={() => setOpenAddMsgModal(true)}>
+                  + Add New
+                </button>
               </div>
+              {openEditMsgModal && (
+                <EditQuickMsgModal
+                  handleClose={setOpenEditMsgModal}
+                  onMsgSubmit={handleUpdateQuickMsg}
+                  value={openEditMsgModal}
+                />
+              )}
+              {openAddMsgModal && (
+                <AddQuickMsgModal
+                  handleClose={setOpenAddMsgModal}
+                  onMsgSubmit={handleAddQuickMsg}
+                />
+              )}
             </div>
           </div>
           <textarea
