@@ -12,14 +12,15 @@ import Divider from "../Divider";
 import AddQuickMsgModal from "./AddQuickMsgModal";
 import EditQuickMsgModal from "./EditQuickMsgModal";
 import EmojiPicker from "./EmojiPicker";
+import { useLocalStorageObject } from "../../hooks/useLocalStorageObject";
 
 const ChatBox = () => {
+  const [{quickResponse}, updateItem] = useLocalStorageObject('utils', { quickResponse: false});
   const { user } = useSelector((state) => state.user);
   const isAdmin = user?.role === "ADMIN";
   const menuRef = useRef(null);
   const fileInputRef = useRef(null);
   const [selectedImages, setSelectedImages] = useState([]);
-  const [quickResponse, setQuickResponse] = useState(false);
   const [qucikMsgBtnController, setQucikMsgBtnController] = useState(null);
   const [openAddMsgModal, setOpenAddMsgModal] = useState(false);
   const [openEditMsgModal, setOpenEditMsgModal] = useState(null);
@@ -93,7 +94,7 @@ const ChatBox = () => {
     }
   };
 
-  useOutsideClick(menuRef, () => setQucikMsgBtnController(null));
+  useOutsideClick(menuRef, () => setQucikMsgBtnController(null));  
 
   return (
     <div className="h-full">
@@ -146,7 +147,7 @@ const ChatBox = () => {
               <button
                 type="button"
                 className="bg-transparent"
-                onClick={() => setQuickResponse(!quickResponse)}
+                onClick={() => updateItem("quickResponse",!quickResponse)}
               >
                 {quickResponse ? (
                   <IoIosArrowDown className="text-xl text-primary" />
