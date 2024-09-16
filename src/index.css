@@ -4,23 +4,22 @@
 @tailwind utilities;
 
 /* Custom Scroll bar */
-body::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 10px;
 }
 
-body::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: #e2e2e2;
 }
-body::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   @apply bg-primary;
   border-radius: 4px;
 }
 
-
 /* for cart drawer */
 .drawer-scroller::-webkit-scrollbar {
   width: 0px;
-} 
+}
 
 /* for chat scrolling */
 
@@ -145,7 +144,7 @@ textarea:placeholder-shown {
 }
 
 .profile-info .MuiPaper-root.MuiPaper-elevation {
-  @apply !w-full !max-w-[500px] !m-4
+  @apply !m-4 !w-full !max-w-[500px];
 }
 
 /* Form Error Handling Design */

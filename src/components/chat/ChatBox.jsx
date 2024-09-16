@@ -122,6 +122,26 @@ const ChatBox = () => {
       textarea.focus();
     }, 0);
   };
+  const handleChangeQuickMsg = (e) => {
+    const textarea = textareaRef.current;
+    const startPos = textarea.selectionStart;
+    const endPos = textarea.selectionEnd;
+
+    // Insert the emoji at the cursor position
+    const newText =
+      textValue.substring(0, startPos) +
+      e.target.value +
+      textValue.substring(endPos, textValue.length);
+
+    setTextValue(newText);
+
+    // Move the cursor position after the emoji
+    setTimeout(() => {
+      textarea.selectionStart = textarea.selectionEnd =
+        startPos + e.target.value.length;
+      textarea.focus();
+    }, 0);
+  };
 
   const handleTextChange = (e) => {
     setTextValue(e.target.value);
@@ -236,9 +256,17 @@ const ChatBox = () => {
                   </button>
                 </div>
               </div>
+              {/* Here is the message text to preview */}
               {msg.messageText && (
                 <div className="mt-1 w-11/12">
                   <p>{msg.messageText}</p>
+                </div>
+              )}
+              {/* Here is the offer template to preview */}
+              {msg.customOffer && (
+                <div>
+                  <p>Custom Offer</p>
+                  <p>{msg.customOffer.title}</p>
                 </div>
               )}
               {/* Here is Image Upload Preview part */}
@@ -258,7 +286,7 @@ const ChatBox = () => {
                           className="h-[180px] w-full object-cover"
                         />
                         <Link className="mt-2 flex items-center justify-center text-xs">
-                          <BiDownload className="text-lg text-primary" />
+                          <BiDownload className="shrink-0 text-lg text-primary" />
                           <p
                             className="mx-2 line-clamp-1 font-medium"
                             title={att.name}
@@ -335,7 +363,13 @@ const ChatBox = () => {
                   key={i}
                   className="relative flex items-center gap-2 border border-gray-400 px-2 py-1 text-xs hover:bg-primary/10"
                 >
-                  <button type="button">{msg.title}</button>
+                  <button
+                    type="button"
+                    value={msg.text}
+                    onClick={handleChangeQuickMsg}
+                  >
+                    {msg.title}
+                  </button>
                   <button type="button" onClick={() => handleQuickMsgs(msg.id)}>
                     <IoIosArrowDown className="text-base text-gray-400" />
                   </button>
@@ -442,7 +476,8 @@ const ChatBox = () => {
       {openOfferModal && (
         <CreateOfferModal
           handleClose={setOpenOfferModal}
-          onOfferSubmit={handleAddQuickMsg}
+          onOfferSubmit={setMessages}
+          values={messages}
         />
       )}
     </div>
