@@ -9,12 +9,29 @@ const InboxPage = () => {
   const sectionRef = useRef(null);
   const [offSetTop, setOffSetTop] = useState(0);
   useEffect(() => {
-    if (sectionRef.current) {
-      setOffSetTop(sectionRef.current.offsetTop);
-      window.addEventListener("resize", () => {
-        setOffSetTop(sectionRef.current.offsetTop);
-      });
-    }
+    // Function to update offsetTop
+    const updateOffsetTop = () => {
+      if (sectionRef.current) {
+        try {
+          setOffSetTop(sectionRef.current.offsetTop);
+        } catch (error) {
+          console.error("Error accessing offsetTop:", error);
+        }
+      } else {
+        console.warn("sectionRef.current is null in updateOffsetTop");
+      }
+    };
+
+    // Update offsetTop when component mounts
+    updateOffsetTop();
+
+    // Add resize event listener
+    window.addEventListener("resize", updateOffsetTop);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", updateOffsetTop);
+    };
   }, []);
 
   return (
@@ -27,7 +44,7 @@ const InboxPage = () => {
         className={`${isAdmin ? "" : "mx-auto max-w-[600px]"} flex h-full justify-center rounded-lg border shadow-md`}
       >
         {isAdmin && (
-          <div className="w-1/3 rounded-tl-lg overflow-hidden border-r">
+          <div className="w-1/3 overflow-hidden rounded-tl-lg border-r">
             <AllConversation />
           </div>
         )}
