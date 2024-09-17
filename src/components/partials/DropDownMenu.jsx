@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   useFetchAllDesignKeywordsQuery,
   useFetchAllIndustryKeywordsQuery,
-} from "../Redux/api/uploadDesignApiSlice";
+} from "../../Redux/api/uploadDesignApiSlice";
 
 const DropDownMenu = ({ className, isDesign, isIndustry }) => {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const DropDownMenu = ({ className, isDesign, isIndustry }) => {
   } = useFetchAllIndustryKeywordsQuery();
   return (
     <div
-      className={`${className} absolute left-0 top-[56px] w-full border-t bg-primary py-6`}
+      className={`${className} absolute left-0 top-full w-full border-t bg-primary py-6`}
     >
       <div className="flex flex-wrap justify-center gap-4">
         {isDesign &&
