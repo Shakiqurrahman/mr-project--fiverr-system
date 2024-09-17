@@ -52,8 +52,9 @@ const CreateOfferModal = ({ handleClose, onOfferSubmit, values }) => {
   };
 
   const handleSubmit = (e) => {
+    const { title, thumbnail, price, deliveryCount, desc } = form;
     e.preventDefault();
-    if (values) {
+    if (values && title && thumbnail && price && deliveryCount && desc) {
       const date = new Date();
       const msgDate = date.toLocaleDateString([], {
         year: "numeric",
@@ -80,6 +81,7 @@ const CreateOfferModal = ({ handleClose, onOfferSubmit, values }) => {
         messageText: "",
         attachment: null,
         customOffer: formData,
+        contactForm: null,
       };
       onOfferSubmit((prev) => [...prev, offerMessage]);
       setForm({

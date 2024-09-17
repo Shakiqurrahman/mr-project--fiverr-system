@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { BiDownload } from "react-icons/bi";
 import { BsFillReplyFill, BsThreeDotsVertical } from "react-icons/bs";
-import { FaTrashAlt } from "react-icons/fa";
+import { FaCheckCircle, FaTrashAlt } from "react-icons/fa";
 import {
   IoIosArrowDown,
   IoIosArrowUp,
@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import logo from "../../assets/images/default_user.png";
 import DownArrow from "../../assets/images/icons/Down Arrow.svg";
 import UpArrow from "../../assets/images/icons/Upper Arrow.svg";
+import thumbnailDemo from "../../assets/images/project-thumbnail.jpg";
 import { useLocalStorageObject } from "../../hooks/useLocalStorageObject";
 import useOutsideClick from "../../hooks/useOutSideClick";
 import formatFileSize from "../../libs/formatFileSize";
@@ -56,10 +57,39 @@ const ChatBox = () => {
         "hello, looking for a flyer for my bathroom and kitchen company. I like the black and gold one you have listed",
       attachment: [],
       customOffer: null,
+      contactForm: null,
     },
   ]);
+
+  const [visibility, setVisibility] = useState({});
+
   useEffect(() => {
+    // Inital Scroll to last message
     endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
+
+    const checkVisibility = () => {
+      const newVisibility = {};
+      const currentTime = new Date();
+
+      messages.forEach((message) => {
+        const messageDate = new Date(`${message.msgDate} ${message.msgTime}`);
+        const fiveMinutesLater = new Date(
+          messageDate.getTime() + 5 * 60 * 1000,
+        );
+        newVisibility[message.messageId] = currentTime < fiveMinutesLater;
+      });
+
+      setVisibility(newVisibility);
+    };
+
+    // Initial visibility check
+    checkVisibility();
+
+    // Set an interval to check every minute
+    const intervalId = setInterval(checkVisibility, 60 * 1000);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
   }, [messages]);
 
   // Selected Images Handler
@@ -215,14 +245,16 @@ const ChatBox = () => {
             <p>Local time: 1:10 PM, May 29, 2023</p>
           </div>
         </div>
-        <div className="flex items-center justify-end gap-3">
-          <div className="flex h-[30px] w-[30px] items-center justify-center rounded-full border border-slate-300 text-xs font-semibold">
-            3
+        {isAdmin && (
+          <div className="flex items-center justify-end gap-3">
+            <div className="flex h-[30px] w-[30px] items-center justify-center rounded-full border border-slate-300 text-xs font-semibold">
+              3
+            </div>
+            <button type="button">
+              <BsThreeDotsVertical className="text-2xl" />
+            </button>
           </div>
-          <button type="button">
-            <BsThreeDotsVertical className="text-2xl" />
-          </button>
-        </div>
+        )}
       </div>
       {/* Conversation Field */}
       <div
@@ -251,9 +283,11 @@ const ChatBox = () => {
                   <button type="button">
                     <BsFillReplyFill className="text-xl" />
                   </button>
-                  <button type="button">
-                    <FaTrashAlt />
-                  </button>
+                  {visibility[msg.messageId] && (
+                    <button type="button">
+                      <FaTrashAlt />
+                    </button>
+                  )}
                 </div>
               </div>
               {/* Here is the message text to preview */}
@@ -262,11 +296,151 @@ const ChatBox = () => {
                   <p>{msg.messageText}</p>
                 </div>
               )}
+              {/* Here is the contact form message to preview */}
+              {msg.contactForm && (
+                <div className="mt-1">
+                  <h1 className="font-semibold">Contact Form</h1>
+                  <p className="my-1">
+                    <span className="font-semibold">Name: </span> Client Name
+                  </p>
+                  <p className="my-1">
+                    <span className="font-semibold">Email: </span>{" "}
+                    info@industryname.com
+                  </p>
+                  <p className="my-1">
+                    <span className="font-semibold">Website/Facebook: </span>{" "}
+                    www.website.com
+                  </p>
+                  <p className="my-1">
+                    <span className="font-semibold">Example design:</span>
+                  </p>
+                  {/* {msg.attachment && msg.attachment.length > 0 && ( */}
+                  <div className="relative mt-2">
+                    {/* {msg.attachment.length > 3 && ( */}
+                    <Link className="mb-2 inline-block text-sm font-medium text-primary">
+                      Download All
+                    </Link>
+                    {/* )} */}
+                    <div className="grid grid-cols-3 gap-3">
+                      {/* {msg.attachment.map((att, i) => ( */}
+                      {[1, 2, 3].map((i) => (
+                        <div key={i}>
+                          <img
+                            src={thumbnailDemo}
+                            alt=""
+                            className="h-[180px] w-full object-cover"
+                          />
+                          <Link className="mt-2 flex items-center justify-center text-xs">
+                            <BiDownload className="shrink-0 text-lg text-primary" />
+                            <p
+                              className="mx-2 line-clamp-1 font-medium"
+                              // title={att.name}
+                            >
+                              Image name 00089.JPG
+                            </p>
+                            <span className="shrink-0 text-black/50">
+                              (598.75 kb)
+                            </span>
+                          </Link>
+                        </div>
+                      ))}
+                      {/* ))} */}
+                    </div>
+                    {/* {msg.attachment?.length >= 6 &&
+                        (!expand ? (
+                          <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
+                            <button
+                              className="rounded-full border bg-white"
+                              onClick={() => setExpand(!expand)}
+                            >
+                              <img
+                                src={DownArrow}
+                                alt=""
+                                className="h-[50px] w-[50px]"
+                              />
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="relative z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-5">
+                            <button
+                              className="rounded-full border bg-white"
+                              onClick={() => setExpand(!expand)}
+                            >
+                              <img
+                                src={UpArrow}
+                                alt=""
+                                className="h-[50px] w-[50px]"
+                              />
+                            </button>
+                          </div>
+                        ))} */}
+                  </div>
+                  <p className="mt-5">
+                    <span className="font-semibold">Message: </span> Lorem ipsum
+                    dolor sit amet consectetur adipisicing elit. Necessitatibus
+                    eveniet dolor provident consectetur iure ipsum officia qui
+                    eligendi suscipit! Deserunt quas sed inventore eaque omnis.
+                  </p>
+                </div>
+              )}
               {/* Here is the offer template to preview */}
               {msg.customOffer && (
-                <div>
+                <div className="mt-1">
                   <p>Custom Offer</p>
-                  <p>{msg.customOffer.title}</p>
+                  <div className="border bg-lightskyblue">
+                    <div className="flex items-center justify-between gap-3 bg-primary/20 p-3">
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={msg.customOffer.thumbnail}
+                          className="h-[60px] w-[80px] object-cover"
+                          alt=""
+                        />
+                        <h1 className="text-2xl font-semibold">
+                          {msg.customOffer.title}
+                        </h1>
+                      </div>
+                      <span className="shrink-0 px-3 text-3xl font-semibold text-primary">
+                        ${msg.customOffer.price}
+                      </span>
+                    </div>
+                    <div className="p-3">
+                      <p className="mb-5 mt-2">{msg.customOffer.desc}</p>
+                      <div className="flex items-center gap-2 font-medium">
+                        <FaCheckCircle className="text-primary" />
+                        <span>
+                          {msg.customOffer.deliveryCount +
+                            " " +
+                            msg.customOffer.deliveryWay}{" "}
+                          delivery
+                        </span>
+                      </div>
+                      <div className="mt-4">
+                        {isAdmin ? (
+                          <button
+                            type="button"
+                            className="block w-full bg-primary p-2 text-center font-semibold text-white"
+                          >
+                            Withdraw Offer
+                          </button>
+                        ) : (
+                          <div className="flex gap-3">
+                            <button
+                              type="button"
+                              className="block w-1/2 bg-primary p-2 text-center font-semibold text-white"
+                            >
+                              Accept
+                            </button>
+                            <button
+                              type="button"
+                              className="block w-1/2 bg-gray-400 p-2 text-center font-semibold text-white"
+                            >
+                              Decline
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
               {/* Here is Image Upload Preview part */}
@@ -413,9 +587,6 @@ const ChatBox = () => {
           ></textarea>
           <div className="flex h-[50px] items-center justify-between border-t border-slate-300">
             <div className="flex items-center gap-3 pl-3">
-              {/* <button type="button">
-                <FaThumbsUp className="text-2xl text-yellow-400" />
-              </button> */}
               <EmojiPicker onEmojiSelect={handleEmojiSelect} />
               <Divider className={"h-[30px] w-px !bg-gray-400"} />
               <div>
