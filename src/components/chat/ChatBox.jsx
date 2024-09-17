@@ -17,7 +17,7 @@ import DownArrow from "../../assets/images/icons/Down Arrow.svg";
 import UpArrow from "../../assets/images/icons/Upper Arrow.svg";
 import thumbnailDemo from "../../assets/images/project-thumbnail.jpg";
 import { useLocalStorageObject } from "../../hooks/useLocalStorageObject";
-import useOutsideClick from "../../hooks/useOutSideClick";
+import useOutsideClick from "../../hooks/useOutsideClick";
 import formatFileSize from "../../libs/formatFileSize";
 import Divider from "../Divider";
 import AddQuickMsgModal from "./AddQuickMsgModal";

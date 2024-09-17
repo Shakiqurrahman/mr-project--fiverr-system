@@ -1,7 +1,7 @@
 import data from "@emoji-mart/data"; // Emoji-mart data
 import Picker from "@emoji-mart/react"; // Note the updated import for v4+
 import React, { useRef, useState } from "react";
-import useOutsideClick from "../../hooks/useOutSideClick";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 const EmojiPicker = ({ onEmojiSelect }) => {
   const [showPicker, setShowPicker] = useState(false);

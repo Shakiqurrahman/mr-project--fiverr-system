@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
-import useOutsideClick from "../../hooks/useOutSideClick";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 const AddQuickMsgModal = ({ handleClose, onMsgSubmit }) => {
   const formRef = useRef(null);

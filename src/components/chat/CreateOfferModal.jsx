@@ -8,7 +8,7 @@ import {
 } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import thumbnailDemo from "../../assets/images/project-thumbnail.jpg";
-import useOutsideClick from "../../hooks/useOutSideClick";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 const CreateOfferModal = ({ handleClose, onOfferSubmit, values }) => {
   const [collapse, setCollapse] = useState(false);

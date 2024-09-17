@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
-import useOutsideClick from "../../hooks/useOutSideClick";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 const EditQuickMsgModal = ({ handleClose, onMsgSubmit, value }) => {
   const editQuickMsgRef = useRef(null);
