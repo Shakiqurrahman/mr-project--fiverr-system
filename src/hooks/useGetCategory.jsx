@@ -5,7 +5,7 @@ import {
 } from "../Redux/api/uploadDesignApiSlice";
 
 const useGetCategory = () => {
-  const { data: uploadDesigns, error, isLoading } = useFetchGetUploadQuery();
+  const { data: uploadDesigns, error, loading } = useFetchGetUploadQuery();
   const { data: folders } = useFetchGetAllFoldersQuery();
   const [categories, setCategories] = useState([]);
 
@@ -60,7 +60,7 @@ const useGetCategory = () => {
     }
   }, [folders, uploadDesigns]);
 
-  return { categories, error, isLoading };
+  return { categories, error, loading };
 };
 
 export default useGetCategory;

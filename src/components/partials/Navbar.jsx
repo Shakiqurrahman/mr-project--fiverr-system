@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import DownArrow from "../../libs/DownArrow";
 
 const Navbar = () => {
   const { user } = useSelector((state) => state.user);
@@ -23,11 +24,13 @@ const Navbar = () => {
             </li>
           </>
         )}
-        <li className="duration-300 hover:text-gray-300">
-          <Link to="/designs">Designs</Link>
+        <li className="duration-300 hover:text-gray-300 group">
+          <Link to="/designs" className="flex items-center gap-1.5">
+            Designs <DownArrow className="size-3 sm:size-4 fill-white group-hover:fill-gray-300" />
+          </Link>
         </li>
-        <li className="duration-300 hover:text-gray-300">
-          <Link to="/industries">Industries</Link>
+        <li className="duration-300 hover:text-gray-300 group">
+          <Link to="/industries" className="flex items-center gap-1.5">Industries <DownArrow className="size-3 sm:size-4 fill-white group-hover:fill-gray-300" /></Link>
         </li>
         <li className="duration-300 hover:text-gray-300">
           <Link to="/pricelist">Price List</Link>
