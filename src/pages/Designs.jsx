@@ -173,6 +173,10 @@ function Designs() {
   const startIndex = (currentPage - 1) * limit;
   const currentPageData = designs?.slice(startIndex, startIndex + limit);
 
+  useEffect(() => {
+    setSelectedValue(state);
+  }, [state]);
+
   return (
     <>
       <div className="max-width">
