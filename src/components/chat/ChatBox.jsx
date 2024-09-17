@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import { useEffect, useRef, useState } from "react";
 import { BiDownload } from "react-icons/bi";
 import { BsFillReplyFill, BsThreeDotsVertical } from "react-icons/bs";
@@ -10,6 +11,7 @@ import {
 } from "react-icons/io";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { io } from "socket.io-client";
 import logo from "../../assets/images/default_user.png";
 import DownArrow from "../../assets/images/icons/Down Arrow.svg";
 import UpArrow from "../../assets/images/icons/Upper Arrow.svg";
@@ -22,6 +24,14 @@ import AddQuickMsgModal from "./AddQuickMsgModal";
 import CreateOfferModal from "./CreateOfferModal";
 import EditQuickMsgModal from "./EditQuickMsgModal";
 import EmojiPicker from "./EmojiPicker";
+
+const token = Cookies.get("authToken");
+
+const socket = io("http://localhost:3000", {
+  auth: {
+    token: token,
+  },
+}); // Replace with your server URL
 
 const ChatBox = () => {
   const [expand, setExpand] = useState(false);
@@ -62,6 +72,20 @@ const ChatBox = () => {
   ]);
 
   const [visibility, setVisibility] = useState({});
+
+  // Socket connection
+  useEffect(() => {
+    // Listen for incoming messages
+    socket.on("message", (msg) => {
+      setMessages((prevMessages) => [...prevMessages, msg]);
+      console.log(msg);
+    });
+
+    // Cleanup on component unmount
+    return () => {
+      socket.off("message");
+    };
+  }, []);
 
   useEffect(() => {
     // Inital Scroll to last message
@@ -206,17 +230,18 @@ const ChatBox = () => {
         });
         const maxId =
           messages.length > 0
-            ? Math.max(...messages.map((item) => item.id)) + 1
+            ? Math.max(...messages.map((item) => item.messageId)) + 1
             : 1;
         const submitForm = {
-          id: maxId,
+          messageId: maxId,
           msgDate,
           msgTime,
           messageText: textValue,
           attachment: selectedImages || null,
           customOffer: null,
         };
-        setMessages((prev) => [...prev, submitForm]);
+        socket.emit("message", submitForm);
+        // setMessages((prev) => [...prev, submitForm]);
         return { result: "Success" };
       };
       const result = response();
@@ -647,7 +672,7 @@ const ChatBox = () => {
       {openOfferModal && (
         <CreateOfferModal
           handleClose={setOpenOfferModal}
-          onOfferSubmit={setMessages}
+          onOfferSubmit={socket}
           values={messages}
         />
       )}

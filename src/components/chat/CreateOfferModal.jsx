@@ -68,14 +68,14 @@ const CreateOfferModal = ({ handleClose, onOfferSubmit, values }) => {
       });
       const maxId =
         values?.length > 0
-          ? Math.max(...values?.map((item) => item.id)) + 1
+          ? Math.max(...values?.map((item) => item.messageId)) + 1
           : 1;
       const formData = {
         ...form,
         requirements,
       };
       const offerMessage = {
-        id: maxId,
+        messageId: maxId,
         msgDate,
         msgTime,
         messageText: "",
@@ -83,7 +83,8 @@ const CreateOfferModal = ({ handleClose, onOfferSubmit, values }) => {
         customOffer: formData,
         contactForm: null,
       };
-      onOfferSubmit((prev) => [...prev, offerMessage]);
+      onOfferSubmit.emit("message", offerMessage);
+      // onOfferSubmit((prev) => [...prev, offerMessage]);
       setForm({
         thumbnail: null,
         title: "",
