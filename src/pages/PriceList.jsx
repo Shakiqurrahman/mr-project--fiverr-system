@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import Check from "../assets/svg/Check";
-import useOutsideClick from "../hooks/useOutSideClick";
+import useOutsideClick from "../hooks/useOutsideClick";
 import { configApi } from "../libs/configApi";
 import {
   deleteCategory,
