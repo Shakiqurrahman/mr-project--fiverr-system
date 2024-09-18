@@ -281,7 +281,7 @@ function CreateCategory() {
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="mt-5 block w-1/2 max-w-[200px] rounded-3xl bg-canceled p-3 text-center text-white"
+            className="mt-5 block w-1/2 max-w-[200px] rounded-3xl bg-revision p-3 text-center text-white"
           >
             Cancel
           </button>

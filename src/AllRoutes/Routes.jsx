@@ -18,6 +18,7 @@ import ErrorPage from "../pages/ErrorPage";
 import Feedback from "../pages/Feedback";
 import ForgetPassword from "../pages/ForgetPassword";
 import Home from "../pages/Home";
+import InboxPage from "../pages/InboxPage";
 import Industries from "../pages/Industries";
 import Join from "../pages/Join";
 import OfferProject from "../pages/OfferProject";
@@ -36,7 +37,6 @@ import ChatLayout from "./ChatLayout";
 import AdminRoute from "./private-route/AdminRoute";
 import PrivateRoute from "./private-route/PrivateRoute";
 import UnAuthenticatedRoute from "./private-route/UnAuthenticatedRoute";
-import InboxPage from "../pages/InboxPage";
 
 export const router = createBrowserRouter([
   {
@@ -208,7 +208,7 @@ export const router = createBrowserRouter([
       {
         path: "/cart",
         element: <Cart />,
-      }
+      },
     ],
   },
   {

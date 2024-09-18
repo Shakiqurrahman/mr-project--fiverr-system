@@ -7,10 +7,12 @@ import {
   IoMdClose,
 } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { useSelector } from "react-redux";
 import thumbnailDemo from "../../assets/images/project-thumbnail.jpg";
 import useOutsideClick from "../../hooks/useOutsideClick";
 
 const CreateOfferModal = ({ handleClose, onOfferSubmit, values }) => {
+  const { user } = useSelector((state) => state.user);
   const [collapse, setCollapse] = useState(false);
   const [form, setForm] = useState({
     thumbnail: null,
@@ -76,6 +78,8 @@ const CreateOfferModal = ({ handleClose, onOfferSubmit, values }) => {
       };
       const offerMessage = {
         messageId: maxId,
+        userImage: user?.image,
+        senderName: user?.fullName,
         msgDate,
         msgTime,
         messageText: "",

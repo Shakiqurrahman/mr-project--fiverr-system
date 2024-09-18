@@ -1,11 +1,15 @@
-import React from 'react';
-import StartSingleProject from '../components/projectStart/StartSingleProject';
+import StartMultipleProject from "../components/projectStart/StartMultipleProject";
+import StartSingleProject from "../components/projectStart/StartSingleProject";
 
 const Project = () => {
   return (
-    <section className='max-width my-10'>
-    <StartSingleProject />
-    </section>
+    <div className="max-width">
+      <h1 className="my-10 text-center text-lg font-semibold sm:text-[28px]">
+        Please select each step below carefully
+      </h1>
+      <StartSingleProject />
+      <StartMultipleProject />
+    </div>
   );
 };
 
