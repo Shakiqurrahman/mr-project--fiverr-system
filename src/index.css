@@ -207,3 +207,18 @@ textarea:placeholder-shown {
 .MuiPaginationItem-previousNext > span {
   @apply !hidden;
 }
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  background-image: url("./assets/svg/Dropdown Icon.svg");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+  padding-right: 40px !important;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}

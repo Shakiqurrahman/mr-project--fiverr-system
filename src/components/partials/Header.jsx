@@ -139,7 +139,6 @@ function Header() {
                   >
                     <Badge
                       badgeContent={cartItems.length}
-                      showZero
                       sx={{
                         "& .MuiBadge-badge": {
                           backgroundColor: "#1b8cdc",

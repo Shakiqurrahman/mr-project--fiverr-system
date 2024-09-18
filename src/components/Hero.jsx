@@ -175,7 +175,7 @@ const Hero = () => {
                       render={({ field }) => (
                         <label className="flex cursor-pointer items-center gap-2">
                           <input
-                            className="size-4 accent-[#ed8864]"
+                            className="size-4"
                             type="checkbox"
                             id={item.designName}
                             {...field}
@@ -216,7 +216,6 @@ const Hero = () => {
                                 type="radio"
                                 {...field}
                                 value={type}
-                                className="accent-[#ed8864]"
                               />
                             )}
                           />
