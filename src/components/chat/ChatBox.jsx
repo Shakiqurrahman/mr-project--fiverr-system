@@ -213,6 +213,7 @@ const ChatBox = () => {
     }
   };
 
+  // click outside the box it will be toggled
   useOutsideClick(menuRef, () => setQucikMsgBtnController(null));
 
   // handler for Submitting/Send a Message
