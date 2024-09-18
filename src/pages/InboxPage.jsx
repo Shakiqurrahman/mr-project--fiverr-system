@@ -41,7 +41,7 @@ const InboxPage = () => {
       style={{ height: `calc(100vh - ${offSetTop}px)` }}
     >
       <div
-        className={`${isAdmin ? "" : "mx-auto max-w-[600px]"} flex h-full justify-center rounded-lg border shadow-md`}
+        className={`${isAdmin ? "" : "mx-auto max-w-[800px]"} flex h-full justify-center rounded-lg border shadow-md`}
       >
         {isAdmin && (
           <div className="w-1/3 overflow-hidden rounded-tl-lg border-r">

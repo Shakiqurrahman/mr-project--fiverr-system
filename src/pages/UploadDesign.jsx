@@ -801,7 +801,7 @@ function UploadDesign() {
               type="button"
               onClick={() => navigate(-1)}
               disabled={submitLoading}
-              className="mt-5 flex h-[45px] w-1/2 max-w-[200px] items-center justify-center rounded-3xl bg-canceled text-white disabled:cursor-not-allowed"
+              className="mt-5 flex h-[45px] w-1/2 max-w-[200px] items-center justify-center rounded-3xl bg-revision text-white disabled:cursor-not-allowed"
             >
               Cancel
             </button>

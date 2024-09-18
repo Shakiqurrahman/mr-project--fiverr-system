@@ -62,7 +62,7 @@ const ChatBox = () => {
   const [messages, setMessages] = useState([
     {
       userImage: userProfilePic,
-      senderName: user.fullName,
+      senderName: user?.fullName,
       messageId: 1,
       msgDate: "Apr 22, 2023",
       msgTime: "07:33 AM",
@@ -296,7 +296,7 @@ const ChatBox = () => {
           <div key={i} className="group mt-3 flex items-start gap-3 px-3">
             <div className="shrink-0">
               <img
-                src={msg.userImage ? msg.userImage : logo}
+                src={msg?.userImage ? msg?.userImage : logo}
                 alt=""
                 className="h-[30px] w-[30px] rounded-full object-cover"
               />
@@ -304,7 +304,7 @@ const ChatBox = () => {
             <div className="grow">
               <div className="mt-1 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <h1 className="font-semibold">{msg.senderName}</h1>
+                  <h1 className="font-semibold">{msg?.senderName}</h1>
                   <p className="text-xs text-black/50">
                     {msg.msgDate}, {msg.msgTime}
                   </p>
