@@ -1,4 +1,4 @@
-// import StartMultipleProject from "../components/projectStart/StartMultipleProject";
+import StartMultipleProject from "../components/projectStart/StartMultipleProject";
 import StartSingleProject from "../components/projectStart/StartSingleProject";
 
 const Project = () => {
@@ -8,7 +8,7 @@ const Project = () => {
         Please select each step below carefully
       </h1>
       <StartSingleProject />
-      {/* <StartMultipleProject /> */}
+      <StartMultipleProject />
     </div>
   );
 };

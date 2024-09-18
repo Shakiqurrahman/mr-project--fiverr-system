@@ -64,6 +64,10 @@ const StartSingleProject = () => {
   }, [selectedCategoryData?.subCategory, selectedSubCategory]);
 
   console.log(selectedSubCategoryData());
+
+
+  const quantities = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
   
 
   return (
@@ -156,17 +160,17 @@ const StartSingleProject = () => {
                 <select
                   className="w-[150px] border bg-white p-3 font-semibold outline-none sm:w-[100px]"
                   name="quantity"
-                  // value={selectedQuantity}
-                  // onChange={(e) => setSelectedQuantity(e.target.value)}
+                  value={selectedQuantity}
+                  onChange={(e) => setSelectedQuantity(e.target.value)}
                 >
-                  {/* {quantities.map((q) => ( */}
+                  {quantities.map((q) => (
                   <option
-                  // key={q}
-                  // value={q}
+                  key={q}
+                  value={q}
                   >
-                    {/* {q} */}
+                    {q}
                   </option>
-                  {/* ))} */}
+                  ))}
                 </select>
               </div>
               <div className="mt-5 border bg-white p-3 text-center text-lg text-primary sm:text-2xl">
