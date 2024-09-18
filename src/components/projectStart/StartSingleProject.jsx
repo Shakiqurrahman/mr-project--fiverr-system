@@ -33,9 +33,6 @@ const StartSingleProject = () => {
 
   return (
     <section>
-      <h1 className="mb-10 text-center text-[28px] font-semibold">
-        Please select each step below carefully
-      </h1>
       <div className="mx-auto max-w-[800px] border">
         <h3 className="bg-primary py-4 text-center text-xl font-semibold text-white">
           You are starting a project
