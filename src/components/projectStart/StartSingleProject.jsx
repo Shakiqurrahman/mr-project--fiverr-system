@@ -8,7 +8,6 @@ const StartSingleProject = () => {
   const { loading, category, error } = useSelector((state) => state.category);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-  // const [selectedItem, setSelectedItem] = useState("");
 
   useEffect(() => {
     dispatch(fetchCategory());
@@ -17,17 +16,18 @@ const StartSingleProject = () => {
   useEffect(() => {
     if (category) {
       setCategories(category);
+      if (category.length > 0) {
+        setSelectedCategory(category[0]?.categoryName);
+      }
     }
   }, [category]);
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
-    console.log(e.target.value);
-    
   };
 
   const selectedCategoryData = categories?.find(
-    (cat) => cat?.categoryName === selectedCategory,
+    (cat) => cat?.categoryName.toLowerCase() === selectedCategory.toLowerCase(),
   );
   console.log(selectedCategoryData);
 
