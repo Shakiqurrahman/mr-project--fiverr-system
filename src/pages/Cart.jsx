@@ -1,12 +1,14 @@
 import React from "react";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Check from "../assets/svg/Check";
-import { removeFromCart, setCart } from "../Redux/features/cartSlice";
 import useSyncCart from "../hooks/useSyncCart";
+import { removeFromCart, setCart } from "../Redux/features/cartSlice";
 
 function Cart() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { items: cart } = useSelector((state) => state.cart);
   useSyncCart();
@@ -26,6 +28,7 @@ function Cart() {
   const handleCheckout = () => {
     const selectedItems = cart.filter((item) => item.checked);
     console.log("Items ready for checkout:", selectedItems);
+    navigate("/project", { state: { items: selectedItems } });
   };
   const hasSelectedItems = cart.some((item) => item.checked);
 
@@ -109,7 +112,7 @@ function Cart() {
             type="button"
             disabled={!hasSelectedItems}
             onClick={handleCheckout}
-            className={`rounded-full ${hasSelectedItems ? 'bg-primary' : 'bg-primary/70 cursor-not-allowed'} px-10 py-2 font-semibold text-white`}
+            className={`rounded-full ${hasSelectedItems ? "bg-primary" : "cursor-not-allowed bg-primary/70"} px-10 py-2 font-semibold text-white`}
           >
             Checkout
           </button>
