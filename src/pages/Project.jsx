@@ -8,7 +8,7 @@ const Project = () => {
         Please select each step below carefully
       </h1>
       <StartSingleProject />
-      <StartMultipleProject />
+      {/* <StartMultipleProject /> */}
     </div>
   );
 };

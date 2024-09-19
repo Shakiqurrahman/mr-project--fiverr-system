@@ -10,65 +10,88 @@ const StartSingleProject = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
-  // const [selectedSubCategoryData, setSelectedSubCategoryData] = useState({});
-  // console.log("hii", selectedSubCategoryData);
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
+  const [isFastDelivery, setIsFastDelivery] = useState(false);
 
   useEffect(() => {
     dispatch(fetchCategory());
   }, [dispatch]);
 
   useEffect(() => {
-    if (category) {
+    if (category?.length > 0) {
       setCategories(category);
-      if (category.length > 0) {
-        setSelectedCategory(category[0]?.categoryName);
-      }
-      // if (category.length > 0) {
-      //   setSelectedCategory(category[0]?.categoryName);
-      // }
+      setSelectedCategory(category[0]?.categoryName); // Set the first category as selected by default
     }
   }, [category]);
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
   };
+
   const handleSubCategoryChange = (e) => {
     setSelectedSubCategory(e.target.value);
   };
 
-  const selectedCategoryData = categories?.find(
-    (cat) => cat?.categoryName.toLowerCase() === selectedCategory.toLowerCase(),
+  const selectedCategoryData = useMemo(
+    () =>
+      categories?.find(
+        (cat) =>
+          cat?.categoryName.toLowerCase() === selectedCategory.toLowerCase(),
+      ),
+    [categories, selectedCategory],
   );
 
   useEffect(() => {
-    const selectedCategoryData = categories.find(
-      (cat) =>
-        cat?.categoryName.toLowerCase() === selectedCategory.toLowerCase(),
-    );
-    if (selectedCategoryData) {
-      setSelectedSubCategory(selectedCategoryData.subCategory[0].subTitle);
+    if (selectedCategoryData?.subCategory?.length > 0) {
+      setSelectedSubCategory(selectedCategoryData.subCategory[0].subTitle); // Set first subcategory by default
     }
-    // if(selectedSubCategory){
-    //   setSelectedSubCategoryData(selectedCategoryData.subCategory.find(
-    //     (subCat) => subCat.subTitle === selectedSubCategory,
-    //   ));
-    // }
-  }, [selectedCategory, categories, selectedSubCategory]);
+  }, [selectedCategoryData]);
 
   const selectedSubCategoryData = useCallback(() => {
-    if (selectedSubCategory) {
-      return selectedCategoryData?.subCategory?.find(
-        (subCat) => subCat?.subTitle === selectedSubCategory,
-      );
-    }
+    return selectedSubCategory
+      ? selectedCategoryData?.subCategory?.find(
+          (subCat) => subCat?.subTitle === selectedSubCategory,
+        )
+      : null;
   }, [selectedCategoryData?.subCategory, selectedSubCategory]);
 
-  console.log(selectedSubCategoryData());
+  const subCategoryData = selectedSubCategoryData();
 
+  const handleFastDeliveryToggle = () => {
+    setIsFastDelivery(!isFastDelivery);
+  };
 
   const quantities = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const [selectedQuantity, setSelectedQuantity] = useState(1);
-  
+
+  const extraFastDeliveryDay =
+    parseInt(subCategoryData?.fastDeliveryDays) * selectedQuantity || 0;
+
+  const regularDeliveryDay =
+    parseInt(subCategoryData?.regularDeliveryDays) * selectedQuantity || 0;
+
+  const baseAmount = parseInt(subCategoryData?.subAmount || 0);
+  const fastDeliveryPrice = parseInt(subCategoryData?.fastDeliveryPrice || 0);
+  const selectedQty = parseInt(selectedQuantity || 1);
+
+  const totalAmount = isFastDelivery
+    ? baseAmount * selectedQty + fastDeliveryPrice
+    : baseAmount * selectedQty;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const selectedCategory = {
+      ...selectedCategoryData,
+      subCategory: subCategoryData?.subTitle,
+    };
+    const data = {
+      ...selectedCategory,
+      selectedQuantity,
+      deliveryTime: isFastDelivery ? extraFastDeliveryDay : regularDeliveryDay,
+      isFastDelivery,
+      totalAmount,
+    };
+    console.log("submittedData", data);
+  };
 
   return (
     <section>
@@ -76,7 +99,7 @@ const StartSingleProject = () => {
         <h3 className="bg-primary py-4 text-center text-xl font-semibold text-white">
           You are starting a project
         </h3>
-        <div className="bg-lightskyblue p-4 pt-10">
+        <form onSubmit={handleSubmit} className="bg-lightskyblue p-4 pt-10">
           <p className="mb-2 text-lg">Choose the category you need</p>
           <div className="flex justify-between gap-2 border bg-white p-6">
             <img
@@ -119,7 +142,7 @@ const StartSingleProject = () => {
 
           <div className="my-5 flex flex-wrap items-center gap-3 sm:flex-nowrap">
             <div className="w-full border bg-white p-3 text-sm sm:text-base">
-              {} Days Delivery
+              {regularDeliveryDay} Days Delivery
             </div>
             <div className="flex w-full items-center gap-3 sm:justify-end">
               <div className="flex items-center gap-x-2 text-sm font-medium sm:text-base">
@@ -127,9 +150,9 @@ const StartSingleProject = () => {
                   type="checkbox"
                   name="extraDelivery"
                   id="extraDelivery"
-                  className="is-checked peer"
-                  // onChange={handleFastDeliveryToggle}
-                  // checked={isFastDelivery}
+                  className={"is-checked peer"}
+                  onChange={handleFastDeliveryToggle}
+                  checked={isFastDelivery}
                   hidden
                 />
                 <label
@@ -138,17 +161,18 @@ const StartSingleProject = () => {
                 >
                   <Check className="h-[8px] sm:h-[10px]" />
                 </label>
-                Extra Fast -day delivery
+                Extra Fast {extraFastDeliveryDay}
+                -day delivery
               </div>
               <span className="mr-3 font-bold leading-none text-primary">
-                {/* ${item.extraDeliveryPrice} */}
+                ${subCategoryData?.fastDeliveryPrice}
               </span>
             </div>
           </div>
 
           <div className="flex flex-wrap items-start gap-3 sm:flex-nowrap">
             <div className="w-full">
-              {selectedCategoryData?.bulletPoints?.map((v, i) => (
+              {selectedCategoryData?.bulletPoint?.map((v, i) => (
                 <p key={i} className="my-2 flex items-center gap-2">
                   <FaCheckCircle className="shrink-0 text-primary" /> {v}
                 </p>
@@ -164,35 +188,32 @@ const StartSingleProject = () => {
                   onChange={(e) => setSelectedQuantity(e.target.value)}
                 >
                   {quantities.map((q) => (
-                  <option
-                  key={q}
-                  value={q}
-                  >
-                    {q}
-                  </option>
+                    <option key={q} value={q}>
+                      {q}
+                    </option>
                   ))}
                 </select>
               </div>
-              <div className="mt-5 border bg-white p-3 text-center text-lg text-primary sm:text-2xl">
+              <div className="mt-5 border bg-white p-3 text-center text-lg font-medium text-primary sm:text-xl">
                 Total -{" "}
-                <span className="font-semibold">
-                  ${/* {item.price}  */}
+                <span className="font-bold">
+                  ${totalAmount}
                   USD
                 </span>
               </div>
             </div>
           </div>
-
-          <p className="my-5 text-center text-sm sm:text-base">
-            5 Days Delivery
-          </p>
-          <button className="my-5 block w-full bg-primary p-3 text-center font-semibold text-white">
-            Continue ($130)
+          <button
+            type="submit"
+            className="my-5 block w-full bg-primary p-3 text-center font-semibold text-white"
+          >
+            Continue ($
+            {totalAmount})
           </button>
           <p className="my-8 text-center text-sm sm:text-base">
             Go to the payment option by clicking &quot;Continue&quot;
           </p>
-        </div>
+        </form>
       </div>
     </section>
   );
