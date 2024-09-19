@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCategory } from "../../Redux/features/category/categoryApi";
 import Check from "../../assets/svg/Check";
 
-const StartSingleProject = ({item}) => {  
+const StartSingleProject = ({ item }) => {
   const dispatch = useDispatch();
   const { loading, category, error } = useSelector((state) => state.category);
   const [categories, setCategories] = useState([]);
@@ -69,9 +69,10 @@ const StartSingleProject = ({item}) => {
   const regularDeliveryDay =
     parseInt(subCategoryData?.regularDeliveryDays) * selectedQuantity || 0;
 
-    const baseAmount = parseInt(subCategoryData?.subAmount || 0);
-    const selectedQty = parseInt(selectedQuantity || 1);
-  const fastDeliveryPrice = (parseInt(subCategoryData?.fastDeliveryPrice) * selectedQty || 0);
+  const baseAmount = parseInt(subCategoryData?.subAmount || 0);
+  const selectedQty = parseInt(selectedQuantity || 1);
+  const fastDeliveryPrice =
+    parseInt(subCategoryData?.fastDeliveryPrice) * selectedQty || 0;
 
   const totalAmount = isFastDelivery
     ? baseAmount * selectedQty + fastDeliveryPrice
@@ -86,9 +87,11 @@ const StartSingleProject = ({item}) => {
     const data = {
       ...selectedCategory,
       selectedQuantity,
-      deliveryDuration: isFastDelivery ? extraFastDeliveryDay : regularDeliveryDay,
+      deliveryDuration: isFastDelivery
+        ? extraFastDeliveryDay
+        : regularDeliveryDay,
       isFastDelivery,
-      fastDeliveryAmount : fastDeliveryPrice,
+      fastDeliveryAmount: fastDeliveryPrice,
       totalAmount,
     };
     console.log("submittedData", data);
@@ -102,30 +105,35 @@ const StartSingleProject = ({item}) => {
         </h3>
         <form onSubmit={handleSubmit} className="bg-lightskyblue p-4 pt-10">
           <p className="mb-2 text-lg">Choose the category you need</p>
-          <div className="flex justify-between items-center gap-2 border bg-white p-6">
+          <div className="flex items-center justify-between gap-2 border bg-white p-6">
             <img
-              className="w-32 object-cover"
+              className="h-[93px] w-32 object-cover"
               src={selectedCategoryData?.image?.url}
               alt={selectedCategoryData?.image?.name}
             />
-            {item ? <h1 className="px-4 text-2xl font-semibold w-full">{selectedCategory}</h1> 
-            : <select
-              name="subcategory"
-              id="subcategory"
-              value={selectedCategory}
-              onChange={handleCategoryChange}
-              className={`w-full p-4 text-2xl font-semibold outline-none`}
-            >
-              {categories?.map((category, idx) => (
-                <option
-                  key={idx}
-                  className="text-base"
-                  value={category?.categoryName}
-                >
-                  {category?.categoryName}
-                </option>
-              ))}
-            </select>}
+            {item ? (
+              <h1 className="w-full px-4 text-2xl font-semibold">
+                {selectedCategory}
+              </h1>
+            ) : (
+              <select
+                name="subcategory"
+                id="subcategory"
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+                className={`w-full p-4 text-2xl font-semibold outline-none`}
+              >
+                {categories?.map((category) => (
+                  <option
+                    key={category.id}
+                    className="text-base"
+                    value={category?.categoryName}
+                  >
+                    {category?.categoryName}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
           <p className="mb-2 mt-6 text-lg">Choose the subcategory you need</p>
           <select
@@ -135,8 +143,8 @@ const StartSingleProject = ({item}) => {
             onChange={handleSubCategoryChange}
             className="w-full border p-4 font-medium outline-none"
           >
-            {selectedCategoryData?.subCategory.map((i, idx) => (
-              <option key={idx} value={i.subTitle}>
+            {selectedCategoryData?.subCategory.map((i) => (
+              <option key={i.id} value={i.subTitle}>
                 {i.subTitle}
               </option>
             ))}
