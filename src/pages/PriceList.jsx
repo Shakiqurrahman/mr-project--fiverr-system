@@ -209,7 +209,7 @@ function PriceList() {
                         {category.categoryName}
                       </h1>
                     </div>
-                    <Link className="rounded-lg bg-primary px-2 py-1 text-center text-xs font-medium text-white sm:px-3 sm:py-2 sm:text-sm">
+                    <Link to='/project' state={{item : category}} className="rounded-lg bg-primary px-2 py-1 text-center text-xs font-medium text-white sm:px-3 sm:py-2 sm:text-sm">
                       PROJECT START
                     </Link>
                   </div>

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCategory } from "../../Redux/features/category/categoryApi";
 import Check from "../../assets/svg/Check";
 
-const StartSingleProject = () => {
+const StartSingleProject = ({item}) => {  
   const dispatch = useDispatch();
   const { loading, category, error } = useSelector((state) => state.category);
   const [categories, setCategories] = useState([]);
@@ -20,9 +20,9 @@ const StartSingleProject = () => {
   useEffect(() => {
     if (category?.length > 0) {
       setCategories(category);
-      setSelectedCategory(category[0]?.categoryName); // Set the first category as selected by default
+      setSelectedCategory(item?.categoryName || category[0]?.categoryName); // Set the first category as selected by default
     }
-  }, [category]);
+  }, [category, item?.categoryName]);
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
@@ -69,9 +69,9 @@ const StartSingleProject = () => {
   const regularDeliveryDay =
     parseInt(subCategoryData?.regularDeliveryDays) * selectedQuantity || 0;
 
-  const baseAmount = parseInt(subCategoryData?.subAmount || 0);
-  const fastDeliveryPrice = parseInt(subCategoryData?.fastDeliveryPrice || 0);
-  const selectedQty = parseInt(selectedQuantity || 1);
+    const baseAmount = parseInt(subCategoryData?.subAmount || 0);
+    const selectedQty = parseInt(selectedQuantity || 1);
+  const fastDeliveryPrice = (parseInt(subCategoryData?.fastDeliveryPrice) * selectedQty || 0);
 
   const totalAmount = isFastDelivery
     ? baseAmount * selectedQty + fastDeliveryPrice
@@ -86,8 +86,9 @@ const StartSingleProject = () => {
     const data = {
       ...selectedCategory,
       selectedQuantity,
-      deliveryTime: isFastDelivery ? extraFastDeliveryDay : regularDeliveryDay,
+      deliveryDuration: isFastDelivery ? extraFastDeliveryDay : regularDeliveryDay,
       isFastDelivery,
+      fastDeliveryAmount : fastDeliveryPrice,
       totalAmount,
     };
     console.log("submittedData", data);
@@ -101,18 +102,19 @@ const StartSingleProject = () => {
         </h3>
         <form onSubmit={handleSubmit} className="bg-lightskyblue p-4 pt-10">
           <p className="mb-2 text-lg">Choose the category you need</p>
-          <div className="flex justify-between gap-2 border bg-white p-6">
+          <div className="flex justify-between items-center gap-2 border bg-white p-6">
             <img
               className="w-32 object-cover"
               src={selectedCategoryData?.image?.url}
               alt={selectedCategoryData?.image?.name}
             />
-            <select
+            {item ? <h1 className="px-4 text-2xl font-semibold w-full">{selectedCategory}</h1> 
+            : <select
               name="subcategory"
               id="subcategory"
               value={selectedCategory}
               onChange={handleCategoryChange}
-              className="w-full p-4 text-2xl font-semibold outline-none"
+              className={`w-full p-4 text-2xl font-semibold outline-none`}
             >
               {categories?.map((category, idx) => (
                 <option
@@ -123,7 +125,7 @@ const StartSingleProject = () => {
                   {category?.categoryName}
                 </option>
               ))}
-            </select>
+            </select>}
           </div>
           <p className="mb-2 mt-6 text-lg">Choose the subcategory you need</p>
           <select
@@ -165,7 +167,7 @@ const StartSingleProject = () => {
                 -day delivery
               </div>
               <span className="mr-3 font-bold leading-none text-primary">
-                ${subCategoryData?.fastDeliveryPrice}
+                ${fastDeliveryPrice}
               </span>
             </div>
           </div>
