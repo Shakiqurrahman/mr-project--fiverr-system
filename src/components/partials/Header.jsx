@@ -57,7 +57,7 @@ function Header() {
             </form>
             <nav className="flex items-center gap-6">
               <ul
-                className={`flex-col items-center gap-6 text-white duration-300 md:static md:flex-row ${
+                className={`z-[100] flex-col items-center gap-6 text-white duration-300 md:static md:flex-row ${
                   activeMenu
                     ? "absolute left-0 top-16 flex w-full bg-black py-16 sm:top-20 md:bg-transparent"
                     : "hidden md:flex"
