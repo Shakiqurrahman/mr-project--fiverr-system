@@ -61,7 +61,7 @@ const MultiProject = () => {
         </div>
 
         {/* Project Image */}
-        <div className="mt-10 bg-lightskyblue">
+        <div className="mt-5 bg-lightskyblue">
           <h1 className="bg-primary p-3 text-white">Project Image</h1>
           <input
             ref={imageRef}
