@@ -4,7 +4,11 @@ import { removeCookie } from "../../libs/removeCookie";
 
 const userSlice = createSlice({
   name: "user",
-  initialState: { user: null, loading: false, token: null },
+  initialState: {
+    user: null,
+    loading: false,
+    token: null,
+  },
   reducers: {
     loginStart: (state) => {
       state.loading = true;
