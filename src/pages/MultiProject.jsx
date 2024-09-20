@@ -53,7 +53,7 @@ const MultiProject = () => {
               name="categoryName"
               value={projectTitle}
               onChange={(e) => setProjectTitle(e.target.value)}
-              placeholder="Category Name"
+              placeholder="Project Name"
               className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 text-base outline-none"
               required
             />
