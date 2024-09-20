@@ -11,44 +11,47 @@ const Navbar = () => {
 
   return (
     <nav className="relative bg-primary">
-      <ul className="max-width flex flex-wrap justify-center gap-x-6 gap-y-2 text-white py-4 md:py-0 text-[13px] sm:text-base">
+      <ul className="max-width flex flex-wrap justify-center gap-x-6 gap-y-2 py-4 text-[13px] text-white sm:text-base md:py-0">
         {adminRole && (
           <>
-            <li className="md:py-4 duration-300 hover:text-gray-300">
+            <li className="duration-300 hover:text-gray-300 md:py-4">
               <Link to="/upload-design">Upload</Link>
             </li>
-            <li className="md:py-4 duration-300 hover:text-gray-300">
+            <li className="duration-300 hover:text-gray-300 md:py-4">
               <Link to="/analytics">Analytics</Link>
             </li>
-            <li className="md:py-4 duration-300 hover:text-gray-300">
+            <li className="duration-300 hover:text-gray-300 md:py-4">
               <Link to="/admin-dashboard">Dashboard</Link>
+            </li>
+            <li className="duration-300 hover:text-gray-300 md:py-4">
+              <Link to="/multi-project">Multi-Project</Link>
             </li>
           </>
         )}
-        <li className="group md:py-4 duration-300 hover:text-gray-300">
+        <li className="group duration-300 hover:text-gray-300 md:py-4">
           <Link to="/designs" className="flex items-center gap-1.5">
             Designs
-            <DownArrow className=" fill-white duration-300 md:group-hover:rotate-180 group-hover:fill-gray-300 sm:size-4 hidden sm:block" />
+            <DownArrow className="hidden fill-white duration-300 group-hover:fill-gray-300 sm:block sm:size-4 md:group-hover:rotate-180" />
           </Link>
           <DropDownMenu
             className="invisible z-[-1] -translate-y-full duration-300 sm:group-hover:visible sm:group-hover:translate-y-0"
             isDesign={true}
           />
         </li>
-        <li className="group md:py-4 duration-300 hover:text-gray-300">
+        <li className="group duration-300 hover:text-gray-300 md:py-4">
           <Link to="/industries" className="flex items-center gap-1.5">
             Industries
-            <DownArrow className=" fill-white duration-300 md:group-hover:rotate-180 group-hover:fill-gray-300 sm:size-4 hidden sm:block" />
+            <DownArrow className="hidden fill-white duration-300 group-hover:fill-gray-300 sm:block sm:size-4 md:group-hover:rotate-180" />
           </Link>
           <DropDownMenu
             className="invisible z-[-1] -translate-y-full duration-300 sm:group-hover:visible sm:group-hover:translate-y-0"
             isIndustry={true}
           />
         </li>
-        <li className="md:py-4 duration-300 hover:text-gray-300">
+        <li className="duration-300 hover:text-gray-300 md:py-4">
           <Link to="/pricelist">Price List</Link>
         </li>
-        <li className="md:py-4 duration-300 hover:text-gray-300">
+        <li className="duration-300 hover:text-gray-300 md:py-4">
           <Link to="/project">Project</Link>
         </li>
       </ul>

@@ -21,6 +21,7 @@ import Home from "../pages/Home";
 import InboxPage from "../pages/InboxPage";
 import Industries from "../pages/Industries";
 import Join from "../pages/Join";
+import MultiProject from "../pages/MultiProject";
 import OfferProject from "../pages/OfferProject";
 import PriceList from "../pages/PriceList";
 import PrivacyAndPolicy from "../pages/PrivacyAndPolicy";
@@ -160,6 +161,14 @@ export const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <CreateOfferProject />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/multi-project",
+        element: (
+          <AdminRoute>
+            <MultiProject />
           </AdminRoute>
         ),
       },

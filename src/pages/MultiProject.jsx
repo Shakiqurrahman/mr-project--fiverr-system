@@ -1,0 +1,138 @@
+import { useRef, useState } from "react";
+import { ImPlus } from "react-icons/im";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { useNavigate } from "react-router-dom";
+
+const MultiProject = () => {
+  const imageRef = useRef(null);
+  const navigate = useNavigate();
+  const [projectTitle, setProjectTitle] = useState("");
+  const [projectImage, setProjectImage] = useState(null);
+  const [requirements, setRequirements] = useState([
+    "Which industry do you work in?",
+    "Do you have your own company logo?",
+  ]);
+
+  const handleImageChange = (e) => {
+    if (imageRef.current) {
+      const file = Array.from(e.target.files)[0];
+      setProjectImage(file);
+      imageRef.current.value = "";
+    }
+  };
+
+  const addRequirements = () => {
+    setRequirements([...requirements, ""]);
+  };
+
+  const deleteRequirements = (index) => {
+    setRequirements(requirements.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (projectTitle && projectImage && requirements) {
+      const data = {
+        projectTitle,
+        projectImage,
+        requirements,
+      };
+      console.log(data);
+    }
+  };
+
+  return (
+    <div className="max-width mt-10 sm:mt-20">
+      <form className="mx-auto w-full max-w-[800px]" onSubmit={handleSubmit}>
+        {/* Project Title */}
+        <div className="mt-10 bg-lightskyblue">
+          <h1 className="bg-primary p-3 text-white">Project Title</h1>
+          <div className="p-3">
+            <input
+              type="text"
+              name="categoryName"
+              value={projectTitle}
+              onChange={(e) => setProjectTitle(e.target.value)}
+              placeholder="Category Name"
+              className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 text-base outline-none"
+              required
+            />
+          </div>
+        </div>
+
+        {/* Project Image */}
+        <div className="mt-10 bg-lightskyblue">
+          <h1 className="bg-primary p-3 text-white">Project Image</h1>
+          <input
+            ref={imageRef}
+            type="file"
+            name="image"
+            id="image"
+            hidden
+            onChange={handleImageChange}
+          />
+          <div className="flex items-stretch">
+            <label
+              htmlFor="image"
+              className="block flex-shrink-0 bg-[#7c7c7c] px-4 py-2 text-sm text-white sm:text-base"
+            >
+              CHOOSE FILE
+            </label>
+            <div className="overflow-hidden text-ellipsis whitespace-nowrap px-4 py-2">
+              {projectImage?.name || "No file chosen"}
+            </div>
+          </div>
+        </div>
+
+        {/* Project Requirements */}
+        <div className="mt-5 bg-lightskyblue">
+          <div className="flex items-center justify-between bg-primary p-3 text-white">
+            <h1 className="">Project Requirements</h1>
+            <ImPlus onClick={addRequirements} />
+          </div>
+          <div className="p-3">
+            {requirements.map((requirement, index) => (
+              <div key={index} className="mb-2 flex items-center gap-2">
+                <input
+                  type="text"
+                  placeholder="Type"
+                  value={requirement}
+                  onChange={(e) => {
+                    const newRequirements = [...requirements];
+                    newRequirements[index] = e.target.value;
+                    setRequirements(newRequirements);
+                  }}
+                  className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 text-base outline-none"
+                />
+                <RiDeleteBin6Line
+                  className="cursor-pointer text-gray-500"
+                  onClick={() => deleteRequirements(index)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex justify-center gap-5">
+          {/* Submit */}
+          <button
+            type="submit"
+            className="mt-5 block w-1/2 max-w-[200px] rounded-3xl bg-primary p-3 text-center text-white"
+          >
+            Create
+          </button>
+          {/* cancel */}
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="mt-5 block w-1/2 max-w-[200px] rounded-3xl bg-revision p-3 text-center text-white"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default MultiProject;
