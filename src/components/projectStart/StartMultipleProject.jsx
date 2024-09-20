@@ -150,10 +150,31 @@ const StartMultipleProject = ({ items }) => {
 
   const allSaved = choosenItems?.every((item) => item.save === true);
 
-  console.log(allSaved);
-
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (allSaved && choosenItems) {
+      const newItems = choosenItems.map(({ save, id, ...item }) => {
+        const {
+          bulletPoint,
+          order,
+          requirements,
+          subCategory,
+          id: categoryId,
+          ...restCategory
+        } = item.category;
+        return {
+          ...item,
+          designId: id,
+          category: { categoryId, ...restCategory },
+        };
+      });
+      const data = {
+        duration: totalDays,
+        totalPrice: totalAmount,
+        orderItems: newItems,
+      };
+      console.log(data);
+    }
   };
 
   return (
