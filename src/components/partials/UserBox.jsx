@@ -3,6 +3,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../Redux/features/userSlice";
+import { disconnectSocket } from "../../libs/socketService";
 
 function UserBox() {
   const dispatch = useDispatch();
@@ -11,6 +12,7 @@ function UserBox() {
 
   const handleLogout = () => {
     dispatch(logout());
+    disconnectSocket();
     navigate("/join");
   };
 

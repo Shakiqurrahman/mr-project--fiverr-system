@@ -14,15 +14,16 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: "socialMedia",
+  tagTypes: ["socialMedia", "user"],
   endpoints: (builder) => ({
     fetchUserData: builder.query({
       query: () => "get-singel-user",
+      providesTags: ["user"],
     }),
     fetchSocialMedias: builder.query({
       query: () => "social-media-link",
       transformResponse: (response) => response?.data,
-      providesTags: ['socialMedia'],
+      providesTags: ["socialMedia"],
     }),
     updateSocialMedias: builder.mutation({
       query: (socialMediaLinks) => ({
@@ -30,9 +31,13 @@ export const apiSlice = createApi({
         method: "POST",
         body: socialMediaLinks,
       }),
-      invalidatesTags: ['socialMedia'],
+      invalidatesTags: ["socialMedia"],
     }),
   }),
 });
 
-export const { useFetchUserDataQuery, useFetchSocialMediasQuery, useUpdateSocialMediasMutation } = apiSlice;
+export const {
+  useFetchUserDataQuery,
+  useFetchSocialMediasQuery,
+  useUpdateSocialMediasMutation,
+} = apiSlice;

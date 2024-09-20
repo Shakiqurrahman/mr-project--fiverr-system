@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { configApi } from "../libs/configApi";
+import { connectSocket } from "../libs/socketService";
 import {
   clearPasswordVisibility,
   toggleShowConfirmPassword,
@@ -83,7 +84,7 @@ function SignUpForm({ handleClick }) {
           country: data.country,
         };
         dispatch(setUser({ user, token }));
-
+        connectSocket("http://localhost:3000", token);
         Cookies.set("authToken", JSON.stringify(token), { expires: 10 });
         // toast.success("Signed Up successfully");
         reset();

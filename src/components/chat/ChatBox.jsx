@@ -1,4 +1,3 @@
-import Cookies from "js-cookie";
 import { useEffect, useRef, useState } from "react";
 import { BiDownload } from "react-icons/bi";
 import { BsFillReplyFill, BsThreeDotsVertical } from "react-icons/bs";
@@ -11,7 +10,6 @@ import {
 } from "react-icons/io";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { io } from "socket.io-client";
 import logo from "../../assets/images/default_user.png";
 import DownArrow from "../../assets/images/icons/Down Arrow.svg";
 import UpArrow from "../../assets/images/icons/Upper Arrow.svg";
@@ -19,19 +17,13 @@ import thumbnailDemo from "../../assets/images/project-thumbnail.jpg";
 import { useLocalStorageObject } from "../../hooks/useLocalStorageObject";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import formatFileSize from "../../libs/formatFileSize";
+import { connectSocket } from "../../libs/socketService";
 import Divider from "../Divider";
 import AddQuickMsgModal from "./AddQuickMsgModal";
 import CreateOfferModal from "./CreateOfferModal";
 import EditQuickMsgModal from "./EditQuickMsgModal";
 import EmojiPicker from "./EmojiPicker";
 
-const token = Cookies.get("authToken");
-
-const socket = io("http://localhost:3000", {
-  auth: {
-    token: token,
-  },
-}); // Replace with your server URL
 
 const ChatBox = () => {
   const [expand, setExpand] = useState(false);
@@ -39,7 +31,10 @@ const ChatBox = () => {
   const [{ quickResponse }, updateItem] = useLocalStorageObject("utils", {
     quickResponse: false,
   });
-  const { user } = useSelector((state) => state.user);
+  const { user, token } = useSelector((state) => state.user);
+  // const token = Cookies.get("authToken");
+  const socket = connectSocket("http://localhost:3000", token);
+
   const userProfilePic = user?.image;
   const isAdmin = user?.role === "ADMIN";
   const menuRef = useRef(null);
@@ -88,7 +83,7 @@ const ChatBox = () => {
     return () => {
       socket.off("message");
     };
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     // Inital Scroll to last message

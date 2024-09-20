@@ -17,15 +17,12 @@ const AuthWrapper = ({ children }) => {
     } else if (!Cookies.get("authToken")) {
       dispatch(logout(error));
     } else if (user) {
-      dispatch(setUser({ user: user.data, token: Cookies.get("authToken") }));
-    }
-    if (user && !Cookies.get("authToken")) {
-      connectSocket("http://localhost:3000", {
-        auth: {
-          token: Cookies.get("authToken"),
-        },
-      });
-  
+      const token = Cookies.get("authToken");
+      dispatch(setUser({ user: user.data, token }));
+      // Connect to socket when the user is authenticated
+      connectSocket("http://localhost:3000", token);
+      
+      // Cleanup function to disconnect socket
       return () => {
         disconnectSocket();
       };
