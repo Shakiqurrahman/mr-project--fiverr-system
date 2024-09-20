@@ -36,7 +36,7 @@ function UserBox() {
     );
   } else {
     content = (
-      <div className="flex size-10 items-center justify-center rounded-full border bg-[#ffefef]/80  object-cover text-3xl font-bold text-[#3b3b3b]/50">
+      <div className="flex size-10 items-center justify-center rounded-full border bg-[#ffefef]/80 object-cover text-3xl font-bold text-[#3b3b3b]/50">
         {letterLogo}
       </div>
     );

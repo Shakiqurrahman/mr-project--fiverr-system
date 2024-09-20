@@ -1,26 +1,19 @@
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
 import { FaSkype, FaTelegramPlane, FaWhatsapp } from "react-icons/fa";
 import { PiDotsSixBold } from "react-icons/pi";
 import { RiPlayLargeFill, RiPlayReverseLargeFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import gmailIcon from "../assets/images/icons/Gmail.png";
 import messengerLogo from "../assets/images/icons/messenger.png";
+import { useLocalStorageObject } from "../hooks/useLocalStorageObject";
 
 function SocialMediaLinks() {
-  // Retrieve the value from localStorage or default to true if not present
-  const initialExpend =
-    JSON.parse(localStorage.getItem("social-links")) ?? true;
-  const [expend, setExpend] = useState(initialExpend);
+  const [{ socialLinks: expend }, updateItem] = useLocalStorageObject("utils", {
+    socialLinks: true,
+  });
 
-  // Update localStorage whenever `expend` changes
-  useEffect(() => {
-    localStorage.setItem("social-links", JSON.stringify(expend));
-  }, [expend]);
-
-  // Toggle the state
   const handleExpend = () => {
-    setExpend((prevExpend) => !prevExpend);
+    updateItem("socialLinks", !expend);
   };
 
   return (
@@ -73,7 +66,7 @@ function SocialMediaLinks() {
             <RiPlayReverseLargeFill className="text-xl" />
           )}
         </button>
-        <PiDotsSixBold className="text-2xl cursor-move" />
+        <PiDotsSixBold className="cursor-move text-2xl" />
       </div>
     </motion.div>
   );

@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import FlipMove from "react-flip-move";
 import toast from "react-hot-toast";
 import { IoMdClose } from "react-icons/io";
 import { useSelector } from "react-redux";
@@ -16,7 +15,7 @@ import CategoryCards from "./CategoryCards";
 function FeatureCategory() {
   const { user } = useSelector((state) => state.user);
   const [expand, setExpand] = useState(false);
-  const { categories, error, isLoading } = useGetCategory();
+  const { categories, error, loading } = useGetCategory();
 
   const [products, setProducts] = useState([]);
   const [draggedIndex, setDraggedIndex] = useState(null);
@@ -108,14 +107,7 @@ function FeatureCategory() {
       )}
       <div className="flex flex-wrap items-start gap-3 sm:flex-nowrap">
         <div className="relative w-full sm:w-2/3 md:w-3/4 lg:w-4/5">
-          {isLoading && products.length > 0 ? (
-            <>
-              <FeatureCategorySkeleton />
-              <FeatureCategorySkeleton />
-              <FeatureCategorySkeleton />
-            </>
-          ) : (
-            <FlipMove>
+            <div>
               {tempProducts.map((category, idx) => {
                 if (!expand) {
                   if (idx <= 4) {
@@ -165,8 +157,7 @@ function FeatureCategory() {
                   );
                 }
               })}
-            </FlipMove>
-          )}
+            </div>
 
           {categories?.length > 5 &&
             (!expand ? (

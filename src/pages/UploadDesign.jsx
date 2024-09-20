@@ -5,9 +5,6 @@ import { FaSpinner } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Check from "../assets/svg/Check";
-import Datalist from "../components/Datalist";
-import { configApi } from "../libs/configApi";
 import {
   useFetchDesignsQuery,
   useFetchFoldersQuery,
@@ -16,6 +13,9 @@ import {
   useFetchSubFoldersQuery,
 } from "../Redux/api/uploadDesignApiSlice";
 import { fetchCategory } from "../Redux/features/category/categoryApi";
+import Check from "../assets/svg/Check";
+import Datalist from "../components/Datalist";
+import { configApi } from "../libs/configApi";
 
 function UploadDesign() {
   const navigate = useNavigate();
@@ -338,8 +338,8 @@ function UploadDesign() {
           // setUploading(true);
           const response = await axios.post(uploadUrl, formData);
           console.log(response);
-          const name = response.data.data.title;
-          const imageUrl = response.data.data.url;
+          const name = response.data.data[0].result.original_filename;
+          const imageUrl = response.data.data[0].result.url;
 
           return {
             url: imageUrl,
@@ -373,6 +373,7 @@ function UploadDesign() {
         industries,
         designs,
       };
+      console.log(data);
       try {
         const url = `${configApi.api}upload/create`;
 
@@ -396,7 +397,7 @@ function UploadDesign() {
         <h1 className="m-auto block w-56 rounded-full border border-primary px-4 py-2 text-center text-lg font-bold text-primary">
           Upload Design
         </h1>
-        <form action="" className="p-3" onSubmit={handleSubmit}>
+        <form className="p-3" onSubmit={handleSubmit}>
           <div className="flex flex-col">
             <label className="block px-2">Title</label>
             <input
@@ -800,7 +801,7 @@ function UploadDesign() {
               type="button"
               onClick={() => navigate(-1)}
               disabled={submitLoading}
-              className="mt-5 flex h-[45px] w-1/2 max-w-[200px] items-center justify-center rounded-3xl bg-canceled text-white disabled:cursor-not-allowed"
+              className="mt-5 flex h-[45px] w-1/2 max-w-[200px] items-center justify-center rounded-3xl bg-revision text-white disabled:cursor-not-allowed"
             >
               Cancel
             </button>

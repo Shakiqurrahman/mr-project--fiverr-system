@@ -13,6 +13,7 @@ import UserBox from "./UserBox";
 
 import Drawer from "react-modern-drawer";
 //react-drawer css
+import { Badge } from "@mui/material";
 import "react-modern-drawer/dist/index.css";
 import useSyncCart from "../../hooks/useSyncCart";
 
@@ -39,15 +40,15 @@ function Header() {
                 alt="MR Logo"
               />
             </Link>
-            <form className="hidden lg:block min-w-[400px]  bg-white rounded-md">
+            <form className="hidden min-w-[400px] rounded-md bg-white lg:block">
               <div className="relative flex items-stretch">
                 <input
-                  className=" rounded-md px-4 py-2 outline-none w-full"
+                  className="w-full rounded-md px-4 py-2 outline-none"
                   type="text"
                   placeholder="What design you are looking for today?"
                 />
                 <button
-                  className="rounded-md bg-primary p-2 m-px"
+                  className="m-px rounded-md bg-primary p-2"
                   type="submit"
                 >
                   <GoSearch className="text-xl text-white" />
@@ -56,7 +57,7 @@ function Header() {
             </form>
             <nav className="flex items-center gap-6">
               <ul
-                className={`flex-col items-center gap-6 text-white duration-300 md:static md:flex-row ${
+                className={`z-[100] flex-col items-center gap-6 text-white duration-300 md:static md:flex-row ${
                   activeMenu
                     ? "absolute left-0 top-16 flex w-full bg-black py-16 sm:top-20 md:bg-transparent"
                     : "hidden md:flex"
@@ -72,13 +73,32 @@ function Header() {
                   className="text-white hover:text-gray-300"
                   onClick={handleClose}
                 >
-                  <NavLink to="/inbox">Inbox</NavLink>
+                  <Badge
+                    badgeContent={0}
+                    sx={{
+                      "& .MuiBadge-badge": {
+                        backgroundColor: "#1b8cdc",
+                        color: "white",
+                      },
+                    }}
+                  >
+                    <NavLink to="/inbox">Inbox</NavLink>
+                  </Badge>
                 </li>
-                <li
-                  className="text-white hover:text-gray-300"
-                  onClick={handleClose}
-                >
-                  <NavLink to="/notifications">Notifications</NavLink>
+                <li>
+                  <Badge
+                    badgeContent={0}
+                    sx={{
+                      "& .MuiBadge-badge": {
+                        backgroundColor: "#1b8cdc",
+                        color: "white",
+                      },
+                    }}
+                    className="text-white hover:text-gray-300"
+                    onClick={handleClose}
+                  >
+                    <NavLink to="/notifications">Notifications</NavLink>
+                  </Badge>
                 </li>
                 <li
                   className="text-white hover:text-gray-300"
@@ -117,19 +137,29 @@ function Header() {
                     className="relative cursor-pointer"
                     onClick={() => setOpenDrawer(true)}
                   >
-                    <BsCart4
-                      className="text-white hover:text-gray-300"
-                      size={30}
-                    />
-                    <span className="absolute -right-2 -top-2 size-6 rounded-full bg-primary text-center text-xs leading-[24px] text-white">
+                    <Badge
+                      badgeContent={cartItems.length}
+                      sx={{
+                        "& .MuiBadge-badge": {
+                          backgroundColor: "#1b8cdc",
+                          color: "white",
+                        },
+                      }}
+                    >
+                      <BsCart4
+                        className="text-white hover:text-gray-300"
+                        size={30}
+                      />
+                    </Badge>
+                    {/* <span className="absolute -right-2 -top-2 size-6 rounded-full bg-primary text-center text-xs leading-[24px] text-white">
                       {cartItems.length}
-                    </span>
+                    </span> */}
                   </div>
                   <Drawer
                     open={openDrawer}
                     onClose={() => setOpenDrawer(false)}
                     direction="right"
-                    className="!w-full !max-w-[450px] !bg-slate-100 !overflow-y-auto drawer-scroller"
+                    className="drawer-scroller !w-full !max-w-[450px] !overflow-y-auto !bg-slate-100"
                   >
                     <CartDrawer close={() => setOpenDrawer(false)} />
                   </Drawer>
