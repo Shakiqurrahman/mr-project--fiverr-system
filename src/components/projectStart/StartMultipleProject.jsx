@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import Check from "../../assets/svg/Check";
 import { fetchCategory } from "../../Redux/features/category/categoryApi";
+import Check from "../../assets/svg/Check";
 
 const StartMultipleProject = ({ items }) => {
   const dispatch = useDispatch();
@@ -37,7 +37,6 @@ const StartMultipleProject = ({ items }) => {
   );
   const [selectedItem, setSelectedItem] = useState(choosenItems[0].id);
   const quantities = Array.from({ length: 9 }, (_, i) => i + 1);
-  const [selectedQuantity, setSelectedQuantity] = useState(1);
 
   // Get the category data from API
   useEffect(() => {
@@ -59,6 +58,10 @@ const StartMultipleProject = ({ items }) => {
             ...item,
             category: categoryObj || item.category,
             subCategory: subCategoryObj || item.subCategory,
+            totalPrice: subCategoryObj?.subAmount,
+            regularDeliveryDays: subCategoryObj?.regularDeliveryDays,
+            fastDeliveryDays: subCategoryObj?.fastDeliveryDays,
+            fastDeliveryPrice: subCategoryObj?.fastDeliveryPrice,
           };
         }),
       );
@@ -66,18 +69,31 @@ const StartMultipleProject = ({ items }) => {
   }, [categories]);
 
   const handleFastDeliveryToggle = (e, id) => {
+    const isChecked = e.target.checked;
     console.log(e.target.checked, id);
     setChoosenItems((prev) =>
       prev.map((item) => {
         if (item.id === id) {
-          return {
-            ...item,
-            isFastDelivery: e.target.checked,
-            save: false,
-          };
-        } else {
-          return item;
+          if (isChecked) {
+            return {
+              ...item,
+              isFastDelivery: true,
+              save: false,
+              totalPrice:
+                (parseInt(item.subCategory.subAmount) +
+                  parseInt(item.subCategory.fastDeliveryPrice)) *
+                item.quantity,
+            };
+          } else {
+            return {
+              ...item,
+              isFastDelivery: false,
+              save: false, // or set to true if you want to change this when unchecked
+              totalPrice: parseInt(item.subCategory.subAmount) * item.quantity,
+            };
+          }
         }
+        return item; // Return the original item if id does not match
       }),
     );
   };
@@ -89,6 +105,13 @@ const StartMultipleProject = ({ items }) => {
             ...item,
             quantity,
             save: false,
+            regularDeliveryDays:
+              parseInt(item.subCategory.regularDeliveryDays) * quantity,
+            fastDeliveryPrice:
+              parseInt(item.subCategory.fastDeliveryPrice) * quantity,
+            fastDeliveryDays:
+              parseInt(item.subCategory.fastDeliveryDays) * quantity,
+            totalPrice: parseInt(item.subCategory.subAmount) * quantity,
           };
         } else {
           return item;
@@ -114,13 +137,24 @@ const StartMultipleProject = ({ items }) => {
   const totalDays = choosenItems?.reduce((total, item) => {
     // Check if fast delivery is selected
     const deliveryDays = item?.isFastDelivery
-      ? item?.subCategory?.fastDeliveryDays || 0 // Use fastDeliveryDays if true
-      : item?.subCategory?.regularDeliveryDays || 0; // Otherwise, use regularDeliveryDays
+      ? item?.fastDeliveryDays || 0 // Use fastDeliveryDays if true
+      : item?.regularDeliveryDays || 0; // Otherwise, use regularDeliveryDays
 
     return total + Number(deliveryDays); // Convert to number and accumulate
   }, 0);
 
-  console.log(choosenItems);
+  const totalAmount = choosenItems?.reduce(
+    (total, item) => total + Number(item.totalPrice),
+    0,
+  );
+
+  const allSaved = choosenItems?.every((item) => item.save === true);
+
+  console.log(allSaved);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
 
   return (
     <div className="mx-auto max-w-[800px] border bg-lightskyblue">
@@ -174,9 +208,7 @@ const StartMultipleProject = ({ items }) => {
               </p>
               <div className="my-5 flex flex-wrap items-center gap-3 sm:flex-nowrap">
                 <div className="w-full border bg-white p-3 text-sm sm:text-base">
-                  {parseInt(item?.subCategory?.regularDeliveryDays) *
-                    parseInt(item?.quantity)}{" "}
-                  Days Delivery
+                  {item?.regularDeliveryDays} Days Delivery
                 </div>
                 <div className="flex w-full items-center gap-3 sm:justify-end">
                   <div className="flex items-center gap-x-2 text-sm font-medium sm:text-base">
@@ -195,15 +227,11 @@ const StartMultipleProject = ({ items }) => {
                     >
                       <Check className="h-[8px] sm:h-[10px]" />
                     </label>
-                    Extra Fast{" "}
-                    {parseInt(item?.subCategory?.fastDeliveryDays) *
-                      parseInt(item?.quantity)}
+                    Extra Fast {item?.fastDeliveryDays}
                     -day delivery
                   </div>
                   <span className="mr-3 font-bold leading-none text-primary">
-                    $
-                    {parseInt(item?.subCategory?.fastDeliveryPrice) *
-                      parseInt(item?.quantity)}
+                    ${item?.fastDeliveryPrice}
                   </span>
                 </div>
               </div>
@@ -236,13 +264,7 @@ const StartMultipleProject = ({ items }) => {
                   <div className="mt-5 border bg-white p-3 text-center text-lg text-primary sm:text-2xl">
                     Total -{" "}
                     <span className="font-semibold">
-                      $
-                      {item?.isFastDelivery
-                        ? (parseInt(item?.subCategory?.subAmount) +
-                            parseInt(item?.subCategory?.fastDeliveryPrice)) *
-                          parseInt(item?.quantity)
-                        : parseInt(item?.subCategory?.subAmount) *
-                          parseInt(item?.quantity)}{" "}
+                      ${item?.totalPrice}
                       USD
                     </span>
                   </div>
@@ -258,8 +280,12 @@ const StartMultipleProject = ({ items }) => {
               <p className="my-5 text-center text-sm sm:text-base">
                 {totalDays} Days Delivery
               </p>
-              <button className="my-5 block w-full bg-primary p-3 text-center font-semibold text-white">
-                Continue ($130)
+              <button
+                className="my-5 block w-full bg-primary p-3 text-center font-semibold text-white disabled:cursor-not-allowed disabled:bg-primary/50"
+                disabled={!allSaved}
+                onClick={handleSubmit}
+              >
+                Continue (${totalAmount || 0})
               </button>
             </div>
           ))}
