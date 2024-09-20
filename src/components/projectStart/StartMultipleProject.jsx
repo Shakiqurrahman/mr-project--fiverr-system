@@ -283,7 +283,7 @@ const StartMultipleProject = ({ items }) => {
                     </select>
                   </div>
                   <div className="mt-5 border bg-white p-3 text-center text-lg text-primary sm:text-2xl">
-                    Total -{" "}
+                    Subtotal -{" "}
                     <span className="font-semibold">
                       ${item?.totalPrice}
                       USD
@@ -292,28 +292,28 @@ const StartMultipleProject = ({ items }) => {
                 </div>
               </div>
               <button
-                className="my-5 block w-full bg-revision p-3 text-center font-semibold text-white disabled:cursor-not-allowed disabled:bg-revision/50"
+                className="my-5 block w-full bg-revision p-3 text-center text-lg font-semibold text-white disabled:cursor-not-allowed disabled:bg-revision/50 sm:text-2xl"
                 disabled={item?.save}
                 onClick={() => handleSave(item?.id)}
               >
                 {item?.save ? "Saved" : "Save"}
               </button>
-              <p className="my-5 text-center text-sm sm:text-base">
-                {totalDays} Days Delivery
-              </p>
-              <button
-                className="my-5 block w-full bg-primary p-3 text-center font-semibold text-white disabled:cursor-not-allowed disabled:bg-primary/50"
-                disabled={!allSaved}
-                onClick={handleSubmit}
-              >
-                Continue (${totalAmount || 0})
-              </button>
             </div>
           ))}
+        <p className="my-5 text-center text-sm sm:text-base">
+          {totalDays} Days Delivery
+        </p>
+        <button
+          className="my-5 block w-full bg-primary p-3 text-center text-lg font-semibold text-white disabled:cursor-not-allowed disabled:bg-primary/50 sm:text-2xl"
+          disabled={!allSaved}
+          onClick={handleSubmit}
+        >
+          Continue (Total - ${totalAmount || 0})
+        </button>
+        <p className="my-8 text-center text-sm sm:text-base">
+          Go to the payment option by clicking &quot;Continue&quot;
+        </p>
       </div>
-      <p className="my-8 text-center text-sm sm:text-base">
-        Go to the payment option by clicking &quot;Continue&quot;
-      </p>
     </div>
   );
 };
