@@ -9,13 +9,12 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { z } from "zod";
 import { configApi } from "../libs/configApi";
+import { connectSocket } from "../libs/socketService";
 import {
   clearPasswordVisibility,
   toggleShowPassword,
 } from "../Redux/features/passwordVisibilitySlice";
-import { setSocketStatus, setUser } from "../Redux/features/userSlice";
-import useSocket from "../hooks/useSocket";
-import { connectSocket } from "../libs/socketService";
+import { setUser } from "../Redux/features/userSlice";
 
 // Define the validation schema using Zod
 const signInSchema = z.object({
@@ -55,7 +54,7 @@ function SignInForm({ handleClick }) {
 
       const userData = response?.data?.data;
       dispatch(setUser({ user: userData.user, token: userData.token }));
-      connectSocket('http://localhost:3000', userData.token);
+      connectSocket("http://localhost:3000", userData.token);
       setLoading(false);
       setError("");
       dispatch(clearPasswordVisibility());
