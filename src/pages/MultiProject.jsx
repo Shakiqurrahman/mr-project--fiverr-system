@@ -1,22 +1,54 @@
-import { useRef, useState } from "react";
+import axios from "axios";
+import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { FaEye } from "react-icons/fa";
 import { ImPlus } from "react-icons/im";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
+import PreviewImage from "../components/PreviewImage";
+import { configApi } from "../libs/configApi";
+import { useFetchMultiProjectQuery } from "../Redux/api/multiProjectApiSlice";
 
 const MultiProject = () => {
+  const { data } = useFetchMultiProjectQuery();
   const imageRef = useRef(null);
   const navigate = useNavigate();
+  const [preview, setPreview] = useState(false);
+  const [id, setId] = useState("");
   const [projectTitle, setProjectTitle] = useState("");
   const [projectImage, setProjectImage] = useState(null);
+  const [selectImage, setSelectImage] = useState(null);
   const [requirements, setRequirements] = useState([
     "Which industry do you work in?",
     "Do you have your own company logo?",
+    "",
   ]);
+
+  useEffect(() => {
+    if (data) {
+      const existingData = data[0];
+      setId(existingData?.id || "");
+      setProjectTitle(existingData?.projectTitle || "");
+      setProjectImage(existingData?.projectImage || null);
+      setRequirements(
+        existingData?.requirements || [
+          "Which industry do you work in?",
+          "Do you have your own company logo?",
+          "",
+        ],
+      );
+    }
+  }, [data]);
+  console.log({ id, projectTitle, projectImage, requirements });
 
   const handleImageChange = (e) => {
     if (imageRef.current) {
       const file = Array.from(e.target.files)[0];
-      setProjectImage(file);
+      setSelectImage(file);
+      setProjectImage({
+        name: file.name,
+        url: URL.createObjectURL(file),
+      });
       imageRef.current.value = "";
     }
   };
@@ -29,15 +61,72 @@ const MultiProject = () => {
     setRequirements(requirements.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (projectTitle && projectImage && requirements) {
-      const data = {
-        projectTitle,
-        projectImage,
-        requirements,
-      };
-      console.log(data);
+
+    // Check if all required fields are filled
+    if (projectTitle && requirements && projectImage) {
+      const formData = new FormData();
+
+      // Check if a new image is selected
+      if (selectImage) {
+        formData.append("fileName", selectImage);
+      }
+
+      const uploadUrl = `${configApi.api}upload-image`;
+
+      try {
+        let imageObj = null;
+
+        // Only upload a new image if one is selected
+        if (selectImage) {
+          const response = await axios.post(uploadUrl, formData);
+          console.log(response);
+
+          if (response.data.success) {
+            const name =
+              response.data.data[0].result.original_filename +
+              "." +
+              response.data.data[0].result.format;
+            const imageUrl = response.data.data[0].result.url;
+
+            imageObj = {
+              url: imageUrl,
+              name,
+            };
+          } else {
+            throw new Error("Image upload failed");
+          }
+        } else {
+          // If no new image, use existing image
+          imageObj = projectImage; // Assuming projectImage contains the existing image data
+        }
+
+        // Prepare the data to update
+        const data = {
+          id,
+          projectTitle,
+          projectImage: imageObj,
+          requirements,
+        };
+
+        const res = await axios.post(
+          `${configApi.api}/multi-project/create`,
+          data,
+        );
+        if (res) {
+          setId(res.data.id);
+          setProjectTitle(res.data.projectTitle);
+          setProjectImage(res.data.projectImage);
+          setRequirements(res.data.requirements);
+        }
+        console.log("Project updated", res);
+      } catch (error) {
+        console.error("Error uploading image or updating project:", error);
+        // Optional: toast.error("Failed to upload image or update project");
+      }
+    } else {
+      toast.error("All Fields are Required!!!");
     }
   };
 
@@ -62,7 +151,12 @@ const MultiProject = () => {
 
         {/* Project Image */}
         <div className="mt-5 bg-lightskyblue">
-          <h1 className="bg-primary p-3 text-white">Project Image</h1>
+          <div className="flex items-center justify-between gap-3 bg-primary p-3 text-white">
+            <h1>Project Image</h1>
+            <button type="button" onClick={() => setPreview(true)}>
+              <FaEye className="text-2xl" />
+            </button>
+          </div>
           <input
             ref={imageRef}
             type="file"
@@ -131,6 +225,12 @@ const MultiProject = () => {
           </button>
         </div>
       </form>
+      {preview && (
+        <PreviewImage
+          url={projectImage.url}
+          closePreview={() => setPreview(false)}
+        />
+      )}
     </div>
   );
 };
