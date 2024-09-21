@@ -3,9 +3,11 @@ import { FaCheckCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategory } from "../../Redux/features/category/categoryApi";
 import Check from "../../assets/svg/Check";
+import { useNavigate } from "react-router-dom";
 
 const StartSingleProject = ({ item }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { loading, category, error } = useSelector((state) => state.category);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -92,9 +94,12 @@ const StartSingleProject = ({ item }) => {
         : regularDeliveryDay,
       isFastDelivery,
       fastDeliveryAmount: fastDeliveryPrice,
+      fastDeliveryDuration: extraFastDeliveryDay,
+      subTotal : baseAmount,
       totalAmount,
     };
-    console.log("submittedData", data);
+    navigate('/payment', {state : data});
+    // console.log("submittedData", data);
   };
 
   return (
@@ -104,15 +109,17 @@ const StartSingleProject = ({ item }) => {
           You are starting a project
         </h3>
         <form onSubmit={handleSubmit} className="bg-lightskyblue p-4 pt-10">
-          <p className="mb-2 text-sm sm:text-lg">Choose the category you need</p>
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 border bg-white p-6">
+          <p className="mb-2 text-sm sm:text-lg">
+            Choose the category you need
+          </p>
+          <div className="flex flex-col items-center justify-between gap-2 border bg-white p-6 sm:flex-row">
             <img
               className="h-[93px] w-32 object-cover"
               src={selectedCategoryData?.image?.url}
               alt={selectedCategoryData?.image?.name}
             />
             {item ? (
-              <h1 className="w-full px-4 text-base sm:text-2xl font-semibold">
+              <h1 className="w-full px-4 text-base font-semibold sm:text-2xl">
                 {selectedCategory}
               </h1>
             ) : (
@@ -121,7 +128,7 @@ const StartSingleProject = ({ item }) => {
                 id="subcategory"
                 value={selectedCategory}
                 onChange={handleCategoryChange}
-                className={`w-full p-4 text-base sm:text-2xl font-semibold outline-none`}
+                className={`w-full p-4 text-base font-semibold outline-none sm:text-2xl`}
               >
                 {categories?.map((category) => (
                   <option
@@ -135,7 +142,9 @@ const StartSingleProject = ({ item }) => {
               </select>
             )}
           </div>
-          <p className="mb-2 mt-6 text-sm sm:text-lg">Choose the subcategory you need</p>
+          <p className="mb-2 mt-6 text-sm sm:text-lg">
+            Choose the subcategory you need
+          </p>
           <select
             name="subcategory"
             id="subcategory"

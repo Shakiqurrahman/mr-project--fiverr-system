@@ -38,6 +38,7 @@ import ChatLayout from "./ChatLayout";
 import AdminRoute from "./private-route/AdminRoute";
 import PrivateRoute from "./private-route/PrivateRoute";
 import UnAuthenticatedRoute from "./private-route/UnAuthenticatedRoute";
+import PaymentPage from "../pages/PaymentPage";
 
 export const router = createBrowserRouter([
   {
@@ -172,6 +173,10 @@ export const router = createBrowserRouter([
           </AdminRoute>
         ),
       },
+      {
+        path: "/payment",
+        element: <PaymentPage />,
+      },
       // Mahdi's created routes start
       {
         path: "/tips",
@@ -226,7 +231,11 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/inbox",
-        element: <InboxPage />,
+        element: (
+          <PrivateRoute>
+            <InboxPage />
+          </PrivateRoute>
+        ),
       },
     ],
   },
