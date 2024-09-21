@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { FaEye } from "react-icons/fa";
+import { FaEye, FaSpinner } from "react-icons/fa";
 import { ImPlus } from "react-icons/im";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +13,7 @@ const MultiProject = () => {
   const { data } = useFetchMultiProjectQuery();
   const imageRef = useRef(null);
   const navigate = useNavigate();
+  const [submitLoading, setSubmitLoading] = useState(false);
   const [preview, setPreview] = useState(false);
   const [id, setId] = useState("");
   const [projectTitle, setProjectTitle] = useState("");
@@ -66,6 +67,8 @@ const MultiProject = () => {
 
     // Check if all required fields are filled
     if (projectTitle && requirements && projectImage) {
+      const reqArray = requirements?.filter((i) => i);
+
       const formData = new FormData();
 
       // Check if a new image is selected
@@ -76,6 +79,8 @@ const MultiProject = () => {
       const uploadUrl = `${configApi.api}upload-image`;
 
       try {
+        setSubmitLoading(true);
+
         let imageObj = null;
 
         // Only upload a new image if one is selected
@@ -107,7 +112,7 @@ const MultiProject = () => {
           id,
           projectTitle,
           projectImage: imageObj,
-          requirements,
+          requirements: reqArray,
         };
 
         const res = await axios.post(
@@ -121,9 +126,12 @@ const MultiProject = () => {
           setRequirements(res.data.requirements);
         }
         console.log("Project updated", res);
+        setSubmitLoading(false);
+        toast.success("Successfully Saved!");
       } catch (error) {
+        setSubmitLoading(false);
         console.error("Error uploading image or updating project:", error);
-        // Optional: toast.error("Failed to upload image or update project");
+        toast.error("Failed to upload image or update project");
       }
     } else {
       toast.error("All Fields are Required!!!");
@@ -208,18 +216,24 @@ const MultiProject = () => {
         </div>
 
         <div className="flex justify-center gap-5">
-          {/* Submit */}
           <button
             type="submit"
-            className="mt-5 block w-1/2 max-w-[200px] rounded-3xl bg-primary p-3 text-center text-white"
+            disabled={submitLoading}
+            className="mt-5 flex h-[45px] w-1/2 max-w-[200px] items-center justify-center rounded-3xl bg-primary text-white disabled:cursor-not-allowed"
           >
-            Create
+            {submitLoading ? (
+              <span className="animate-spin text-xl">
+                <FaSpinner />
+              </span>
+            ) : (
+              "Save"
+            )}
           </button>
-          {/* cancel */}
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="mt-5 block w-1/2 max-w-[200px] rounded-3xl bg-revision p-3 text-center text-white"
+            disabled={submitLoading}
+            className="mt-5 flex h-[45px] w-1/2 max-w-[200px] items-center justify-center rounded-3xl bg-revision text-white disabled:cursor-not-allowed"
           >
             Cancel
           </button>

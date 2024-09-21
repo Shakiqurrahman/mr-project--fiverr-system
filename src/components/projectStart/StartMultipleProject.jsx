@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCategory } from "../../Redux/features/category/categoryApi";
 import Check from "../../assets/svg/Check";
+import { useFetchMultiProjectQuery } from "../../Redux/api/multiProjectApiSlice";
+import { fetchCategory } from "../../Redux/features/category/categoryApi";
 
 const StartMultipleProject = ({ items }) => {
+  const { data } = useFetchMultiProjectQuery();
   const dispatch = useDispatch();
   const { category: categories } = useSelector((state) => state.category);
+  const [multiProjectData, setMultiProjectData] = useState(null);
   const [choosenItems, setChoosenItems] = useState(() =>
     items.map(
       ({
@@ -38,10 +41,18 @@ const StartMultipleProject = ({ items }) => {
   const [selectedItem, setSelectedItem] = useState(choosenItems[0].id);
   const quantities = Array.from({ length: 9 }, (_, i) => i + 1);
 
+  // Set the multi-project data from API
+  useEffect(() => {
+    if (data) {
+      setMultiProjectData(data[0]);
+    }
+  }, [data]);
+
   // Get the category data from API
   useEffect(() => {
     dispatch(fetchCategory());
   }, [dispatch]);
+
   // Update choosenItems with category data and filter subcategories
   useEffect(() => {
     if (categories) {
@@ -58,7 +69,7 @@ const StartMultipleProject = ({ items }) => {
             ...item,
             category: categoryObj || item.category,
             subCategory: subCategoryObj || item.subCategory,
-            totalPrice: subCategoryObj?.subAmount,
+            subTotal: subCategoryObj?.subAmount,
             regularDeliveryDays: subCategoryObj?.regularDeliveryDays,
             fastDeliveryDays: subCategoryObj?.fastDeliveryDays,
             fastDeliveryPrice: subCategoryObj?.fastDeliveryPrice,
@@ -79,7 +90,7 @@ const StartMultipleProject = ({ items }) => {
               ...item,
               isFastDelivery: true,
               save: false,
-              totalPrice:
+              subTotal:
                 (parseInt(item.subCategory.subAmount) +
                   parseInt(item.subCategory.fastDeliveryPrice)) *
                 item.quantity,
@@ -89,7 +100,7 @@ const StartMultipleProject = ({ items }) => {
               ...item,
               isFastDelivery: false,
               save: false, // or set to true if you want to change this when unchecked
-              totalPrice: parseInt(item.subCategory.subAmount) * item.quantity,
+              subTotal: parseInt(item.subCategory.subAmount) * item.quantity,
             };
           }
         }
@@ -111,7 +122,7 @@ const StartMultipleProject = ({ items }) => {
               parseInt(item.subCategory.fastDeliveryPrice) * quantity,
             fastDeliveryDays:
               parseInt(item.subCategory.fastDeliveryDays) * quantity,
-            totalPrice: parseInt(item.subCategory.subAmount) * quantity,
+            subTotal: parseInt(item.subCategory.subAmount) * quantity,
           };
         } else {
           return item;
@@ -144,7 +155,7 @@ const StartMultipleProject = ({ items }) => {
   }, 0);
 
   const totalAmount = choosenItems?.reduce(
-    (total, item) => total + Number(item.totalPrice),
+    (total, item) => total + Number(item.subTotal),
     0,
   );
 
@@ -152,7 +163,7 @@ const StartMultipleProject = ({ items }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (allSaved && choosenItems) {
+    if (allSaved && choosenItems && multiProjectData) {
       const newItems = choosenItems.map(({ save, id, ...item }) => {
         const {
           bulletPoint,
@@ -169,8 +180,9 @@ const StartMultipleProject = ({ items }) => {
         };
       });
       const data = {
+        multiProjectData,
         duration: totalDays,
-        totalPrice: totalAmount,
+        totalAmount,
         orderItems: newItems,
       };
       console.log(data);
@@ -285,7 +297,7 @@ const StartMultipleProject = ({ items }) => {
                   <div className="mt-5 border bg-white p-3 text-center text-lg text-primary sm:text-2xl">
                     Subtotal -{" "}
                     <span className="font-semibold">
-                      ${item?.totalPrice}
+                      ${item?.subTotal}
                       USD
                     </span>
                   </div>
