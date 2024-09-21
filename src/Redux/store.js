@@ -4,13 +4,14 @@ import persistStore from "redux-persist/es/persistStore";
 import storage from "redux-persist/lib/storage";
 import { allUserApiSlice } from "./api/allUserApiSlice";
 import { apiSlice } from "./api/apiSlice";
+import { multiProjectApiSlice } from "./api/multiProjectApiSlice";
 import { offerProjectApiSlice } from "./api/offerProjectApiSlice";
 import { uploadDesignApiSlice } from "./api/uploadDesignApiSlice";
+import cartSlice from "./features/cartSlice";
 import categorySlice from "./features/category/categorySlice";
 import offerProjectSlice from "./features/offerProjectSlice";
 import passwordVisibilitySlice from "./features/passwordVisibilitySlice";
 import userSlice from "./features/userSlice";
-import cartSlice from "./features/cartSlice";
 
 // Persist configs
 const userPersistConfig = {
@@ -46,12 +47,13 @@ const store = configureStore({
     user: persistedUserReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
     [allUserApiSlice.reducerPath]: allUserApiSlice.reducer,
-    cart : persistedCartReducer,
+    cart: persistedCartReducer,
     passwordVisibility: passwordVisibilitySlice,
     category: categorySlice,
     offerProject: persistedOfferProjectReducer,
     [offerProjectApiSlice.reducerPath]: offerProjectApiSlice.reducer,
     [uploadDesignApiSlice.reducerPath]: uploadDesignApiSlice.reducer,
+    [multiProjectApiSlice.reducerPath]: multiProjectApiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -61,6 +63,7 @@ const store = configureStore({
       allUserApiSlice.middleware,
       offerProjectApiSlice.middleware,
       uploadDesignApiSlice.middleware,
+      multiProjectApiSlice.middleware,
     ),
 });
 

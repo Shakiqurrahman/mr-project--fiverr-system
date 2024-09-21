@@ -74,14 +74,14 @@ const ChatBox = () => {
   // Socket connection
   useEffect(() => {
     // Listen for incoming messages
-    socket.on("message", (msg) => {
+    socket?.on("message", (msg) => {
       setMessages((prevMessages) => [...prevMessages, msg]);
       console.log(msg);
     });
 
     // Cleanup on component unmount
     return () => {
-      socket.off("message");
+      socket?.off("message");
     };
   }, [socket]);
 
