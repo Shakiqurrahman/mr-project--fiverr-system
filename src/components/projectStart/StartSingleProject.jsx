@@ -104,15 +104,15 @@ const StartSingleProject = ({ item }) => {
           You are starting a project
         </h3>
         <form onSubmit={handleSubmit} className="bg-lightskyblue p-4 pt-10">
-          <p className="mb-2 text-lg">Choose the category you need</p>
-          <div className="flex items-center justify-between gap-2 border bg-white p-6">
+          <p className="mb-2 text-sm sm:text-lg">Choose the category you need</p>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 border bg-white p-6">
             <img
               className="h-[93px] w-32 object-cover"
               src={selectedCategoryData?.image?.url}
               alt={selectedCategoryData?.image?.name}
             />
             {item ? (
-              <h1 className="w-full px-4 text-2xl font-semibold">
+              <h1 className="w-full px-4 text-base sm:text-2xl font-semibold">
                 {selectedCategory}
               </h1>
             ) : (
@@ -121,7 +121,7 @@ const StartSingleProject = ({ item }) => {
                 id="subcategory"
                 value={selectedCategory}
                 onChange={handleCategoryChange}
-                className={`w-full p-4 text-2xl font-semibold outline-none`}
+                className={`w-full p-4 text-base sm:text-2xl font-semibold outline-none`}
               >
                 {categories?.map((category) => (
                   <option
@@ -135,7 +135,7 @@ const StartSingleProject = ({ item }) => {
               </select>
             )}
           </div>
-          <p className="mb-2 mt-6 text-lg">Choose the subcategory you need</p>
+          <p className="mb-2 mt-6 text-sm sm:text-lg">Choose the subcategory you need</p>
           <select
             name="subcategory"
             id="subcategory"
