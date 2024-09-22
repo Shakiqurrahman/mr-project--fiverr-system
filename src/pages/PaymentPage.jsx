@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import Cards from "../assets/images/card.png";
 import Check from "../assets/svg/Check";
+import PaymentTabs from "../components/PaymentTabs";
 import { ToggleSwitch } from "../libs/ToggleSwitch";
 
 const PaymentPage = () => {
   const { state } = useLocation();
   console.log(state);
+  const [activeTab, setActiveTab] = useState(null);
   const [fastDelivery, setFastDelivery] = useState(
     state?.isFastDelivery || false,
   );
@@ -22,6 +24,18 @@ const PaymentPage = () => {
   // for saving card details
   const [isSavingCard, setIsSavingCard] = useState(false);
   const [designs, setDesigns] = useState(state || []);
+  const [designsList, setDesignsList] = useState(state?.designs || []);
+  console.log("des", designsList);
+
+  // Function to handle tab click
+  const handleTabClick = (tab) => {
+    if (activeTab === tab) {
+      // If the clicked tab is already active, deselect it
+      setActiveTab(null);
+    } else {
+      setActiveTab(tab);
+    }
+  };
 
   const totalAmount = fastDelivery
     ? parseInt(designs.subTotal) + parseInt(designs.fastDeliveryAmount)
@@ -29,11 +43,11 @@ const PaymentPage = () => {
 
   return (
     <section className="max-width my-10">
-      <h1 className="mb-10 text-center text-lg font-semibold sm:text-[28px]">
+      <h1 className="mb-4 text-center text-lg font-semibold sm:mb-10 sm:text-[28px]">
         Add your card details carefully
       </h1>
-      <div className="mx-auto max-w-[800px] border">
-        <div className="bg-sky-200/60 p-4 sm:p-6">
+      <div className="mx-auto max-w-[800px]">
+        <div className="mb-8 border bg-sky-200/60 p-4 px-2 sm:p-6">
           <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
             <div className="flex flex-col items-center gap-4 sm:flex-row">
               <img
@@ -41,18 +55,23 @@ const PaymentPage = () => {
                 src={designs?.image?.url}
                 alt={designs?.image?.name}
               />
-              <h2 className="text-xl font-semibold">{designs?.categoryName}</h2>
+              <h2 className="text-xl font-semibold">{designs?.title}</h2>
             </div>
-            <p>Quantity-{designs?.selectedQuantity} </p>
+            {designs.selectedQuantity && (
+              <p>Quantity-{designs?.selectedQuantity} </p>
+            )}
+            {state?.from === "offerProject" && (
+              <h3 className="text-3xl font-bold">${totalAmount}</h3>
+            )}
           </div>
           <div className="mt-6 flex flex-col items-center justify-between gap-2 sm:flex-row">
-            <p>Double Sided Design</p>
+            {state?.from !== "offerProject" && <p>{designs?.subCategory}</p>}
             <div className="flex items-center gap-3">
               <ToggleSwitch
                 isChecked={fastDelivery}
                 onToggle={() => setFastDelivery(!fastDelivery)}
               />
-              <p>
+              <p className="text-sm">
                 Extra-fast {designs?.fastDeliveryDuration}-day delivery
                 <span className="text-lg font-semibold text-primary">
                   {" "}
@@ -60,10 +79,20 @@ const PaymentPage = () => {
                 </span>
               </p>
             </div>
-            <h3 className="text-3xl font-bold">${totalAmount}</h3>
+            {state?.from !== "offerProject" && (
+              <h3 className="text-3xl font-bold">${totalAmount}</h3>
+            )}
           </div>
         </div>
-        <div className="bg-lightskyblue p-4 sm:p-6">
+
+        {/* Tab Navigation */}
+        <PaymentTabs handleTabClick={handleTabClick} activeTab={activeTab} />
+        <div className="mx-auto mb-4 flex w-4/5 items-center justify-center gap-4 text-lg font-medium">
+          <span className="h-[1px] w-full flex-1 bg-slate-200"></span> or{" "}
+          <span className="h-[1px] w-full flex-1 bg-slate-200"></span>
+        </div>
+        {/* card header  */}
+        <div className="border bg-lightskyblue p-4 sm:p-6">
           <div className="mb-4 flex flex-wrap items-center gap-2 sm:gap-4">
             <h2 className="text-xl font-semibold">Card Payment</h2>
             <img src={Cards} className="h-[40px]" alt="" />
@@ -94,7 +123,7 @@ const PaymentPage = () => {
               <p className="mb-1 ml-2">Name on Card</p>
               <input
                 type="text"
-                className="w-full border p-4 outline-none"
+                className="w-full border p-4 text-base outline-none"
                 placeholder="Name on Card"
               />
             </div>
@@ -102,7 +131,7 @@ const PaymentPage = () => {
               <p className="mb-1 ml-2">Card Number</p>
               <input
                 type="number"
-                className="w-full border p-4 outline-none"
+                className="w-full border p-4 text-base outline-none"
                 placeholder="Card Number"
               />
             </div>
@@ -111,7 +140,7 @@ const PaymentPage = () => {
                 <p className="mb-1 ml-2">Expiry Date</p>
                 <input
                   type="text"
-                  className="w-full border p-4 outline-none"
+                  className="w-full border p-4 text-base outline-none"
                   placeholder="MM/YY"
                 />
               </div>
@@ -119,7 +148,7 @@ const PaymentPage = () => {
                 <p className="mb-1 ml-2">CVV</p>
                 <input
                   type="number"
-                  className="w-full border p-4 outline-none"
+                  className="w-full border p-4 text-base outline-none"
                   placeholder="CVV"
                 />
               </div>
@@ -146,14 +175,28 @@ const PaymentPage = () => {
             </div>
 
             {/* payment details  */}
-            <div className="border bg-white p-4">
+            <div className="flex flex-col items-center gap-8 border bg-white p-4 sm:flex-row sm:gap-16 sm:p-6">
               <ul className="w-full space-y-3 [&>li:last-child]:border-t">
-                <li className="flex justify-between gap-2">
-                  <p>{designs?.categoryName}</p>
-                  <span className="font-bold">${designs?.subTotal}</span>
-                </li>
+                {!designs.designs && (
+                  <li className="flex justify-between gap-2 px-2">
+                    <p>{designs?.title}</p>
+                    <span className="font-bold">${designs?.subTotal}</span>
+                  </li>
+                )}
+                {state.from === "offerProject" && 
+                  <li className="flex justify-between gap-2 px-2">
+                    <p>{designs?.freeDesign?.designName}</p>
+                    <span className="font-bold">Free</span>
+                  </li>
+                }
+                {state.from === "offerProject" && designs.designs.map((design, idx) => (
+                  <li key={idx} className="flex justify-between gap-2 px-2">
+                    <p>{design.categoryLabel}</p>
+                    <span className="font-bold">x 1</span>
+                  </li>
+                ))}
                 {fastDelivery && (
-                  <li className="flex justify-between gap-2">
+                  <li className="flex justify-between gap-2 px-2">
                     <p>
                       Extra-fast {designs?.fastDeliveryDuration}-day delivery
                     </p>
@@ -162,11 +205,24 @@ const PaymentPage = () => {
                     </span>
                   </li>
                 )}
-                <li className="flex justify-between gap-2 pt-4">
-                  <p className="font-semibold">Total</p> <span className="font-bold">{totalAmount}</span>
+                <li className="flex justify-between gap-2 px-2 pt-4">
+                  <p className="font-semibold">Total</p>{" "}
+                  <span className="font-bold">${totalAmount}</span>
                 </li>
               </ul>
+              <div className="w-full">
+                <p className="mb-4 text-center">Single Payment</p>
+                <button
+                  type="submit"
+                  className="w-full rounded-2xl bg-primary py-4 text-xl font-semibold text-white transition-colors duration-300"
+                >
+                  Pay Now
+                </button>
+              </div>
             </div>
+            <p className="!mt-6 text-center text-base font-medium">
+              Payments are processed securely by Stripe.
+            </p>
           </form>
         </div>
       </div>

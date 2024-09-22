@@ -1,11 +1,12 @@
 export default function formatFileSize(bytes) {
-  if (bytes < 1024) {
-    return bytes + " bytes";
-  } else if (bytes < 1024 * 1024) {
-    return (bytes / 1024).toFixed(2) + " kb";
-  } else if (bytes < 1024 * 1024 * 1024) {
-    return (bytes / (1024 * 1024)).toFixed(2) + " mb";
+  const parsedBytes = Number(bytes);
+  if (parsedBytes < 1024) {
+    return parsedBytes + " bytes";
+  } else if (parsedBytes < 1024 * 1024) {
+    return (parsedBytes / 1024).toFixed(2) + " kb";
+  } else if (parsedBytes < 1024 * 1024 * 1024) {
+    return (parsedBytes / (1024 * 1024)).toFixed(2) + " mb";
   } else {
-    return (bytes / (1024 * 1024 * 1024)).toFixed(2) + " gb";
+    return (parsedBytes / (1024 * 1024 * 1024)).toFixed(2) + " gb";
   }
 }

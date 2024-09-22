@@ -2,12 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { BiDownload } from "react-icons/bi";
 import { BsFillReplyFill, BsThreeDotsVertical } from "react-icons/bs";
 import { FaCheckCircle, FaTrashAlt } from "react-icons/fa";
-import {
-  IoIosArrowDown,
-  IoIosArrowUp,
-  IoIosAttach,
-  IoMdClose,
-} from "react-icons/io";
+import { IoIosArrowDown, IoIosArrowUp, IoIosAttach } from "react-icons/io";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import logo from "../../assets/images/default_user.png";
@@ -23,7 +19,6 @@ import AddQuickMsgModal from "./AddQuickMsgModal";
 import CreateOfferModal from "./CreateOfferModal";
 import EditQuickMsgModal from "./EditQuickMsgModal";
 import EmojiPicker from "./EmojiPicker";
-
 
 const ChatBox = () => {
   const [expand, setExpand] = useState(false);
@@ -114,24 +109,6 @@ const ChatBox = () => {
     return () => clearInterval(intervalId);
   }, [messages]);
 
-  // Selected Images Handler
-  const handleChangeSelectedImage = (e) => {
-    const imagesArr = Array.from(e.target.files);
-    if (Array.isArray(imagesArr) && imagesArr.length > 0) {
-      const images = imagesArr.map((file) => {
-        const size = formatFileSize(file.size);
-        const url = URL.createObjectURL(file);
-        return {
-          name: file.name,
-          url,
-          size,
-        };
-      });
-      console.log(images);
-      setSelectedImages(images);
-    }
-  };
-
   // Quick Messages Handlers
   const handleQuickMsgs = (id) => {
     setQucikMsgBtnController(qucikMsgBtnController === id ? null : id);
@@ -198,14 +175,45 @@ const ChatBox = () => {
   const handleTextChange = (e) => {
     setTextValue(e.target.value);
   };
-  const handleResetImages = () => {
-    // Clear the state
-    setSelectedImages(null);
 
-    // Reset the file input value
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+  // Image Preview Controllers
+
+  const getImagesWithDimensions = (files) => {
+    const images = [];
+
+    const handleImageLoad = (file) => {
+      images.push({
+        file: file,
+        url: URL.createObjectURL(file),
+      });
+      if (images.length === files.length) {
+        setSelectedImages((prevImages) => {
+          // Ensure prevImages is an array
+          return Array.isArray(prevImages)
+            ? [...prevImages, ...images]
+            : images;
+        });
+      }
+    };
+
+    for (let i = 0; i < files.length; i++) {
+      handleImageLoad(files[i]);
     }
+  };
+
+  const handleChangeSelectedImage = (event) => {
+    const files = Array.from(event.target.files);
+    getImagesWithDimensions(files);
+  };
+
+  const handleImageRemove = (index) => {
+    setSelectedImages((prevImages) => {
+      const newImages = prevImages.filter((_, i) => i !== index);
+      return newImages;
+    });
+
+    // Reset the file input to allow re-uploading the same file
+    fileInputRef.current.value = null;
   };
 
   // click outside the box it will be toggled
@@ -231,6 +239,11 @@ const ChatBox = () => {
           messages.length > 0
             ? Math.max(...messages.map((item) => item.messageId)) + 1
             : 1;
+        const attachments = selectedImages?.map((img) => ({
+          name: img.file.name,
+          size: img.file.size,
+          url: img.url,
+        }));
         const submitForm = {
           messageId: maxId,
           userImage: userProfilePic,
@@ -238,7 +251,7 @@ const ChatBox = () => {
           msgDate,
           msgTime,
           messageText: textValue,
-          attachment: selectedImages || null,
+          attachment: attachments || null,
           customOffer: null,
         };
         socket.emit("message", submitForm);
@@ -257,6 +270,18 @@ const ChatBox = () => {
         }
       }
     }
+  };
+
+  // handle download all button
+  const handleDownloadAll = (files) => {
+    files.forEach((file) => {
+      const link = document.createElement("a");
+      link.href = file.url; // Ensure this points to the file's URL
+      link.setAttribute("download", file.name); // Set the filename
+      document.body.appendChild(link);
+      link.click(); // Simulate click to download
+      document.body.removeChild(link); // Clean up
+    });
   };
 
   return (
@@ -284,7 +309,7 @@ const ChatBox = () => {
       </div>
       {/* Conversation Field */}
       <div
-        className={`${quickResponse ? "h-[calc(100%_-_350px)]" : "h-[calc(100%_-_250px)]"} overflow-y-auto p-5`}
+        className={`${quickResponse && selectedImages?.length > 0 ? "h-[calc(100%_-_493px)]" : quickResponse ? "h-[calc(100%_-_350px)]" : selectedImages?.length > 0 ? "h-[calc(100%_-_393px)]" : "h-[calc(100%_-_250px)]"} overflow-y-auto p-5`}
       >
         {/* All message Container */}
         {/* Each message block */}
@@ -473,7 +498,10 @@ const ChatBox = () => {
               {msg.attachment && msg.attachment.length > 0 && (
                 <div className="relative mt-2">
                   {msg.attachment.length > 3 && (
-                    <Link className="mb-2 inline-block text-sm font-medium text-primary">
+                    <Link
+                      onClick={() => handleDownloadAll(msg.attachment)}
+                      className="mb-2 inline-block text-sm font-medium text-primary"
+                    >
                       Download All
                     </Link>
                   )}
@@ -485,7 +513,12 @@ const ChatBox = () => {
                           alt=""
                           className="h-[180px] w-full object-cover"
                         />
-                        <Link className="mt-2 flex items-center justify-center text-xs">
+                        {console.log(att)}
+                        <a
+                          href={att.url}
+                          download={att.name}
+                          className="mt-2 flex items-center justify-center text-xs"
+                        >
                           <BiDownload className="shrink-0 text-lg text-primary" />
                           <p
                             className="mx-2 line-clamp-1 font-medium"
@@ -494,9 +527,9 @@ const ChatBox = () => {
                             {att.name}
                           </p>
                           <span className="shrink-0 text-black/50">
-                            ({att.size})
+                            ({formatFileSize(att.size)})
                           </span>
-                        </Link>
+                        </a>
                       </div>
                     ))}
                   </div>
@@ -536,8 +569,41 @@ const ChatBox = () => {
         <div ref={endOfMessagesRef} />
       </div>
       {/* Text Field Part */}
-      <div className={`${quickResponse ? "h-[280px]" : "h-[180px]"} px-3`}>
+      <div
+        className={`${quickResponse && selectedImages?.length > 0 ? "h-[423px]" : quickResponse ? "h-[280px]" : "h-[180px]"} px-3`}
+      >
         <div className="rounded-t-md border border-b border-slate-300">
+          {selectedImages?.length > 0 && (
+            <div className="flex gap-2 overflow-x-auto border-b p-[10px]">
+              {selectedImages?.map((image, index) => (
+                <div key={index} className="w-[120px]">
+                  <div className="group relative">
+                    <img
+                      className={`h-[80px] w-full object-contain`}
+                      src={image.url}
+                      alt={`Selected ${index}`}
+                    />
+                    <button
+                      type="button"
+                      className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
+                      onClick={() => handleImageRemove(index)}
+                    >
+                      <RiDeleteBin6Line size={15} />
+                    </button>
+                  </div>
+                  <h1
+                    className="truncate text-xs font-medium"
+                    title={image.file.name}
+                  >
+                    {image.file.name}
+                  </h1>
+                  <span className="text-xs">
+                    ({formatFileSize(image.file.size)})
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
           <div
             className={`${quickResponse ? "h-[140px]" : "h-[40px]"} border-b border-slate-300 p-2`}
           >
@@ -636,14 +702,6 @@ const ChatBox = () => {
                 >
                   Create an Offer
                 </button>
-              )}
-              {selectedImages?.length > 0 && (
-                <div className="flex items-center gap-2 text-sm">
-                  {selectedImages?.length} file selected{" "}
-                  <button onClick={handleResetImages}>
-                    <IoMdClose className="text-lg" />
-                  </button>
-                </div>
               )}
             </div>
             <button

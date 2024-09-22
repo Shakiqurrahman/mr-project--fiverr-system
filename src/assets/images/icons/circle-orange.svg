@@ -1,12 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-  <defs>
-    <style>
-      .cls-1 {
-        fill: #f2faff;
-        stroke: #f1592a;
-        stroke-width: 1px;
-      }
-    </style>
-  </defs>
-  <circle id="Ellipse_2_copy_4" data-name="Ellipse 2 copy 4" class="cls-1" cx="11.859" cy="11.859" r="11.859"/>
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+	<title>Round Icon</title>
+	<style>
+		.s0 { fill: none;stroke: #f1592a;stroke-miterlimit:100 } 
+	</style>
+	<path id="Ellipse 2 copy 4" class="s0" d="m49.9 38c6.5 0 11.8 5.3 11.8 11.9 0 6.5-5.3 11.8-11.8 11.8-6.6 0-11.9-5.3-11.9-11.8 0-6.6 5.3-11.9 11.9-11.9z"/>
 </svg>
