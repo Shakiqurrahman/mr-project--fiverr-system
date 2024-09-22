@@ -24,6 +24,7 @@ const StartMultipleProject = ({ items }) => {
         size,
         subFolder,
         tags,
+        
         ...newItem
       }) => {
         const designImage = images.find((i) => i.thumbnail === true).url;
@@ -38,6 +39,8 @@ const StartMultipleProject = ({ items }) => {
       },
     ),
   );
+  console.log('cho',choosenItems);
+  
   const [selectedItem, setSelectedItem] = useState(choosenItems[0].id);
   const quantities = Array.from({ length: 9 }, (_, i) => i + 1);
 
@@ -69,10 +72,10 @@ const StartMultipleProject = ({ items }) => {
             ...item,
             category: categoryObj || item.category,
             subCategory: subCategoryObj || item.subCategory,
-            subTotal: subCategoryObj?.subAmount,
-            regularDeliveryDays: subCategoryObj?.regularDeliveryDays,
-            fastDeliveryDays: subCategoryObj?.fastDeliveryDays,
-            fastDeliveryPrice: subCategoryObj?.fastDeliveryPrice,
+            subTotal: subCategoryObj?.subAmount || item.subTotal,
+            regularDeliveryDays: subCategoryObj?.regularDeliveryDays || item.regularDeliveryDays,
+            fastDeliveryDays: subCategoryObj?.fastDeliveryDays || item.fastDeliveryDays,
+            fastDeliveryPrice: subCategoryObj?.fastDeliveryPrice || item.fastDeliveryPrice,
           };
         }),
       );
