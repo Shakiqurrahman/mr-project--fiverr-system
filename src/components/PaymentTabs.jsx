@@ -1,7 +1,7 @@
 import React from "react";
 import stripe from "../assets/svg/stripe.svg"
 import paypal from "../assets/svg/paypal.svg"
-import payoneer from "../assets/svg/payoneer.svg"
+import payoneer from "../assets/svg/Payoneer.svg"
 import wise from "../assets/svg/wise.svg"
 
 const PaymentTabs = ({ handleTabClick, activeTab }) => {
