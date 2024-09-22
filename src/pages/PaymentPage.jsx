@@ -3,10 +3,12 @@ import { useLocation } from "react-router-dom";
 import Cards from "../assets/images/card.png";
 import Check from "../assets/svg/Check";
 import { ToggleSwitch } from "../libs/ToggleSwitch";
+import PaymentTabs from "../components/PaymentTabs";
 
 const PaymentPage = () => {
   const { state } = useLocation();
   console.log(state);
+  const [activeTab, setActiveTab] = useState(null);
   const [fastDelivery, setFastDelivery] = useState(
     state?.isFastDelivery || false,
   );
@@ -23,17 +25,27 @@ const PaymentPage = () => {
   const [isSavingCard, setIsSavingCard] = useState(false);
   const [designs, setDesigns] = useState(state || []);
 
+  // Function to handle tab click
+  const handleTabClick = (tab) => {
+    if (activeTab === tab) {
+      // If the clicked tab is already active, deselect it
+      setActiveTab(null);
+    } else {
+      setActiveTab(tab);
+    }
+  }
+
   const totalAmount = fastDelivery
     ? parseInt(designs.subTotal) + parseInt(designs.fastDeliveryAmount)
     : parseInt(designs.subTotal) || 0;
 
   return (
     <section className="max-width my-10">
-      <h1 className="mb-10 text-center text-lg font-semibold sm:text-[28px]">
+      <h1 className="mb-4 sm:mb-10 text-center text-lg font-semibold sm:text-[28px]">
         Add your card details carefully
       </h1>
-      <div className="mx-auto max-w-[800px] border">
-        <div className="bg-sky-200/60 p-4 sm:p-6">
+      <div className="mx-auto max-w-[800px] ">
+        <div className="bg-sky-200/60 p-4 sm:p-6 border mb-8">
           <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
             <div className="flex flex-col items-center gap-4 sm:flex-row">
               <img
@@ -63,7 +75,13 @@ const PaymentPage = () => {
             <h3 className="text-3xl font-bold">${totalAmount}</h3>
           </div>
         </div>
-        <div className="bg-lightskyblue p-4 sm:p-6">
+
+        {/* Tab Navigation */}
+        <PaymentTabs handleTabClick={handleTabClick} activeTab={activeTab}/>
+        <div className="flex justify-center gap-4 items-center text-lg font-medium w-4/5 mx-auto mb-4">
+          <span className="flex-1 w-full h-[1px] bg-slate-200"></span> or <span className="flex-1 w-full h-[1px] bg-slate-200"></span></div>
+        {/* card header  */}
+        <div className="bg-lightskyblue p-4 sm:p-6 border">
           <div className="mb-4 flex flex-wrap items-center gap-2 sm:gap-4">
             <h2 className="text-xl font-semibold">Card Payment</h2>
             <img src={Cards} className="h-[40px]" alt="" />
@@ -94,7 +112,7 @@ const PaymentPage = () => {
               <p className="mb-1 ml-2">Name on Card</p>
               <input
                 type="text"
-                className="w-full border p-4 outline-none"
+                className="w-full border p-4 text-base outline-none"
                 placeholder="Name on Card"
               />
             </div>
@@ -102,7 +120,7 @@ const PaymentPage = () => {
               <p className="mb-1 ml-2">Card Number</p>
               <input
                 type="number"
-                className="w-full border p-4 outline-none"
+                className="w-full border p-4 text-base outline-none"
                 placeholder="Card Number"
               />
             </div>
@@ -111,7 +129,7 @@ const PaymentPage = () => {
                 <p className="mb-1 ml-2">Expiry Date</p>
                 <input
                   type="text"
-                  className="w-full border p-4 outline-none"
+                  className="w-full border p-4 text-base outline-none"
                   placeholder="MM/YY"
                 />
               </div>
@@ -119,7 +137,7 @@ const PaymentPage = () => {
                 <p className="mb-1 ml-2">CVV</p>
                 <input
                   type="number"
-                  className="w-full border p-4 outline-none"
+                  className="w-full border p-4 text-base outline-none"
                   placeholder="CVV"
                 />
               </div>
@@ -146,14 +164,14 @@ const PaymentPage = () => {
             </div>
 
             {/* payment details  */}
-            <div className="border bg-white p-4">
+            <div className="flex flex-col items-center gap-8 border bg-white p-4 sm:flex-row sm:gap-16 sm:p-6">
               <ul className="w-full space-y-3 [&>li:last-child]:border-t">
-                <li className="flex justify-between gap-2">
+                <li className="flex justify-between gap-2 px-2">
                   <p>{designs?.categoryName}</p>
                   <span className="font-bold">${designs?.subTotal}</span>
                 </li>
                 {fastDelivery && (
-                  <li className="flex justify-between gap-2">
+                  <li className="flex justify-between gap-2 px-2">
                     <p>
                       Extra-fast {designs?.fastDeliveryDuration}-day delivery
                     </p>
@@ -162,11 +180,24 @@ const PaymentPage = () => {
                     </span>
                   </li>
                 )}
-                <li className="flex justify-between gap-2 pt-4">
-                  <p className="font-semibold">Total</p> <span className="font-bold">{totalAmount}</span>
+                <li className="flex justify-between gap-2 px-2 pt-4">
+                  <p className="font-semibold">Total</p>{" "}
+                  <span className="font-bold">{totalAmount}</span>
                 </li>
               </ul>
+              <div className="w-full">
+                <p className="mb-4 text-center">Single Payment</p>
+                <button
+                  type="submit"
+                  className="w-full rounded-2xl bg-primary py-4 text-xl font-semibold text-white transition-colors duration-300"
+                >
+                  Pay Now
+                </button>
+              </div>
             </div>
+            <p className="!mt-6 text-center text-base font-medium">
+              Payments are processed securely by Stripe.
+            </p>
           </form>
         </div>
       </div>

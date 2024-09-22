@@ -70,7 +70,7 @@ const SocialMediasForm = () => {
 
     // Check if any of the fields have changed
     const hasChanges = Object.entries(socialLinks)?.some(
-      ([key, value]) => value !== socialMediasData?.[key]
+      ([key, value]) => value !== socialMediasData?.[key],
     );
     if (!hasChanges) {
       toast.error("Nothing to update!");
