@@ -97,7 +97,7 @@ const Hero = () => {
       <div className="absolute right-5 top-6 md:left-5 md:top-36 lg:left-[25%] lg:top-20">
         <img src={starBlue} alt="star blue" />
       </div>
-      <div className="absolute left-[40%] top-10 hidden md:block">
+      <div className="absolute left-[35%] top-4 hidden md:block">
         <img src={circleOrange} alt="circleOrange" />
       </div>
       <div className="absolute -bottom-48 -left-44 hidden md:block">

@@ -180,10 +180,12 @@ const StartMultipleProject = ({ items }) => {
         };
       });
       const data = {
-        multiProjectData,
+        categoryName : multiProjectData.projectTitle,
+        image : multiProjectData.projectImage,
+        requirements : multiProjectData.requirements,
         duration: totalDays,
         totalAmount,
-        orderItems: newItems,
+        designs: newItems,
       };
       console.log(data);
     }

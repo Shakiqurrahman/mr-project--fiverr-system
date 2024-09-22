@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Check from "../assets/svg/Check";
 function OfferProject() {
+  const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
-  console.log(state);
 
   const [categories, setCategories] = useState(state?.designs || []);
   const [freeDesign, setFreeDesign] = useState({
@@ -20,23 +20,55 @@ function OfferProject() {
     isDesignSelected: true,
   });
   const [isFastDelivery, setIsFastDelivery] = useState(false);
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubDesignChange = (subName, e) => {
-    if (!freeDesign.isDesignSelected) {
-      return;
+  useEffect(() => {
+    // Get the selected categories
+    const selectedCategories = categories.filter((item) => item.isSelected);
+
+    // Check if there are at least 3 selected categories
+    const hasThreeSelectedCategories = selectedCategories.length >= 3;
+
+    // Check if each of the selected categories has at least one selected subcategory
+    const allSelectedCategoriesHaveSubcategory = selectedCategories.every(
+      (item) => item.subCategories.some((sub) => sub.isSelected),
+    );
+
+    const hasFreeDesignSubcategorySelected = freeDesign.isDesignSelected
+      ? freeDesign.subDesignNames.some((sub) => sub.isSelected)
+      : true;
+
+    const isValidSubmission =
+      hasThreeSelectedCategories &&
+      allSelectedCategoriesHaveSubcategory &&
+      hasFreeDesignSubcategorySelected;
+    setIsSubmitDisabled(
+      !(
+        hasThreeSelectedCategories &&
+        allSelectedCategoriesHaveSubcategory &&
+        hasFreeDesignSubcategorySelected
+      ),
+    );
+
+    // Set error messages based on conditions
+    let newErrorMessage = "";
+    if (!hasThreeSelectedCategories) {
+      newErrorMessage = "Please select at least 3 designs.";
+    } else if (!allSelectedCategoriesHaveSubcategory) {
+      newErrorMessage =
+        "Each selected design must have at least one subcategory.";
+    } else if (
+      freeDesign.isDesignSelected &&
+      !hasFreeDesignSubcategorySelected
+    ) {
+      newErrorMessage = "Please select a subcategory for the free design.";
     }
-    setFreeDesign((prevState) => ({
-      ...prevState,
-      subDesignNames: prevState.subDesignNames.map((subItem) => ({
-        ...subItem,
-        isSelected:
-          subItem.subDesignName === subName ? e.target.checked : false,
-      })),
-    }));
-  };
-  
-  
 
+    setErrorMessage(newErrorMessage);
+  }, [categories, freeDesign]);
+
+  // Handle free design checkbox change
   const handleFreeDesignChange = () => {
     setFreeDesign((prevState) => {
       const newIsDesignSelected = !prevState.isDesignSelected;
@@ -50,9 +82,13 @@ function OfferProject() {
       };
     });
   };
-  
-  
-  
+
+  // Handle fast delivery checkbox toggle
+  const handleFastDeliveryToggle = () => {
+    setIsFastDelivery((prevIsFastDelivery) => !prevIsFastDelivery);
+  };
+
+  // Handle category checkbox change
   const handleCategoryChange = (categoryName, event) => {
     const isCategorySelected = event.target.checked;
 
@@ -60,7 +96,7 @@ function OfferProject() {
       const selectedCount = prevItems.filter((item) => item.isSelected).length;
 
       // If trying to select a new category and there are already 3 selected, prevent it
-      if (event.target.checked && selectedCount >= 3) {
+      if (isCategorySelected && selectedCount >= 3) {
         return prevItems;
       }
 
@@ -79,6 +115,7 @@ function OfferProject() {
     });
   };
 
+  // Handle subcategory checkbox change
   const handleSubCategoryChange = (categoryName, subCategoryName, event) => {
     setCategories((prevItems) =>
       prevItems.map((item) =>
@@ -98,23 +135,58 @@ function OfferProject() {
     );
   };
 
-  const handleFastDeliveryToggle = () => {
-    setIsFastDelivery(!isFastDelivery);
+  // Handle subdesign checkbox change
+  const handleSubDesignChange = (subName, e) => {
+    if (!freeDesign.isDesignSelected) {
+      return;
+    }
+    setFreeDesign((prevState) => ({
+      ...prevState,
+      subDesignNames: prevState.subDesignNames.map((subItem) => ({
+        ...subItem,
+        isSelected:
+          subItem.subDesignName === subName ? e.target.checked : false,
+      })),
+    }));
   };
 
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("handlesubmit", categories);
-    console.log("handlesubmit", freeDesign);
+
+    const selectedDesigns = categories
+      .filter((d) => d.isSelected)
+      .map(({ subCategories, ...rest }) => {
+        const selectedSubcategories = subCategories?.find(
+          (sub) => sub.isSelected,
+        );
+        return {
+          ...rest,
+          subCategory: selectedSubcategories,
+        };
+      });
+
+    const updatedFreeDesign = freeDesign?.subDesignNames?.find(
+      (data) => data.isSelected,
+    );
+
     const data = {
-      freeDesign,
-      designs: categories,
+      title: "Free Offer Project",
+      image: state?.projectImage,
+      subTotal: state?.offerAmount,
+      fastDeliveryDuration: state?.extraFastDelivery,
+      fastDeliveryAmount: state?.extraFastDeliveryAmount,
+      freeDesign: {
+        designName: freeDesign.designName,
+        freeSubDesign: updatedFreeDesign,
+      },
+      designs: selectedDesigns,
       isFastDelivery,
+      from: "offerProject",
     };
-    console.log(data);
+    navigate("/payment", { state: data });
   };
 
-  console.log(categories);
   return (
     <div className="max-width">
       <h1 className="my-10 text-center text-lg font-semibold sm:text-2xl">
@@ -305,7 +377,11 @@ function OfferProject() {
           </div>
 
           {/* Form Submit Button */}
-          <button className="block w-full bg-primary p-2 text-white">
+          <button
+            type="submit"
+            disabled={isSubmitDisabled}
+            className="block w-full bg-primary p-2 text-white disabled:bg-primary/60"
+          >
             Continue (
             {isFastDelivery
               ? parseInt(state?.offerAmount) +
@@ -313,6 +389,11 @@ function OfferProject() {
               : parseInt(state?.offerAmount)}
             $)
           </button>
+          {errorMessage && (
+            <p className="mt-4 text-center text-sm font-medium text-red-500">
+              {errorMessage}
+            </p>
+          )}
 
           {/* Tips message Section */}
           <p className="my-8 mb-2 text-center text-xs sm:text-sm">

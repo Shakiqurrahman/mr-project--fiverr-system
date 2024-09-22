@@ -89,6 +89,7 @@ const StartSingleProject = ({ item }) => {
     const data = {
       ...selectedCategory,
       selectedQuantity,
+      title : selectedCategory.categoryName, 
       deliveryDuration: isFastDelivery
         ? extraFastDeliveryDay
         : regularDeliveryDay,
