@@ -16,6 +16,23 @@
   border-radius: 4px;
 }
 
+.preview-scroll-overflow-x {
+  padding-bottom: 10px;
+  overflow-x: auto;
+}
+
+.preview-scroll-overflow-x::-webkit-scrollbar {
+  height: 5px !important;
+}
+
+.preview-scroll-overflow-x::-webkit-scrollbar-track {
+  background: rgb(236, 236, 236);
+}
+.preview-scroll-overflow-x::-webkit-scrollbar-thumb {
+  @apply bg-primary;
+  border-radius: 4px;
+}
+
 /* for cart drawer */
 .drawer-scroller::-webkit-scrollbar {
   width: 0px;

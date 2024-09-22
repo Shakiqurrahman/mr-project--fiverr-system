@@ -23,10 +23,12 @@ import Industries from "../pages/Industries";
 import Join from "../pages/Join";
 import MultiProject from "../pages/MultiProject";
 import OfferProject from "../pages/OfferProject";
+import PaymentPage from "../pages/PaymentPage";
 import PriceList from "../pages/PriceList";
 import PrivacyAndPolicy from "../pages/PrivacyAndPolicy";
 import ProfileLayout from "../pages/ProfileLayout";
 import Project from "../pages/Project";
+import ProjectRequirements from "../pages/ProjectRequirements";
 import SetupProfile from "../pages/SetupProfile";
 import SingleProductPage from "../pages/SingleProductPage";
 import TermsAndConditions from "../pages/TermsAndConditions";
@@ -38,7 +40,6 @@ import ChatLayout from "./ChatLayout";
 import AdminRoute from "./private-route/AdminRoute";
 import PrivateRoute from "./private-route/PrivateRoute";
 import UnAuthenticatedRoute from "./private-route/UnAuthenticatedRoute";
-import PaymentPage from "../pages/PaymentPage";
 
 export const router = createBrowserRouter([
   {
@@ -175,7 +176,19 @@ export const router = createBrowserRouter([
       },
       {
         path: "/payment",
-        element: <PaymentPage />,
+        element: (
+          <PrivateRoute>
+            <PaymentPage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/project-requirements",
+        element: (
+          <PrivateRoute>
+            <ProjectRequirements />
+          </PrivateRoute>
+        ),
       },
       // Mahdi's created routes start
       {
