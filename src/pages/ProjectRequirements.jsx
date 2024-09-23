@@ -255,6 +255,7 @@ const ProjectRequirements = () => {
                           handleEmojiSelect(emoji, i, item.id)
                         }
                         emojiSize={"text-lg"}
+                        style={{ transform: "translateX(-70%)" }}
                       />
                       <Divider className={"h-[20px] w-[2px] !bg-black/20"} />
                       <div>
