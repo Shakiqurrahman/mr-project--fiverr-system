@@ -4,8 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import Check from "../../assets/svg/Check";
 import { useFetchMultiProjectQuery } from "../../Redux/api/multiProjectApiSlice";
 import { fetchCategory } from "../../Redux/features/category/categoryApi";
+import { useNavigate } from "react-router-dom";
 
 const StartMultipleProject = ({ items }) => {
+  const navigate = useNavigate();
   const { data } = useFetchMultiProjectQuery();
   const dispatch = useDispatch();
   const { category: categories } = useSelector((state) => state.category);
@@ -125,7 +127,7 @@ const StartMultipleProject = ({ items }) => {
               parseInt(item.subCategory.fastDeliveryPrice) * quantity,
             fastDeliveryDays:
               parseInt(item.subCategory.fastDeliveryDays) * quantity,
-            subTotal: parseInt(item.subCategory.subAmount) * quantity,
+            subTotal: item?.isFastDelivery ? (parseInt(item.subCategory.subAmount) + parseInt(item.subCategory.fastDeliveryPrice)) * quantity : parseInt(item.subCategory.subAmount) * quantity,
           };
         } else {
           return item;
@@ -183,14 +185,16 @@ const StartMultipleProject = ({ items }) => {
         };
       });
       const data = {
-        categoryName : multiProjectData.projectTitle,
+        title : multiProjectData.projectTitle,
         image : multiProjectData.projectImage,
         requirements : multiProjectData.requirements,
         duration: totalDays,
         totalAmount,
         designs: newItems,
+        from : "multipleProject"
       };
       console.log(data);
+      navigate("/payment", { state: data });
     }
   };
 
