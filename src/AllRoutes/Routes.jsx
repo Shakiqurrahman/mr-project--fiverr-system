@@ -6,11 +6,13 @@ import Affiliate from "../pages/Affiliate";
 import AllCategory from "../pages/AllCategory";
 import AllCompletedProjects from "../pages/AllCompletedProjects";
 import AllDesign from "../pages/AllDesign";
+import AllReviews from "../pages/AllReviews";
 import Cart from "../pages/Cart";
 import ChangePassword from "../pages/ChangePassword";
 import Contact from "../pages/Contact";
 import CreateCategory from "../pages/CreateCategory";
 import CreateOfferProject from "../pages/CreateOfferProject";
+import DashboardPage from "../pages/DashboardPage";
 import Designs from "../pages/Designs";
 import EditCategory from "../pages/EditCategory";
 import EditDesign from "../pages/EditDesign";
@@ -40,7 +42,6 @@ import ChatLayout from "./ChatLayout";
 import AdminRoute from "./private-route/AdminRoute";
 import PrivateRoute from "./private-route/PrivateRoute";
 import UnAuthenticatedRoute from "./private-route/UnAuthenticatedRoute";
-import DashboardPage from "../pages/DashboardPage";
 
 export const router = createBrowserRouter([
   {
@@ -244,6 +245,10 @@ export const router = createBrowserRouter([
             <DashboardPage />
           </AdminRoute>
         ),
+      },
+      {
+        path: "/all-reviews",
+        element: <AllReviews />,
       },
     ],
   },

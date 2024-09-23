@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { ImPlus } from "react-icons/im";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
@@ -39,6 +40,10 @@ function CreateCategory() {
         fastDeliveryPrice: "",
       },
     ]);
+  };
+
+  const handleSubCategoryRemove = (index) => {
+    setSubcategory(subCategory.filter((_, i) => i !== index));
   };
 
   const [uploading, setUploading] = useState(false);
@@ -132,6 +137,10 @@ function CreateCategory() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (subCategory.length === 0) {
+      toast.error("At Least One SubCategory Needed to Create Category!!!");
+      return false;
+    }
     const imageName = form.categoryImage.name;
     const getExtension = imageName.slice(imageName.lastIndexOf("."));
     const updatedName = imageName.replace(getExtension, "");
@@ -198,7 +207,7 @@ function CreateCategory() {
             <h1 className="">Subcategory</h1>
             <ImPlus onClick={addSubcategory} />
           </div>
-          <div className="p-3">
+          <div className="pb-3">
             {subCategory.map((input, index) => (
               <SubCategory
                 key={index}
@@ -206,6 +215,9 @@ function CreateCategory() {
                 index={index}
                 handleChange={handleChange}
                 subCategoryLength={subCategory.length}
+                handleSubCategoryRemove={(index) =>
+                  handleSubCategoryRemove(index)
+                }
               />
             ))}
           </div>
@@ -292,9 +304,22 @@ function CreateCategory() {
 }
 
 // SubCategory Component
-function SubCategory({ input, index, handleChange, subCategoryLength }) {
+function SubCategory({
+  input,
+  index,
+  handleChange,
+  subCategoryLength,
+  handleSubCategoryRemove,
+}) {
   return (
-    <div>
+    <div className="relative px-3 pt-10">
+      <button
+        type="button"
+        className="absolute right-3 top-3 rounded-full bg-black bg-opacity-50 p-1 text-white"
+        onClick={() => handleSubCategoryRemove(index)}
+      >
+        <RiDeleteBin6Line size={20} />
+      </button>
       <input
         type="text"
         name="subTitle"
@@ -345,7 +370,7 @@ function SubCategory({ input, index, handleChange, subCategoryLength }) {
 
       {/* Conditionally render the divider */}
       {index !== subCategoryLength - 1 && (
-        <div className="my-4 border-b border-gray-300" />
+        <div className="mt-4 border-b border-gray-300" />
       )}
     </div>
   );
