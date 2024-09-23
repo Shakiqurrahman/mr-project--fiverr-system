@@ -19,7 +19,7 @@ function Footer() {
       <ScrollToTop
         smooth
         top={700}
-        className="!right-[20px] !h-[40px] !w-[40px] !rounded-full sm:!right-[40px]"
+        className="!right-5 !h-[40px] !w-[40px] !rounded-full"
         component={<img src={UpArrow} />}
       />
       <div className="mt-10 bg-black text-white sm:mt-20">
