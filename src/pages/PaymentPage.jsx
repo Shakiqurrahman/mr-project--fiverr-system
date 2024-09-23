@@ -41,6 +41,10 @@ const PaymentPage = () => {
     ? parseInt(designs.subTotal) + parseInt(designs.fastDeliveryAmount)
     : parseInt(designs.subTotal) || 0;
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+
   return (
     <section className="max-width my-10">
       <h1 className="mb-4 text-center text-lg font-semibold sm:mb-10 sm:text-[28px]">
@@ -63,26 +67,31 @@ const PaymentPage = () => {
             {state?.from === "offerProject" && (
               <h3 className="text-3xl font-bold">${totalAmount}</h3>
             )}
-          </div>
-          <div className="mt-6 flex flex-col items-center justify-between gap-2 sm:flex-row">
-            {state?.from !== "offerProject" && <p>{designs?.subCategory}</p>}
-            <div className="flex items-center gap-3">
-              <ToggleSwitch
-                isChecked={fastDelivery}
-                onToggle={() => setFastDelivery(!fastDelivery)}
-              />
-              <p className="text-sm">
-                Extra-fast {designs?.fastDeliveryDuration}-day delivery
-                <span className="text-lg font-semibold text-primary">
-                  {" "}
-                  ${designs?.fastDeliveryAmount}
-                </span>
-              </p>
-            </div>
-            {state?.from !== "offerProject" && (
-              <h3 className="text-3xl font-bold">${totalAmount}</h3>
+            {state?.from === "multipleProject" && (
+              <h3 className="text-3xl font-bold">${designs?.totalAmount}</h3>
             )}
           </div>
+          {state?.from !== "multipleProject" && (
+            <div className="mt-6 flex flex-col items-center justify-between gap-2 sm:flex-row">
+              {state?.from !== "offerProject" && <p>{designs?.subCategory}</p>}
+              <div className="flex items-center gap-3">
+                <ToggleSwitch
+                  isChecked={fastDelivery}
+                  onToggle={() => setFastDelivery(!fastDelivery)}
+                />
+                <p className="text-sm">
+                  Extra-fast {designs?.fastDeliveryDuration}-day delivery
+                  <span className="text-lg font-semibold text-primary">
+                    {" "}
+                    ${designs?.fastDeliveryAmount}
+                  </span>
+                </p>
+              </div>
+              {state?.from !== "offerProject" && (
+                <h3 className="text-3xl font-bold">${totalAmount}</h3>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Tab Navigation */}
@@ -103,7 +112,7 @@ const PaymentPage = () => {
           </p>
 
           {/* card form  */}
-          <form className="mt-10 space-y-8">
+          <form onSubmit={handleSubmit} className="mt-10 space-y-8">
             <div>
               <p className="mb-1 ml-2">Card Details</p>
               <select
@@ -183,18 +192,36 @@ const PaymentPage = () => {
                     <span className="font-bold">${designs?.subTotal}</span>
                   </li>
                 )}
-                {state.from === "offerProject" && 
+                {state.from === "offerProject" && (
                   <li className="flex justify-between gap-2 px-2">
                     <p>{designs?.freeDesign?.designName}</p>
                     <span className="font-bold">Free</span>
                   </li>
-                }
-                {state.from === "offerProject" && designs.designs.map((design, idx) => (
-                  <li key={idx} className="flex justify-between gap-2 px-2">
-                    <p>{design.categoryLabel}</p>
-                    <span className="font-bold">x 1</span>
-                  </li>
-                ))}
+                )}
+                {state.from === "offerProject" &&
+                  designs.designs.map((design, idx) => (
+                    <li key={idx} className="flex justify-between gap-2 px-2">
+                      <p>{design.categoryLabel}</p>
+                      <span className="font-bold">x 1</span>
+                    </li>
+                  ))}
+                {state.from === "multipleProject" &&
+                  designs.designs.map((design, idx) => (
+                    <div className="border-b py-2 last-of-type:py-0 last-of-type:border-none" key={idx}>
+                    <li key={idx} className="flex justify-between gap-2 px-2">
+                      <p>{design.title}</p>
+                      <div className="font-bold flex items-center gap-2"><span className="text-sm font-normal">{design?.quantity} x</span> ${design?.subCategory?.subAmount}</div>
+                    </li>
+                    {design?.isFastDelivery && <li className="flex justify-between gap-2 px-2">
+                    <p>
+                      Extra-fast {design?.fastDeliveryDays}-day delivery
+                    </p>
+                    <span className="font-bold">
+                      ${design?.fastDeliveryPrice}
+                    </span>
+                  </li>}
+                    </div>
+                  ))}
                 {fastDelivery && (
                   <li className="flex justify-between gap-2 px-2">
                     <p>
@@ -206,8 +233,8 @@ const PaymentPage = () => {
                   </li>
                 )}
                 <li className="flex justify-between gap-2 px-2 pt-4">
-                  <p className="font-semibold">Total</p>{" "}
-                  <span className="font-bold">${totalAmount}</span>
+                  <p className="font-semibold text-lg">Total</p>{" "}
+                  <span className="font-bold text-lg">${totalAmount || designs?.totalAmount}</span>
                 </li>
               </ul>
               <div className="w-full">
