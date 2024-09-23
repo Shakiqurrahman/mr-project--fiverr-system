@@ -3,7 +3,7 @@ import Picker from "@emoji-mart/react"; // Note the updated import for v4+
 import React, { useRef, useState } from "react";
 import useOutsideClick from "../../hooks/useOutsideClick";
 
-const EmojiPicker = ({ onEmojiSelect }) => {
+const EmojiPicker = ({ onEmojiSelect, emojiSize }) => {
   const [showPicker, setShowPicker] = useState(false);
   const [emoji, setEmoji] = useState("👍");
   const pickerRef = useRef(null);
@@ -22,7 +22,11 @@ const EmojiPicker = ({ onEmojiSelect }) => {
 
   return (
     <div className="relative h-full">
-      <button type="button" onClick={togglePicker} className="text-2xl">
+      <button
+        type="button"
+        onClick={togglePicker}
+        className={emojiSize ? emojiSize : "text-2xl"}
+      >
         {emoji}
       </button>
 
