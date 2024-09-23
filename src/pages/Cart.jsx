@@ -1,7 +1,7 @@
 import React from "react";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Check from "../assets/svg/Check";
 import useSyncCart from "../hooks/useSyncCart";
 import { removeFromCart, setCart } from "../Redux/features/cartSlice";
@@ -47,7 +47,7 @@ function Cart() {
               key={index}
               className="flex items-start gap-2 border-b border-black/20 pb-4"
             >
-              <div className="">
+              <div className="shrink-0">
                 <input
                   type="checkbox"
                   name={`cartItem-${item.designId}`}
@@ -66,32 +66,38 @@ function Cart() {
                   <Check className="h-[14px] sm:h-[18px]" />
                 </label>
               </div>
-              <img
-                src={
-                  item?.images?.find((image) => image?.thumbnail === true)?.url
-                }
-                alt="Design Image"
-                className="h-[80px] w-[120px] object-cover"
-              />
-              <div className="flex-grow">
-                <h1 className="font-bold">{item.title}</h1>
-                <p className="text-sm">
-                  <span className="font-semibold text-slate-500">
-                    Category :
-                  </span>{" "}
-                  {item.category}
-                </p>
-                <p className="text-sm">
-                  <span className="font-semibold text-slate-500">
-                    Subcategory :
-                  </span>{" "}
-                  {item.subCategory}
-                </p>
-              </div>
+              <Link
+                to={`/design/${item?.designId}`}
+                className="flex grow gap-3"
+              >
+                <img
+                  src={
+                    item?.images?.find((image) => image?.thumbnail === true)
+                      ?.url
+                  }
+                  alt="Design Image"
+                  className="w-[120px] object-cover"
+                />
+                <div className="flex-grow">
+                  <h1 className="font-bold hover:underline">{item.title}</h1>
+                  <p className="text-sm">
+                    <span className="font-semibold text-slate-500">
+                      Category :
+                    </span>{" "}
+                    {item.category}
+                  </p>
+                  <p className="text-sm">
+                    <span className="font-semibold text-slate-500">
+                      Subcategory :
+                    </span>{" "}
+                    {item.subCategory}
+                  </p>
+                </div>
+              </Link>
               <button
                 type="button"
                 onClick={() => dispatch(removeFromCart(item.designId))}
-                className="grid min-h-6 min-w-6 place-content-center rounded-full border border-slate-500"
+                className="grid min-h-6 min-w-6 shrink-0 place-content-center rounded-full border border-slate-500"
               >
                 <RxCross2 className="text-slate-500" />
               </button>
