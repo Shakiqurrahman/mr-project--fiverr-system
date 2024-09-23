@@ -7,7 +7,6 @@ import { ToggleSwitch } from "../libs/ToggleSwitch";
 
 const PaymentPage = () => {
   const { state } = useLocation();
-  console.log(state);
   const [activeTab, setActiveTab] = useState(null);
   const [fastDelivery, setFastDelivery] = useState(
     state?.isFastDelivery || false,
@@ -25,8 +24,7 @@ const PaymentPage = () => {
   const [isSavingCard, setIsSavingCard] = useState(false);
   const [designs, setDesigns] = useState(state || []);
   const [designsList, setDesignsList] = useState(state?.designs || []);
-  console.log("des", designsList);
-
+ 
   // Function to handle tab click
   const handleTabClick = (tab) => {
     if (activeTab === tab) {
