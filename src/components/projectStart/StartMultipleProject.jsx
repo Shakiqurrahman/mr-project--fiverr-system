@@ -4,8 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import Check from "../../assets/svg/Check";
 import { useFetchMultiProjectQuery } from "../../Redux/api/multiProjectApiSlice";
 import { fetchCategory } from "../../Redux/features/category/categoryApi";
+import { useNavigate } from "react-router-dom";
 
 const StartMultipleProject = ({ items }) => {
+  const navigate = useNavigate();
   const { data } = useFetchMultiProjectQuery();
   const dispatch = useDispatch();
   const { category: categories } = useSelector((state) => state.category);
@@ -24,6 +26,7 @@ const StartMultipleProject = ({ items }) => {
         size,
         subFolder,
         tags,
+        
         ...newItem
       }) => {
         const designImage = images.find((i) => i.thumbnail === true).url;
@@ -38,6 +41,8 @@ const StartMultipleProject = ({ items }) => {
       },
     ),
   );
+  console.log('cho',choosenItems);
+  
   const [selectedItem, setSelectedItem] = useState(choosenItems[0].id);
   const quantities = Array.from({ length: 9 }, (_, i) => i + 1);
 
@@ -69,10 +74,10 @@ const StartMultipleProject = ({ items }) => {
             ...item,
             category: categoryObj || item.category,
             subCategory: subCategoryObj || item.subCategory,
-            subTotal: subCategoryObj?.subAmount,
-            regularDeliveryDays: subCategoryObj?.regularDeliveryDays,
-            fastDeliveryDays: subCategoryObj?.fastDeliveryDays,
-            fastDeliveryPrice: subCategoryObj?.fastDeliveryPrice,
+            subTotal: subCategoryObj?.subAmount || item.subTotal,
+            regularDeliveryDays: subCategoryObj?.regularDeliveryDays || item.regularDeliveryDays,
+            fastDeliveryDays: subCategoryObj?.fastDeliveryDays || item.fastDeliveryDays,
+            fastDeliveryPrice: subCategoryObj?.fastDeliveryPrice || item.fastDeliveryPrice,
           };
         }),
       );
@@ -122,7 +127,7 @@ const StartMultipleProject = ({ items }) => {
               parseInt(item.subCategory.fastDeliveryPrice) * quantity,
             fastDeliveryDays:
               parseInt(item.subCategory.fastDeliveryDays) * quantity,
-            subTotal: parseInt(item.subCategory.subAmount) * quantity,
+            subTotal: item?.isFastDelivery ? (parseInt(item.subCategory.subAmount) + parseInt(item.subCategory.fastDeliveryPrice)) * quantity : parseInt(item.subCategory.subAmount) * quantity,
           };
         } else {
           return item;
@@ -180,14 +185,16 @@ const StartMultipleProject = ({ items }) => {
         };
       });
       const data = {
-        categoryName : multiProjectData.projectTitle,
+        title : multiProjectData.projectTitle,
         image : multiProjectData.projectImage,
         requirements : multiProjectData.requirements,
         duration: totalDays,
         totalAmount,
         designs: newItems,
+        from : "multipleProject"
       };
       console.log(data);
+      navigate("/payment", { state: data });
     }
   };
 

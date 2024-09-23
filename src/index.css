@@ -141,7 +141,7 @@ textarea:placeholder-shown {
 }
 
 /* homeactivitycard slider design */
-.slick-track {
+/* .slick-track {
   display: flex;
   align-items: stretch;
 }
@@ -150,7 +150,7 @@ textarea:placeholder-shown {
 }
 .slick-track > div > div {
   height: 100%;
-}
+} */
 
 /* category cards slider design */
 .category-cards .slick-track {

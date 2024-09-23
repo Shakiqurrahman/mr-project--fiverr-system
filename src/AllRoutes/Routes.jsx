@@ -6,11 +6,13 @@ import Affiliate from "../pages/Affiliate";
 import AllCategory from "../pages/AllCategory";
 import AllCompletedProjects from "../pages/AllCompletedProjects";
 import AllDesign from "../pages/AllDesign";
+import AllReviews from "../pages/AllReviews";
 import Cart from "../pages/Cart";
 import ChangePassword from "../pages/ChangePassword";
 import Contact from "../pages/Contact";
 import CreateCategory from "../pages/CreateCategory";
 import CreateOfferProject from "../pages/CreateOfferProject";
+import DashboardPage from "../pages/DashboardPage";
 import Designs from "../pages/Designs";
 import EditCategory from "../pages/EditCategory";
 import EditDesign from "../pages/EditDesign";
@@ -235,6 +237,18 @@ export const router = createBrowserRouter([
       {
         path: "/cart",
         element: <Cart />,
+      },
+      {
+        path: "/admin-dashboard",
+        element: (
+          <AdminRoute>
+            <DashboardPage />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/all-reviews",
+        element: <AllReviews />,
       },
     ],
   },

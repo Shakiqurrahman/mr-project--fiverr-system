@@ -12,12 +12,14 @@ import Dreamstime from "../assets/images/Stock Logos/06 Dreamstime_Logo.png";
 import Vectezzy from "../assets/images/Stock Logos/07 Vectezzy logo.png";
 import alamy from "../assets/images/Stock Logos/alamy logo.png";
 import depositPhotos from "../assets/images/Stock Logos/depositphotos.png";
+import EmojiPicker from "../components/chat/EmojiPicker";
 import Divider from "../components/Divider";
 import formatFileSize from "../libs/formatFileSize";
 
 const ProjectRequirements = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  const textareasRef = useRef([]);
   const [submitLoading, setSubmitLoading] = useState(false);
   const requirementsData = useMemo(
     () => [
@@ -31,6 +33,48 @@ const ProjectRequirements = () => {
     [],
   );
   const [requirements, setRequirements] = useState(null);
+
+  //Sidebar Stock Images Data
+  const stockImages = [
+    {
+      url: adobeStock,
+      link: "",
+    },
+    {
+      url: shutterStock,
+      link: "",
+    },
+    {
+      url: iStock,
+      link: "",
+    },
+    {
+      url: RF_logo,
+      link: "",
+    },
+    {
+      url: Getty,
+      link: "",
+    },
+    {
+      url: depositPhotos,
+      link: "",
+    },
+    {
+      url: Vectezzy,
+      link: "",
+    },
+    {
+      url: Dreamstime,
+      link: "",
+    },
+    {
+      url: alamy,
+      link: "",
+    },
+  ];
+
+  // Initial stage Update requirements state
   useEffect(() => {
     if (requirementsData) {
       const updateRequirements = requirementsData.map((item, i) => ({
@@ -42,6 +86,44 @@ const ProjectRequirements = () => {
       setRequirements(updateRequirements);
     }
   }, [requirementsData]);
+
+  //Emoji Picker component handler
+
+  const handleEmojiSelect = (emoji, index, id) => {
+    setRequirements((prev) =>
+      prev.map((item) => {
+        if (item.id === id) {
+          const textarea = textareasRef.current[index];
+          const startPos = textarea.selectionStart;
+          const endPos = textarea.selectionEnd;
+
+          console.log(textarea.value, id);
+
+          // Insert the emoji at the cursor position
+          const newText =
+            item.answer.substring(0, startPos) +
+            emoji +
+            item.answer.substring(endPos, item.answer.length);
+
+          const updatedItem = {
+            ...item,
+            answer: newText,
+          };
+
+          // Move the cursor position after the emoji
+          setTimeout(() => {
+            textarea.selectionStart = textarea.selectionEnd =
+              startPos + emoji.length;
+            textarea.focus();
+          }, 0);
+
+          return updatedItem;
+        } else {
+          return item;
+        }
+      }),
+    );
+  };
 
   //   Updating Each Answer Field
   const handleChangeAnswer = (e, id) => {
@@ -116,12 +198,15 @@ const ProjectRequirements = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(requirements);
+    const checkTextLength = requirements.every(
+      (item) => item.answer.length <= 5000,
+    );
+    console.log(checkTextLength, requirements);
   };
 
   return (
     <div className="max-width my-10">
-      <div className="flex items-start gap-5 lg:gap-10">
+      <div className="flex flex-wrap items-start gap-5 sm:flex-nowrap lg:gap-10">
         <div className="w-full shrink sm:w-2/3 md:w-3/4 lg:w-4/5">
           <h1 className="text-center text-xl font-bold leading-relaxed">
             Please fill in the answers to the questions below and attach the
@@ -138,28 +223,40 @@ const ProjectRequirements = () => {
             className="mx-auto max-w-[800px] border bg-lightskyblue"
             onSubmit={handleSubmit}
           >
-            <h1 className="bg-primary p-4 text-center text-[22px] font-medium text-white">
+            <h1 className="tex-lg bg-primary p-4 text-center font-medium text-white sm:text-[22px]">
               Project Requirements
             </h1>
             <div className="px-3">
               {requirements?.map((item, i) => (
                 <div key={i} className="mt-6">
-                  <label className="mb-3 flex items-start gap-1 px-2 font-semibold">
+                  <label className="mb-3 flex items-start gap-1 px-2 text-sm font-semibold sm:text-base">
                     <span className="text-primary">{i + 1}.</span>{" "}
                     {item.question}
                   </label>
-                  <div className="border bg-white">
+                  <div
+                    className={`border bg-white ${item.answer.length > 5000 ? "border-canceled" : "border-solid"}`}
+                  >
                     <textarea
-                      className="block h-[100px] w-full resize-none p-3 outline-none"
+                      className="block h-[80px] w-full resize-none p-3 text-sm outline-none sm:h-[100px] sm:text-base"
                       placeholder="Type here"
                       value={item.answer}
                       onChange={(e) => handleChangeAnswer(e, item.id)}
                       required
+                      ref={(el) => (textareasRef.current[i] = el)}
                     ></textarea>
                     <div className="flex items-center justify-end gap-3 p-3">
-                      <span className="text-sm font-medium text-black/50">
-                        00/5,000
+                      <span
+                        className={`text-sm font-medium ${item.answer.length > 5000 ? "text-canceled" : "text-black/50"}`}
+                      >
+                        {item.answer.length}/5,000
                       </span>
+                      <EmojiPicker
+                        onEmojiSelect={(emoji) =>
+                          handleEmojiSelect(emoji, i, item.id)
+                        }
+                        emojiSize={"text-lg"}
+                        style={{ transform: "translateX(-70%)" }}
+                      />
                       <Divider className={"h-[20px] w-[2px] !bg-black/20"} />
                       <div>
                         <input
@@ -178,9 +275,9 @@ const ProjectRequirements = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="preview-scroll-overflow-x mt-4 flex gap-4">
-                    {item.attachments.length > 0 &&
-                      item.attachments?.map((att, idx) => (
+                  {item.attachments.length > 0 && (
+                    <div className="preview-scroll-overflow-x mt-4 flex gap-4">
+                      {item.attachments?.map((att, idx) => (
                         <div key={idx} className="w-[120px] shrink-0">
                           <div className="relative">
                             <img
@@ -206,7 +303,8 @@ const ProjectRequirements = () => {
                           </span>
                         </div>
                       ))}
-                  </div>
+                    </div>
+                  )}
                 </div>
               ))}
               <div className="mt-5 flex justify-center gap-5">
@@ -214,14 +312,14 @@ const ProjectRequirements = () => {
                   type="button"
                   onClick={() => navigate(-1)}
                   disabled={submitLoading}
-                  className="mt-5 flex h-[45px] w-1/2 items-center justify-center bg-gray-300 text-lg font-semibold text-white disabled:cursor-not-allowed"
+                  className="mt-5 flex h-[45px] w-1/2 items-center justify-center bg-gray-400 text-base font-semibold text-white disabled:cursor-not-allowed sm:text-lg"
                 >
                   Skip
                 </button>
                 <button
                   type="submit"
                   disabled={submitLoading}
-                  className="mt-5 flex h-[45px] w-1/2 items-center justify-center bg-primary text-lg font-semibold text-white disabled:cursor-not-allowed"
+                  className="mt-5 flex h-[45px] w-1/2 items-center justify-center bg-primary text-base font-semibold text-white disabled:cursor-not-allowed sm:text-lg"
                 >
                   {submitLoading ? (
                     <span className="animate-spin text-xl">
@@ -232,7 +330,7 @@ const ProjectRequirements = () => {
                   )}
                 </button>
               </div>
-              <p className="py-6 text-center">
+              <p className="py-6 text-center text-sm sm:text-base">
                 Start your project now by clicking &quot;Start Now&quot;
               </p>
             </div>
@@ -244,245 +342,27 @@ const ProjectRequirements = () => {
               I&apos;ve added links to a few stock image sites below. You can
               choose images from any of the sites linked below for your design.
             </p>
-            <div className="hidden p-2 sm:block">
-              <div className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500">
-                <div className="p-2">
-                  <img
-                    className="h-[100px] w-full object-contain"
-                    src={adobeStock}
-                    alt=""
-                  />
-                </div>
-                <Link className="block w-full bg-gray-500 p-1 text-center text-white">
-                  Click Here
-                </Link>
-              </div>
-              <div className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500">
-                <div className="p-2">
-                  <img
-                    className="h-[100px] w-full object-contain"
-                    src={shutterStock}
-                    alt=""
-                  />
-                </div>
-                <Link className="block w-full bg-gray-500 p-1 text-center text-white">
-                  Click Here
-                </Link>
-              </div>
-              <div className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500">
-                <div className="p-2">
-                  <img
-                    className="h-[100px] w-full object-contain"
-                    src={iStock}
-                    alt=""
-                  />
-                </div>
-                <Link className="block w-full bg-gray-500 p-1 text-center text-white">
-                  Click Here
-                </Link>
-              </div>
-              <div className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500">
-                <div className="p-2">
-                  <img
-                    className="h-[100px] w-full object-contain"
-                    src={RF_logo}
-                    alt=""
-                  />
-                </div>
-                <Link className="block w-full bg-gray-500 p-1 text-center text-white">
-                  Click Here
-                </Link>
-              </div>
-              <div className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500">
-                <div className="p-2">
-                  <img
-                    className="h-[100px] w-full object-contain"
-                    src={Getty}
-                    alt=""
-                  />
-                </div>
-                <Link className="block w-full bg-gray-500 p-1 text-center text-white">
-                  Click Here
-                </Link>
-              </div>
-              <div className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500">
-                <div className="p-2">
-                  <img
-                    className="h-[100px] w-full object-contain"
-                    src={depositPhotos}
-                    alt=""
-                  />
-                </div>
-                <Link className="block w-full bg-gray-500 p-1 text-center text-white">
-                  Click Here
-                </Link>
-              </div>
-              <div className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500">
-                <div className="p-2">
-                  <img
-                    className="h-[100px] w-full object-contain"
-                    src={Vectezzy}
-                    alt=""
-                  />
-                </div>
-                <Link className="block w-full bg-gray-500 p-1 text-center text-white">
-                  Click Here
-                </Link>
-              </div>
-              <div className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500">
-                <div className="p-2">
-                  <img
-                    className="h-[100px] w-full object-contain"
-                    src={Dreamstime}
-                    alt=""
-                  />
-                </div>
-                <Link className="block w-full bg-gray-500 p-1 text-center text-white">
-                  Click Here
-                </Link>
-              </div>
-              <div className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500">
-                <div className="p-2">
-                  <img
-                    className="h-[100px] w-full object-contain"
-                    src={alamy}
-                    alt=""
-                  />
-                </div>
-                <Link className="block w-full bg-gray-500 p-1 text-center text-white">
-                  Click Here
-                </Link>
-              </div>
-            </div>
-
-            {/* Show on Mobile Screen */}
-            <div className="block p-2 sm:hidden">
-              <div className="px-2">
-                <div className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500">
+            <div className="grid grid-cols-2 gap-x-3 p-2 sm:grid-cols-1">
+              {stockImages.map((stock, i) => (
+                <div
+                  key={i}
+                  className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500"
+                >
                   <div className="p-2">
                     <img
                       className="h-[100px] w-full object-contain"
-                      src={adobeStock}
+                      src={stock.url}
                       alt=""
                     />
                   </div>
-                  <Link className="block w-full bg-gray-500 p-1 text-center text-white">
+                  <Link
+                    to={stock.link}
+                    className="block w-full bg-gray-500 p-1 text-center text-white"
+                  >
                     Click Here
                   </Link>
                 </div>
-              </div>
-              <div className="px-2">
-                <div className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500">
-                  <div className="p-2">
-                    <img
-                      className="h-[100px] w-full object-contain"
-                      src={shutterStock}
-                      alt=""
-                    />
-                  </div>
-                  <Link className="block w-full bg-gray-500 p-1 text-center text-white">
-                    Click Here
-                  </Link>
-                </div>
-              </div>
-              <div className="px-2">
-                <div className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500">
-                  <div className="p-2">
-                    <img
-                      className="h-[100px] w-full object-contain"
-                      src={iStock}
-                      alt=""
-                    />
-                  </div>
-                  <Link className="block w-full bg-gray-500 p-1 text-center text-white">
-                    Click Here
-                  </Link>
-                </div>
-              </div>
-              <div className="px-2">
-                <div className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500">
-                  <div className="p-2">
-                    <img
-                      className="h-[100px] w-full object-contain"
-                      src={RF_logo}
-                      alt=""
-                    />
-                  </div>
-                  <Link className="block w-full bg-gray-500 p-1 text-center text-white">
-                    Click Here
-                  </Link>
-                </div>
-              </div>
-              <div className="px-2">
-                <div className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500">
-                  <div className="p-2">
-                    <img
-                      className="h-[100px] w-full object-contain"
-                      src={Getty}
-                      alt=""
-                    />
-                  </div>
-                  <Link className="block w-full bg-gray-500 p-1 text-center text-white">
-                    Click Here
-                  </Link>
-                </div>
-              </div>
-              <div className="px-2">
-                <div className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500">
-                  <div className="p-2">
-                    <img
-                      className="h-[100px] w-full object-contain"
-                      src={depositPhotos}
-                      alt=""
-                    />
-                  </div>
-                  <Link className="block w-full bg-gray-500 p-1 text-center text-white">
-                    Click Here
-                  </Link>
-                </div>
-              </div>
-              <div className="px-2">
-                <div className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500">
-                  <div className="p-2">
-                    <img
-                      className="h-[100px] w-full object-contain"
-                      src={Vectezzy}
-                      alt=""
-                    />
-                  </div>
-                  <Link className="block w-full bg-gray-500 p-1 text-center text-white">
-                    Click Here
-                  </Link>
-                </div>
-              </div>
-              <div className="px-2">
-                <div className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500">
-                  <div className="p-2">
-                    <img
-                      className="h-[100px] w-full object-contain"
-                      src={Dreamstime}
-                      alt=""
-                    />
-                  </div>
-                  <Link className="block w-full bg-gray-500 p-1 text-center text-white">
-                    Click Here
-                  </Link>
-                </div>
-              </div>
-              <div className="px-2">
-                <div className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500">
-                  <div className="p-2">
-                    <img
-                      className="h-[100px] w-full object-contain"
-                      src={alamy}
-                      alt=""
-                    />
-                  </div>
-                  <Link className="block w-full bg-gray-500 p-1 text-center text-white">
-                    Click Here
-                  </Link>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>

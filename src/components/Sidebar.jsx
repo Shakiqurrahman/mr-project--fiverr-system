@@ -1,7 +1,4 @@
 import { Link } from "react-router-dom";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick-theme.css";
-import "slick-carousel/slick/slick.css";
 import adobeStock from "../assets/images/Stock Logos/01 Adobe Stock Logo.svg";
 import shutterStock from "../assets/images/Stock Logos/01 Shutterstock_logo.svg";
 import iStock from "../assets/images/Stock Logos/03 iStock logo.png";
@@ -14,265 +11,74 @@ import depositPhotos from "../assets/images/Stock Logos/depositphotos.png";
 import SidebarProfileStatus from "./SidebarProfileStatus";
 
 function Sidebar() {
-  const settings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: false,
-    autoplay: true,
-    autoplaySpeed: 1500,
-  };
+  //Sidebar Stock Images Data
+  const stockImages = [
+    {
+      url: adobeStock,
+      link: "",
+    },
+    {
+      url: shutterStock,
+      link: "",
+    },
+    {
+      url: iStock,
+      link: "",
+    },
+    {
+      url: RF_logo,
+      link: "",
+    },
+    {
+      url: Getty,
+      link: "",
+    },
+    {
+      url: depositPhotos,
+      link: "",
+    },
+    {
+      url: Vectezzy,
+      link: "",
+    },
+    {
+      url: Dreamstime,
+      link: "",
+    },
+    {
+      url: alamy,
+      link: "",
+    },
+  ];
   return (
-    <div className="flex-grow mt-10 w-full sm:w-1/3 md:w-1/4 lg:w-1/5">
+    <div className="mt-10 w-full flex-grow sm:w-1/3 md:w-1/4 lg:w-1/5">
       <SidebarProfileStatus />
-      <div className="border border-solid border-primary rounded-lg overflow-hidden mt-5">
-        <p className="bg-primary text-white p-2 text-center">
+      <div className="mt-5 overflow-hidden rounded-lg border border-solid border-primary">
+        <p className="bg-primary p-2 text-center text-white">
           We have added links to some stock image sites below. You can choose
           images from any of sites linked below for your design.
         </p>
-        <div className="p-2 hidden sm:block">
-          <div className="overflow-hidden rounded-lg border border-solid border-gray-500 mt-3">
-            <div className="p-2">
-              <img
-                className="h-[100px] w-full object-contain"
-                src={adobeStock}
-                alt=""
-              />
-            </div>
-            <Link className="bg-gray-500 text-white p-1 text-center w-full block">
-              Click Here
-            </Link>
-          </div>
-          <div className="overflow-hidden rounded-lg border border-solid border-gray-500 mt-3">
-            <div className="p-2">
-              <img
-                className="h-[100px] w-full object-contain"
-                src={shutterStock}
-                alt=""
-              />
-            </div>
-            <Link className="bg-gray-500 text-white p-1 text-center w-full block">
-              Click Here
-            </Link>
-          </div>
-          <div className="overflow-hidden rounded-lg border border-solid border-gray-500 mt-3">
-            <div className="p-2">
-              <img
-                className="h-[100px] w-full object-contain"
-                src={iStock}
-                alt=""
-              />
-            </div>
-            <Link className="bg-gray-500 text-white p-1 text-center w-full block">
-              Click Here
-            </Link>
-          </div>
-          <div className="overflow-hidden rounded-lg border border-solid border-gray-500 mt-3">
-            <div className="p-2">
-              <img
-                className="h-[100px] w-full object-contain"
-                src={RF_logo}
-                alt=""
-              />
-            </div>
-            <Link className="bg-gray-500 text-white p-1 text-center w-full block">
-              Click Here
-            </Link>
-          </div>
-          <div className="overflow-hidden rounded-lg border border-solid border-gray-500 mt-3">
-            <div className="p-2">
-              <img
-                className="h-[100px] w-full object-contain"
-                src={Getty}
-                alt=""
-              />
-            </div>
-            <Link className="bg-gray-500 text-white p-1 text-center w-full block">
-              Click Here
-            </Link>
-          </div>
-          <div className="overflow-hidden rounded-lg border border-solid border-gray-500 mt-3">
-            <div className="p-2">
-              <img
-                className="h-[100px] w-full object-contain"
-                src={depositPhotos}
-                alt=""
-              />
-            </div>
-            <Link className="bg-gray-500 text-white p-1 text-center w-full block">
-              Click Here
-            </Link>
-          </div>
-          <div className="overflow-hidden rounded-lg border border-solid border-gray-500 mt-3">
-            <div className="p-2">
-              <img
-                className="h-[100px] w-full object-contain"
-                src={Vectezzy}
-                alt=""
-              />
-            </div>
-            <Link className="bg-gray-500 text-white p-1 text-center w-full block">
-              Click Here
-            </Link>
-          </div>
-          <div className="overflow-hidden rounded-lg border border-solid border-gray-500 mt-3">
-            <div className="p-2">
-              <img
-                className="h-[100px] w-full object-contain"
-                src={Dreamstime}
-                alt=""
-              />
-            </div>
-            <Link className="bg-gray-500 text-white p-1 text-center w-full block">
-              Click Here
-            </Link>
-          </div>
-          <div className="overflow-hidden rounded-lg border border-solid border-gray-500 mt-3">
-            <div className="p-2">
-              <img
-                className="h-[100px] w-full object-contain"
-                src={alamy}
-                alt=""
-              />
-            </div>
-            <Link className="bg-gray-500 text-white p-1 text-center w-full block">
-              Click Here
-            </Link>
-          </div>
-        </div>
-
-        {/* Show on Mobile Screen */}
-        <div className="p-2 block sm:hidden">
-          <Slider {...settings}>
-            <div className="px-2">
-              <div className="overflow-hidden rounded-lg border border-solid border-gray-500 mt-3">
-                <div className="p-2">
-                  <img
-                    className="h-[100px] w-full object-contain"
-                    src={adobeStock}
-                    alt=""
-                  />
-                </div>
-                <Link className="bg-gray-500 text-white p-1 text-center w-full block">
-                  Click Here
-                </Link>
+        <div className="grid grid-cols-2 gap-x-3 p-2 sm:grid-cols-1">
+          {stockImages.map((stock, i) => (
+            <div
+              key={i}
+              className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500"
+            >
+              <div className="p-2">
+                <img
+                  className="h-[100px] w-full object-contain"
+                  src={stock.url}
+                  alt=""
+                />
               </div>
+              <Link
+                to={stock.link}
+                className="block w-full bg-gray-500 p-1 text-center text-white"
+              >
+                Click Here
+              </Link>
             </div>
-            <div className="px-2">
-              <div className="overflow-hidden rounded-lg border border-solid border-gray-500 mt-3">
-                <div className="p-2">
-                  <img
-                    className="h-[100px] w-full object-contain"
-                    src={shutterStock}
-                    alt=""
-                  />
-                </div>
-                <Link className="bg-gray-500 text-white p-1 text-center w-full block">
-                  Click Here
-                </Link>
-              </div>
-            </div>
-            <div className="px-2">
-              <div className="overflow-hidden rounded-lg border border-solid border-gray-500 mt-3">
-                <div className="p-2">
-                  <img
-                    className="h-[100px] w-full object-contain"
-                    src={iStock}
-                    alt=""
-                  />
-                </div>
-                <Link className="bg-gray-500 text-white p-1 text-center w-full block">
-                  Click Here
-                </Link>
-              </div>
-            </div>
-            <div className="px-2">
-              <div className="overflow-hidden rounded-lg border border-solid border-gray-500 mt-3">
-                <div className="p-2">
-                  <img
-                    className="h-[100px] w-full object-contain"
-                    src={RF_logo}
-                    alt=""
-                  />
-                </div>
-                <Link className="bg-gray-500 text-white p-1 text-center w-full block">
-                  Click Here
-                </Link>
-              </div>
-            </div>
-            <div className="px-2">
-              <div className="overflow-hidden rounded-lg border border-solid border-gray-500 mt-3">
-                <div className="p-2">
-                  <img
-                    className="h-[100px] w-full object-contain"
-                    src={Getty}
-                    alt=""
-                  />
-                </div>
-                <Link className="bg-gray-500 text-white p-1 text-center w-full block">
-                  Click Here
-                </Link>
-              </div>
-            </div>
-            <div className="px-2">
-              <div className="overflow-hidden rounded-lg border border-solid border-gray-500 mt-3">
-                <div className="p-2">
-                  <img
-                    className="h-[100px] w-full object-contain"
-                    src={depositPhotos}
-                    alt=""
-                  />
-                </div>
-                <Link className="bg-gray-500 text-white p-1 text-center w-full block">
-                  Click Here
-                </Link>
-              </div>
-            </div>
-            <div className="px-2">
-              <div className="overflow-hidden rounded-lg border border-solid border-gray-500 mt-3">
-                <div className="p-2">
-                  <img
-                    className="h-[100px] w-full object-contain"
-                    src={Vectezzy}
-                    alt=""
-                  />
-                </div>
-                <Link className="bg-gray-500 text-white p-1 text-center w-full block">
-                  Click Here
-                </Link>
-              </div>
-            </div>
-            <div className="px-2">
-              <div className="overflow-hidden rounded-lg border border-solid border-gray-500 mt-3">
-                <div className="p-2">
-                  <img
-                    className="h-[100px] w-full object-contain"
-                    src={Dreamstime}
-                    alt=""
-                  />
-                </div>
-                <Link className="bg-gray-500 text-white p-1 text-center w-full block">
-                  Click Here
-                </Link>
-              </div>
-            </div>
-            <div className="px-2">
-              <div className="overflow-hidden rounded-lg border border-solid border-gray-500 mt-3">
-                <div className="p-2">
-                  <img
-                    className="h-[100px] w-full object-contain"
-                    src={alamy}
-                    alt=""
-                  />
-                </div>
-                <Link className="bg-gray-500 text-white p-1 text-center w-full block">
-                  Click Here
-                </Link>
-              </div>
-            </div>
-          </Slider>
+          ))}
         </div>
       </div>
     </div>

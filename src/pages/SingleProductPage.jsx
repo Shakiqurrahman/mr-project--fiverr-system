@@ -56,7 +56,6 @@ function SingleProductPage() {
     refetch,
   } = useFetchGetUploadQuery();
 
-
   const design = useMemo(
     () => uploadDesigns?.find((d) => d.designId === slug),
     [uploadDesigns, slug],
@@ -69,7 +68,6 @@ function SingleProductPage() {
       ),
     [uploadDesigns, design?.relatedDesigns],
   );
-  
 
   useEffect(() => {
     if (design) {
@@ -116,11 +114,7 @@ function SingleProductPage() {
         navigate("/");
         Swal.fire("Deleted!", "Your design has been deleted.", "success");
       } catch (error) {
-        Swal.fire(
-          "Not Deleted!",
-          "Your design has not been deleted.",
-          "error",
-        );
+        Swal.fire("Not Deleted!", "Your design has not been deleted.", "error");
       }
     }
   };
@@ -155,7 +149,7 @@ function SingleProductPage() {
             )}
           </div>
         )}
-        <div className="mt-5 flex flex-wrap gap-4 sm:mt-10 md:flex-nowrap">
+        <div className="mt-5 flex flex-wrap items-start gap-4 sm:mt-10 md:flex-nowrap">
           <div className="w-full md:w-2/3 lg:w-3/4">
             {images?.length === 1 ? (
               <img
@@ -176,7 +170,7 @@ function SingleProductPage() {
               </Slider>
             )}
           </div>
-          <div className="w-full bg-lightskyblue px-4 py-5 md:w-1/3 lg:w-1/4">
+          <div className="w-full bg-lightskyblue px-4 py-6 md:w-1/3 lg:w-1/4">
             <h1 className="text-lg font-bold sm:text-2xl">{design?.title}</h1>
             <ul className="mb-5 mt-10 *:my-4 *:font-medium">
               <li>
