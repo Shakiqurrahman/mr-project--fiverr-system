@@ -6,6 +6,7 @@ import Affiliate from "../pages/Affiliate";
 import AllCategory from "../pages/AllCategory";
 import AllCompletedProjects from "../pages/AllCompletedProjects";
 import AllDesign from "../pages/AllDesign";
+import AllReviews from "../pages/AllReviews";
 import Cart from "../pages/Cart";
 import ChangePassword from "../pages/ChangePassword";
 import Contact from "../pages/Contact";
@@ -235,6 +236,10 @@ export const router = createBrowserRouter([
       {
         path: "/cart",
         element: <Cart />,
+      },
+      {
+        path: "/all-reviews",
+        element: <AllReviews />,
       },
     ],
   },
