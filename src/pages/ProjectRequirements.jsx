@@ -12,12 +12,14 @@ import Dreamstime from "../assets/images/Stock Logos/06 Dreamstime_Logo.png";
 import Vectezzy from "../assets/images/Stock Logos/07 Vectezzy logo.png";
 import alamy from "../assets/images/Stock Logos/alamy logo.png";
 import depositPhotos from "../assets/images/Stock Logos/depositphotos.png";
+import EmojiPicker from "../components/chat/EmojiPicker";
 import Divider from "../components/Divider";
 import formatFileSize from "../libs/formatFileSize";
 
 const ProjectRequirements = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  const textareasRef = useRef([]);
   const [submitLoading, setSubmitLoading] = useState(false);
   const requirementsData = useMemo(
     () => [
@@ -42,6 +44,44 @@ const ProjectRequirements = () => {
       setRequirements(updateRequirements);
     }
   }, [requirementsData]);
+
+  //Emoji Picker component handler
+
+  const handleEmojiSelect = (emoji, index, id) => {
+    setRequirements((prev) =>
+      prev.map((item) => {
+        if (item.id === id) {
+          const textarea = textareasRef.current[index];
+          const startPos = textarea.selectionStart;
+          const endPos = textarea.selectionEnd;
+
+          console.log(textarea.value, id);
+
+          // Insert the emoji at the cursor position
+          const newText =
+            item.answer.substring(0, startPos) +
+            emoji +
+            item.answer.substring(endPos, item.answer.length);
+
+          const updatedItem = {
+            ...item,
+            answer: newText,
+          };
+
+          // Move the cursor position after the emoji
+          setTimeout(() => {
+            textarea.selectionStart = textarea.selectionEnd =
+              startPos + emoji.length;
+            textarea.focus();
+          }, 0);
+
+          return updatedItem;
+        } else {
+          return item;
+        }
+      }),
+    );
+  };
 
   //   Updating Each Answer Field
   const handleChangeAnswer = (e, id) => {
@@ -116,7 +156,10 @@ const ProjectRequirements = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(requirements);
+    const checkTextLength = requirements.every(
+      (item) => item.answer.length <= 5000,
+    );
+    console.log(checkTextLength, requirements);
   };
 
   return (
@@ -148,18 +191,28 @@ const ProjectRequirements = () => {
                     <span className="text-primary">{i + 1}.</span>{" "}
                     {item.question}
                   </label>
-                  <div className="border bg-white">
+                  <div
+                    className={`border bg-white ${item.answer.length > 5000 ? "border-canceled" : "border-solid"}`}
+                  >
                     <textarea
                       className="block h-[100px] w-full resize-none p-3 outline-none"
                       placeholder="Type here"
                       value={item.answer}
                       onChange={(e) => handleChangeAnswer(e, item.id)}
                       required
+                      ref={(el) => (textareasRef.current[i] = el)}
                     ></textarea>
                     <div className="flex items-center justify-end gap-3 p-3">
-                      <span className="text-sm font-medium text-black/50">
-                        00/5,000
+                      <span
+                        className={`text-sm font-medium ${item.answer.length > 5000 ? "text-canceled" : "text-black/50"}`}
+                      >
+                        {item.answer.length}/5,000
                       </span>
+                      <EmojiPicker
+                        onEmojiSelect={(emoji) =>
+                          handleEmojiSelect(emoji, i, item.id)
+                        }
+                      />
                       <Divider className={"h-[20px] w-[2px] !bg-black/20"} />
                       <div>
                         <input
@@ -214,7 +267,7 @@ const ProjectRequirements = () => {
                   type="button"
                   onClick={() => navigate(-1)}
                   disabled={submitLoading}
-                  className="mt-5 flex h-[45px] w-1/2 items-center justify-center bg-gray-300 text-lg font-semibold text-white disabled:cursor-not-allowed"
+                  className="mt-5 flex h-[45px] w-1/2 items-center justify-center bg-gray-400 text-lg font-semibold text-white disabled:cursor-not-allowed"
                 >
                   Skip
                 </button>
