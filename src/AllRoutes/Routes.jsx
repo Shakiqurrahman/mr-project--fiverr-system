@@ -7,6 +7,7 @@ import AllCategory from "../pages/AllCategory";
 import AllCompletedProjects from "../pages/AllCompletedProjects";
 import AllDesign from "../pages/AllDesign";
 import AllReviews from "../pages/AllReviews";
+import Analytics from "../pages/Analytics";
 import Cart from "../pages/Cart";
 import ChangePassword from "../pages/ChangePassword";
 import Contact from "../pages/Contact";
@@ -243,6 +244,14 @@ export const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <DashboardPage />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/analytics",
+        element: (
+          <AdminRoute>
+            <Analytics />
           </AdminRoute>
         ),
       },
