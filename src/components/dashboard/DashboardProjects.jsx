@@ -1,4 +1,13 @@
-import React, { useState } from "react";
+import {
+  differenceInDays,
+  differenceInHours,
+  differenceInMinutes,
+  differenceInMonths,
+  differenceInYears,
+  isPast,
+  parseISO,
+} from "date-fns";
+import React, { Fragment, useState } from "react";
 import { FaComputer } from "react-icons/fa6";
 import { getStatusText } from "../customer-profile/StatusText";
 
@@ -57,15 +66,15 @@ const DashboardProjects = () => {
       id: 1,
       status: "Ongoing",
       price: 30,
-      deadline: "June 15, 2024",
+      deadline: "2024-09-26T18:11:59Z",
       image: {
-        url: "https://img-cdn.pixlr.com/image-generator/history/65bb506dcb310754719cf81f/ede935de-1138-4f66-8ed7-44bd16efc709/medium.webp",
+        url: "https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D",
         name: "Door Hanger Design",
       },
       client: {
         id: 1,
         isOnline: true,
-        name: "John Doe",
+        name: "Shakiqur Rahman",
         avatar:
           "https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D",
       },
@@ -74,7 +83,7 @@ const DashboardProjects = () => {
       id: 2,
       status: "Revision",
       price: 30,
-      deadline: "June 15, 2024",
+      deadline: "2024-11-30T14:10:59Z",
       image: {
         url: "https://img-cdn.pixlr.com/image-generator/history/65bb506dcb310754719cf81f/ede935de-1138-4f66-8ed7-44bd16efc709/medium.webp",
         name: "Flyer Design",
@@ -87,6 +96,40 @@ const DashboardProjects = () => {
           "https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D",
       },
     },
+    {
+      id: 3,
+      status: "Revision",
+      price: 30,
+      deadline: "2024-09-25T02:51:59Z",
+      image: {
+        url: "https://img-cdn.pixlr.com/image-generator/history/65bb506dcb310754719cf81f/ede935de-1138-4f66-8ed7-44bd16efc709/medium.webp",
+        name: "Flyer Design",
+      },
+      client: {
+        id: 2,
+        isOnline: false,
+        name: "Shake Xpress",
+        avatar:
+          "https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D",
+      },
+    },
+    {
+      id: 4,
+      status: "Ongoing",
+      price: 30,
+      deadline: "2024-09-26T02:51:59Z",
+      image: {
+        url: "https://img-cdn.pixlr.com/image-generator/history/65bb506dcb310754719cf81f/ede935de-1138-4f66-8ed7-44bd16efc709/medium.webp",
+        name: "Flyer Design",
+      },
+      client: {
+        id: 4,
+        isOnline: true,
+        name: "Shake Xpress",
+        avatar:
+          "https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D",
+      },
+    },
   ]);
 
   const handleProjectTypeChange = (e) => {
@@ -94,8 +137,68 @@ const DashboardProjects = () => {
   };
 
   const filteredSelectedProject = projectType.find(
-    (type) => type.name === selectedProjectType,
+    (type) => type?.name.toLowerCase() === selectedProjectType.toLowerCase(),
   );
+
+  // Function to get time status
+  const getTimeStatus = (deadline) => {
+    const now = new Date();
+    const eventDate = parseISO(deadline); // Convert string to date
+
+    if (isPast(eventDate)) {
+      // time is late
+      const yearsLate = differenceInYears(now, eventDate);
+      const monthsLate = differenceInMonths(now, eventDate) % 12;
+      const daysLate = differenceInDays(now, eventDate) % 30;
+      const hoursLate = differenceInHours(now, eventDate) % 24;
+      const minutesLate = differenceInMinutes(now, eventDate) % 60;
+
+      let overdueText = "";
+
+      if (yearsLate >= 1) {
+        overdueText = `${yearsLate} year${yearsLate > 1 ? "s" : ""} late`;
+      } else if (monthsLate >= 1) {
+        overdueText = `${monthsLate} month${monthsLate > 1 ? "s" : ""}, ${daysLate} day${daysLate > 1 ? "s" : ""} late`;
+      } else if (daysLate >= 1) {
+        overdueText = `${daysLate} day${daysLate > 1 ? "s" : ""}`;
+      } else if (hoursLate >= 1) {
+        overdueText = `${hoursLate}h ${minutesLate}min late`;
+      } else {
+        overdueText = `${minutesLate}min late`;
+      }
+
+      return {
+        time: overdueText,
+        color: "black", // Default color for overdue events
+      };
+    } else {
+      // time is remaining
+      const timeRemaining = eventDate - now;
+
+      const totalHours = Math.floor(timeRemaining / (1000 * 60 * 60)); // Total hours remaining
+      const days = Math.floor(totalHours / 24); // Calculate remaining days
+      const hours = totalHours % 24; // Remaining hours
+      const minutes = Math.floor(
+        (timeRemaining % (1000 * 60 * 60)) / (1000 * 60),
+      ); // Remaining minutes
+
+      let displayTime;
+      if (days > 0) {
+        displayTime = `${days}d - ${hours}h`;
+      } else {
+        displayTime = `${hours}h - ${minutes} min`;
+      }
+
+      // Set color based on remaining time
+      const color = totalHours < 12 ? "red" : "black"; // Red if less than 12 hours
+
+      return {
+        time: displayTime,
+        color: color,
+      };
+    }
+  };
+
   return (
     <>
       <div className="mb-6 flex items-center justify-between gap-2 border p-4">
@@ -117,54 +220,67 @@ const DashboardProjects = () => {
           ))}
         </select>
       </div>
-      <div>
-        {activeProjectList.map((project, idx) => (
-          <div
-            key={idx}
-            className="mb-6 flex items-center justify-between gap-4 border bg-lightskyblue p-4"
-          >
-            <div className="flex items-center">
-              <img
-                src={project?.image?.url}
-                alt={project?.image?.name}
-                className="h-[74px] w-[100px] border object-cover"
-              />
-              <div className="ml-4 flex items-center gap-2">
-                <div className="relative">
+      <div className="dashboard-overflow-x">
+        {activeProjectList.map((project, idx) => {
+          const { time, color } = getTimeStatus(project?.deadline);
+          return (
+            <Fragment key={idx}>
+              <div className="mb-6 flex min-w-[700px] items-center justify-between gap-4 border bg-lightskyblue p-4 last:mb-0">
+                <div className="flex w-full items-center">
                   <img
-                    src={project?.client?.avatar}
-                    alt={project?.client?.name}
-                    className="size-10 rounded-full border object-cover"
+                    src={project?.image?.url}
+                    alt={project?.image?.name}
+                    className="h-[74px] w-[100px] flex-shrink-0 border object-cover"
                   />
-                  <span
-                    className={`absolute bottom-0 right-1 size-2 rounded-full border border-white ${project?.client?.isOnline ? "bg-primary" : "bg-gray-400"}`}
-                  ></span>
+                  <div className="ml-4 flex items-center gap-2">
+                    <div className="relative flex-shrink-0">
+                      <img
+                        src={project?.client?.avatar}
+                        alt={project?.client?.name}
+                        className="size-10 rounded-full border object-cover"
+                      />
+                      <span
+                        className={`absolute bottom-0 right-1 size-2 rounded-full border border-white ${project?.client?.isOnline ? "bg-primary" : "bg-gray-400"}`}
+                      ></span>
+                    </div>
+                    <h2
+                      title={project.client.name}
+                      className="max-w-[160px] truncate text-sm font-semibold"
+                    >
+                      {project.client.name}
+                    </h2>
+                  </div>
                 </div>
-                <h2 className="text-sm font-semibold">{project.client.name}</h2>
+                <div className="flex w-full items-center gap-6 lg:gap-10">
+                  <div className="w-[20%] text-center text-sm">
+                    <p className="font-medium text-gray-500">Price</p>
+                    <p className="font-bold">${project.price}</p>
+                  </div>
+                  <div className="w-[50%] text-center text-sm">
+                    <p className="font-medium text-gray-500">Time</p>
+                    <p
+                      className={`font-bold ${color === "red" ? "text-red-500" : "text-black"}`}
+                    >
+                      {time}
+                    </p>
+                  </div>
+                  <div className="w-[30%] text-center text-sm">
+                    <p className="font-medium text-gray-500">Status</p>
+                    <p className="font-bold">
+                      {getStatusText(project?.status)}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-6 lg:gap-8">
+                  <button className="text-sm font-semibold text-primary">
+                    View
+                  </button>
+                  <FaComputer className="cursor-pointer text-xl text-black duration-300 hover:text-primary" />
+                </div>
               </div>
-            </div>
-            <div className="flex items-center gap-10">
-              <div className="text-center text-sm">
-                <p className="font-medium text-gray-500">Price</p>
-                <p className="font-bold">${project.price}</p>
-              </div>
-              <div className="text-center text-sm">
-                <p className="font-medium text-gray-500">Time</p>
-                <p className="font-bold">{project.deadline}</p>
-              </div>
-              <div className="text-center text-sm">
-                <p className="font-medium text-gray-500">Status</p>
-                <p className="font-bold">{getStatusText(project?.status)}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-8">
-              <button className="text-sm font-semibold text-primary">
-                View
-              </button>
-              <FaComputer className="cursor-pointer text-xl text-black duration-300 hover:text-primary" />
-            </div>
-          </div>
-        ))}
+            </Fragment>
+          );
+        })}
       </div>
     </>
   );

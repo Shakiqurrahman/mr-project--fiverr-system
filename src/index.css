@@ -33,6 +33,19 @@
   border-radius: 4px;
 }
 
+.dashboard-overflow-x {
+  padding-bottom: 5px;
+  overflow-x: auto;
+}
+
+.dashboard-overflow-x::-webkit-scrollbar {
+  height: 10px !important;
+}
+.dashboard-overflow-x::-webkit-scrollbar-thumb {
+  @apply bg-primary;
+  border-radius: 4px;
+}
+
 /* for cart drawer */
 .drawer-scroller::-webkit-scrollbar {
   width: 0px;
