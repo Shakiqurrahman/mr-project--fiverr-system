@@ -36,7 +36,7 @@ const Analytics = () => {
   };
   return (
     <div className="max-width mt-10">
-      <div className="mb-10 flex justify-between gap-3">
+      <div className="mb-10 hidden justify-between gap-3 md:flex">
         {btns.map((btn, i) => (
           <button
             key={i}
@@ -47,6 +47,17 @@ const Analytics = () => {
           </button>
         ))}
       </div>
+      <select
+        value={selectedBtn}
+        onChange={(e) => setSelectedBtn(e.target.value)}
+        className="mb-10 block w-full border border-gray-300 p-3 font-medium outline-none md:hidden"
+      >
+        {btns.map((btn, i) => (
+          <option key={i} value={btn}>
+            {btn}
+          </option>
+        ))}
+      </select>
       <RenderComponent />
     </div>
   );
