@@ -1,4 +1,4 @@
-const ComputerIcon = ({ fillColor }) => {
+const ComputerIcon = ({ className }) => {
   return (
     <svg
       version="1.1"
@@ -10,7 +10,7 @@ const ComputerIcon = ({ fillColor }) => {
       viewBox="0 0 897.9 880.9"
       enableBackground="new 0 0 897.9 880.9"
       xmlSpace="preserve"
-      className={fillColor}
+      className={className}
     >
       <path
         d="M626.3,109.2c10.8,2.9,22,4.7,32.2,8.7c79.1,31.1,101.5,132.2,43.4,194.2c-1.6,1.7-3.2,3.4-4.9,5.3

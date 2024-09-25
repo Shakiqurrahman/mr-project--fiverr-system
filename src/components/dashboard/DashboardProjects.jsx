@@ -8,8 +8,8 @@ import {
   parseISO,
 } from "date-fns";
 import React, { Fragment, useState } from "react";
-import { FaComputer } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import ComputerIcon from "../../assets/svg/ComputerIcon";
 import { getStatusText } from "../customer-profile/StatusText";
 
 const DashboardProjects = () => {
@@ -77,8 +77,7 @@ const DashboardProjects = () => {
         isOnline: true,
         name: "Shakiqur Rahman",
         userName: "shake75",
-        avatar:
-          "",
+        avatar: "",
       },
     },
     {
@@ -113,8 +112,7 @@ const DashboardProjects = () => {
         isOnline: false,
         name: "Shake Xpress",
         userName: "shake75",
-        avatar:
-          "",
+        avatar: "",
       },
     },
     {
@@ -131,8 +129,7 @@ const DashboardProjects = () => {
         isOnline: true,
         name: "Shake Xpress",
         userName: "shake75",
-        avatar:
-          "",
+        avatar: "",
       },
     },
   ]);
@@ -292,7 +289,8 @@ const DashboardProjects = () => {
                   <button className="text-sm font-semibold text-primary">
                     View
                   </button>
-                  <FaComputer className="cursor-pointer text-xl text-black duration-300 hover:text-primary" />
+                  {/* <FaComputer className="cursor-pointer text-xl text-black duration-300 hover:text-primary" /> */}
+                  <ComputerIcon className="flex-shrink-0 cursor-pointer fill-black duration-200 hover:fill-primary size-7" />
                 </div>
               </div>
             </Fragment>
