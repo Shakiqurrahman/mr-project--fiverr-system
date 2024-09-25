@@ -2,6 +2,9 @@ import React from "react";
 import AllTimeStats from "../components/dashboard/AllTimeStats";
 import CurrentMonthStats from "../components/dashboard/CurrentMonthStats";
 import DashboardProjects from "../components/dashboard/DashboardProjects";
+import SearchBox from "../components/dashboard/SearchBox";
+import TotalVisitors from "../components/dashboard/TotalVisitors";
+import AllUsers from "../components/dashboard/AllUsers";
 
 const DashboardPage = () => {
   return (
@@ -16,6 +19,15 @@ const DashboardPage = () => {
 
         {/* -----All Times statistics-----  */}
         <AllTimeStats />
+
+        {/* -----Search Project-----  */}
+        <SearchBox />
+
+        {/* -----Total Visitors-----  */}
+        <TotalVisitors />
+
+        {/* -----All Users-----  */}
+        <AllUsers />
       </div>
     </section>
   );
