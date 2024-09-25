@@ -9,6 +9,7 @@ import {
 } from "date-fns";
 import React, { Fragment, useState } from "react";
 import { FaComputer } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 import { getStatusText } from "../customer-profile/StatusText";
 
 const DashboardProjects = () => {
@@ -75,8 +76,9 @@ const DashboardProjects = () => {
         id: 1,
         isOnline: true,
         name: "Shakiqur Rahman",
+        userName: "shake75",
         avatar:
-          "https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D",
+          "",
       },
     },
     {
@@ -92,6 +94,7 @@ const DashboardProjects = () => {
         id: 2,
         isOnline: false,
         name: "Shake Xpress",
+        userName: "shakeXpress",
         avatar:
           "https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D",
       },
@@ -109,8 +112,9 @@ const DashboardProjects = () => {
         id: 2,
         isOnline: false,
         name: "Shake Xpress",
+        userName: "shake75",
         avatar:
-          "https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D",
+          "",
       },
     },
     {
@@ -126,8 +130,9 @@ const DashboardProjects = () => {
         id: 4,
         isOnline: true,
         name: "Shake Xpress",
+        userName: "shake75",
         avatar:
-          "https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D",
+          "",
       },
     },
   ]);
@@ -201,8 +206,8 @@ const DashboardProjects = () => {
 
   return (
     <>
-      <div className="mb-6 flex flex-col sm:flex-row md:flex-wrap items-center justify-between gap-2 border p-4">
-        <h1 className="text-lg text-nowrap sm:text-xl font-bold text-primary">
+      <div className="mb-6 flex flex-col items-center justify-between gap-2 border p-4 sm:flex-row md:flex-wrap">
+        <h1 className="text-nowrap text-lg font-bold text-primary sm:text-xl">
           {filteredSelectedProject?.name} - {filteredSelectedProject?.quantity}{" "}
           ($
           {filteredSelectedProject?.totalPrice})
@@ -223,6 +228,9 @@ const DashboardProjects = () => {
       <div className="dashboard-overflow-x">
         {activeProjectList.map((project, idx) => {
           const { time, color } = getTimeStatus(project?.deadline);
+          const letterLogo =
+            !project.client.avatar &&
+            project?.client?.userName.trim().charAt(0).toUpperCase();
           return (
             <Fragment key={idx}>
               <div className="mb-6 flex min-w-[700px] items-center justify-between gap-4 border bg-lightskyblue p-4 last:mb-0">
@@ -232,24 +240,33 @@ const DashboardProjects = () => {
                     alt={project?.image?.name}
                     className="h-[74px] w-[100px] flex-shrink-0 border object-cover"
                   />
-                  <div className="ml-4 flex items-center gap-2">
+                  <Link
+                    to={`/${project?.client?.userName}`}
+                    className="group ml-4 flex items-center gap-2"
+                  >
                     <div className="relative flex-shrink-0">
-                      <img
-                        src={project?.client?.avatar}
-                        alt={project?.client?.name}
-                        className="size-10 rounded-full border object-cover"
-                      />
+                      {project.client.avatar ? (
+                        <img
+                          src={project?.client?.avatar}
+                          alt={project?.client?.name}
+                          className="size-10 rounded-full border object-cover"
+                        />
+                      ) : (
+                        <div className="flex size-10 items-center justify-center rounded-full border bg-gray-200 object-cover text-2xl font-bold text-[#3b3b3b]/50">
+                          {letterLogo}
+                        </div>
+                      )}
                       <span
                         className={`absolute bottom-0 right-1 size-2 rounded-full border border-white ${project?.client?.isOnline ? "bg-primary" : "bg-gray-400"}`}
                       ></span>
                     </div>
                     <h2
-                      title={project.client.name}
-                      className="max-w-[160px] truncate text-sm font-semibold"
+                      title={project?.client?.userName}
+                      className="max-w-[160px] truncate text-sm font-semibold duration-300 group-hover:underline"
                     >
-                      {project.client.name}
+                      {project?.client?.userName}
                     </h2>
-                  </div>
+                  </Link>
                 </div>
                 <div className="flex w-full items-center gap-6 lg:gap-10">
                   <div className="w-[20%] text-center text-sm">
