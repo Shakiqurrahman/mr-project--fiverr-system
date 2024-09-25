@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
 const AllTimeStats = () => {
-  // const currentDate = new Date();
   const statsType = [
     {
       id: 1,
