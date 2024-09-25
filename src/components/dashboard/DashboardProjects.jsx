@@ -289,7 +289,6 @@ const DashboardProjects = () => {
                   <button className="text-sm font-semibold text-primary">
                     View
                   </button>
-                  {/* <FaComputer className="cursor-pointer text-xl text-black duration-300 hover:text-primary" /> */}
                   <ComputerIcon className="flex-shrink-0 cursor-pointer fill-black duration-200 hover:fill-primary size-7" />
                 </div>
               </div>
