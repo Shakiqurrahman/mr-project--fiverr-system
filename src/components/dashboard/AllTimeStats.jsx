@@ -43,7 +43,7 @@ const AllTimeStats = () => {
   return (
     <>
       <div className="mt-6 bg-lightcream p-4">
-        <div className="mb-2 flex items-center justify-between gap-2 border-b border-primary pb-2">
+        <div className="mb-2 flex flex-wrap items-center justify-between gap-2 border-b border-primary pb-2">
           <h1 className="text-lg font-semibold text-primary">
             {selectedStatsType}
           </h1>

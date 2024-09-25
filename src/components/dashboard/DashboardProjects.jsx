@@ -83,7 +83,7 @@ const DashboardProjects = () => {
       id: 2,
       status: "Revision",
       price: 30,
-      deadline: "2024-11-30T14:10:59Z",
+      deadline: "2024-06-30T14:10:59Z",
       image: {
         url: "https://img-cdn.pixlr.com/image-generator/history/65bb506dcb310754719cf81f/ede935de-1138-4f66-8ed7-44bd16efc709/medium.webp",
         name: "Flyer Design",
@@ -158,7 +158,7 @@ const DashboardProjects = () => {
       if (yearsLate >= 1) {
         overdueText = `${yearsLate} year${yearsLate > 1 ? "s" : ""} late`;
       } else if (monthsLate >= 1) {
-        overdueText = `${monthsLate} month${monthsLate > 1 ? "s" : ""}, ${daysLate} day${daysLate > 1 ? "s" : ""} late`;
+        overdueText = `${monthsLate} month${monthsLate > 1 ? "s" : ""} late`;
       } else if (daysLate >= 1) {
         overdueText = `${daysLate} day${daysLate > 1 ? "s" : ""}`;
       } else if (hoursLate >= 1) {
@@ -201,8 +201,8 @@ const DashboardProjects = () => {
 
   return (
     <>
-      <div className="mb-6 flex items-center justify-between gap-2 border p-4">
-        <h1 className="text-xl font-bold text-primary">
+      <div className="mb-6 flex flex-col sm:flex-row md:flex-wrap items-center justify-between gap-2 border p-4">
+        <h1 className="text-lg text-nowrap sm:text-xl font-bold text-primary">
           {filteredSelectedProject?.name} - {filteredSelectedProject?.quantity}{" "}
           ($
           {filteredSelectedProject?.totalPrice})
