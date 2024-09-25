@@ -11,6 +11,7 @@ import React, { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 import ComputerIcon from "../../assets/svg/ComputerIcon";
 import { getStatusText } from "../customer-profile/StatusText";
+import AddDesignerModal from "./AddDesignerModal";
 
 const DashboardProjects = () => {
   const projectType = [
@@ -57,6 +58,9 @@ const DashboardProjects = () => {
       totalPrice: 290,
     },
   ];
+
+  const [addDesignerModal, setAddDesignerModal] = useState(false);
+  console.log(addDesignerModal);
 
   const [selectedProjectType, setSelectedProjectType] = useState(
     projectType[0]?.name || "",
@@ -286,10 +290,24 @@ const DashboardProjects = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-6 lg:gap-8">
-                  <button className="text-sm font-semibold text-primary">
+                  <button
+                    type="button"
+                    className="text-sm font-semibold text-primary"
+                  >
                     View
                   </button>
-                  <ComputerIcon className="flex-shrink-0 cursor-pointer fill-black duration-200 hover:fill-primary size-7" />
+                  <button
+                    type="button"
+                    onClick={() => setAddDesignerModal(true)}
+                  >
+                    <ComputerIcon className="size-7 flex-shrink-0 cursor-pointer fill-black duration-200 hover:fill-primary" />
+                  </button>
+                  {addDesignerModal && (
+                    <AddDesignerModal
+                      handleClose={setAddDesignerModal}
+                      // onMsgSubmit={handleAddQuickMsg}
+                    />
+                  )}
                 </div>
               </div>
             </Fragment>
