@@ -205,8 +205,8 @@ const DashboardProjects = () => {
     }
   };
 
-  const handleDesignerModal = (e) => {
-    console.log(e)
+  const handleDesignerModal = (value) => {
+    console.log(value);
   }
 
   return (
