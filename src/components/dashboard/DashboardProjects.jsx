@@ -205,6 +205,10 @@ const DashboardProjects = () => {
     }
   };
 
+  const handleDesignerModal = (e) => {
+    console.log(e)
+  }
+
   return (
     <>
       <div className="mb-6 flex flex-col items-center justify-between gap-2 border p-4 sm:flex-row md:flex-wrap">
@@ -302,18 +306,18 @@ const DashboardProjects = () => {
                   >
                     <ComputerIcon className="size-7 flex-shrink-0 cursor-pointer fill-black duration-200 hover:fill-primary" />
                   </button>
-                  {addDesignerModal && (
-                    <AddDesignerModal
-                      handleClose={setAddDesignerModal}
-                      // onMsgSubmit={handleAddQuickMsg}
-                    />
-                  )}
                 </div>
               </div>
             </Fragment>
           );
         })}
       </div>
+      {addDesignerModal && (
+        <AddDesignerModal
+          handleClose={setAddDesignerModal}
+          onMsgSubmit={handleDesignerModal}
+        />
+      )}
     </>
   );
 };
