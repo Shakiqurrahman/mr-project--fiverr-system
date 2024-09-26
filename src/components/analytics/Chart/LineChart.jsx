@@ -48,15 +48,13 @@ const LineChart = ({
           newVisitors.push(Math.floor(Math.random() * 50));
           returningVisitors.push(Math.floor(Math.random() * 30));
 
-          if (i % 5 === 0 || i === 0) {
-            labels.push(
-              date.toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              }),
-            );
-          }
+          labels.push(
+            date.toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            }),
+          );
         }
         break;
       }
@@ -69,15 +67,13 @@ const LineChart = ({
           newVisitors.push(Math.floor(Math.random() * 50));
           returningVisitors.push(Math.floor(Math.random() * 30));
 
-          if (i % 5 === 0 || i === 0) {
-            labels.push(
-              date.toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              }),
-            );
-          }
+          labels.push(
+            date.toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            }),
+          );
         }
         break;
       }
@@ -102,15 +98,13 @@ const LineChart = ({
           newVisitors.push(Math.floor(Math.random() * 50));
           returningVisitors.push(Math.floor(Math.random() * 30));
 
-          if (i % 5 === 0) {
-            labels.push(
-              date.toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              }),
-            );
-          }
+          labels.push(
+            date.toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            }),
+          );
         }
         break;
       }
@@ -171,16 +165,26 @@ const LineChart = ({
         },
         ticks: {
           color: "#1b8cdc", // Change this to your desired color
-          // Custom tick callback to format date labels
-          callback: (value) => {
-            const strValue = data.labels[value]; // Get the correct label from data.labels
-            const parts = strValue.split(" "); // Split the date string
-            return parts.length === 3
-              ? [`${parts[0]} ${parts[1]}`, parts[2]] // Show "Nov 5" on one line and "2023" on another
-              : [strValue]; // Fallback to original value
+          callback: function (val, index) {
+            // Hide every 2nd tick label
+            return index % 4 === 0 ? this.getLabelForValue(val) : "";
           },
+          // Custom tick callback to format date labels
+          // callback: (value) => {
+          //   const strValue = data.labels[value]; // Get the correct label from data.labels
+          //   const parts = strValue.split(" "); // Split the date string
+          //   return parts.length === 3
+          //     ? [`${parts[0]} ${parts[1]}`, parts[2]] // Show "Nov 5" on one line and "2023" on another
+          //     : [strValue]; // Fallback to original value
+          // },
           autoSkip: false, // Prevent automatic skipping of labels
           align: "center", // Align ticks to center
+        },
+        y: {
+          suggestedMax: 200,
+          ticks: {
+            stepSize: 50,
+          },
         },
       },
     },
@@ -205,9 +209,33 @@ const LineChart = ({
         borderWidth: 1,
         padding: 15,
         cornerRadius: 10,
+        usePointStyle: true,
       },
       legend: {
         display: false,
+      },
+      // Custom plugin for drawing ticks with different colors
+      // Custom plugin for drawing ticks with different colors
+      beforeDraw: (chart) => {
+        const ctx = chart.ctx;
+        const xAxis = chart.scales.x;
+
+        ctx.save();
+        ctx.font = `${xAxis.options.ticks.fontSize}px ${xAxis.options.ticks.fontStyle} ${xAxis.options.ticks.fontFamily}`;
+
+        xAxis.ticks.forEach((tick, index) => {
+          if (index % 5 === 0) {
+            ctx.fillStyle = "#ff0000"; // Change color for every 5th tick
+          } else {
+            ctx.fillStyle = "#1b8cdc"; // Default color for other ticks
+          }
+
+          const x = xAxis.getPixelForTick(index);
+          const y = xAxis.bottom + 20; // Position below the axis
+          ctx.fillText(tick.label, x, y);
+        });
+
+        ctx.restore();
       },
     },
   };
