@@ -8,13 +8,16 @@ const HorizontalBarChart = ({ data, title }) => {
   // Define colors for each category using a mapping object
   const colorMapping = {
     completed: "#1b8cdc",
-    offer: "#808000", // Olive color code
-    custom: "#ffa500", // Orange color
+    offer: "#87b306", 
+    custom: "#f56f6c", 
+    custom2: "#9258c8", 
     revision: "#f1592a",
     ongoing: "#078510",
     waiting: "#9d0e66",
     delivered: "#0e97a0",
     cancelled: "#e60006",
+    direct : "#c0ad83",
+    direct2 : "#7ba7c2",
   };
 
   // Calculate the total value
