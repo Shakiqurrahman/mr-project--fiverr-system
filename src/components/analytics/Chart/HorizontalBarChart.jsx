@@ -1,24 +1,26 @@
 import React, { useState } from "react";
 
-const HorizontalBarChart = ({ data, title }) => {
+const HorizontalBarChart = ({ data, title, color }) => {  
   // Extract category names and values
   const categories = Object.keys(data);
   const values = Object.values(data);
 
-  // Define colors for each category using a mapping object
-  const colorMapping = {
+  // Default color mapping
+  const defaultColorMapping = {
     completed: "#1b8cdc",
     offer: "#87b306",
-    custom: "#f56f6c",
-    custom2: "#9258c8",
     revision: "#f1592a",
     ongoing: "#078510",
     waiting: "#9d0e66",
     delivered: "#0e97a0",
     cancelled: "#e60006",
-    direct: "#c0ad83",
-    direct2: "#7ba7c2",
+    custom: "#c0ad83",
+    direct: "#f56f6c",
+    md : '#b26f70'
   };
+
+  // Merge the provided color prop with defaultColorMapping (priority to color prop)
+  const colorMapping = { ...defaultColorMapping, ...color };
 
   // Calculate the total value
   const totalValue = values.reduce((sum, value) => sum + value, 0);
