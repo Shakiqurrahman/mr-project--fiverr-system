@@ -20,6 +20,12 @@ import CreateOfferModal from "./CreateOfferModal";
 import EditQuickMsgModal from "./EditQuickMsgModal";
 import EmojiPicker from "./EmojiPicker";
 
+import toast from "react-hot-toast";
+import {
+  useDeleteQuickResMsgMutation,
+  useFetchQuickResMsgQuery,
+} from "../../Redux/api/inboxApiSlice";
+
 const ChatBox = () => {
   const [expand, setExpand] = useState(false);
   const endOfMessagesRef = useRef(null);
@@ -29,8 +35,25 @@ const ChatBox = () => {
   const { user, token } = useSelector((state) => state.user);
   // const token = Cookies.get("authToken");
   const socket = connectSocket("http://localhost:3000", token);
+  const { data: quickMsgs } = useFetchQuickResMsgQuery();
+  const [deleteQuickResMsg, { isLoading, error }] =
+    useDeleteQuickResMsgMutation();
+
+  const [onlineUser, setOnlineUser] = useState([]);
+
+  console.log(onlineUser, "checking the online users");
+
+  // all avaiable user's
+  useEffect(() => {
+    socket.emit("view-online-users");
+    socket.on("online-users", (onlineUsers) => {
+      setOnlineUser(onlineUsers);
+    });
+  }, []);
 
   const userProfilePic = user?.image;
+  console.log(userProfilePic);
+
   const isAdmin = user?.role === "ADMIN";
   const menuRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -40,38 +63,31 @@ const ChatBox = () => {
   const [openEditMsgModal, setOpenEditMsgModal] = useState(null);
   const [openOfferModal, setOpenOfferModal] = useState(false);
 
-  const [quickMsgs, setQuickMsgs] = useState([
-    {
-      id: 1,
-      title: "Thank you",
-      text: "Thank you very much for choosing my service!",
-    },
-  ]);
-
   // messages state
+  // eslint-disable-next-line no-unused-vars
   const [messages, setMessages] = useState([
-    {
-      userImage: userProfilePic,
-      senderName: user?.fullName,
-      messageId: 1,
-      msgDate: "Apr 22, 2023",
-      msgTime: "07:33 AM",
-      messageText:
-        "hello, looking for a flyer for my bathroom and kitchen company. I like the black and gold one you have listed",
-      attachment: [],
-      customOffer: null,
-      contactForm: null,
-    },
+    // {
+    //   userImage: userProfilePic,
+    //   senderName: user?.fullName,
+    //   messageId: 1,
+    //   msgDate: "Apr 22, 2023",
+    //   msgTime: "07:33 AM",
+    //   messageText:
+    //     "hello, looking for a flyer for my bathroom and kitchen company. I like the black and gold one you have listed",
+    //   attachment: [],
+    //   customOffer: null,
+    //   contactForm: null,
+    // },
   ]);
 
   const [visibility, setVisibility] = useState({});
 
-  // Socket connection
+  // Socket connection reader
   useEffect(() => {
     // Listen for incoming messages
     socket?.on("message", (msg) => {
-      setMessages((prevMessages) => [...prevMessages, msg]);
-      console.log(msg);
+      // setMessages((prevMessages) => [...prevMessages, msg]);
+      console.log(msg, "socket message testing");
     });
 
     // Cleanup on component unmount
@@ -113,19 +129,14 @@ const ChatBox = () => {
   const handleQuickMsgs = (id) => {
     setQucikMsgBtnController(qucikMsgBtnController === id ? null : id);
   };
-  const handleAddQuickMsg = (msg) => {
-    const maxId =
-      quickMsgs.length > 0
-        ? Math.max(...quickMsgs.map((item) => item.id)) + 1
-        : 1;
-    const newMsg = { id: maxId, ...msg };
-    setQuickMsgs((prevMsg) => [...prevMsg, newMsg]);
-  };
-  const handleUpdateQuickMsg = (msg) => {
-    setQuickMsgs((prevMsg) => prevMsg.map((v) => (v.id === msg.id ? msg : v)));
-  };
-  const handleDeleteQuickMsg = (id) => {
-    setQuickMsgs((prevMsg) => prevMsg.filter((v) => v.id !== id));
+
+  const handleDeleteQuickMsg = async (id) => {
+    try {
+      await deleteQuickResMsg(id).unwrap();
+      toast.success("Quick Message deleted successfully");
+    } catch (err) {
+      toast.error("Failed to delete message");
+    }
   };
 
   // input handling
@@ -222,6 +233,7 @@ const ChatBox = () => {
   // handler for Submitting/Send a Message
   const handleSubmitMessage = (e) => {
     e.preventDefault();
+
     if (textValue || selectedImages) {
       const response = () => {
         const date = new Date();
@@ -254,8 +266,17 @@ const ChatBox = () => {
           attachment: attachments || null,
           customOffer: null,
         };
-        socket.emit("message", submitForm);
-        // setMessages((prev) => [...prev, submitForm]);
+        if (isAdmin) {
+          socket.emit("admin-message", {
+            userId: "66f4597cf2259c272ecaf810",
+            ...submitForm,
+          });
+        } else {
+          socket.emit("user-message", {
+            userId: "66f4597cf2259c272ecaf810",
+            ...submitForm,
+          });
+        }
         return { result: "Success" };
       };
       const result = response();
@@ -624,14 +645,14 @@ const ChatBox = () => {
             <div
               className={`${quickResponse ? "block" : "hidden"} flex h-[100px] flex-wrap items-start gap-3 overflow-y-auto py-2`}
             >
-              {quickMsgs.map((msg, i) => (
+              {quickMsgs?.map((msg, i) => (
                 <div
                   key={i}
                   className="relative flex items-center gap-2 border border-gray-400 px-2 py-1 text-xs hover:bg-primary/10"
                 >
                   <button
                     type="button"
-                    value={msg.text}
+                    value={msg.description}
                     onClick={handleChangeQuickMsg}
                   >
                     {msg.title}
@@ -718,16 +739,11 @@ const ChatBox = () => {
       {openEditMsgModal && (
         <EditQuickMsgModal
           handleClose={setOpenEditMsgModal}
-          onMsgSubmit={handleUpdateQuickMsg}
           value={openEditMsgModal}
+          controller = {setQucikMsgBtnController}
         />
       )}
-      {openAddMsgModal && (
-        <AddQuickMsgModal
-          handleClose={setOpenAddMsgModal}
-          onMsgSubmit={handleAddQuickMsg}
-        />
-      )}
+      {openAddMsgModal && <AddQuickMsgModal handleClose={setOpenAddMsgModal} />}
       {openOfferModal && (
         <CreateOfferModal
           handleClose={setOpenOfferModal}

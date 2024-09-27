@@ -1,26 +1,55 @@
 import { useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { IoMdClose } from "react-icons/io";
 import useOutsideClick from "../../hooks/useOutsideClick";
+import { useUpdateQuickResMsgMutation } from "../../Redux/api/inboxApiSlice";
 
-const EditQuickMsgModal = ({ handleClose, onMsgSubmit, value }) => {
+const EditQuickMsgModal = ({ handleClose, value, controller }) => {
+  console.log(value);
+
   const editQuickMsgRef = useRef(null);
+  const [updateQuickResMsg, { isLoading, error }] =
+    useUpdateQuickResMsgMutation();
+
+  // Initialize form state with existing message values
   const [form, setForm] = useState({
     id: value.id,
     title: value.title,
-    text: value.text,
+    description: value.description,
   });
+
+  // Handle form input changes
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  const handleSubmit = (e) => {
+
+  // Handle form submission and trigger the mutation
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.title && form.title.length <= 60 && form.text) {
-      onMsgSubmit(form);
-      handleClose(null);
+
+    if (form.title && form.title.length <= 60 && form.description) {
+      try {
+        await updateQuickResMsg({
+          id: form.id,
+          updatedMessage: {
+            title: form.title,
+            description: form.description,
+          },
+        }).unwrap();
+
+        toast.success("Message updated successfully");
+        handleClose(null);
+      } catch (err) {
+        toast.error("Failed to update message");
+        console.error("Failed to update message:", err);
+      }
+      controller(null);
     }
   };
 
+  // Close the modal when clicking outside of it
   useOutsideClick(editQuickMsgRef, () => handleClose(null));
+
   return (
     <div className="fixed left-0 top-0 !z-[9999999] !flex h-screen w-full items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
       <button
@@ -54,8 +83,8 @@ const EditQuickMsgModal = ({ handleClose, onMsgSubmit, value }) => {
         <textarea
           className="block min-h-[100px] w-full resize-none rounded-md border px-3 py-2 text-sm outline-none"
           placeholder="Enter Message"
-          name="text"
-          value={form.text}
+          name="description"
+          value={form.description}
           onChange={handleChange}
         ></textarea>
         <button
