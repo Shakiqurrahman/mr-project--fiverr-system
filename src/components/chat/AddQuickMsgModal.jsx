@@ -3,13 +3,13 @@ import { IoMdClose } from "react-icons/io";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useCreateQuickResMsgMutation } from "../../Redux/api/inboxApiSlice";
 
-const AddQuickMsgModal = ({ handleClose}) => {
+const AddQuickMsgModal = ({ handleClose }) => {
   const [createQuickResMsg, { isLoading, error }] =
     useCreateQuickResMsgMutation();
   const formRef = useRef(null);
   const [form, setForm] = useState({
     title: "",
-    text: "",
+    description: "",
   });
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -19,12 +19,12 @@ const AddQuickMsgModal = ({ handleClose}) => {
     e.preventDefault();
 
     // Validate form input
-    if (form.title && form.title.length <= 60 && form.text) {
+    if (form.title && form.title.length <= 60 && form.description) {
       try {
         // Trigger the mutation to create a new quick message
         const newMessage = await createQuickResMsg({
           title: form.title,
-          description: form.text,
+          description: form.description,
         }).unwrap();
         console.log(newMessage);
 
@@ -70,8 +70,8 @@ const AddQuickMsgModal = ({ handleClose}) => {
         <textarea
           className="block min-h-[100px] w-full resize-none rounded-md border px-3 py-2 text-sm outline-none"
           placeholder="Enter Message"
-          name="text"
-          value={form.text}
+          name="description"
+          value={form.description}
           onChange={handleChange}
         ></textarea>
         <button
