@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { IoIosStar } from "react-icons/io";
 import { IoSearchOutline } from "react-icons/io5";
 import { LuClock3 } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
@@ -76,7 +77,7 @@ const AllConversation = () => {
       lastMessage: "Hi Hashuuu!",
       lastMessageTime: new Date(Date.now() - 1209600000), // 14 days ago
       unreadMessages: 2,
-      starred: false,
+      starred: true,
       isRepeatedClient: true,
       archived: false,
       customOffer: true,
@@ -172,9 +173,9 @@ const AllConversation = () => {
     }
 
     // Apply search filter if search is active
-    if (searchQuery.trim() !== "") {      
+    if (searchQuery.trim() !== "") {
       filteredChats = filteredChats.filter((chat) =>
-        chat.name.toLowerCase().includes(searchQuery.toLowerCase())
+        chat.name.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
 
@@ -264,15 +265,18 @@ const AllConversation = () => {
                   </p>
                 </div>
               </div>
-              <div className="flex flex-col gap-1 items-end">
-                <p className="text-[12px] text-gray-500">
-                  {formatTimeAgo(chat.lastMessageTime)}
-                </p>
-                {chat.unreadMessages > 0 && (
-                  <span className="size-6 rounded-full bg-primary text-center text-[10px] leading-[24px] text-white">
-                    {chat.unreadMessages}
-                  </span>
-                )}
+              <div className="flex items-center gap-3">
+                <div className="flex flex-col items-end gap-1">
+                  <p className="text-[12px] text-gray-500">
+                    {formatTimeAgo(chat.lastMessageTime)}
+                  </p>
+                  {chat.unreadMessages > 0 && (
+                    <span className="size-6 rounded-full bg-primary text-center text-[10px] leading-[24px] text-white">
+                      {chat.unreadMessages}
+                    </span>
+                  )}
+                </div>
+                {chat.starred && <IoIosStar className="text-lg text-primary" />}
               </div>
             </div>
           ))

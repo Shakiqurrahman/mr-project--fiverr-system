@@ -13,9 +13,11 @@ const AuthWrapper = ({ children }) => {
 
   useEffect(() => {
     if (error) {
-      dispatch(logout(error));
+      dispatch(logout());
+      disconnectSocket();
     } else if (!Cookies.get("authToken")) {
-      dispatch(logout(error));
+      dispatch(logout());
+      disconnectSocket();
     } else if (user) {
       const token = Cookies.get("authToken");
       dispatch(setUser({ user: user.data, token }));

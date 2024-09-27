@@ -127,7 +127,7 @@ function Header() {
                 }`}
               >
                 <li
-                  className={`${!user && "hidden md:block"} flex items-center text-white hover:text-gray-300`}
+                  className={`${!user && "hidden md:block"} flex shrink-0 items-center text-white hover:text-gray-300`}
                 >
                   {user ? <UserBox /> : <NavLink to="/join">Join</NavLink>}
                 </li>

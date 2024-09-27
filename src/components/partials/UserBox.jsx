@@ -1,5 +1,5 @@
 import { Divider, Menu, MenuItem, Skeleton } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../Redux/features/userSlice";
@@ -9,7 +9,6 @@ function UserBox() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user, loading } = useSelector((state) => state.user);
-
   const handleLogout = () => {
     dispatch(logout());
     disconnectSocket();
@@ -31,9 +30,10 @@ function UserBox() {
   if (user.image) {
     content = (
       <img
-        className="size-10 rounded-full object-cover"
-        src={user.image}
+        className="size-10 rounded-full bg-[rgba(255,255,255,0.20)] object-cover"
+        src={user?.image}
         alt="user"
+      
       />
     );
   } else {
