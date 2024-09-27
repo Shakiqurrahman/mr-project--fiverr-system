@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { IoMdClose } from "react-icons/io";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useCreateQuickResMsgMutation } from "../../Redux/api/inboxApiSlice";
@@ -22,16 +23,17 @@ const AddQuickMsgModal = ({ handleClose }) => {
     if (form.title && form.title.length <= 60 && form.description) {
       try {
         // Trigger the mutation to create a new quick message
-        const newMessage = await createQuickResMsg({
+        await createQuickResMsg({
           title: form.title,
           description: form.description,
         }).unwrap();
-        console.log(newMessage);
+        toast.success("Message created successfully");
 
         // Close the modal on success
         handleClose(false);
       } catch (err) {
         console.error("Failed to create the quick message:", err);
+        toast.error("Failed to create the quick message");
       }
     }
   };
