@@ -4,8 +4,12 @@ import Cards from "../assets/images/card.png";
 import Check from "../assets/svg/Check";
 import PaymentTabs from "../components/PaymentTabs";
 import { ToggleSwitch } from "../libs/ToggleSwitch";
+import NotificationPopper from "../components/NotificationPopper";
 
 const PaymentPage = () => {
+  //just for testing purposes
+  const [showNotification, setShowNotification] = useState(false);
+
   const { state } = useLocation();
   const [activeTab, setActiveTab] = useState(null);
   const [fastDelivery, setFastDelivery] = useState(
@@ -239,6 +243,7 @@ const PaymentPage = () => {
                 <p className="mb-4 text-center">Single Payment</p>
                 <button
                   type="submit"
+                  onClick={() => setShowNotification(true)}
                   className="w-full rounded-2xl bg-primary py-4 text-xl font-semibold text-white transition-colors duration-300"
                 >
                   Pay Now
@@ -251,6 +256,16 @@ const PaymentPage = () => {
           </form>
         </div>
       </div>
+      {/* notification testing  */}
+      {showNotification && (
+        <NotificationPopper
+          logo={""}
+          isOnline={true}
+          type={"Order"}
+          userName={"Shake75"}
+          onClose={() => setShowNotification(false)}
+        />
+      )}
     </section>
   );
 };

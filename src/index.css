@@ -72,6 +72,41 @@ body {
   scroll-behavior: smooth;
 }
 
+/* Notification Popper - Animation for sliding in from the right */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Animation for sliding out */
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Notification Popper - Applying animation to the notification */
+.slide-in-out {
+  animation: slideIn 0.3s ease-out forwards; /* Slide in animation */
+}
+
+.slide-out {
+  animation: slideOut 0.3s ease-out forwards; /* Slide out animation */
+}
+
+
+
 /* Resetting heading tags to default design for product description */
 .product-description h1 {
   font-size: 2em; /* Adjust size as needed */
