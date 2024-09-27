@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const HorizontalBarChart = ({ data, title, color }) => {  
+const HorizontalBarChart = ({ data, title, color }) => {
   // Extract category names and values
   const categories = Object.keys(data);
   const values = Object.values(data);
@@ -16,7 +16,7 @@ const HorizontalBarChart = ({ data, title, color }) => {
     cancelled: "#e60006",
     custom: "#c0ad83",
     direct: "#f56f6c",
-    "M-D Project" : '#b26f70'
+    "M-D Project": "#b26f70",
   };
 
   // Merge the provided color prop with defaultColorMapping (priority to color prop)
