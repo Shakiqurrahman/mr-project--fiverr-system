@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { TiArrowDownThick, TiArrowUpThick } from "react-icons/ti";
-import LineChart from "./Chart/LineChart";
+import VisitorLineChart from "./Chart/VisitorLineChart";
 
 const getFilterTimes = () => {
   const currentYear = new Date().getFullYear();
@@ -77,7 +77,7 @@ const VisitorsData = () => {
       </div>
       {/* Chart Start From Here */}
       <div className="mt-5 p-3">
-        <LineChart
+        <VisitorLineChart
           selectedTimeOption={selectedTimeOption}
           selectedLegend={selectedFilterOption}
           setDatasetLabels={setKeywordFilterOptions}
