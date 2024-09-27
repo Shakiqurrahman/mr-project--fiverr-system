@@ -41,7 +41,7 @@ const ProjectDetailsData = () => {
     custom: 250,
     direct: 100,
     offer: 100,
-    md : 100
+    "M-D Project" : 80
   };
   const avgSellingData = {
     custom: 250,

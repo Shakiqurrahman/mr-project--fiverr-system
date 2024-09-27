@@ -16,7 +16,7 @@ const HorizontalBarChart = ({ data, title, color }) => {
     cancelled: "#e60006",
     custom: "#c0ad83",
     direct: "#f56f6c",
-    md : '#b26f70'
+    "M-D Project" : '#b26f70'
   };
 
   // Merge the provided color prop with defaultColorMapping (priority to color prop)
