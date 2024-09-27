@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import useOutsideClick from "../../hooks/useOutsideClick";
 
-const EditQuickMsgModal = ({ handleClose, onMsgSubmit, value }) => {
+const EditQuickMsgModal = ({ handleClose, value }) => {
   const editQuickMsgRef = useRef(null);
   const [form, setForm] = useState({
     id: value.id,
@@ -12,13 +12,13 @@ const EditQuickMsgModal = ({ handleClose, onMsgSubmit, value }) => {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (form.title && form.title.length <= 60 && form.text) {
-      onMsgSubmit(form);
-      handleClose(null);
-    }
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (form.title && form.title.length <= 60 && form.text) {
+  //     onMsgSubmit(form);
+  //     handleClose(null);
+  //   }
+  // };
 
   useOutsideClick(editQuickMsgRef, () => handleClose(null));
   return (

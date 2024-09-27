@@ -1,8 +1,11 @@
 import { useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import useOutsideClick from "../../hooks/useOutsideClick";
+import { useCreateQuickResMsgMutation } from "../../Redux/api/inboxApiSlice";
 
-const AddQuickMsgModal = ({ handleClose, onMsgSubmit }) => {
+const AddQuickMsgModal = ({ handleClose}) => {
+  const [createQuickResMsg, { isLoading, error }] =
+    useCreateQuickResMsgMutation();
   const formRef = useRef(null);
   const [form, setForm] = useState({
     title: "",
@@ -11,11 +14,25 @@ const AddQuickMsgModal = ({ handleClose, onMsgSubmit }) => {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate form input
     if (form.title && form.title.length <= 60 && form.text) {
-      onMsgSubmit(form);
-      handleClose(false);
+      try {
+        // Trigger the mutation to create a new quick message
+        const newMessage = await createQuickResMsg({
+          title: form.title,
+          description: form.text,
+        }).unwrap();
+        console.log(newMessage);
+
+        // Close the modal on success
+        handleClose(false);
+      } catch (err) {
+        console.error("Failed to create the quick message:", err);
+      }
     }
   };
 

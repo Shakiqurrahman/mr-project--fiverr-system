@@ -12,6 +12,7 @@ import categorySlice from "./features/category/categorySlice";
 import offerProjectSlice from "./features/offerProjectSlice";
 import passwordVisibilitySlice from "./features/passwordVisibilitySlice";
 import userSlice from "./features/userSlice";
+import { inboxApiSlice } from "./api/inboxApiSlice";
 
 // Persist configs
 const userPersistConfig = {
@@ -54,6 +55,7 @@ const store = configureStore({
     [offerProjectApiSlice.reducerPath]: offerProjectApiSlice.reducer,
     [uploadDesignApiSlice.reducerPath]: uploadDesignApiSlice.reducer,
     [multiProjectApiSlice.reducerPath]: multiProjectApiSlice.reducer,
+    [inboxApiSlice.reducerPath]: inboxApiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -64,6 +66,7 @@ const store = configureStore({
       offerProjectApiSlice.middleware,
       uploadDesignApiSlice.middleware,
       multiProjectApiSlice.middleware,
+      inboxApiSlice.middleware,
     ),
 });
 

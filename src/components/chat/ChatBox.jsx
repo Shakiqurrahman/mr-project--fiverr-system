@@ -22,6 +22,7 @@ import EmojiPicker from "./EmojiPicker";
 
 import fetchData from 'data-fetch-ts';
 import { configApi } from "../../libs/configApi";
+import { useFetchQuickResMsgQuery } from "../../Redux/api/inboxApiSlice";
 
 const ChatBox = () => {
   const [expand, setExpand] = useState(false);
@@ -32,6 +33,8 @@ const ChatBox = () => {
   const { user, token } = useSelector((state) => state.user);
   // const token = Cookies.get("authToken");
   const socket = connectSocket("http://localhost:3000", token);
+  const {data : quickMsgs} = useFetchQuickResMsgQuery();
+  
 
 
   const [onlineUser, setOnlineUser] = useState([]);
@@ -50,22 +53,6 @@ const ChatBox = () => {
   }, []);
 
 
-
-
-  useEffect(() => {
-    fetchQuickResponse();
-  }, []);
-
-
-  const fetchQuickResponse = async () => {
-    const endpoint = (`${configApi.api}quickResponse/quickres`);
-    const quickRes = await fetchData({ endpoint, token });
-    const data = await quickRes.data;
-    console.log(data, 'get the data');
-  };
-
-
-
   const userProfilePic = user?.image;
   console.log(userProfilePic);
 
@@ -78,13 +65,9 @@ const ChatBox = () => {
   const [openEditMsgModal, setOpenEditMsgModal] = useState(null);
   const [openOfferModal, setOpenOfferModal] = useState(false);
 
-  const [quickMsgs, setQuickMsgs] = useState([
-    {
-      id: 1,
-      title: "Thank you",
-      text: "Thank you very much for choosing my service!",
-    },
-  ]);
+  // const [quickMsgs, setQuickMsgs] = useState(fetchQuickResponse)
+  console.log('quickMsgs', quickMsgs);
+  
 
   // messages state
   // eslint-disable-next-line no-unused-vars
@@ -152,19 +135,19 @@ const ChatBox = () => {
   const handleQuickMsgs = (id) => {
     setQucikMsgBtnController(qucikMsgBtnController === id ? null : id);
   };
-  const handleAddQuickMsg = (msg) => {
-    const maxId =
-      quickMsgs.length > 0
-        ? Math.max(...quickMsgs.map((item) => item.id)) + 1
-        : 1;
-    const newMsg = { id: maxId, ...msg };
-    setQuickMsgs((prevMsg) => [...prevMsg, newMsg]);
-  };
+  // const handleAddQuickMsg = (msg) => {
+  //   const maxId =
+  //     quickMsgs.length > 0
+  //       ? Math.max(...quickMsgs.map((item) => item.id)) + 1
+  //       : 1;
+  //   const newMsg = { id: maxId, ...msg };
+  //   // setQuickMsgs((prevMsg) => [...prevMsg, newMsg]);
+  // };
   const handleUpdateQuickMsg = (msg) => {
-    setQuickMsgs((prevMsg) => prevMsg.map((v) => (v.id === msg.id ? msg : v)));
+    // setQuickMsgs((prevMsg) => prevMsg.map((v) => (v.id === msg.id ? msg : v)));
   };
   const handleDeleteQuickMsg = (id) => {
-    setQuickMsgs((prevMsg) => prevMsg.filter((v) => v.id !== id));
+    // setQuickMsgs((prevMsg) => prevMsg.filter((v) => v.id !== id));
   };
 
   // input handling
@@ -667,7 +650,7 @@ const ChatBox = () => {
             <div
               className={`${quickResponse ? "block" : "hidden"} flex h-[100px] flex-wrap items-start gap-3 overflow-y-auto py-2`}
             >
-              {quickMsgs.map((msg, i) => (
+              {quickMsgs?.map((msg, i) => (
                 <div
                   key={i}
                   className="relative flex items-center gap-2 border border-gray-400 px-2 py-1 text-xs hover:bg-primary/10"
@@ -768,7 +751,6 @@ const ChatBox = () => {
       {openAddMsgModal && (
         <AddQuickMsgModal
           handleClose={setOpenAddMsgModal}
-          onMsgSubmit={handleAddQuickMsg}
         />
       )}
       {openOfferModal && (
