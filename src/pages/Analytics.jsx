@@ -1,10 +1,10 @@
-import { useState } from "react";
 import AffiliateData from "../components/analytics/AffiliateData";
 import CategoriesData from "../components/analytics/CategoriesData";
 import ProjectDetailsData from "../components/analytics/ProjectDetailsData";
 import TopKeywords from "../components/analytics/TopKeywords";
 import VisitorsData from "../components/analytics/VisitorsData";
 import WorldDomination from "../components/analytics/WorldDomination";
+import { useLocalStorageObject } from "../hooks/useLocalStorageObject";
 
 const Analytics = () => {
   const btns = [
@@ -15,9 +15,15 @@ const Analytics = () => {
     "Affiliate",
     "Visitors",
   ];
-  const [selectedBtn, setSelectedBtn] = useState("Project Details");
+  const [{ selectedAnalyticsTab }, updateItem] = useLocalStorageObject(
+    "utils",
+    {
+      selectedAnalyticsTab: "Project Details",
+    },
+  );
+  // const [selectedBtn, setSelectedBtn] = useState("Project Details");
   const RenderComponent = () => {
-    switch (selectedBtn) {
+    switch (selectedAnalyticsTab) {
       case "Project Details":
         return <ProjectDetailsData />;
       case "World Domination":
@@ -36,20 +42,22 @@ const Analytics = () => {
   };
   return (
     <div className="max-width mt-10">
-      <div className="mb-10 hidden justify-between gap-3 md:flex">
-        {btns.map((btn, i) => (
-          <button
-            key={i}
-            className={`shrink-0 border-b text-lg font-semibold duration-300 hover:border-primary hover:text-primary ${btn === selectedBtn ? "border-primary text-primary" : "border-transparent"}`}
-            onClick={() => setSelectedBtn(btn)}
-          >
-            {btn}
-          </button>
-        ))}
+      <div className="relative mb-10 border-b border-black pb-2">
+        <div className="hidden justify-between gap-3 md:flex">
+          {btns.map((btn, i) => (
+            <button
+              key={i}
+              className={`relative shrink-0 text-lg font-semibold duration-300 after:absolute after:bottom-[-10px] after:left-0 after:h-[3px] after:w-full after:rounded-md after:bg-primary hover:border-primary hover:text-primary ${btn === selectedAnalyticsTab ? "text-primary after:bg-primary" : "after:bg-transparent"}`}
+              onClick={() => updateItem("selectedAnalyticsTab", btn)}
+            >
+              {btn}
+            </button>
+          ))}
+        </div>
       </div>
       <select
-        value={selectedBtn}
-        onChange={(e) => setSelectedBtn(e.target.value)}
+        value={selectedAnalyticsTab}
+        onChange={(e) => updateItem("selectedAnalyticsTab", e.target.value)}
         className="mb-10 block w-full border border-gray-300 p-3 font-medium outline-none md:hidden"
       >
         {btns.map((btn, i) => (

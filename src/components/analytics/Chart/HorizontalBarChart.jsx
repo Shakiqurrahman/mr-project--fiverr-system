@@ -8,16 +8,16 @@ const HorizontalBarChart = ({ data, title }) => {
   // Define colors for each category using a mapping object
   const colorMapping = {
     completed: "#1b8cdc",
-    offer: "#87b306", 
-    custom: "#f56f6c", 
-    custom2: "#9258c8", 
+    offer: "#87b306",
+    custom: "#f56f6c",
+    custom2: "#9258c8",
     revision: "#f1592a",
     ongoing: "#078510",
     waiting: "#9d0e66",
     delivered: "#0e97a0",
     cancelled: "#e60006",
-    direct : "#c0ad83",
-    direct2 : "#7ba7c2",
+    direct: "#c0ad83",
+    direct2: "#7ba7c2",
   };
 
   // Calculate the total value
@@ -55,8 +55,8 @@ const HorizontalBarChart = ({ data, title }) => {
 
         {/* Full-width Single Bar */}
         <div className="mb-5 flex w-full items-center">
-          <div className="relative   w-full flex-1 ">
-            <div className="bg-white p-1 flex rounded-[20px]">
+          <div className="relative w-full flex-1">
+            <div className="flex rounded-[20px] bg-white p-1">
               {percentages.map((percentage, index) => {
                 return (
                   <div
@@ -74,7 +74,7 @@ const HorizontalBarChart = ({ data, title }) => {
                   >
                     {/* Show percentage on hover */}
                     <span
-                      className={`flex w-full h-full items-center justify-center text-sm text-white transition-opacity duration-200 ${
+                      className={`flex h-full w-full items-center justify-center text-sm text-white transition-opacity duration-200 ${
                         hoveredIndex === index ? "opacity-100" : "opacity-0"
                       }`}
                     >
@@ -84,7 +84,7 @@ const HorizontalBarChart = ({ data, title }) => {
                 );
               })}
             </div>
-            <div className="absolute top-[-5px] z-[-2] left-1 flex h-[calc(100%_+_10px)] w-[calc(100%_-_8px)]">
+            <div className="absolute left-1 top-[-5px] z-[-2] flex h-[calc(100%_+_10px)] w-[calc(100%_-_8px)]">
               {percentages.map((percentage, index) => {
                 const leftOffset = percentages
                   .slice(0, index)
@@ -104,7 +104,7 @@ const HorizontalBarChart = ({ data, title }) => {
                 );
               })}
             </div>
-            <div className="absolute top-[-5px] z-[-3] left-[-5px] flex h-[calc(100%_+_10px)] w-[calc(100%_+_10px)]">
+            <div className="absolute left-[-5px] top-[-5px] z-[-3] flex h-[calc(100%_+_10px)] w-[calc(100%_+_10px)]">
               {percentages.map((percentage, index) => {
                 const leftOffset = percentages
                   .slice(0, index)

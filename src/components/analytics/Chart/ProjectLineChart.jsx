@@ -46,7 +46,7 @@ const customGridLinesPlugin = {
   },
 };
 
-const LineChart = ({
+const ProjectLineChart = ({
   selectedTimeOption,
   selectedLegend,
   setDatasetLabels,
@@ -152,17 +152,8 @@ const LineChart = ({
     labels: labels,
     datasets: [
       {
-        label: "Total Visitors",
+        label: "New Projects",
         data: totalVisitors,
-        fill: false,
-        borderColor: "#1b8cdc",
-        backgroundColor: "#1b8cdc",
-        tension: 0.1,
-        pointRadius: 5,
-      },
-      {
-        label: "New Visitors",
-        data: newVisitors,
         fill: false,
         borderColor: "#078510",
         backgroundColor: "#078510",
@@ -170,11 +161,20 @@ const LineChart = ({
         pointRadius: 5,
       },
       {
-        label: "Returning Visitors",
+        label: "Completed Projects",
+        data: newVisitors,
+        fill: false,
+        borderColor: "#1b8cdc",
+        backgroundColor: "#1b8cdc",
+        tension: 0.1,
+        pointRadius: 5,
+      },
+      {
+        label: "Cancelled Projects",
         data: returningVisitors,
         fill: false,
-        borderColor: "#9d0e66",
-        backgroundColor: "#9d0e66",
+        borderColor: "#f1592a",
+        backgroundColor: "#f1592a",
         tension: 0.1,
         pointRadius: 5,
       },
@@ -285,4 +285,4 @@ const LineChart = ({
   );
 };
 
-export default LineChart;
+export default ProjectLineChart;

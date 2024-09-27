@@ -46,7 +46,7 @@ const customGridLinesPlugin = {
   },
 };
 
-const LineChart = ({
+const VisitorLineChart = ({
   selectedTimeOption,
   selectedLegend,
   setDatasetLabels,
@@ -285,4 +285,4 @@ const LineChart = ({
   );
 };
 
-export default LineChart;
+export default VisitorLineChart;
