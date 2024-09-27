@@ -21,6 +21,31 @@ ChartJS.register(
   Legend,
 );
 
+// Define the custom plugin for grid lines
+const customGridLinesPlugin = {
+  id: "customGridLines",
+  beforeDraw: (chart) => {
+    const ctx = chart.ctx;
+    const xAxis = chart.scales.x;
+
+    // Draw x-axis grid lines
+    ctx.save();
+    ctx.lineWidth = 1; // Set a sufficient line width
+    xAxis.ticks.forEach((tick, index) => {
+      ctx.beginPath();
+      ctx.moveTo(xAxis.getPixelForTick(index), chart.chartArea.top);
+      ctx.lineTo(xAxis.getPixelForTick(index), chart.chartArea.bottom);
+
+      // Set color based on index
+      ctx.strokeStyle =
+        index === 0 || (index - 4) % 5 === 0 ? "#1b8cdc" : "#ddd";
+      ctx.stroke();
+    });
+
+    ctx.restore();
+  },
+};
+
 const LineChart = ({
   selectedTimeOption,
   selectedLegend,
@@ -44,9 +69,9 @@ const LineChart = ({
           const date = new Date(currentDate);
           date.setDate(currentDate.getDate() - i);
 
-          totalVisitors.push(Math.floor(Math.random() * 100));
-          newVisitors.push(Math.floor(Math.random() * 50));
-          returningVisitors.push(Math.floor(Math.random() * 30));
+          totalVisitors.push(Math.floor(Math.random() * 200));
+          newVisitors.push(Math.floor(Math.random() * 200));
+          returningVisitors.push(Math.floor(Math.random() * 200));
 
           labels.push(
             date.toLocaleDateString("en-US", {
@@ -63,9 +88,9 @@ const LineChart = ({
           const date = new Date(currentDate);
           date.setDate(currentDate.getDate() - i);
 
-          totalVisitors.push(Math.floor(Math.random() * 100));
-          newVisitors.push(Math.floor(Math.random() * 50));
-          returningVisitors.push(Math.floor(Math.random() * 30));
+          totalVisitors.push(Math.floor(Math.random() * 200));
+          newVisitors.push(Math.floor(Math.random() * 200));
+          returningVisitors.push(Math.floor(Math.random() * 200));
 
           labels.push(
             date.toLocaleDateString("en-US", {
@@ -94,9 +119,9 @@ const LineChart = ({
             lastMonth.getMonth(),
             i,
           );
-          totalVisitors.push(Math.floor(Math.random() * 100));
-          newVisitors.push(Math.floor(Math.random() * 50));
-          returningVisitors.push(Math.floor(Math.random() * 30));
+          totalVisitors.push(Math.floor(Math.random() * 200));
+          newVisitors.push(Math.floor(Math.random() * 200));
+          returningVisitors.push(Math.floor(Math.random() * 200));
 
           labels.push(
             date.toLocaleDateString("en-US", {
@@ -161,29 +186,39 @@ const LineChart = ({
     scales: {
       x: {
         grid: {
-          color: "#1b8cdc", // Customize grid line color
+          color: "#ddd", // Customize grid line color
         },
         ticks: {
           color: "#1b8cdc", // Change this to your desired color
+          maxRotation: 0, // Prevent rotation of labels
+          minRotation: 0, // Prevent rotation of labels
           callback: function (val, index) {
-            // Hide every 2nd tick label
-            return index % 4 === 0 ? this.getLabelForValue(val) : "";
+            const strValue = data.labels[val]; // Get the correct label from data.labels
+            const parts = strValue.split(","); // Split the date string
+            const value = [parts[0], parts[1]];
+            switch (selectedTimeOption) {
+              case "Last 7 Days":
+                return this.getLabelForValue(value);
+              default:
+                return index > 0 && (index - 4) % 5 === 0
+                  ? this.getLabelForValue(value)
+                  : "";
+            }
           },
-          // Custom tick callback to format date labels
-          // callback: (value) => {
-          //   const strValue = data.labels[value]; // Get the correct label from data.labels
-          //   const parts = strValue.split(" "); // Split the date string
-          //   return parts.length === 3
-          //     ? [`${parts[0]} ${parts[1]}`, parts[2]] // Show "Nov 5" on one line and "2023" on another
-          //     : [strValue]; // Fallback to original value
-          // },
           autoSkip: false, // Prevent automatic skipping of labels
           align: "center", // Align ticks to center
         },
-        y: {
-          suggestedMax: 200,
-          ticks: {
-            stepSize: 50,
+      },
+      y: {
+        grid: {
+          color: "#ddd", // Customize grid line color
+        },
+        suggestedMin: 0, // Optional: Set a minimum value for better visibility
+        suggestedMax: 200,
+        ticks: {
+          stepSize: 50, // Define step size
+          callback: function (value) {
+            return value; // Customize the label if needed
           },
         },
       },
@@ -214,29 +249,7 @@ const LineChart = ({
       legend: {
         display: false,
       },
-      // Custom plugin for drawing ticks with different colors
-      // Custom plugin for drawing ticks with different colors
-      beforeDraw: (chart) => {
-        const ctx = chart.ctx;
-        const xAxis = chart.scales.x;
-
-        ctx.save();
-        ctx.font = `${xAxis.options.ticks.fontSize}px ${xAxis.options.ticks.fontStyle} ${xAxis.options.ticks.fontFamily}`;
-
-        xAxis.ticks.forEach((tick, index) => {
-          if (index % 5 === 0) {
-            ctx.fillStyle = "#ff0000"; // Change color for every 5th tick
-          } else {
-            ctx.fillStyle = "#1b8cdc"; // Default color for other ticks
-          }
-
-          const x = xAxis.getPixelForTick(index);
-          const y = xAxis.bottom + 20; // Position below the axis
-          ctx.fillText(tick.label, x, y);
-        });
-
-        ctx.restore();
-      },
+      customGridLines: true,
     },
   };
   // Extract dataset labels for the select options
@@ -263,7 +276,11 @@ const LineChart = ({
 
   return (
     <div>
-      <Line options={options} data={filteredData} />
+      <Line
+        options={options}
+        data={filteredData}
+        plugins={[customGridLinesPlugin]}
+      />
     </div>
   );
 };
