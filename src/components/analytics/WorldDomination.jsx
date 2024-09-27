@@ -14,7 +14,7 @@ const WorldDomination = () => {
     { country: "mx", value: 127318112 }, // mexico
   ];
   const getStyle = ({ countryValue, color }) => ({
-    fill: countryValue ? "rgba(0,0,0,0.6)" : color,
+    fill: countryValue ? "rgba(27, 140, 220, 1)" : color,
     stroke: "#fff",
     strokeWidth: 1,
     strokeOpacity: 0.2,
@@ -25,12 +25,13 @@ const WorldDomination = () => {
       <h1 className="text-lg font-semibold">World Domination 9%</h1>
       <div>
         <WorldMap
-          color="#ddd"
+          color="rgba(27, 140, 220, 0.2)"
           data={data}
           size={"xxl"}
           styleFunction={getStyle}
           valueSuffix="Sales"
-          tooltipBgColor="#1b8cdc"
+          tooltipBgColor="#fff"
+          tooltipTextColor="#000"
         />
       </div>
     </div>

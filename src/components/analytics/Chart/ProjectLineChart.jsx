@@ -182,6 +182,7 @@ const ProjectLineChart = ({
   };
 
   const options = {
+    borderWidth: 1,
     responsive: true,
     scales: {
       x: {

@@ -35,9 +35,9 @@ const HorizontalBarChart = ({ data, title }) => {
     <div className="mb-14 flex flex-col items-center">
       <div className="w-full">
         {/* Custom Legend */}
-        <div className="mb-6 flex flex-col items-center gap-4 md:flex-row">
+        <div className="relative mb-6 flex flex-col items-center gap-4 md:flex-row">
           <h2 className="text-xl font-semibold text-primary">{title}</h2>
-          <div className="flex flex-1 flex-wrap items-center justify-center">
+          <div className="absolute left-1/2 top-1/2 flex flex-1 -translate-x-1/2 -translate-y-1/2 flex-wrap items-center justify-center">
             {categories.map((label, index) => (
               <div className="mx-2 flex items-center" key={index}>
                 <div

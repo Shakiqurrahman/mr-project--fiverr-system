@@ -40,11 +40,11 @@ function ProjectCard({
       <Link to={slug} className="block cursor-pointer border bg-white">
         <div className="relative">
           <img src={thumbnail} alt="" className="block w-full object-cover" />
-          <h1 className="absolute left-0 top-0 flex h-full w-full items-center justify-center bg-[rgba(0,0,0,0.5)] p-5 text-center text-sm font-semibold text-white opacity-0 duration-300 hover:opacity-100">
+          {/* <h1 className="absolute left-0 top-0 flex h-full w-full items-center justify-center bg-[rgba(0,0,0,0.5)] p-5 text-center text-sm font-semibold text-white opacity-0 duration-300 hover:opacity-100">
             {thumbnailName}
-          </h1>
+          </h1> */}
         </div>
-        <h1 className="px-3 py-2">
+        <h1 className="px-3 py-2" title={title}>
           <span className="line-clamp-2">{title}</span>
         </h1>
       </Link>
