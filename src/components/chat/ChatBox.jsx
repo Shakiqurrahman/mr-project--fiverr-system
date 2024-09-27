@@ -20,6 +20,9 @@ import CreateOfferModal from "./CreateOfferModal";
 import EditQuickMsgModal from "./EditQuickMsgModal";
 import EmojiPicker from "./EmojiPicker";
 
+import fetchData from 'data-fetch-ts';
+import { configApi } from "../../libs/configApi";
+
 const ChatBox = () => {
   const [expand, setExpand] = useState(false);
   const endOfMessagesRef = useRef(null);
@@ -30,7 +33,42 @@ const ChatBox = () => {
   // const token = Cookies.get("authToken");
   const socket = connectSocket("http://localhost:3000", token);
 
+
+  const [onlineUser, setOnlineUser] = useState([]);
+
+  console.log(onlineUser, 'checking the online users');
+
+
+
+
+  // all avaiable user's
+  useEffect(() => {
+    socket.emit('view-online-users');
+    socket.on("online-users", (onlineUsers) => {
+      setOnlineUser(onlineUsers);
+    });
+  }, []);
+
+
+
+
+  useEffect(() => {
+    fetchQuickResponse();
+  }, []);
+
+
+  const fetchQuickResponse = async () => {
+    const endpoint = (`${configApi.api}quickResponse/quickres`);
+    const quickRes = await fetchData({ endpoint, token });
+    const data = await quickRes.data;
+    console.log(data, 'get the data');
+  };
+
+
+
   const userProfilePic = user?.image;
+  console.log(userProfilePic);
+
   const isAdmin = user?.role === "ADMIN";
   const menuRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -49,29 +87,30 @@ const ChatBox = () => {
   ]);
 
   // messages state
+  // eslint-disable-next-line no-unused-vars
   const [messages, setMessages] = useState([
-    {
-      userImage: userProfilePic,
-      senderName: user?.fullName,
-      messageId: 1,
-      msgDate: "Apr 22, 2023",
-      msgTime: "07:33 AM",
-      messageText:
-        "hello, looking for a flyer for my bathroom and kitchen company. I like the black and gold one you have listed",
-      attachment: [],
-      customOffer: null,
-      contactForm: null,
-    },
+    // {
+    //   userImage: userProfilePic,
+    //   senderName: user?.fullName,
+    //   messageId: 1,
+    //   msgDate: "Apr 22, 2023",
+    //   msgTime: "07:33 AM",
+    //   messageText:
+    //     "hello, looking for a flyer for my bathroom and kitchen company. I like the black and gold one you have listed",
+    //   attachment: [],
+    //   customOffer: null,
+    //   contactForm: null,
+    // },
   ]);
 
   const [visibility, setVisibility] = useState({});
 
-  // Socket connection
+  // Socket connection reader
   useEffect(() => {
     // Listen for incoming messages
     socket?.on("message", (msg) => {
-      setMessages((prevMessages) => [...prevMessages, msg]);
-      console.log(msg);
+      // setMessages((prevMessages) => [...prevMessages, msg]);
+      console.log(msg, "socket message testing");
     });
 
     // Cleanup on component unmount
@@ -222,6 +261,7 @@ const ChatBox = () => {
   // handler for Submitting/Send a Message
   const handleSubmitMessage = (e) => {
     e.preventDefault();
+
     if (textValue || selectedImages) {
       const response = () => {
         const date = new Date();
@@ -254,8 +294,11 @@ const ChatBox = () => {
           attachment: attachments || null,
           customOffer: null,
         };
-        socket.emit("message", submitForm);
-        // setMessages((prev) => [...prev, submitForm]);
+        if (isAdmin) {
+          socket.emit("admin-message", { userId: "66f4597cf2259c272ecaf810", ...submitForm });
+        } else {
+          socket.emit("user-message", { userId: "66f4597cf2259c272ecaf810", ...submitForm });
+        }
         return { result: "Success" };
       };
       const result = response();
@@ -269,7 +312,7 @@ const ChatBox = () => {
           fileInputRef.current.value = "";
         }
       }
-    }
+    };
   };
 
   // handle download all button
@@ -385,7 +428,7 @@ const ChatBox = () => {
                             <BiDownload className="shrink-0 text-lg text-primary" />
                             <p
                               className="mx-2 line-clamp-1 font-medium"
-                              // title={att.name}
+                            // title={att.name}
                             >
                               Image name 00089.JPG
                             </p>
