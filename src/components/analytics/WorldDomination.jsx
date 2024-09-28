@@ -32,6 +32,7 @@ const WorldDomination = () => {
           valueSuffix="Sales"
           tooltipBgColor="#fff"
           tooltipTextColor="#000"
+          richInteraction={true}
         />
       </div>
     </div>
