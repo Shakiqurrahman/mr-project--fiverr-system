@@ -6,69 +6,83 @@ const CategoriesData = () => {
   const [expend, setExpend] = useState(false);
   const [selectedFilterOption, setSelectedFilterOption] = useState("Earnings");
   const [selectedTimeOption, setSelectedTimeOption] = useState("Last 30 Days");
+
+  // @TODO: Offer Project and Custom Offer must be Included in original Data
   const [categoriesData, setCategoriesData] = useState([
     {
       id: 1,
+      name: "Offer Project",
+      projects: 2,
+      earning: 240,
+    },
+    {
+      id: 2,
+      name: "Custom Offer",
+      projects: 5,
+      earning: 170,
+    },
+    {
+      id: 3,
       name: "Door Hanger Design",
       projects: 2,
       earning: 60,
     },
     {
-      id: 2,
+      id: 4,
       name: "Flyer Design",
       projects: 0,
       earning: 0,
     },
     {
-      id: 3,
+      id: 5,
       name: "Postcard Design",
       projects: 3,
       earning: 120,
     },
     {
-      id: 4,
+      id: 6,
       name: "Poster Design",
       projects: 0,
       earning: 0,
     },
     {
-      id: 5,
+      id: 7,
       name: "Rack Card Design",
       projects: 1,
       earning: 30,
     },
     {
-      id: 6,
+      id: 8,
       name: "Business Card Design",
       projects: 0,
       earning: 0,
     },
     {
-      id: 7,
+      id: 9,
       name: "Brochure Design",
       projects: 0,
       earning: 0,
     },
     {
-      id: 8,
+      id: 10,
       name: "Facebook cover Design",
       projects: 2,
       earning: 40,
     },
     {
-      id: 9,
+      id: 11,
       name: "Billboard Design",
       projects: 3,
       earning: 75,
     },
     {
-      id: 10,
+      id: 12,
       name: "Yard Sign Design",
       projects: 2,
       earning: 25,
     },
     {
-      id: 11,
+      id: 13,
       name: "Yard Sign Design",
       projects: 1,
       earning: 30,

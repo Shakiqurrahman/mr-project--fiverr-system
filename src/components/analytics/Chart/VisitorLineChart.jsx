@@ -158,7 +158,7 @@ const VisitorLineChart = ({
         borderColor: "#1b8cdc",
         backgroundColor: "#1b8cdc",
         tension: 0.1,
-        pointRadius: 5,
+        pointRadius: 4,
       },
       {
         label: "New Visitors",
@@ -167,7 +167,7 @@ const VisitorLineChart = ({
         borderColor: "#078510",
         backgroundColor: "#078510",
         tension: 0.1,
-        pointRadius: 5,
+        pointRadius: 4,
       },
       {
         label: "Returning Visitors",
@@ -176,7 +176,7 @@ const VisitorLineChart = ({
         borderColor: "#9d0e66",
         backgroundColor: "#9d0e66",
         tension: 0.1,
-        pointRadius: 5,
+        pointRadius: 4,
       },
     ],
   };

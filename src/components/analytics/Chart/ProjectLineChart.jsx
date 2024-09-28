@@ -158,7 +158,7 @@ const ProjectLineChart = ({
         borderColor: "#078510",
         backgroundColor: "#078510",
         tension: 0.1,
-        pointRadius: 5,
+        pointRadius: 4,
       },
       {
         label: "Completed Projects",
@@ -167,7 +167,7 @@ const ProjectLineChart = ({
         borderColor: "#1b8cdc",
         backgroundColor: "#1b8cdc",
         tension: 0.1,
-        pointRadius: 5,
+        pointRadius: 4,
       },
       {
         label: "Cancelled Projects",
@@ -176,7 +176,7 @@ const ProjectLineChart = ({
         borderColor: "#f1592a",
         backgroundColor: "#f1592a",
         tension: 0.1,
-        pointRadius: 5,
+        pointRadius: 4,
       },
     ],
   };
