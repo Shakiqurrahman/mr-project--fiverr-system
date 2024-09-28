@@ -17,7 +17,7 @@ const WorldDomination = () => {
     fill: countryValue ? "rgba(27, 140, 220, 1)" : color,
     stroke: "#fff",
     strokeWidth: 1,
-    strokeOpacity: 0.2,
+    strokeOpacity: 0.5,
     cursor: "pointer",
   });
   return (

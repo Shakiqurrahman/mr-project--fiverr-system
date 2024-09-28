@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import DownArrow from "../../assets/svg/DownArrow";
 import UpArrow from "../../assets/svg/UpArrow";
 
@@ -158,7 +159,7 @@ const ReturnBuyers = () => {
               {slicedCategoriesData.map((keyword) => (
                 <tr key={keyword.id} className="text-center even:bg-white">
                   <td className="border-collapse border border-gray-300 px-3 py-2 text-start">
-                    {keyword.userName}
+                    <Link to={`/${keyword.userName}`}>{keyword.userName}</Link>
                   </td>
                   <td className="border-collapse border border-gray-300 px-3 py-2">
                     {keyword.projects}
