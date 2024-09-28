@@ -1,4 +1,5 @@
 // import { Drawer } from "@mui/material";
+import { Badge } from "@mui/material";
 import React, { useState } from "react";
 import { BiX } from "react-icons/bi";
 import { BsCart4 } from "react-icons/bs";
@@ -13,20 +14,27 @@ import UserBox from "./UserBox";
 
 import Drawer from "react-modern-drawer";
 //react-drawer css
-import { Badge } from "@mui/material";
 import "react-modern-drawer/dist/index.css";
+
 import useSyncCart from "../../hooks/useSyncCart";
+import NotificationModal from "../Notifications/NotificationModal";
+
 
 function Header() {
   const { user, loading } = useSelector((state) => state.user);
   const { items: cartItems } = useSelector((state) => state.cart);
   const [activeMenu, setActiveMenu] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [openNotifications, setOpenNotifications] = useState(false);
 
   const handleClose = () => {
     setActiveMenu(false);
   };
 
+  const handleNotificationClick = () => {
+    setActiveMenu(false);
+    setOpenNotifications(!openNotifications);
+  };
   useSyncCart();
   return (
     <>
@@ -94,10 +102,18 @@ function Header() {
                         color: "white",
                       },
                     }}
-                    className="text-white hover:text-gray-300"
-                    onClick={handleClose}
                   >
-                    <NavLink to="/notifications">Notifications</NavLink>
+                    <button
+                      className="text-white hover:text-gray-300"
+                      onClick={handleNotificationClick}
+                    >
+                      Notifications
+                    </button>
+                    {/* <NavLink to="/notifications">Notifications</NavLink> */}
+                    {/* Notification Modal */}
+                    {openNotifications && (
+                      <NotificationModal close={setOpenNotifications} />
+                    )}
                   </Badge>
                 </li>
                 <li

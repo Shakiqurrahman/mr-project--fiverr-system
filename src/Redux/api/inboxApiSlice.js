@@ -8,8 +8,6 @@ export const inboxApiSlice = createApi({
     baseUrl: `${configApi.api}`,
     prepareHeaders: (headers) => {
       const token = Cookies.get("authToken");
-      console.log(token);
-      
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }
@@ -17,7 +15,7 @@ export const inboxApiSlice = createApi({
     },
   }),
   tagTypes: ["quickResponse"],
-  refetchOnMountOrArgChange : true,
+  refetchOnMountOrArgChange: true,
   endpoints: (builder) => ({
     // Fetch Quick Response Messages
     fetchQuickResMsg: builder.query({

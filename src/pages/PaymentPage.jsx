@@ -4,7 +4,7 @@ import Cards from "../assets/images/card.png";
 import Check from "../assets/svg/Check";
 import PaymentTabs from "../components/PaymentTabs";
 import { ToggleSwitch } from "../libs/ToggleSwitch";
-import NotificationPopper from "../components/NotificationPopper";
+import NotificationPopper from "../components/Notifications/NotificationPopper";
 
 const PaymentPage = () => {
   //just for testing purposes
