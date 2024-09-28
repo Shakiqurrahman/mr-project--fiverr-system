@@ -1,6 +1,7 @@
 import AffiliateData from "../components/analytics/AffiliateData";
 import CategoriesData from "../components/analytics/CategoriesData";
 import ProjectDetailsData from "../components/analytics/ProjectDetailsData";
+import ReturnBuyers from "../components/analytics/ReturnBuyers";
 import TopKeywords from "../components/analytics/TopKeywords";
 import VisitorsData from "../components/analytics/VisitorsData";
 import WorldDomination from "../components/analytics/WorldDomination";
@@ -11,6 +12,7 @@ const Analytics = () => {
     "Project Details",
     "World Domination",
     "Top Keywords",
+    "Return Buyers",
     "Categories",
     "Affiliate",
     "Visitors",
@@ -21,7 +23,6 @@ const Analytics = () => {
       selectedAnalyticsTab: "Project Details",
     },
   );
-  // const [selectedBtn, setSelectedBtn] = useState("Project Details");
   const RenderComponent = () => {
     switch (selectedAnalyticsTab) {
       case "Project Details":
@@ -30,6 +31,8 @@ const Analytics = () => {
         return <WorldDomination />;
       case "Top Keywords":
         return <TopKeywords />;
+      case "Return Buyers":
+        return <ReturnBuyers />;
       case "Categories":
         return <CategoriesData />;
       case "Affiliate":
@@ -43,7 +46,7 @@ const Analytics = () => {
   return (
     <div className="max-width mt-10">
       <div className="relative mb-10 border-b border-black pb-2">
-        <div className="hidden justify-between gap-3 md:flex">
+        <div className="hidden justify-between gap-3 lg:flex">
           {btns.map((btn, i) => (
             <button
               key={i}
@@ -58,7 +61,7 @@ const Analytics = () => {
       <select
         value={selectedAnalyticsTab}
         onChange={(e) => updateItem("selectedAnalyticsTab", e.target.value)}
-        className="mb-10 block w-full border border-gray-300 p-3 font-medium outline-none md:hidden"
+        className="mb-10 block w-full border border-gray-300 p-3 font-medium outline-none lg:hidden"
       >
         {btns.map((btn, i) => (
           <option key={i} value={btn}>

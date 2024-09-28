@@ -142,7 +142,7 @@ const TopKeywords = () => {
 
   return (
     <>
-      <div className="border border-gray-300 bg-lightcream">
+      <div className="border border-gray-300 bg-lightskyblue">
         <div className="flex flex-wrap items-center gap-5 p-3">
           <h1 className="grow text-base font-semibold text-primary sm:text-lg">
             Top Keywords
