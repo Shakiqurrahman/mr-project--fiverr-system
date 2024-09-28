@@ -8,19 +8,22 @@ export const inboxApiSlice = createApi({
     baseUrl: `${configApi.api}`,
     prepareHeaders: (headers) => {
       const token = Cookies.get("authToken");
+      console.log(token);
+      
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }
       return headers;
     },
   }),
-  tagTypes: ['quickResponse',],
+  tagTypes: ["quickResponse"],
+  refetchOnMountOrArgChange : true,
   endpoints: (builder) => ({
     // Fetch Quick Response Messages
     fetchQuickResMsg: builder.query({
       query: () => "quickResponse/quickres",
       transformResponse: (response) => response?.data,
-      providesTags: ['quickResponse'],
+      providesTags: ["quickResponse"],
     }),
 
     // Create Quick Response Message
@@ -30,7 +33,7 @@ export const inboxApiSlice = createApi({
         method: "POST",
         body: newMessage,
       }),
-      invalidatesTags: ['quickResponse'],
+      invalidatesTags: ["quickResponse"],
     }),
 
     // Update Quick Response Message
@@ -40,7 +43,7 @@ export const inboxApiSlice = createApi({
         method: "PUT",
         body: updatedMessage,
       }),
-      invalidatesTags: ['quickResponse'],
+      invalidatesTags: ["quickResponse"],
     }),
 
     // Delete Quick Response Message
@@ -49,7 +52,7 @@ export const inboxApiSlice = createApi({
         url: `quickResponse/quickres/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ['quickResponse'],
+      invalidatesTags: ["quickResponse"],
     }),
   }),
 });
