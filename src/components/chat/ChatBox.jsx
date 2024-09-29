@@ -21,14 +21,21 @@ import EditQuickMsgModal from "./EditQuickMsgModal";
 import EmojiPicker from "./EmojiPicker";
 
 import toast from "react-hot-toast";
+import { RxHamburgerMenu } from "react-icons/rx";
 import {
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
 } from "../../Redux/api/inboxApiSlice";
 
 const ChatBox = () => {
+  //Set the conversation user id
+  const { conversationUser, chatData } = useSelector((state) => state.chat);
+  console.log("heydata", chatData);
+
   const [expand, setExpand] = useState(false);
+  const [expandDot, setExpandDot] = useState(false);
   const endOfMessagesRef = useRef(null);
+  const dotMenuRef = useRef(null);
   const [{ quickResponse }, updateItem] = useLocalStorageObject("utils", {
     quickResponse: false,
   });
@@ -36,18 +43,17 @@ const ChatBox = () => {
   // const token = Cookies.get("authToken");
   const socket = connectSocket("http://localhost:3000", token);
   const { data: quickMsgs } = useFetchQuickResMsgQuery();
-  const [deleteQuickResMsg, { isLoading, error }] =
-    useDeleteQuickResMsgMutation();
+  const [deleteQuickResMsg] = useDeleteQuickResMsgMutation();
 
-  const [onlineUser, setOnlineUser] = useState([]);
+  const [onlineUsers, setOnlineUsers] = useState([]);
 
-  console.log(onlineUser, "checking the online users");
+  console.log(onlineUsers, "checking the online users");
 
   // all avaiable user's
   useEffect(() => {
     socket.emit("view-online-users");
     socket.on("online-users", (onlineUsers) => {
-      setOnlineUser(onlineUsers);
+      setOnlineUsers(onlineUsers);
     });
   }, []);
 
@@ -229,6 +235,7 @@ const ChatBox = () => {
 
   // click outside the box it will be toggled
   useOutsideClick(menuRef, () => setQucikMsgBtnController(null));
+  useOutsideClick(dotMenuRef, () => setExpandDot(false));
 
   // handler for Submitting/Send a Message
   const handleSubmitMessage = (e) => {
@@ -259,7 +266,7 @@ const ChatBox = () => {
         const submitForm = {
           messageId: maxId,
           userImage: userProfilePic,
-          senderName: user?.fullName,
+          senderUserName: user?.userName,
           msgDate,
           msgTime,
           messageText: textValue,
@@ -310,31 +317,78 @@ const ChatBox = () => {
       {/* Header Part */}
       <div className="flex h-[70px] items-center justify-between bg-[#efefef] p-4">
         <div className="">
-          <h1 className="text-lg font-semibold">clientusername</h1>
-          <div className="flex items-center gap-3 text-sm">
+          <h1 className="text-base font-semibold sm:text-lg">clientusername</h1>
+          <div className="flex flex-col items-start text-xs sm:flex-row sm:items-center sm:gap-3 lg:text-sm">
             <p>Last seen: 18 hours ago</p>
-            <Divider className={"h-[15px] w-[2px] !bg-black/50"} />
+            <Divider
+              className={"hidden h-[15px] w-[2px] !bg-black/50 sm:block"}
+            />
             <p>Local time: 1:10 PM, May 29, 2023</p>
           </div>
         </div>
         {isAdmin && (
-          <div className="flex items-center justify-end gap-3">
+          <div className="flex items-center justify-end sm:gap-3">
             <div className="flex h-[30px] w-[30px] items-center justify-center rounded-full border border-slate-300 text-xs font-semibold">
               3
             </div>
-            <button type="button">
+            <div className="relative" onClick={() => setExpandDot(!expandDot)}>
               <BsThreeDotsVertical className="text-2xl" />
+              {expandDot && (
+                <div
+                  className="absolute right-0 top-full z-10 rounded-lg border border-solid bg-white py-2 text-center *:block *:p-[5px_15px]"
+                  ref={dotMenuRef}
+                >
+                  <button
+                    type="button"
+                    className="w-full text-xs hover:bg-gray-200"
+                    // onClick={() => setOpenEditMsgModal(msg)}
+                  >
+                    Read/Unread
+                  </button>
+                  <button
+                    type="button"
+                    // onClick={() => handleDeleteQuickMsg(msg.id)}
+                    className="w-full text-xs hover:bg-gray-200"
+                  >
+                    Star/Starred
+                  </button>
+                  <button
+                    type="button"
+                    className="w-full text-xs hover:bg-gray-200"
+                    // onClick={() => setOpenEditMsgModal(msg)}
+                  >
+                    Block/Unblock
+                  </button>
+                  <button
+                    type="button"
+                    // onClick={() => handleDeleteQuickMsg(msg.id)}
+                    className="w-full text-xs hover:bg-gray-200"
+                  >
+                    Archive/Archived
+                  </button>
+                  <button
+                    type="button"
+                    // onClick={() => console.log("deleted")}
+                    className="w-full text-xs hover:bg-gray-200"
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
+            <button type="button" className="block md:hidden">
+              <RxHamburgerMenu className="text-2xl" />
             </button>
           </div>
         )}
       </div>
       {/* Conversation Field */}
       <div
-        className={`${quickResponse && selectedImages?.length > 0 ? "h-[calc(100%_-_493px)]" : quickResponse ? "h-[calc(100%_-_350px)]" : selectedImages?.length > 0 ? "h-[calc(100%_-_393px)]" : "h-[calc(100%_-_250px)]"} overflow-y-auto p-5`}
+        className={`${quickResponse && selectedImages?.length > 0 ? "h-[calc(100%_-_491px)]" : quickResponse ? "h-[calc(100%_-_350px)]" : selectedImages?.length > 0 ? "h-[calc(100%_-_391px)]" : "h-[calc(100%_-_250px)]"} overflow-y-auto p-5`}
       >
         {/* All message Container */}
         {/* Each message block */}
-        {messages.map((msg, i) => (
+        {chatData?.map((msg, i) => (
           <div key={i} className="group mt-3 flex items-start gap-3 px-3">
             <div className="shrink-0">
               <img
@@ -346,7 +400,7 @@ const ChatBox = () => {
             <div className="grow">
               <div className="mt-1 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <h1 className="font-semibold">{msg?.senderName}</h1>
+                  <h1 className="font-semibold">{msg?.senderUserName}</h1>
                   <p className="text-xs text-black/50">
                     {msg.msgDate}, {msg.msgTime}
                   </p>
@@ -699,8 +753,11 @@ const ChatBox = () => {
             onChange={handleTextChange}
           ></textarea>
           <div className="flex h-[50px] items-center justify-between border-t border-slate-300">
-            <div className="flex items-center gap-3 pl-3">
-              <EmojiPicker onEmojiSelect={handleEmojiSelect} />
+            <div className="flex items-center gap-[2px] pl-3 sm:gap-3">
+              <EmojiPicker
+                onEmojiSelect={handleEmojiSelect}
+                style={{ transform: "translateX(-5%)" }}
+              />
               <Divider className={"h-[30px] w-px !bg-gray-400"} />
               <div>
                 <input
@@ -718,7 +775,7 @@ const ChatBox = () => {
               {isAdmin && (
                 <button
                   type="button"
-                  className="bg-lightskyblue px-2 py-1 text-sm font-medium"
+                  className="bg-lightskyblue px-2 py-1 text-xs font-medium sm:text-sm"
                   onClick={() => setOpenOfferModal(true)}
                 >
                   Create an Offer
@@ -727,7 +784,7 @@ const ChatBox = () => {
             </div>
             <button
               type="button"
-              className="flex h-full w-[120px] items-center justify-center bg-primary font-semibold text-white"
+              className="flex h-full w-[100px] items-center justify-center bg-primary text-sm font-semibold text-white sm:w-[120px] sm:text-base"
               onClick={handleSubmitMessage}
             >
               Send
@@ -740,7 +797,7 @@ const ChatBox = () => {
         <EditQuickMsgModal
           handleClose={setOpenEditMsgModal}
           value={openEditMsgModal}
-          controller = {setQucikMsgBtnController}
+          controller={setQucikMsgBtnController}
         />
       )}
       {openAddMsgModal && <AddQuickMsgModal handleClose={setOpenAddMsgModal} />}

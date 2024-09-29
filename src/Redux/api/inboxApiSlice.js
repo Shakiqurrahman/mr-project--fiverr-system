@@ -17,7 +17,7 @@ export const inboxApiSlice = createApi({
   tagTypes: ["quickResponse"],
   refetchOnMountOrArgChange: true,
   endpoints: (builder) => ({
-    // Fetch Quick Response Messages
+    // Get Quick Response Messages
     fetchQuickResMsg: builder.query({
       query: () => "quickResponse/quickres",
       transformResponse: (response) => response?.data,
@@ -53,15 +53,25 @@ export const inboxApiSlice = createApi({
       invalidatesTags: ["quickResponse"],
     }),
 
+    // Get available chat users for admin
+    getAvailableChatUsers: builder.query({
+      query: () => "avaiableforchat",
+      transformResponse: (response) => response?.data,
+    }),
 
-     // Create Quick Response Message
-     startContactForChat: builder.mutation({
+    // Get All Conversational Messages for admin
+    getAllMessages: builder.query({
+      query: ({ senderId, receiverId }) => `message/${senderId}/${receiverId}`,
+      transformResponse: (response) => response?.data,
+    }),
+
+    // Create start contact for Message
+    startContactForChat: builder.mutation({
       query: (newMessage) => ({
         url: "contactForChat",
         method: "POST",
         body: newMessage,
       }),
-      // invalidatesTags: ["quickResponse"],
     }),
   }),
 });
@@ -71,5 +81,6 @@ export const {
   useCreateQuickResMsgMutation,
   useUpdateQuickResMsgMutation,
   useDeleteQuickResMsgMutation,
-  useStartContactForChatMutation,
+  useGetAvailableChatUsersQuery,
+  useLazyGetAllMessagesQuery,
 } = inboxApiSlice;

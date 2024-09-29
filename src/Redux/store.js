@@ -4,15 +4,16 @@ import persistStore from "redux-persist/es/persistStore";
 import storage from "redux-persist/lib/storage";
 import { allUserApiSlice } from "./api/allUserApiSlice";
 import { apiSlice } from "./api/apiSlice";
+import { inboxApiSlice } from "./api/inboxApiSlice";
 import { multiProjectApiSlice } from "./api/multiProjectApiSlice";
 import { offerProjectApiSlice } from "./api/offerProjectApiSlice";
 import { uploadDesignApiSlice } from "./api/uploadDesignApiSlice";
 import cartSlice from "./features/cartSlice";
 import categorySlice from "./features/category/categorySlice";
+import chatSlice from "./features/chatSlice";
 import offerProjectSlice from "./features/offerProjectSlice";
 import passwordVisibilitySlice from "./features/passwordVisibilitySlice";
 import userSlice from "./features/userSlice";
-import { inboxApiSlice } from "./api/inboxApiSlice";
 
 // Persist configs
 const userPersistConfig = {
@@ -56,6 +57,7 @@ const store = configureStore({
     [uploadDesignApiSlice.reducerPath]: uploadDesignApiSlice.reducer,
     [multiProjectApiSlice.reducerPath]: multiProjectApiSlice.reducer,
     [inboxApiSlice.reducerPath]: inboxApiSlice.reducer,
+    chat: chatSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
