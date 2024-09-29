@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import AffiliateData from "../components/analytics/AffiliateData";
 import CategoriesData from "../components/analytics/CategoriesData";
 import ProjectDetailsData from "../components/analytics/ProjectDetailsData";
@@ -23,6 +24,10 @@ const Analytics = () => {
       selectedAnalyticsTab: "Project Details",
     },
   );
+
+  useEffect(() => {
+    updateItem("selectedAnalyticsTab", "Project Details")
+  }, [])
   const RenderComponent = () => {
     switch (selectedAnalyticsTab) {
       case "Project Details":

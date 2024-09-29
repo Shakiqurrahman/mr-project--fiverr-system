@@ -52,6 +52,17 @@ export const inboxApiSlice = createApi({
       }),
       invalidatesTags: ["quickResponse"],
     }),
+
+
+     // Create Quick Response Message
+     startContactForChat: builder.mutation({
+      query: (newMessage) => ({
+        url: "contactForChat",
+        method: "POST",
+        body: newMessage,
+      }),
+      // invalidatesTags: ["quickResponse"],
+    }),
   }),
 });
 
@@ -60,4 +71,5 @@ export const {
   useCreateQuickResMsgMutation,
   useUpdateQuickResMsgMutation,
   useDeleteQuickResMsgMutation,
+  useStartContactForChatMutation,
 } = inboxApiSlice;

@@ -2,9 +2,14 @@ import axios from "axios";
 import { useRef, useState } from "react";
 import { CgAttachment } from "react-icons/cg";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { useNavigate } from "react-router-dom";
 import formatFileSize from "../libs/formatFileSize";
+import { useStartContactForChatMutation } from "../Redux/api/inboxApiSlice";
 
 function Contact() {
+  const navigate = useNavigate();
+  const [createContract, { isLoading, error }] =
+    useStartContactForChatMutation();
   const [value, setValue] = useState({
     name: "",
     email: "",
@@ -107,6 +112,18 @@ function Contact() {
     });
     const images = await Promise.all(imagesPromise);
     console.log(value, images);
+    const res = await createContract({
+      name: value.name,
+      email: value.email,
+      website: value.link,
+      message: value.Message,
+      exampleDesign: {
+        name: "stack",
+        url: "images",
+      },
+    }).unwrap();
+    console.log(res, value.Message);
+    navigate("/inbox");
   };
 
   const handleKeyUp = (e) => {
