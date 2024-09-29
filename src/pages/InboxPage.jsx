@@ -44,11 +44,11 @@ const InboxPage = () => {
         className={`${isAdmin ? "" : "mx-auto max-w-[800px]"} flex h-full justify-center rounded-lg border shadow-md`}
       >
         {isAdmin && (
-          <div className="w-1/3 overflow-hidden rounded-tl-lg border-r">
+          <div className="hidden w-1/3 overflow-hidden rounded-tl-lg border-r md:block">
             <AllConversation />
           </div>
         )}
-        <div className={`${isAdmin ? "w-2/3" : "w-full"}`}>
+        <div className={`${isAdmin ? "w-full md:w-2/3" : "w-full"}`}>
           <ChatBox />
         </div>
       </div>

@@ -1,11 +1,6 @@
 import { useRef, useState } from "react";
 import { ImPlus } from "react-icons/im";
-import {
-  IoIosArrowDown,
-  IoIosArrowUp,
-  IoIosAttach,
-  IoMdClose,
-} from "react-icons/io";
+import { IoIosArrowDown, IoIosArrowUp, IoIosAttach } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import thumbnailDemo from "../../assets/images/project-thumbnail.jpg";
@@ -105,19 +100,15 @@ const CreateOfferModal = ({ handleClose, onOfferSubmit, values }) => {
 
   return (
     <div className="fixed left-0 top-0 z-[9999999] flex h-screen w-full items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-      <button
-        className="absolute right-10 top-10"
-        onClick={() => handleClose(false)}
-      >
-        <IoMdClose className="text-3xl text-canceled" />
-      </button>
       <form
         ref={formRef}
         className="w-full max-w-[600px] bg-lightskyblue"
         onSubmit={handleSubmit}
       >
         <div className="flex items-center justify-between bg-primary p-3 text-white">
-          <h1 className="text-lg font-medium">Create a single payment offer</h1>
+          <h1 className="text-base font-medium md:text-lg">
+            Create a single payment offer
+          </h1>
           <div>
             <input
               type="file"
@@ -137,19 +128,19 @@ const CreateOfferModal = ({ handleClose, onOfferSubmit, values }) => {
             <img
               src={form.thumbnail ? form.thumbnail : thumbnailDemo}
               alt=""
-              className="h-[100px] w-[100px] shrink-0 object-cover"
+              className="w-[80px] shrink-0 object-cover sm:w-[100px]"
             />
             <input
               type="text"
               name="title"
-              className="grow text-2xl font-semibold outline-none"
+              className="w-full grow text-sm font-semibold outline-none md:text-2xl"
               placeholder="Enter Title"
               value={form.title}
               onChange={handleChange}
             />
           </div>
-          <div className="my-5 flex items-center justify-between gap-3">
-            <div className="flex w-1/2 items-center gap-3">
+          <div className="my-5 flex flex-wrap items-center justify-start gap-3 sm:flex-nowrap sm:justify-between">
+            <div className="flex w-full items-center gap-3 sm:w-1/2">
               <p className="text-sm font-medium">Delivery</p>
               <div className="flex items-center border bg-white pr-3">
                 <input
@@ -171,7 +162,7 @@ const CreateOfferModal = ({ handleClose, onOfferSubmit, values }) => {
                 </select>
               </div>
             </div>
-            <div className="flex w-1/2 items-center justify-end gap-3">
+            <div className="flex w-full items-center justify-start gap-3 sm:w-1/2 sm:justify-end">
               <p className="text-sm font-medium">Price</p>
               <div className="flex items-center border bg-white">
                 <input
@@ -193,7 +184,7 @@ const CreateOfferModal = ({ handleClose, onOfferSubmit, values }) => {
             className="block h-[150px] w-full resize-none border bg-white p-3 outline-none"
           ></textarea>
           <div className="my-5">
-            <div className="flex items-center justify-between bg-primary p-3 text-white">
+            <div className="flex items-center justify-between bg-primary p-2 text-white sm:p-3">
               <h1>Requirements</h1>
               <div className="flex items-center gap-3">
                 <button
@@ -225,7 +216,7 @@ const CreateOfferModal = ({ handleClose, onOfferSubmit, values }) => {
                         newRequirements[index] = e.target.value;
                         setRequirements(newRequirements);
                       }}
-                      className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+                      className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 text-sm outline-none sm:text-base"
                     />
                     <RiDeleteBin6Line
                       className="cursor-pointer text-gray-500"
