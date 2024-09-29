@@ -28,6 +28,10 @@ import {
 } from "../../Redux/api/inboxApiSlice";
 
 const ChatBox = () => {
+  //Set the conversation user id
+  const { conversationUser, chatData } = useSelector((state) => state.chat);
+  console.log("heydata", chatData);
+
   const [expand, setExpand] = useState(false);
   const [expandDot, setExpandDot] = useState(false);
   const endOfMessagesRef = useRef(null);
@@ -39,8 +43,7 @@ const ChatBox = () => {
   // const token = Cookies.get("authToken");
   const socket = connectSocket("http://localhost:3000", token);
   const { data: quickMsgs } = useFetchQuickResMsgQuery();
-  const [deleteQuickResMsg, { isLoading, error }] =
-    useDeleteQuickResMsgMutation();
+  const [deleteQuickResMsg] = useDeleteQuickResMsgMutation();
 
   const [onlineUsers, setOnlineUsers] = useState([]);
 
@@ -263,7 +266,7 @@ const ChatBox = () => {
         const submitForm = {
           messageId: maxId,
           userImage: userProfilePic,
-          senderName: user?.fullName,
+          senderUserName: user?.userName,
           msgDate,
           msgTime,
           messageText: textValue,
@@ -385,7 +388,7 @@ const ChatBox = () => {
       >
         {/* All message Container */}
         {/* Each message block */}
-        {messages.map((msg, i) => (
+        {chatData?.map((msg, i) => (
           <div key={i} className="group mt-3 flex items-start gap-3 px-3">
             <div className="shrink-0">
               <img
@@ -397,7 +400,7 @@ const ChatBox = () => {
             <div className="grow">
               <div className="mt-1 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <h1 className="font-semibold">{msg?.senderName}</h1>
+                  <h1 className="font-semibold">{msg?.senderUserName}</h1>
                   <p className="text-xs text-black/50">
                     {msg.msgDate}, {msg.msgTime}
                   </p>

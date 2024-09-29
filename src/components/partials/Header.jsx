@@ -19,7 +19,6 @@ import "react-modern-drawer/dist/index.css";
 import useSyncCart from "../../hooks/useSyncCart";
 import NotificationModal from "../Notifications/NotificationModal";
 
-
 function Header() {
   const { user, loading } = useSelector((state) => state.user);
   const { items: cartItems } = useSelector((state) => state.cart);
@@ -93,7 +92,30 @@ function Header() {
                     <NavLink to="/inbox">Inbox</NavLink>
                   </Badge>
                 </li>
-                <li>
+                <li className="hidden md:block">
+                  <Badge
+                    badgeContent={0}
+                    sx={{
+                      "& .MuiBadge-badge": {
+                        backgroundColor: "#1b8cdc",
+                        color: "white",
+                      },
+                    }}
+                  >
+                    <button
+                      className="text-white hover:text-gray-300"
+                      onClick={handleNotificationClick}
+                    >
+                      Notifications
+                    </button>
+                    {/* <NavLink to="/notifications">Notifications</NavLink> */}
+                    {/* Notification Modal */}
+                    {openNotifications && (
+                      <NotificationModal close={setOpenNotifications} />
+                    )}
+                  </Badge>
+                </li>
+                <li className="block md:hidden">
                   <Badge
                     badgeContent={0}
                     sx={{

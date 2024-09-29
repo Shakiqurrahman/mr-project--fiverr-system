@@ -1,14 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosStar } from "react-icons/io";
 import { IoSearchOutline } from "react-icons/io5";
 import { LuClock3 } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
+import { useDispatch, useSelector } from "react-redux";
 import logo from "../../assets/images/MR Logo White.png";
 import repeatIcon from "../../assets/svg/Repeat icon.svg";
 import { formatTimeAgo } from "../../libs/timeFormatter";
+import {
+  useGetAvailableChatUsersQuery,
+  useLazyGetAllMessagesQuery,
+} from "../../Redux/api/inboxApiSlice";
+import {
+  setChatData,
+  setConversationUser,
+} from "../../Redux/features/chatSlice";
 
 const AllConversation = () => {
+  const dispatch = useDispatch();
+
+  const { data: availableUsers } = useGetAvailableChatUsersQuery();
+  // getAllMessages
+  const [triggerGetAllMessages, { data: getAllMessages }] =
+    useLazyGetAllMessagesQuery();
+
+  console.log("all messagesData", getAllMessages);
+
+  useEffect(() => {
+    if (getAllMessages) {
+      dispatch(setChatData(getAllMessages));
+    }
+  }, [getAllMessages, dispatch]);
+
   const [selectedOption, setSelectedOption] = useState("AllConversations");
+  const { user, token } = useSelector((state) => state.user);
   const [openSearch, setOpenSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -188,6 +213,14 @@ const AllConversation = () => {
   };
   const filteredChatList = getFilteredChatList();
 
+  const handleChatOpen = (id) => {
+    dispatch(setConversationUser(id));
+    triggerGetAllMessages({
+      senderId: "66f4597cf2259c272ecaf810",
+      receiverId: "66f4597cf2259c272ecaf810",
+    });
+  };
+
   return (
     <div className="flex h-full flex-col">
       <div className="flex h-[70px] items-center justify-between bg-primary/20 px-4">
@@ -231,15 +264,20 @@ const AllConversation = () => {
       </div>
 
       <div className="chat-scrollbar flex-1 overflow-y-auto">
-        {filteredChatList.length > 0 ? (
-          filteredChatList.map((chat) => (
+        {availableUsers?.length > 0 ? (
+          availableUsers?.map((chat) => (
             <div
-              key={chat.id}
+              key={chat?.id}
               className="flex cursor-pointer items-center justify-between border-b p-4 hover:bg-lightcream/50"
+              onClick={() => handleChatOpen(chat?.id)}
             >
               <div className="flex items-center gap-4">
                 <div className="relative">
-                  <img className="size-8 object-cover" src={logo} alt="logo" />
+                  <img
+                    className="size-8 rounded-full object-cover"
+                    src={chat?.image ? chat?.image : logo}
+                    alt="logo"
+                  />
                   {chat?.isRepeatedClient && (
                     <img
                       className={`absolute -top-1 left-1 size-3`}
@@ -253,30 +291,32 @@ const AllConversation = () => {
                 </div>
                 <div>
                   <p className="flex items-center gap-2 font-semibold">
-                    {chat.name}{" "}
+                    {chat?.userName}{" "}
                     <span className="text-secondary">
                       {chat?.isNewClient && <LuClock3 />}
                     </span>
                   </p>
                   <p
-                    className={`${chat.unreadMessages > 0 && "font-bold"} text-sm`}
+                    className={`${chat?.unreadMessages > 0 && "font-bold"} text-sm`}
                   >
-                    {chat.lastMessage}
+                    {chat?.lastMessage}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <div className="flex flex-col items-end gap-1">
                   <p className="text-[12px] text-gray-500">
-                    {formatTimeAgo(chat.lastMessageTime)}
+                    {formatTimeAgo(chat?.lastMessageTime || 0)}
                   </p>
-                  {chat.unreadMessages > 0 && (
+                  {chat?.unreadMessages > 0 && (
                     <span className="size-6 rounded-full bg-primary text-center text-[10px] leading-[24px] text-white">
-                      {chat.unreadMessages}
+                      {chat?.unreadMessages}
                     </span>
                   )}
                 </div>
-                {chat.starred && <IoIosStar className="text-lg text-primary" />}
+                {chat?.starred && (
+                  <IoIosStar className="text-lg text-primary" />
+                )}
               </div>
             </div>
           ))
