@@ -83,4 +83,5 @@ export const {
   useDeleteQuickResMsgMutation,
   useGetAvailableChatUsersQuery,
   useLazyGetAllMessagesQuery,
+  useStartContactForChatMutation,
 } = inboxApiSlice;
