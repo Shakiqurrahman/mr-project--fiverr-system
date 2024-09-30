@@ -115,12 +115,9 @@ function Contact() {
     const res = await createContract({
       name: value.name,
       email: value.email,
-      website: value.link,
+      websiteOrFacebook: value.link,
       message: value.Message,
-      exampleDesign: {
-        name: "stack",
-        url: "images",
-      },
+      exampleDesign: images,
     }).unwrap();
     console.log(res, value.Message);
     navigate("/inbox");
