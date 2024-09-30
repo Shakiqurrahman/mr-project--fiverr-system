@@ -96,8 +96,15 @@ function SignUpForm({ handleClick }) {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      setError("Something went wrong!");
+      if(error.status === 409 ){
+        setError(error?.response?.data?.message);
+      } else if(error.code === "ERR_NETWORK"){
+        setError("Network error occurred! Please try again!");
+      } else {
+        setError("Something went wrong!");
+      }
       console.error(error);
+      console.error(error.code);
     }
   };
 
