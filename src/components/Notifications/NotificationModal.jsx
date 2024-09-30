@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { MdOutlineNotifications } from "react-icons/md";
 import useOutsideClick from "../../hooks/useOutsideClick";
+import GetNotificationTitle from "./GetNotificationTitle";
 
 const NotificationModal = ({ close }) => {
   const notificalModal = useRef(null);
@@ -11,7 +12,6 @@ const NotificationModal = ({ close }) => {
       id: 1,
       userName: "shake75",
       avatar: "",
-      title: "You have a new order from shake75",
       date: "15d",
       orderedImage: "",
       isOnline: true,
@@ -21,33 +21,32 @@ const NotificationModal = ({ close }) => {
       id: 2,
       userName: "shakil",
       avatar: "",
-      title: "You have a new order from shakil",
       date: "1h",
       orderedImage:
         "https://media.vanityfair.com/photos/5f5245d91e10df7a77868af6/master/pass/avatar-the-last-airbender.jpg",
       isOnline: false,
-      type: "order",
+      type: "instructions",
     },
     {
       id: 3,
       userName: "shakil",
       avatar:
         "https://media.gq.com/photos/627d37fbbad17dc46fce8158/4:3/w_2507,h_1880,c_limit/MCDAVAT_FE021.jpg",
-      title: "Shakespeare: Red is the logos Yellow is the verbiage.",
       date: "15min",
       orderedImage:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_gaxAkYYDw8UfNleSC2Viswv3xSmOa4bIAQ&s",
       isOnline: false,
       type: "review",
+      rating: 5,
     },
     {
       id: 4,
       userName: "Soumik",
       avatar:
         "https://media.gq.com/photos/627d37fbbad17dc46fce8158/4:3/w_2507,h_1880,c_limit/MCDAVAT_FE021.jpg",
-      title: "Shakespeare: Red is the logos Yellow is the verbiage.",
+      message: "Red is the logos Yellow is the verbiage.",
       date: "15min",
-      type: "rating",
+      type: "orderMessage",
       orderedImage:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_gaxAkYYDw8UfNleSC2Viswv3xSmOa4bIAQ&s",
       isOnline: false,
@@ -73,7 +72,7 @@ const NotificationModal = ({ close }) => {
           {notifications.map((notification) => (
             <div
               key={notification.id}
-              className="flex items-center gap-4 border-b p-4 last:border-b-0"
+              className="flex items-center justify-between gap-4 border-b p-4 last:border-b-0"
             >
               <div className="flex items-center gap-2">
                 {/* avatar  */}
@@ -96,9 +95,15 @@ const NotificationModal = ({ close }) => {
 
                 {/* msg  */}
                 <div className="flex flex-1 flex-col gap-2">
-                  <p className="line-clamp-3 text-base font-medium text-gray-900">
-                    {notification?.title}
-                  </p>
+                  <div>
+                    {GetNotificationTitle({
+                      type: notification?.type,
+                      userName: notification?.userName,
+                      message: notification?.message,
+                      rating: notification?.rating,
+                      commentQuantity: notification?.commentQuantity,
+                    })}
+                  </div>
                   <p className="text-sm text-gray-600">{notification?.date}</p>
                 </div>
               </div>
