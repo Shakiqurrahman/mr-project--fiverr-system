@@ -27,7 +27,7 @@ import {
   useFetchQuickResMsgQuery,
 } from "../../Redux/api/inboxApiSlice";
 
-const ChatBox = () => {
+const ChatBox = ({ openToggle }) => {
   //Set the conversation user id
   const { conversationUser, chatData } = useSelector((state) => state.chat);
   console.log("heydata", chatData);
@@ -376,7 +376,11 @@ const ChatBox = () => {
                 </div>
               )}
             </div>
-            <button type="button" className="block md:hidden">
+            <button
+              type="button"
+              className="block md:hidden"
+              onClick={() => openToggle(true)}
+            >
               <RxHamburgerMenu className="text-2xl" />
             </button>
           </div>

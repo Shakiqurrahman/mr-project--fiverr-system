@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { IoIosStar } from "react-icons/io";
-import { IoSearchOutline } from "react-icons/io5";
+import { IoClose, IoSearchOutline } from "react-icons/io5";
 import { LuClock3 } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,7 +16,7 @@ import {
   setConversationUser,
 } from "../../Redux/features/chatSlice";
 
-const AllConversation = () => {
+const AllConversation = ({ closeToggle }) => {
   const dispatch = useDispatch();
 
   const { data: availableUsers } = useGetAvailableChatUsersQuery();
@@ -219,6 +219,7 @@ const AllConversation = () => {
       senderId: "66f4597cf2259c272ecaf810",
       receiverId: "66f4597cf2259c272ecaf810",
     });
+    closeToggle(false);
   };
 
   return (
@@ -261,6 +262,13 @@ const AllConversation = () => {
           <option value="archived">Archived</option>
           <option value="customOffers">Custom Offers</option>
         </select>
+        <button
+          className={`block sm:hidden ${openSearch && "hidden"}`}
+          type="button"
+          onClick={() => closeToggle(false)}
+        >
+          <IoClose className="text-2xl" />
+        </button>
       </div>
 
       <div className="chat-scrollbar flex-1 overflow-y-auto">

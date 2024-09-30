@@ -8,6 +8,7 @@ const InboxPage = () => {
   const isAdmin = user?.role === "ADMIN";
   const sectionRef = useRef(null);
   const [offSetTop, setOffSetTop] = useState(0);
+  const [toggleBtn, setToggleBtn] = useState(true);
   useEffect(() => {
     // Function to update offsetTop
     const updateOffsetTop = () => {
@@ -41,15 +42,17 @@ const InboxPage = () => {
       style={{ height: `calc(100vh - ${offSetTop}px)` }}
     >
       <div
-        className={`${isAdmin ? "" : "mx-auto max-w-[800px]"} flex h-full justify-center rounded-lg border shadow-md`}
+        className={`${isAdmin ? "" : "mx-auto max-w-[800px]"} relative flex h-full justify-center rounded-lg border shadow-md`}
       >
         {isAdmin && (
-          <div className="hidden w-1/3 overflow-hidden rounded-tl-lg border-r md:block">
-            <AllConversation />
+          <div
+            className={`${toggleBtn ? "block h-full bg-white" : "hidden"} absolute left-0 top-0 z-[10] w-full overflow-hidden rounded-tl-lg border-r md:static md:block md:w-1/3`}
+          >
+            <AllConversation closeToggle={setToggleBtn} />
           </div>
         )}
         <div className={`${isAdmin ? "w-full md:w-2/3" : "w-full"}`}>
-          <ChatBox />
+          <ChatBox openToggle={setToggleBtn} />
         </div>
       </div>
     </section>
