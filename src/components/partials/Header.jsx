@@ -25,6 +25,7 @@ function Header() {
   const [activeMenu, setActiveMenu] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [openNotifications, setOpenNotifications] = useState(false);
+  const [openNotificationDrawer, setOpenNotificationDrawer] = useState(false);
 
   const handleClose = () => {
     setActiveMenu(false);
@@ -33,6 +34,10 @@ function Header() {
   const handleNotificationClick = () => {
     setActiveMenu(false);
     setOpenNotifications(!openNotifications);
+  };
+  const handleNotificationDrawerClick = () => {
+    setActiveMenu(false);
+    setOpenNotificationDrawer(!openNotificationDrawer);
   };
   useSyncCart();
   return (
@@ -127,15 +132,10 @@ function Header() {
                   >
                     <button
                       className="text-white hover:text-gray-300"
-                      onClick={handleNotificationClick}
+                      onClick={handleNotificationDrawerClick}
                     >
                       Notifications
                     </button>
-                    {/* <NavLink to="/notifications">Notifications</NavLink> */}
-                    {/* Notification Modal */}
-                    {openNotifications && (
-                      <NotificationModal close={setOpenNotifications} />
-                    )}
                   </Badge>
                 </li>
                 <li
@@ -221,6 +221,13 @@ function Header() {
         </div>
         <Navbar />
       </header>
+
+      {/* Notification Drawer For Mobile Version */}
+      {openNotificationDrawer && (
+        <div className="fixed left-0 top-0 z-[9999999999] flex h-screen w-full items-start justify-center bg-black/50 p-5 backdrop-blur-sm">
+          <NotificationModal close={setOpenNotificationDrawer} />
+        </div>
+      )}
     </>
   );
 }
