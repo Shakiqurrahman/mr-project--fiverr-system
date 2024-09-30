@@ -315,7 +315,7 @@ const ChatBox = ({ openToggle }) => {
   return (
     <div className="h-full">
       {/* Header Part */}
-      <div className="flex h-[70px] items-center justify-between bg-[#efefef] p-4">
+      <div className="flex h-[70px] items-center justify-between rounded-tl-lg rounded-tr-lg bg-[#efefef] p-4 md:rounded-tl-none">
         <div className="">
           <h1 className="text-base font-semibold sm:text-lg">clientusername</h1>
           <div className="flex flex-col items-start text-xs sm:flex-row sm:items-center sm:gap-3 lg:text-sm">
@@ -323,11 +323,11 @@ const ChatBox = ({ openToggle }) => {
             <Divider
               className={"hidden h-[15px] w-[2px] !bg-black/50 sm:block"}
             />
-            <p>Local time: 1:10 PM, May 29, 2023</p>
+            <p className="hidden sm:block">Local time: 1:10 PM, May 29, 2023</p>
           </div>
         </div>
         {isAdmin && (
-          <div className="flex items-center justify-end sm:gap-3">
+          <div className="flex items-center justify-end gap-1 sm:gap-3">
             <div className="flex h-[30px] w-[30px] items-center justify-center rounded-full border border-slate-300 text-xs font-semibold">
               3
             </div>
@@ -757,7 +757,7 @@ const ChatBox = ({ openToggle }) => {
             onChange={handleTextChange}
           ></textarea>
           <div className="flex h-[50px] items-center justify-between border-t border-slate-300">
-            <div className="flex items-center gap-[2px] pl-3 sm:gap-3">
+            <div className="flex items-center gap-[2px] pl-1 sm:gap-3 sm:pl-3">
               <EmojiPicker
                 onEmojiSelect={handleEmojiSelect}
                 style={{ transform: "translateX(-5%)" }}
@@ -779,7 +779,7 @@ const ChatBox = ({ openToggle }) => {
               {isAdmin && (
                 <button
                   type="button"
-                  className="bg-lightskyblue px-2 py-1 text-xs font-medium sm:text-sm"
+                  className="bg-lightskyblue px-2 py-2 text-xs font-medium sm:text-sm"
                   onClick={() => setOpenOfferModal(true)}
                 >
                   Create an Offer
