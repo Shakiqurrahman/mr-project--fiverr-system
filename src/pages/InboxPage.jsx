@@ -8,7 +8,7 @@ const InboxPage = () => {
   const isAdmin = user?.role === "ADMIN";
   const sectionRef = useRef(null);
   const [offSetTop, setOffSetTop] = useState(0);
-  const [toggleBtn, setToggleBtn] = useState(true);
+  const [toggleBtn, setToggleBtn] = useState(false);
   useEffect(() => {
     // Function to update offsetTop
     const updateOffsetTop = () => {
