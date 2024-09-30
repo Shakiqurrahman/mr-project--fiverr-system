@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { IoClose } from "react-icons/io5";
 import { MdOutlineNotifications } from "react-icons/md";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import GetNotificationTitle from "./GetNotificationTitle";
@@ -58,13 +59,20 @@ const NotificationModal = ({ close }) => {
   useOutsideClick(notificalModal, () => close(false));
   return (
     <div
-      className="absolute right-0 top-10 hidden max-w-[400px] rounded-md bg-white shadow-lg md:block md:w-[450px]"
+      className="static max-w-[400px] rounded-md bg-white shadow-lg sm:absolute sm:right-0 sm:top-10 md:w-[450px]"
       ref={notificalModal}
     >
       <div>
-        <h2 className="flex items-center gap-2 border-b p-4 text-base font-semibold text-black">
+        <h2 className="flex items-center justify-between gap-2 border-b p-4 text-base font-semibold text-black sm:justify-start">
           <MdOutlineNotifications className="text-2xl" /> Notifications (
           {unReadNotifications})
+          <button
+            className="block sm:hidden"
+            type="button"
+            onClick={() => close(false)}
+          >
+            <IoClose className="text-2xl" />
+          </button>
         </h2>
 
         {/* List of unread notifications */}
