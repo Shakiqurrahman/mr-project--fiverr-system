@@ -32,7 +32,7 @@ const GetNotificationTitle = ({
       <div className="flex-1">
         <p className="text-sm font-medium sm:text-base text-gray-900 line-clamp-3">
           <span className="font-bold">{userName}: requested </span>a change to
-          your order. Review the feedback.
+          your project. Review the feedback.
         </p>
       </div>
     ),
@@ -56,7 +56,7 @@ const GetNotificationTitle = ({
     projectStart: (
       <div className="flex-1">
         <p className="text-sm font-medium sm:text-base text-gray-900 line-clamp-3">
-          {`Your project has started! The designer is now working on your order.`}
+          {`Your project has started! The designer is now working on your project.`}
         </p>
       </div>
     ),
