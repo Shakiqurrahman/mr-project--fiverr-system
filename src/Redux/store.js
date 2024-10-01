@@ -34,11 +34,11 @@ const offerProjectPersistConfig = {
   storage,
 };
 
-const inboxApiPersistConfig = {
-  key: 'inboxApi',
-  storage,
-  whitelist: ['queries', 'mutations'],
-};
+// const inboxApiPersistConfig = {
+//   key: 'inboxApi',
+//   storage,
+//   whitelist: ['queries', 'mutations'],
+// };
 
 
 // Persisted reducers
@@ -51,7 +51,7 @@ const persistedOfferProjectReducer = persistReducer(
   offerProjectSlice,
 );
 
-const persistedInboxApiReducer = persistReducer(inboxApiPersistConfig, inboxApiSlice.reducer);
+// const persistedInboxApiReducer = persistReducer(inboxApiPersistConfig, inboxApiSlice.reducer);
 
 const store = configureStore({
   reducer: {
@@ -65,7 +65,8 @@ const store = configureStore({
     [offerProjectApiSlice.reducerPath]: offerProjectApiSlice.reducer,
     [uploadDesignApiSlice.reducerPath]: uploadDesignApiSlice.reducer,
     [multiProjectApiSlice.reducerPath]: multiProjectApiSlice.reducer,
-    [inboxApiSlice.reducerPath]: persistedInboxApiReducer,
+    [inboxApiSlice.reducerPath]: inboxApiSlice.reducer,
+    // [inboxApiSlice.reducerPath]: persistedInboxApiReducer,
     chat: chatSlice,
   },
   middleware: (getDefaultMiddleware) =>

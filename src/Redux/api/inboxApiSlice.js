@@ -14,7 +14,7 @@ export const inboxApiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ["quickResponse"],
+  tagTypes: ["quickResponse, getAllMessages"],
   refetchOnMountOrArgChange: true,
   endpoints: (builder) => ({
     // Get Quick Response Messages
@@ -57,12 +57,15 @@ export const inboxApiSlice = createApi({
     getAvailableChatUsers: builder.query({
       query: () => "avaiableforchat",
       transformResponse: (response) => response?.data,
+      providesTags: ["getAllMessages"],
     }),
 
     // Get All Conversational Messages for admin
     getAllMessages: builder.query({
       query: ({ receiverId }) => `message/${receiverId}`,
       transformResponse: (response) => response?.data,
+      providesTags: ["getAllMessages"],
+      pollingInterval: 1000,
     }),
 
     // Create start contact for Message
@@ -72,6 +75,7 @@ export const inboxApiSlice = createApi({
         method: "POST",
         body: newMessage,
       }),
+      invalidatesTags: ["getAllMessages"],
     }),
   }),
 });
