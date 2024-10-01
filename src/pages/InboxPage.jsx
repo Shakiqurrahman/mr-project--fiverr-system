@@ -53,15 +53,17 @@ const InboxPage = () => {
           </div>
         )}
         <div className={`${isAdmin ? "w-full md:w-2/3" : "w-full"}`}>
-          {conversationUser ? (
-            <ChatBox openToggle={setToggleBtn} />
-          ) : (
+          {!conversationUser && isAdmin ? (
             <div className="flex h-full items-center justify-center">
-              <div className="text-center space-y-1">
-                <p className="tracking-[10px] uppercase">Welcome To</p>
-                <h1 className="text-3xl font-bold text-primary uppercase">MR Project</h1>
+              <div className="space-y-1 text-center">
+                <p className="uppercase tracking-[10px]">Welcome To</p>
+                <h1 className="text-3xl font-bold uppercase text-primary">
+                  MR Project
+                </h1>
               </div>
             </div>
+          ) : (
+            <ChatBox openToggle={setToggleBtn} />
           )}
         </div>
       </div>
