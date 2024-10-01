@@ -17,7 +17,11 @@ import {
 } from "../../Redux/features/chatSlice";
 
 const AllConversation = ({ closeToggle }) => {
+  const { user, token } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const [selectedOption, setSelectedOption] = useState("AllConversations");
+  const [openSearch, setOpenSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { data: availableUsers } = useGetAvailableChatUsersQuery();
   // getAllMessages
@@ -25,17 +29,6 @@ const AllConversation = ({ closeToggle }) => {
     useLazyGetAllMessagesQuery();
 
   console.log("all messagesData", getAllMessages);
-
-  useEffect(() => {
-    if (getAllMessages) {
-      dispatch(setChatData(getAllMessages));
-    }
-  }, [getAllMessages, dispatch]);
-
-  const [selectedOption, setSelectedOption] = useState("AllConversations");
-  const { user, token } = useSelector((state) => state.user);
-  const [openSearch, setOpenSearch] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
 
   const handleSelectChange = (e) => {
     setSelectedOption(e.target.value);
@@ -172,6 +165,12 @@ const AllConversation = ({ closeToggle }) => {
     },
   ]);
 
+  useEffect(() => {
+    if (getAllMessages) {
+      dispatch(setChatData(getAllMessages));
+    }
+  }, [dispatch, getAllMessages]);
+
   // Filter chat list based on selected option
   const getFilteredChatList = () => {
     let filteredChats = chatList;
@@ -215,9 +214,12 @@ const AllConversation = ({ closeToggle }) => {
 
   const handleChatOpen = (id) => {
     dispatch(setConversationUser(id));
-    triggerGetAllMessages({
-      receiverId: id,
-    },{ pollingInterval: 1000 } );
+    triggerGetAllMessages(
+      {
+        receiverId: id,
+      },
+      { pollingInterval: 1000 },
+    );
     closeToggle(false);
   };
 

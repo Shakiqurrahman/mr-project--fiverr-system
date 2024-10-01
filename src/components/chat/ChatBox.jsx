@@ -4,7 +4,7 @@ import { BsFillReplyFill, BsThreeDotsVertical } from "react-icons/bs";
 import { FaCheckCircle, FaTrashAlt } from "react-icons/fa";
 import { IoIosArrowDown, IoIosArrowUp, IoIosAttach } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import logo from "../../assets/images/default_user.png";
 import DownArrow from "../../assets/images/icons/Down Arrow.svg";
@@ -25,14 +25,22 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import {
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
+  useLazyGetAllMessagesQuery,
   useSendAMessageMutation,
 } from "../../Redux/api/inboxApiSlice";
+import { setChatData } from "../../Redux/features/chatSlice";
 
 const ChatBox = ({ openToggle }) => {
-  const [sendAMessage, { data: upgrade }] = useSendAMessageMutation();
-  console.log("upgrade", upgrade);
+  const dispatch = useDispatch();
+  const [sendAMessage] = useSendAMessageMutation();
+
+  // getAllMessages
+  const [triggerGetAllMessages, { data: getAllMessagesForUser }] =
+    useLazyGetAllMessagesQuery();
+
   //Set the conversation user id
   const { conversationUser, chatData } = useSelector((state) => state.chat);
+  console.log("chat data for user", chatData);
   const [expand, setExpand] = useState(false);
   const [expandDot, setExpandDot] = useState(false);
   const endOfMessagesRef = useRef(null);
@@ -56,14 +64,12 @@ const ChatBox = ({ openToggle }) => {
     socket.on("online-users", (onlineUsers) => {
       setOnlineUsers(onlineUsers);
     });
-  }, []);
-
-  const userProfilePic = user?.image;
+  }, [socket]);
 
   const isAdmin = user?.role === "ADMIN";
   const menuRef = useRef(null);
   const fileInputRef = useRef(null);
-  const [selectedImages, setSelectedImages] = useState(null);
+  const [selectedImages, setSelectedImages] = useState([]);
   const [qucikMsgBtnController, setQucikMsgBtnController] = useState(null);
   const [openAddMsgModal, setOpenAddMsgModal] = useState(false);
   const [openEditMsgModal, setOpenEditMsgModal] = useState(null);
@@ -71,20 +77,25 @@ const ChatBox = ({ openToggle }) => {
 
   // messages state
   // eslint-disable-next-line no-unused-vars
-  const [messages, setMessages] = useState([
-    // {
-    //   userImage: userProfilePic,
-    //   senderName: user?.fullName,
-    //   messageId: 1,
-    //   msgDate: "Apr 22, 2023",
-    //   msgTime: "07:33 AM",
-    //   messageText:
-    //     "hello, looking for a flyer for my bathroom and kitchen company. I like the black and gold one you have listed",
-    //   attachment: [],
-    //   customOffer: null,
-    //   contactForm: null,
-    // },
-  ]);
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    if (user.role === "USER") {
+      triggerGetAllMessages(
+        {
+          receiverId: "66fba5d5dca406c532a6b338",
+        },
+        { pollingInterval: 1000 },
+      );
+    }
+  }, [user, triggerGetAllMessages]);
+  console.log("User Data", getAllMessagesForUser);
+
+  useEffect(() => {
+    if (getAllMessagesForUser && user.role === "USER") {
+      dispatch(setChatData(getAllMessagesForUser));
+    }
+  }, [dispatch, getAllMessagesForUser, user]);
 
   const [visibility, setVisibility] = useState({});
 
@@ -242,7 +253,7 @@ const ChatBox = ({ openToggle }) => {
   const handleSubmitMessage = async (e) => {
     e.preventDefault();
 
-    if (textValue || selectedImages) {
+    if (textValue || selectedImages.length > 0) {
       const response = async () => {
         const attachments = selectedImages?.map((img) => ({
           name: img.file.name,
@@ -250,20 +261,30 @@ const ChatBox = ({ openToggle }) => {
           url: img.url,
         }));
         const submitForm = {
-          recipientId: conversationUser,
           messageText: textValue,
-          attachment: attachments || null,
+          attachment: attachments || [],
           customOffer: null,
         };
         if (isAdmin) {
-          socket.emit("admin-message", submitForm);
-          const res = await sendAMessage(submitForm).unwrap();
+          socket.emit("admin-message", {
+            userId: conversationUser,
+            ...submitForm,
+          });
+          const res = await sendAMessage({
+            recipientId: conversationUser,
+            ...submitForm,
+          }).unwrap();
           console.log(res);
         } else {
           socket.emit("user-message", {
-            userId: "66f4597cf2259c272ecaf810",
+            userId: user?.id,
             ...submitForm,
           });
+          const res = await sendAMessage({
+            recipientId: "66fba5d5dca406c532a6b338",
+            ...submitForm,
+          }).unwrap();
+          console.log(res);
         }
         return { result: "Success" };
       };

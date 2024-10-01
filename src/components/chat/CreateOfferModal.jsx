@@ -5,9 +5,13 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import thumbnailDemo from "../../assets/images/project-thumbnail.jpg";
 import useOutsideClick from "../../hooks/useOutsideClick";
+import { useSendAMessageMutation } from "../../Redux/api/inboxApiSlice";
 
 const CreateOfferModal = ({ handleClose, onOfferSubmit, values }) => {
+  const { conversationUser } = useSelector((state) => state.chat);
+  const [sendAMessage] = useSendAMessageMutation();
   const { user } = useSelector((state) => state.user);
+  const isAdmin = user?.role === "ADMIN";
   const [collapse, setCollapse] = useState(false);
   const [form, setForm] = useState({
     thumbnail: null,
@@ -48,50 +52,40 @@ const CreateOfferModal = ({ handleClose, onOfferSubmit, values }) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     const { title, thumbnail, price, deliveryCount, desc } = form;
     e.preventDefault();
     if (values && title && thumbnail && price && deliveryCount && desc) {
-      const date = new Date();
-      const msgDate = date.toLocaleDateString([], {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
-      const msgTime = date.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      });
-      const maxId =
-        values?.length > 0
-          ? Math.max(...values?.map((item) => item.messageId)) + 1
-          : 1;
       const formData = {
         ...form,
         requirements,
       };
       const offerMessage = {
-        messageId: maxId,
-        userImage: user?.image,
-        senderName: user?.fullName,
-        msgDate,
-        msgTime,
         messageText: "",
-        attachment: null,
+        attachment: [],
         customOffer: formData,
         contactForm: null,
       };
-      onOfferSubmit.emit("message", offerMessage);
-      // onOfferSubmit((prev) => [...prev, offerMessage]);
-      setForm({
-        thumbnail: null,
-        title: "",
-        deliveryCount: "",
-        deliveryWay: "hours",
-        price: "",
-        desc: "",
-      });
+      if (isAdmin) {
+        onOfferSubmit?.emit("admin-message", {
+          userId: conversationUser,
+          ...offerMessage,
+        });
+        const res = await sendAMessage({
+          recipientId: conversationUser,
+          ...offerMessage,
+        }).unwrap();
+        console.log(res);
+        setForm({
+          thumbnail: null,
+          title: "",
+          deliveryCount: "",
+          deliveryWay: "hours",
+          price: "",
+          desc: "",
+        });
+      }
+
       handleClose(false);
     }
   };
