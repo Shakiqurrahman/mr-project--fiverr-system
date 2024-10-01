@@ -116,12 +116,14 @@ const ChatBox = ({ openToggle }) => {
   useEffect(() => {
     // Inital Scroll to last message
     endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatData]);
 
+  useEffect(() => {
     const checkVisibility = () => {
       const newVisibility = {};
       const currentTime = new Date();
 
-      messages.forEach((message) => {
+      chatData?.forEach((message) => {
         const messageDate = new Date(`${message.msgDate} ${message.msgTime}`);
         const fiveMinutesLater = new Date(
           messageDate.getTime() + 5 * 60 * 1000,
@@ -140,7 +142,7 @@ const ChatBox = ({ openToggle }) => {
 
     // Clean up the interval on component unmount
     return () => clearInterval(intervalId);
-  }, [messages]);
+  }, [chatData]);
 
   // Quick Messages Handlers
   const handleQuickMsgs = (id) => {
