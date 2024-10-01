@@ -5,6 +5,7 @@ import ChatBox from "../components/chat/ChatBox";
 
 const InboxPage = () => {
   const { user } = useSelector((state) => state.user);
+  const { conversationUser } = useSelector((state) => state.chat);
   const isAdmin = user?.role === "ADMIN";
   const sectionRef = useRef(null);
   const [offSetTop, setOffSetTop] = useState(0);
@@ -52,7 +53,16 @@ const InboxPage = () => {
           </div>
         )}
         <div className={`${isAdmin ? "w-full md:w-2/3" : "w-full"}`}>
-          <ChatBox openToggle={setToggleBtn} />
+          {conversationUser ? (
+            <ChatBox openToggle={setToggleBtn} />
+          ) : (
+            <div className="flex h-full items-center justify-center">
+              <div className="text-center space-y-1">
+                <p className="tracking-[10px] uppercase">Welcome To</p>
+                <h1 className="text-3xl font-bold text-primary uppercase">MR Project</h1>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>
