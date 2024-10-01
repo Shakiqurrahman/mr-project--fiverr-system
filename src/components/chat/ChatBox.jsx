@@ -41,7 +41,6 @@ const ChatBox = ({ openToggle }) => {
 
   //Set the conversation user id
   const { conversationUser, chatData } = useSelector((state) => state.chat);
-  console.log("chat data for user", chatData);
   const [expand, setExpand] = useState(false);
   const [expandDot, setExpandDot] = useState(false);
   const endOfMessagesRef = useRef(null);
@@ -57,7 +56,7 @@ const ChatBox = ({ openToggle }) => {
 
   const [onlineUsers, setOnlineUsers] = useState([]);
 
-  console.log(onlineUsers, "checking the online users");
+  // console.log(onlineUsers, "checking the online users");
 
   // all avaiable user's
   useEffect(() => {
@@ -77,8 +76,9 @@ const ChatBox = ({ openToggle }) => {
   const [openOfferModal, setOpenOfferModal] = useState(false);
 
   // messages state
-  // eslint-disable-next-line no-unused-vars
   const [messages, setMessages] = useState([]);
+  // console.log('messages',messages);
+  
 
   useEffect(() => {
     if (user.role === "USER") {
@@ -90,41 +90,46 @@ const ChatBox = ({ openToggle }) => {
       );
     }
   }, [user, triggerGetAllMessages]);
-  console.log("User Data", getAllMessagesForUser);
 
   useEffect(() => {
     if (getAllMessagesForUser && user.role === "USER") {
       dispatch(setChatData(getAllMessagesForUser));
+      setMessages(getAllMessagesForUser);
+    } else if(chatData){
+      setMessages(chatData);
     }
-  }, [dispatch, getAllMessagesForUser, user]);
+  }, [dispatch, getAllMessagesForUser, user, chatData]);
 
   const [visibility, setVisibility] = useState({});
 
   // Socket connection reader
-  useEffect(() => {
-    // Listen for incoming messages
-    socket?.on("message", (msg) => {
-      // setMessages((prevMessages) => [...prevMessages, msg]);
-      console.log(msg, "socket message testing");
-    });
+  // useEffect(() => {
+  //   // Listen for incoming messages
+  //   socket?.on("message", (msg) => {
+  //     if(msg.from === conversationUser){
+  //       setMessages((prevMessages) => [...prevMessages, msg]);
+  //     }
+  //     console.log("socket message testing.....",msg );
+  //   });
 
-    // Cleanup on component unmount
-    return () => {
-      socket?.off("message");
-    };
-  }, [socket]);
+  //   // Cleanup on component unmount
+  //   return () => {
+  //     socket?.off("message");
+  //   };
+  // }, [socket]);
+
 
   useEffect(() => {
     // Inital Scroll to last message
-    endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chatData]);
+    endOfMessagesRef.current?.scrollIntoView();
+  }, [messages]);
 
   useEffect(() => {
     const checkVisibility = () => {
       const newVisibility = {};
       const currentTime = new Date();
 
-      chatData?.forEach((message) => {
+      messages?.forEach((message) => {
         const messageDate = new Date(`${message.msgDate} ${message.msgTime}`);
         const fiveMinutesLater = new Date(
           messageDate.getTime() + 5 * 60 * 1000,
@@ -143,7 +148,7 @@ const ChatBox = ({ openToggle }) => {
 
     // Clean up the interval on component unmount
     return () => clearInterval(intervalId);
-  }, [chatData]);
+  }, [messages]);
 
   // Quick Messages Handlers
   const handleQuickMsgs = (id) => {
@@ -397,7 +402,7 @@ const ChatBox = ({ openToggle }) => {
       >
         {/* All message Container */}
         {/* Each message block */}
-        {chatData?.map((msg, i) => (
+        {messages?.map((msg, i) => (
           <div key={i} className="group mt-3 flex items-start gap-3 px-3">
             <div className="shrink-0">
               <img
@@ -415,7 +420,7 @@ const ChatBox = ({ openToggle }) => {
                       : msg?.senderUserName}
                   </h1>
                   <p className="text-xs text-black/50">
-                    {msg.msgDate}, {msg.msgTime.toUpperCase()}
+                    {msg?.msgDate}, {msg?.msgTime?.toUpperCase()}
                   </p>
                 </div>
                 <div className="flex items-center gap-3 text-black/50 opacity-0 group-hover:opacity-100">
@@ -430,9 +435,9 @@ const ChatBox = ({ openToggle }) => {
                 </div>
               </div>
               {/* Here is the message text to preview */}
-              {msg.messageText && (
+              {msg?.messageText && (
                 <div className="mt-1 w-11/12">
-                  <p>{msg.messageText}</p>
+                  <p>{msg?.messageText}</p>
                 </div>
               )}
               {/* Here is the contact form message to preview */}
