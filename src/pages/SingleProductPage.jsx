@@ -119,6 +119,12 @@ function SingleProductPage() {
     }
   };
 
+  const handleStartProject = (e) => {
+    e.preventDefault();
+    const data = [design];
+    navigate("/project", { state: {items: data} });
+  };
+
   // Determine which tags to show
   const tagsToShow = showAll ? design?.tags : design?.tags?.slice(0, 10);
   return (
@@ -201,7 +207,11 @@ function SingleProductPage() {
                 ADD TO CART
               </button>
             )}
-            <button className="mt-5 w-full rounded-[30px] bg-primary p-2 font-medium text-white sm:p-3">
+            <button
+              type="button"
+              className="mt-5 w-full rounded-[30px] bg-primary p-2 font-medium text-white sm:p-3"
+              onClick={handleStartProject}
+            >
               START PROJECT
             </button>
           </div>
