@@ -217,7 +217,7 @@ const AllConversation = ({ closeToggle }) => {
     dispatch(setConversationUser(id));
     triggerGetAllMessages({
       receiverId: id,
-    });
+    },{ pollingInterval: 1000 } );
     closeToggle(false);
   };
 
