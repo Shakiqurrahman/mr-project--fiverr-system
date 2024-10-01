@@ -40,7 +40,6 @@ const MultiProject = () => {
       );
     }
   }, [data]);
-  console.log({ id, projectTitle, projectImage, requirements });
 
   const handleImageChange = (e) => {
     if (imageRef.current) {
@@ -86,7 +85,6 @@ const MultiProject = () => {
         // Only upload a new image if one is selected
         if (selectImage) {
           const response = await axios.post(uploadUrl, formData);
-          console.log(response);
 
           if (response.data.success) {
             const name =
@@ -120,10 +118,10 @@ const MultiProject = () => {
           data,
         );
         if (res) {
-          setId(res.data.id);
-          setProjectTitle(res.data.projectTitle);
-          setProjectImage(res.data.projectImage);
-          setRequirements(res.data.requirements);
+          setId(res.data.data.id);
+          setProjectTitle(res.data.data.projectTitle);
+          setProjectImage(res.data.data.projectImage);
+          setRequirements(res.data.data.requirements);
         }
         console.log("Project updated", res);
         setSubmitLoading(false);
@@ -193,7 +191,7 @@ const MultiProject = () => {
             <ImPlus onClick={addRequirements} />
           </div>
           <div className="p-3">
-            {requirements.map((requirement, index) => (
+            {requirements?.map((requirement, index) => (
               <div key={index} className="mb-2 flex items-center gap-2">
                 <input
                   type="text"
