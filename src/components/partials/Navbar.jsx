@@ -24,7 +24,7 @@ const Navbar = () => {
               <Link to="/admin-dashboard">Dashboard</Link>
             </li>
             <li className="duration-300 hover:text-gray-300 md:py-4">
-              <Link to="/multi-project">Multi-Project</Link>
+              <Link to="/multi-project">MD-Project</Link>
             </li>
           </>
         )}
