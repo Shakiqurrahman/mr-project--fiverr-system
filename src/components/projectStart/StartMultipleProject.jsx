@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Check from "../../assets/svg/Check";
 import { useFetchMultiProjectQuery } from "../../Redux/api/multiProjectApiSlice";
 import { fetchCategory } from "../../Redux/features/category/categoryApi";
-import { useNavigate } from "react-router-dom";
 
 const StartMultipleProject = ({ items }) => {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ const StartMultipleProject = ({ items }) => {
         size,
         subFolder,
         tags,
-        
+
         ...newItem
       }) => {
         const designImage = images.find((i) => i.thumbnail === true).url;
@@ -41,8 +41,8 @@ const StartMultipleProject = ({ items }) => {
       },
     ),
   );
-  console.log('cho',choosenItems);
-  
+  console.log("cho", choosenItems);
+
   const [selectedItem, setSelectedItem] = useState(choosenItems[0].id);
   const quantities = Array.from({ length: 9 }, (_, i) => i + 1);
 
@@ -75,9 +75,12 @@ const StartMultipleProject = ({ items }) => {
             category: categoryObj || item.category,
             subCategory: subCategoryObj || item.subCategory,
             subTotal: subCategoryObj?.subAmount || item.subTotal,
-            regularDeliveryDays: subCategoryObj?.regularDeliveryDays || item.regularDeliveryDays,
-            fastDeliveryDays: subCategoryObj?.fastDeliveryDays || item.fastDeliveryDays,
-            fastDeliveryPrice: subCategoryObj?.fastDeliveryPrice || item.fastDeliveryPrice,
+            regularDeliveryDays:
+              subCategoryObj?.regularDeliveryDays || item.regularDeliveryDays,
+            fastDeliveryDays:
+              subCategoryObj?.fastDeliveryDays || item.fastDeliveryDays,
+            fastDeliveryPrice:
+              subCategoryObj?.fastDeliveryPrice || item.fastDeliveryPrice,
           };
         }),
       );
@@ -127,7 +130,11 @@ const StartMultipleProject = ({ items }) => {
               parseInt(item.subCategory.fastDeliveryPrice) * quantity,
             fastDeliveryDays:
               parseInt(item.subCategory.fastDeliveryDays) * quantity,
-            subTotal: item?.isFastDelivery ? (parseInt(item.subCategory.subAmount) + parseInt(item.subCategory.fastDeliveryPrice)) * quantity : parseInt(item.subCategory.subAmount) * quantity,
+            subTotal: item?.isFastDelivery
+              ? (parseInt(item.subCategory.subAmount) +
+                  parseInt(item.subCategory.fastDeliveryPrice)) *
+                quantity
+              : parseInt(item.subCategory.subAmount) * quantity,
           };
         } else {
           return item;
@@ -168,7 +175,7 @@ const StartMultipleProject = ({ items }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (allSaved && choosenItems && multiProjectData) {
+    if (allSaved && choosenItems?.length > 1 && multiProjectData) {
       const newItems = choosenItems.map(({ save, id, ...item }) => {
         const {
           bulletPoint,
@@ -185,15 +192,36 @@ const StartMultipleProject = ({ items }) => {
         };
       });
       const data = {
-        title : multiProjectData.projectTitle,
-        image : multiProjectData.projectImage,
-        requirements : multiProjectData.requirements,
+        title: multiProjectData.projectTitle,
+        image: multiProjectData.projectImage,
+        requirements: multiProjectData.requirements,
         duration: totalDays,
         totalAmount,
         designs: newItems,
-        from : "multipleProject"
+        from: "multipleProject",
       };
-      console.log(data);
+      navigate("/payment", { state: data });
+    } else if (choosenItems?.length === 1) {
+      const choosenItem = choosenItems[0];
+      const selectedCategory = choosenItem.category;
+      const data = {
+        ...selectedCategory,
+        subCategory: selectedCategory.subCategory.subTitle,
+        selectedQuantity: choosenItem.quantity,
+        title: choosenItem.category.categoryName,
+        designTitle: choosenItem.title,
+        designId: choosenItem.designId,
+        designImage: choosenItem.designImage,
+        deliveryDuration: choosenItem.isFastDelivery
+          ? choosenItem.fastDeliveryDays
+          : choosenItem.regularDeliveryDays,
+        isFastDelivery: choosenItem.isFastDelivery,
+        fastDeliveryAmount: choosenItem.fastDeliveryPrice,
+        fastDeliveryDuration: choosenItem.fastDeliveryDays,
+        subTotal: choosenItem.subCategory.subAmount,
+        totalAmount: choosenItem.subTitle,
+        designDbId: choosenItem.id,
+      };
       navigate("/payment", { state: data });
     }
   };
@@ -312,21 +340,25 @@ const StartMultipleProject = ({ items }) => {
                   </div>
                 </div>
               </div>
-              <button
-                className="my-5 block w-full bg-revision p-3 text-center text-lg font-semibold text-white disabled:cursor-not-allowed disabled:bg-revision/50 sm:text-2xl"
-                disabled={item?.save}
-                onClick={() => handleSave(item?.id)}
-              >
-                {item?.save ? "Saved" : "Save"}
-              </button>
+              {choosenItems?.length > 1 && (
+                <button
+                  className="my-5 block w-full bg-revision p-3 text-center text-lg font-semibold text-white disabled:cursor-not-allowed disabled:bg-revision/50 sm:text-2xl"
+                  disabled={item?.save}
+                  onClick={() => handleSave(item?.id)}
+                >
+                  {item?.save ? "Saved" : "Save"}
+                </button>
+              )}
             </div>
           ))}
-        <p className="my-5 text-center text-sm sm:text-base">
-          {totalDays} Days Delivery
-        </p>
+        {choosenItems?.length > 1 && (
+          <p className="my-5 text-center text-sm sm:text-base">
+            {totalDays} Days Delivery
+          </p>
+        )}
         <button
           className="my-5 block w-full bg-primary p-3 text-center text-lg font-semibold text-white disabled:cursor-not-allowed disabled:bg-primary/50 sm:text-2xl"
-          disabled={!allSaved}
+          disabled={choosenItems?.length > 1 && !allSaved}
           onClick={handleSubmit}
         >
           Continue (Total - ${totalAmount || 0})

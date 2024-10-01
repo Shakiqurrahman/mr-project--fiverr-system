@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { fetchCategory } from "../../Redux/features/category/categoryApi";
 import Check from "../../assets/svg/Check";
-import { useNavigate } from "react-router-dom";
 
 const StartSingleProject = ({ item }) => {
   const dispatch = useDispatch();
@@ -89,18 +89,17 @@ const StartSingleProject = ({ item }) => {
     const data = {
       ...selectedCategory,
       selectedQuantity,
-      title : selectedCategory.categoryName, 
+      title: selectedCategory.categoryName,
       deliveryDuration: isFastDelivery
         ? extraFastDeliveryDay
         : regularDeliveryDay,
       isFastDelivery,
       fastDeliveryAmount: fastDeliveryPrice,
       fastDeliveryDuration: extraFastDeliveryDay,
-      subTotal : baseAmount,
+      subTotal: baseAmount,
       totalAmount,
     };
-    navigate('/payment', {state : data});
-    // console.log("submittedData", data);
+    navigate("/payment", { state: data });
   };
 
   return (
