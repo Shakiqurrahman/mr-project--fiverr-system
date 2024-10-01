@@ -61,7 +61,7 @@ export const inboxApiSlice = createApi({
 
     // Get All Conversational Messages for admin
     getAllMessages: builder.query({
-      query: ({ senderId, receiverId }) => `message/${senderId}/${receiverId}`,
+      query: ({ receiverId }) => `message/${receiverId}`,
       transformResponse: (response) => response?.data,
     }),
 

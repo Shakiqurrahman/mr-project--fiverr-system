@@ -216,8 +216,7 @@ const AllConversation = ({ closeToggle }) => {
   const handleChatOpen = (id) => {
     dispatch(setConversationUser(id));
     triggerGetAllMessages({
-      senderId: "66f4597cf2259c272ecaf810",
-      receiverId: "66f4597cf2259c272ecaf810",
+      receiverId: id,
     });
     closeToggle(false);
   };

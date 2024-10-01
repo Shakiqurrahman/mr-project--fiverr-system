@@ -30,8 +30,6 @@ import {
 const ChatBox = ({ openToggle }) => {
   //Set the conversation user id
   const { conversationUser, chatData } = useSelector((state) => state.chat);
-  console.log("heydata", chatData);
-
   const [expand, setExpand] = useState(false);
   const [expandDot, setExpandDot] = useState(false);
   const endOfMessagesRef = useRef(null);
@@ -58,7 +56,6 @@ const ChatBox = ({ openToggle }) => {
   }, []);
 
   const userProfilePic = user?.image;
-  console.log(userProfilePic);
 
   const isAdmin = user?.role === "ADMIN";
   const menuRef = useRef(null);
