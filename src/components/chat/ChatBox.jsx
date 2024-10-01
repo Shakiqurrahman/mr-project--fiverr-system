@@ -128,7 +128,7 @@ const ChatBox = ({ openToggle }) => {
         const fiveMinutesLater = new Date(
           messageDate.getTime() + 5 * 60 * 1000,
         );
-        newVisibility[message.messageId] = currentTime < fiveMinutesLater;
+        newVisibility[message?.id] = currentTime < fiveMinutesLater;
       });
 
       setVisibility(newVisibility);
@@ -421,7 +421,7 @@ const ChatBox = ({ openToggle }) => {
                   <button type="button">
                     <BsFillReplyFill className="text-xl" />
                   </button>
-                  {visibility[msg.messageId] && (
+                  {visibility[msg?.id] && (
                     <button type="button">
                       <FaTrashAlt />
                     </button>
