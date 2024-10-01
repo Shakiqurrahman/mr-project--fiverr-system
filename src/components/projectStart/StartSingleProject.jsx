@@ -213,9 +213,9 @@ const StartSingleProject = ({ item }) => {
                   ))}
                 </select>
               </div>
-              <div className="mt-5 border bg-white p-3 text-center text-lg font-medium text-primary sm:text-xl">
-                Total -{" "}
-                <span className="font-bold">
+              <div className="mt-5 border bg-white p-3 text-center text-lg text-primary sm:text-2xl">
+                Subtotal -{" "}
+                <span className="font-semibold">
                   ${totalAmount}
                   USD
                 </span>
@@ -224,10 +224,9 @@ const StartSingleProject = ({ item }) => {
           </div>
           <button
             type="submit"
-            className="my-5 block w-full bg-primary p-3 text-center font-semibold text-white"
+            className="my-5 block w-full bg-primary p-3 text-center text-lg font-semibold text-white disabled:cursor-not-allowed disabled:bg-primary/50 sm:text-2xl"
           >
-            Continue ($
-            {totalAmount})
+            Continue (Total - ${totalAmount || 0})
           </button>
           <p className="my-8 text-center text-sm sm:text-base">
             Go to the payment option by clicking &quot;Continue&quot;
