@@ -25,9 +25,12 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import {
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
+  useSendAMessageMutation,
 } from "../../Redux/api/inboxApiSlice";
 
 const ChatBox = ({ openToggle }) => {
+  const [sendAMessage, { data: upgrade }] = useSendAMessageMutation();
+  console.log("upgrade", upgrade);
   //Set the conversation user id
   const { conversationUser, chatData } = useSelector((state) => state.chat);
   const [expand, setExpand] = useState(false);
@@ -229,52 +232,33 @@ const ChatBox = ({ openToggle }) => {
     // Reset the file input to allow re-uploading the same file
     fileInputRef.current.value = null;
   };
+  console.log(conversationUser);
 
   // click outside the box it will be toggled
   useOutsideClick(menuRef, () => setQucikMsgBtnController(null));
   useOutsideClick(dotMenuRef, () => setExpandDot(false));
 
   // handler for Submitting/Send a Message
-  const handleSubmitMessage = (e) => {
+  const handleSubmitMessage = async (e) => {
     e.preventDefault();
 
     if (textValue || selectedImages) {
-      const response = () => {
-        const date = new Date();
-        const msgDate = date.toLocaleDateString([], {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        });
-        const msgTime = date.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        });
-        const maxId =
-          messages.length > 0
-            ? Math.max(...messages.map((item) => item.messageId)) + 1
-            : 1;
+      const response = async () => {
         const attachments = selectedImages?.map((img) => ({
           name: img.file.name,
           size: img.file.size,
           url: img.url,
         }));
         const submitForm = {
-          messageId: maxId,
-          userImage: userProfilePic,
-          senderUserName: user?.userName,
-          msgDate,
-          msgTime,
+          recipientId: conversationUser,
           messageText: textValue,
           attachment: attachments || null,
           customOffer: null,
         };
         if (isAdmin) {
-          socket.emit("admin-message", {
-            userId: "66f4597cf2259c272ecaf810",
-            ...submitForm,
-          });
+          socket.emit("admin-message", submitForm);
+          const res = await sendAMessage(submitForm).unwrap();
+          console.log(res);
         } else {
           socket.emit("user-message", {
             userId: "66f4597cf2259c272ecaf810",
@@ -283,7 +267,7 @@ const ChatBox = ({ openToggle }) => {
         }
         return { result: "Success" };
       };
-      const result = response();
+      const result = await response();
       if (result.result === "Success") {
         setTextValue("");
         // Clear the state
@@ -401,9 +385,13 @@ const ChatBox = ({ openToggle }) => {
             <div className="grow">
               <div className="mt-1 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <h1 className="font-semibold">{msg?.senderUserName}</h1>
+                  <h1 className="font-semibold">
+                    {user?.userName === msg?.senderUserName
+                      ? "Me"
+                      : msg?.senderUserName}
+                  </h1>
                   <p className="text-xs text-black/50">
-                    {msg.msgDate}, {msg.msgTime}
+                    {msg.msgDate}, {msg.msgTime.toUpperCase()}
                   </p>
                 </div>
                 <div className="flex items-center gap-3 text-black/50 opacity-0 group-hover:opacity-100">

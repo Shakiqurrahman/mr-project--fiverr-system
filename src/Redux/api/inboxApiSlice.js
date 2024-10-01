@@ -68,6 +68,16 @@ export const inboxApiSlice = createApi({
       pollingInterval: 1000,
     }),
 
+    // Get All Conversational Messages for admin
+    sendAMessage: builder.mutation({
+      query: (newMessage) => ({
+        url: "message/send",
+        method: "POST",
+        body: newMessage,
+      }),
+      invalidatesTags: ["getAllMessages"],
+    }),
+
     // Create start contact for Message
     startContactForChat: builder.mutation({
       query: (newMessage) => ({
@@ -88,4 +98,5 @@ export const {
   useGetAvailableChatUsersQuery,
   useLazyGetAllMessagesQuery,
   useStartContactForChatMutation,
+  useSendAMessageMutation,
 } = inboxApiSlice;
