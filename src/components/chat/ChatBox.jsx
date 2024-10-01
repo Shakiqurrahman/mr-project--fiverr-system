@@ -29,6 +29,7 @@ import {
   useSendAMessageMutation,
 } from "../../Redux/api/inboxApiSlice";
 import { setChatData } from "../../Redux/features/chatSlice";
+import { configApi } from "../../libs/configApi";
 
 const ChatBox = ({ openToggle }) => {
   const dispatch = useDispatch();
@@ -50,7 +51,7 @@ const ChatBox = ({ openToggle }) => {
   });
   const { user, token } = useSelector((state) => state.user);
   // const token = Cookies.get("authToken");
-  const socket = connectSocket("http://localhost:3000", token);
+  const socket = connectSocket(`${configApi.socket}`, token);
   const { data: quickMsgs } = useFetchQuickResMsgQuery();
   const [deleteQuickResMsg] = useDeleteQuickResMsgMutation();
 

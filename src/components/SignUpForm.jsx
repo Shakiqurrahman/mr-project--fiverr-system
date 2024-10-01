@@ -84,7 +84,7 @@ function SignUpForm({ handleClick }) {
           country: data.country,
         };
         dispatch(setUser({ user, token }));
-        connectSocket("http://localhost:3000", token);
+        connectSocket(`${configApi.socket}`, token);
         Cookies.set("authToken", JSON.stringify(token), { expires: 10 });
         // toast.success("Signed Up successfully");
         reset();

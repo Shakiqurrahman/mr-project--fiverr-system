@@ -54,7 +54,7 @@ function SignInForm({ handleClick }) {
 
       const userData = response?.data?.data;
       dispatch(setUser({ user: userData.user, token: userData.token }));
-      connectSocket("http://localhost:3000", userData.token);
+      connectSocket(`${configApi.socket}`, userData.token);
       setLoading(false);
       setError("");
       dispatch(clearPasswordVisibility());

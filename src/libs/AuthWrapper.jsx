@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useFetchUserDataQuery } from "../Redux/api/apiSlice";
 import { logout, setUser } from "../Redux/features/userSlice";
 import { connectSocket, disconnectSocket } from "./socketService";
+import { configApi } from "./configApi";
 
 const AuthWrapper = ({ children }) => {
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ const AuthWrapper = ({ children }) => {
       const token = Cookies.get("authToken");
       dispatch(setUser({ user: user.data, token }));
       // Connect to socket when the user is authenticated
-      connectSocket("http://localhost:3000", token);
+      connectSocket(`${configApi.socket}`, token);
       
       // Cleanup function to disconnect socket
       return () => {

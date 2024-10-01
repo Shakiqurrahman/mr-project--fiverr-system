@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
+import { configApi } from '../libs/configApi';
 
 const useSocket = (token) => {
   const socketRef = useRef(null);
@@ -7,7 +8,7 @@ const useSocket = (token) => {
 
   useEffect(() => {
     if (token) {
-      const socketInstance = io('http://localhost:3000', {
+      const socketInstance = io(`${configApi.socket}`, {
         auth: { token },
       });
       
