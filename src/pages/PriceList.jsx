@@ -209,17 +209,21 @@ function PriceList() {
                         {category.categoryName}
                       </h1>
                     </div>
-                    <Link to='/project' state={{item : category}} className="rounded-lg bg-primary px-2 py-1 text-center text-xs font-medium text-white sm:px-3 sm:py-2 sm:text-sm">
+                    <Link
+                      to="/project"
+                      state={{ item: category }}
+                      className="rounded-lg bg-primary px-2 py-1 text-center text-xs font-medium text-white sm:px-3 sm:py-2 sm:text-sm"
+                    >
                       PROJECT START
                     </Link>
                   </div>
                   <div
-                    className={`grid md:grid-cols-${category.subCategory.length} items-center border-y-2 *:border-b-2 *:border-solid *:border-gray-300 md:*:border-b-0 md:*:border-e-2`}
+                    className={`md:*:border-b-1 grid items-center border-t-2 *:border-b-2 *:border-solid *:border-gray-300 md:grid-cols-2 md:*:border-e-2`}
                   >
-                    {category.subCategory.map((sub) => (
+                    {category.subCategory.map((sub, index) => (
                       <div
                         key={Math.random()}
-                        className="p-5 text-center last-of-type:border-0"
+                        className={`p-5 text-center last:border-e-0 even:border-e-0 ${index === category.subCategory.length - 1 && category.subCategory.length % 2 === 1 ? "md:col-span-2" : "md:col-span-1"}`}
                       >
                         <h1 className="text-base font-semibold sm:text-lg">
                           {sub.subTitle}

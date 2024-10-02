@@ -141,16 +141,9 @@ function CreateCategory() {
       toast.error("At Least One SubCategory Needed to Create Category!!!");
       return false;
     }
-    const imageName = form.categoryImage.name;
-    const getExtension = imageName.slice(imageName.lastIndexOf("."));
-    const updatedName = imageName.replace(getExtension, "");
-    const image = {
-      name: updatedName,
-      url: form.categoryImage.url,
-    };
     const data = {
       categoryName: form.categoryName,
-      image,
+      image: form.categoryImage,
       subCategory,
       bulletPoint: bullets,
       requirements: requirements.filter((req) => req.trim() !== ""),
