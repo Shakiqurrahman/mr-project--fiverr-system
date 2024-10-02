@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { IoIosStar } from "react-icons/io";
-import { IoClose, IoSearchOutline } from "react-icons/io5";
+import { IoSearchOutline } from "react-icons/io5";
 import { LuClock3 } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
@@ -261,13 +261,6 @@ const AllConversation = ({ closeToggle }) => {
           <option value="archived">Archived</option>
           <option value="customOffers">Custom Offers</option>
         </select>
-        <button
-          className={`block sm:hidden ${openSearch && "hidden"}`}
-          type="button"
-          onClick={() => closeToggle(false)}
-        >
-          <IoClose className="text-2xl" />
-        </button>
       </div>
 
       <div className="chat-scrollbar flex-1 overflow-y-auto">
