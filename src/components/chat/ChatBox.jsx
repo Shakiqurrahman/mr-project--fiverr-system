@@ -49,23 +49,10 @@ const ChatBox = ({ openToggle }) => {
   const [{ quickResponse }, updateItem] = useLocalStorageObject("utils", {
     quickResponse: false,
   });
-  const { user, token } = useSelector((state) => state.user);
-  // const token = Cookies.get("authToken");
+  const { user, token, onlineUsers } = useSelector((state) => state.user);
   const socket = connectSocket(`${configApi.socket}`, token);
   const { data: quickMsgs } = useFetchQuickResMsgQuery();
   const [deleteQuickResMsg] = useDeleteQuickResMsgMutation();
-
-  const [onlineUsers, setOnlineUsers] = useState([]);
-
-  // console.log(onlineUsers, "checking the online users");
-
-  // all avaiable user's
-  useEffect(() => {
-    socket.emit("view-online-users");
-    socket.on("online-users", (onlineUsers) => {
-      setOnlineUsers(onlineUsers);
-    });
-  }, [socket]);
 
   const isAdmin = user?.role === "ADMIN";
   const menuRef = useRef(null);

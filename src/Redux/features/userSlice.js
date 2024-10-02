@@ -8,6 +8,7 @@ const userSlice = createSlice({
     user: null,
     loading: false,
     token: null,
+    onlineUsers: [],
   },
   reducers: {
     setToken: (state, action) => {
@@ -19,6 +20,9 @@ const userSlice = createSlice({
       state.token = action.payload.token;
       state.loading = false;
     },
+    setOnlineUsers: (state, action) => {
+      state.onlineUsers = action.payload;
+    },
     logout: (state) => {
       state.user = null;
       state.token = null;
@@ -29,5 +33,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUser, logout } = userSlice.actions;
+export const { setUser, setOnlineUsers, logout } = userSlice.actions;
 export default userSlice.reducer;

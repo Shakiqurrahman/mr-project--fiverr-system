@@ -1,13 +1,18 @@
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import loading from "../assets/svg/loading.gif";
 import AllConversation from "../components/chat/AllConversation";
 import ChatBox from "../components/chat/ChatBox";
+import { configApi } from "../libs/configApi";
+import { connectSocket } from "../libs/socketService";
 import { useGetAvailableChatUsersQuery } from "../Redux/api/inboxApiSlice";
-import loading from '../assets/svg/loading.gif'
+import { setOnlineUsers } from "../Redux/features/userSlice";
 
 const InboxPage = () => {
-  const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  const { user, token } = useSelector((state) => state.user);
   const { conversationUser } = useSelector((state) => state.chat);
   const { data: availableUsers, isLoading } = useGetAvailableChatUsersQuery();
 
@@ -46,6 +51,15 @@ const InboxPage = () => {
     };
   }, []);
 
+  const socket = connectSocket(`${configApi.socket}`, token);
+  // all avaliable users
+  useEffect(() => {
+    socket.emit("view-online-users");
+    socket.on("online-users", (onlineUsers) => {
+      dispatch(setOnlineUsers(onlineUsers));
+    });
+  }, [socket, dispatch]);
+
   return (
     <section
       ref={sectionRef}
@@ -53,8 +67,8 @@ const InboxPage = () => {
       style={{ height: `calc(100vh - ${offSetTop}px)` }}
     >
       {isLoading ? (
-        <div className="flex justify-center items-center h-full">
-        <img src={loading} alt="" />
+        <div className="flex h-full items-center justify-center">
+          <img src={loading} alt="" />
         </div>
       ) : !isLoading && (isAdmin || isAvailableForChat) ? (
         <div
