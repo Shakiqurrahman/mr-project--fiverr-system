@@ -41,7 +41,7 @@ function Contact() {
       });
       // }
       if (images.length === files.length) {
-        setMatchingImages(images);
+        setMatchingImages((prev) => [...prev, ...images]);
         // setErrorImg(null);
       }
       // else {
