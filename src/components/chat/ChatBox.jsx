@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 import logo from "../../assets/images/default_user.png";
 import DownArrow from "../../assets/images/icons/Down Arrow.svg";
 import UpArrow from "../../assets/images/icons/Upper Arrow.svg";
-import thumbnailDemo from "../../assets/images/project-thumbnail.jpg";
 import { useLocalStorageObject } from "../../hooks/useLocalStorageObject";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import formatFileSize from "../../libs/formatFileSize";
@@ -331,6 +330,9 @@ const ChatBox = ({ openToggle }) => {
     });
   };
 
+  console.log("messages", messages);
+  console.log("sender id", conversationUser);
+
   return (
     <div className="h-full">
       {/* Header Part */}
@@ -456,32 +458,32 @@ const ChatBox = ({ openToggle }) => {
                 <div className="mt-1">
                   <h1 className="font-semibold">Contact Form</h1>
                   <p className="my-1">
-                    <span className="font-semibold">Name: </span> Client Name
+                    <span className="font-semibold">Name: </span>{" "}
+                    {msg.contactForm.name}
                   </p>
                   <p className="my-1">
                     <span className="font-semibold">Email: </span>{" "}
-                    info@industryname.com
+                    {msg.contactForm.email}
                   </p>
                   <p className="my-1">
                     <span className="font-semibold">Website/Facebook: </span>{" "}
-                    www.website.com
+                    {msg.contactForm.website}
                   </p>
                   <p className="my-1">
                     <span className="font-semibold">Example design:</span>
                   </p>
                   {/* {msg.attachment && msg.attachment.length > 0 && ( */}
                   <div className="relative mt-2">
-                    {/* {msg.attachment.length > 3 && ( */}
-                    <Link className="mb-2 inline-block text-sm font-medium text-primary">
-                      Download All
-                    </Link>
-                    {/* )} */}
+                    {msg?.contactForm?.exampleDesign?.length > 3 && (
+                      <Link className="mb-2 inline-block text-sm font-medium text-primary">
+                        Download All
+                      </Link>
+                    )}
                     <div className="grid grid-cols-3 gap-3">
-                      {/* {msg.attachment.map((att, i) => ( */}
-                      {[1, 2, 3].map((i) => (
+                      {msg?.contactForm?.exampleDesign?.map((att, i) => (
                         <div key={i}>
                           <img
-                            src={thumbnailDemo}
+                            src={att?.url}
                             alt=""
                             className="h-[180px] w-full object-cover"
                           />
@@ -489,52 +491,49 @@ const ChatBox = ({ openToggle }) => {
                             <BiDownload className="shrink-0 text-lg text-primary" />
                             <p
                               className="mx-2 line-clamp-1 font-medium"
-                              // title={att.name}
+                              title={att?.name}
                             >
-                              Image name 00089.JPG
+                              {att?.name}
                             </p>
                             <span className="shrink-0 text-black/50">
-                              (598.75 kb)
+                              ({formatFileSize(att?.size)})
                             </span>
                           </Link>
                         </div>
                       ))}
-                      {/* ))} */}
                     </div>
-                    {/* {msg.attachment?.length >= 6 &&
-                        (!expand ? (
-                          <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
-                            <button
-                              className="rounded-full border bg-white"
-                              onClick={() => setExpand(!expand)}
-                            >
-                              <img
-                                src={DownArrow}
-                                alt=""
-                                className="h-[50px] w-[50px]"
-                              />
-                            </button>
-                          </div>
-                        ) : (
-                          <div className="relative z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-5">
-                            <button
-                              className="rounded-full border bg-white"
-                              onClick={() => setExpand(!expand)}
-                            >
-                              <img
-                                src={UpArrow}
-                                alt=""
-                                className="h-[50px] w-[50px]"
-                              />
-                            </button>
-                          </div>
-                        ))} */}
+                    {msg?.contactForm?.exampleDesign?.length >= 6 &&
+                      (!expand ? (
+                        <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
+                          <button
+                            className="rounded-full border bg-white"
+                            onClick={() => setExpand(!expand)}
+                          >
+                            <img
+                              src={DownArrow}
+                              alt=""
+                              className="h-[50px] w-[50px]"
+                            />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="relative z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-5">
+                          <button
+                            className="rounded-full border bg-white"
+                            onClick={() => setExpand(!expand)}
+                          >
+                            <img
+                              src={UpArrow}
+                              alt=""
+                              className="h-[50px] w-[50px]"
+                            />
+                          </button>
+                        </div>
+                      ))}
                   </div>
                   <p className="mt-5">
-                    <span className="font-semibold">Message: </span> Lorem ipsum
-                    dolor sit amet consectetur adipisicing elit. Necessitatibus
-                    eveniet dolor provident consectetur iure ipsum officia qui
-                    eligendi suscipit! Deserunt quas sed inventore eaque omnis.
+                    <span className="font-semibold">Message: </span>{" "}
+                    {msg.contactForm.messageText}
                   </p>
                 </div>
               )}
