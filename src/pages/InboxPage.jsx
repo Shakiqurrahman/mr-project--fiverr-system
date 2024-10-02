@@ -8,7 +8,7 @@ import { useGetAvailableChatUsersQuery } from "../Redux/api/inboxApiSlice";
 const InboxPage = () => {
   const { user } = useSelector((state) => state.user);
   const { conversationUser } = useSelector((state) => state.chat);
-  const { data: availableUsers } = useGetAvailableChatUsersQuery();
+  const { data: availableUsers, isLoading } = useGetAvailableChatUsersQuery();
 
   const isAdmin = user?.role === "ADMIN";
   const sectionRef = useRef(null);
@@ -51,7 +51,7 @@ const InboxPage = () => {
       className="max-width py-10"
       style={{ height: `calc(100vh - ${offSetTop}px)` }}
     >
-      {isAdmin || isAvailableForChat ? (
+      {!isLoading && (isAdmin || isAvailableForChat) ? (
         <div
           className={`${isAdmin ? "" : "mx-auto max-w-[800px]"} relative flex h-full justify-center rounded-lg border shadow-md`}
         >
@@ -79,19 +79,26 @@ const InboxPage = () => {
         </div>
       ) : (
         <div className="rounded-lg bg-orange-600/5 p-4 sm:p-10 sm:py-14">
-          <div className="max-w-[800px] mx-auto">
-          <p className="text-center sm:text-lg font-medium">
-            &quot; Before you send your message, please take a moment to{" "}
-            <span className="rounded-lg bg-orange-600/15 px-2 py-1 leading-loose font-semibold text-nowrap">
-              submit the contact form.
-            </span>{" "}
-            This ensures we have the details we need to get back to you. &quot;
-          </p>
-          <p className="group text-center mt-8 sm:text-lg">
-            Ready to connect with us?
-            <Link to='/contact' className="group-hover:underline text-primary"> Click here </Link>
-            to visit our contact page!
-          </p>
+          <div className="mx-auto max-w-[800px]">
+            <p className="text-center font-medium sm:text-lg">
+              &quot; Before you send your message, please take a moment to{" "}
+              <span className="text-nowrap rounded-lg bg-orange-600/15 px-2 py-1 font-semibold leading-loose">
+                submit the contact form.
+              </span>{" "}
+              This ensures we have the details we need to get back to you.
+              &quot;
+            </p>
+            <p className="group mt-8 text-center sm:text-lg">
+              Ready to connect with us?
+              <Link
+                to="/contact"
+                className="text-primary group-hover:underline"
+              >
+                {" "}
+                Click here{" "}
+              </Link>
+              to visit our contact page!
+            </p>
           </div>
         </div>
       )}
