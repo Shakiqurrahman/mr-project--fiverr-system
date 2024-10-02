@@ -2,11 +2,13 @@ import { Backdrop, CircularProgress } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import { FaEye } from "react-icons/fa";
 import { ImPlus } from "react-icons/im";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import PreviewImage from "../components/PreviewImage";
 import { useUpdateOfferProjectMutation } from "../Redux/api/offerProjectApiSlice";
 
 function CreateOfferProject() {
@@ -20,6 +22,7 @@ function CreateOfferProject() {
   console.log(projectImage);
 
   // Form state
+  const [preview, setPreview] = useState(false);
   const [form, setForm] = useState({
     freeBannerName: offerProjects?.freeDesignName || "",
     offerAmount: offerProjects?.offerAmount || "",
@@ -36,7 +39,8 @@ function CreateOfferProject() {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setProjectImage({ file: file, name: file.name });
+    const url = URL.createObjectURL(file);
+    setProjectImage({ file: file, name: file.name, url });
   };
 
   // Design sections state
@@ -209,7 +213,8 @@ function CreateOfferProject() {
         const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
         try {
           const response = await axios.post(uploadUrl, formData);
-          const name = response.data.data.title;
+          console.log(response);
+          const name = response.data.data.thumb.filename;
           const imageUrl = response.data.data.url;
           setProjectImage({ name, url: imageUrl });
           return {
@@ -270,7 +275,12 @@ function CreateOfferProject() {
       <form className="mx-auto w-full max-w-[800px]" onSubmit={handleSubmit}>
         {/* Image */}
         <div className="mt-10 bg-lightskyblue">
-          <h1 className="bg-primary p-3 text-white">Image</h1>
+          <h1 className="flex items-center justify-between bg-primary p-3 text-white">
+            Image{" "}
+            <button type="button" onClick={() => setPreview(true)}>
+              <FaEye className="text-2xl" />
+            </button>
+          </h1>
           <input
             type="file"
             name="image"
@@ -519,6 +529,12 @@ function CreateOfferProject() {
           </button>
         </div>
       </form>
+      {preview && (
+        <PreviewImage
+          url={projectImage.url}
+          closePreview={() => setPreview(false)}
+        />
+      )}
       {isLoading && (
         <Backdrop
           sx={{
