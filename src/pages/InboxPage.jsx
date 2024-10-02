@@ -51,7 +51,9 @@ const InboxPage = () => {
       className="max-width py-10"
       style={{ height: `calc(100vh - ${offSetTop}px)` }}
     >
-      {!isLoading && (isAdmin || isAvailableForChat) ? (
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : !isLoading && (isAdmin || isAvailableForChat) ? (
         <div
           className={`${isAdmin ? "" : "mx-auto max-w-[800px]"} relative flex h-full justify-center rounded-lg border shadow-md`}
         >
