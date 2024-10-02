@@ -61,6 +61,7 @@ function CategoryCards({ title, path, subCategory = [], titleSlug }) {
                   thumbnail={thumbnail?.url}
                   thumbnailName={thumbnail?.name}
                   title={design?.title}
+                  folder={true}
                   slug={`/designs/${titleSlug}/${category?.slug}`}
                 />
               );

@@ -1,3 +1,4 @@
+import { FaFolderOpen } from "react-icons/fa6";
 import { GiShoppingCart } from "react-icons/gi";
 import { MdClose } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +14,7 @@ function ProjectCard({
   clientName,
   timeStamp,
   cart,
+  folder,
   slug,
 }) {
   const dispatch = useDispatch();
@@ -37,6 +39,14 @@ function ProjectCard({
             <GiShoppingCart />
           </button>
         ))}
+      {folder && (
+        <Link
+          to={slug}
+          className="absolute right-4 top-2.5 z-10 flex h-8 w-8 items-center justify-center rounded-md border border-primary bg-white text-xl"
+        >
+          <FaFolderOpen className="text-primary" />
+        </Link>
+      )}
       <Link to={slug} className="block cursor-pointer border bg-white">
         <div className="relative">
           <img src={thumbnail} alt="" className="block w-full object-cover" />
