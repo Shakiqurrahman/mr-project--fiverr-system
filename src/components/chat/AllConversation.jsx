@@ -28,8 +28,6 @@ const AllConversation = ({ closeToggle }) => {
   const [triggerGetAllMessages, { data: getAllMessages }] =
     useLazyGetAllMessagesQuery();
 
-  console.log("all messagesData", getAllMessages);
-
   const handleSelectChange = (e) => {
     setSelectedOption(e.target.value);
   };

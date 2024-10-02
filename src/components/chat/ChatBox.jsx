@@ -103,22 +103,25 @@ const ChatBox = ({ openToggle }) => {
   const [visibility, setVisibility] = useState({});
 
   // Socket connection reader
-  // useEffect(() => {
-  //   // Listen for incoming messages
-  //   socket?.on("message", (msg) => {
-  //     if(msg.from === conversationUser){
-  //       setMessages((prevMessages) => [...prevMessages, msg]);
-  //     }
-  //     console.log("socket message testing.....",msg );
-  //   });
+  useEffect(() => {
+    // Listen for incoming messages
+    socket?.on("message", (msg) => {
+      // if(msg.from === conversationUser){
+        setMessages((prevMessages) => [...prevMessages, msg]);
+      // }
+      // console.log("socket message testing.....",msg );
+    });
 
-  //   // Cleanup on component unmount
-  //   return () => {
-  //     socket?.off("message");
-  //   };
-  // }, [socket]);
+    // Cleanup on component unmount
+    return () => {
+      socket?.off("message");
+    };
+  }, [socket]);
 
+const filterData = messages.filter(message => message.userId === conversationUser);
+console.log('mapped data',messages.map(message => message.userId));
 
+console.log("filtyring data.....",filterData );
   useEffect(() => {
     // Inital Scroll to last message
     endOfMessagesRef.current?.scrollIntoView();
@@ -251,7 +254,7 @@ const ChatBox = ({ openToggle }) => {
     // Reset the file input to allow re-uploading the same file
     fileInputRef.current.value = null;
   };
-  console.log(conversationUser);
+  // console.log(conversationUser);
 
   // click outside the box it will be toggled
   useOutsideClick(menuRef, () => setQucikMsgBtnController(null));
