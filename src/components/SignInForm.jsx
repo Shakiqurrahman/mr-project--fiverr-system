@@ -83,7 +83,6 @@ function SignInForm({ handleClick }) {
       reset();
       navigate(from, { replace: true });
     } catch (error) {
-      console.error("Error:", error.response?.data?.message || error.message);
       setLoading(false);
       setError("Sign in failed. Please check your credentials.");
       reset();

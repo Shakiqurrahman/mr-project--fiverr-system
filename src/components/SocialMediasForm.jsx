@@ -79,7 +79,6 @@ const SocialMediasForm = () => {
     }
     try {
       const result = await updateSocialMedias(socialLinks).unwrap();
-      console.log(result);
 
       if (state === "newUser") {
         Swal.fire({
@@ -99,7 +98,6 @@ const SocialMediasForm = () => {
         navigate(-1);
       }
     } catch (error) {
-      console.error("Error saving social media links:", error);
       toast.error("Unable to save!");
     }
   };

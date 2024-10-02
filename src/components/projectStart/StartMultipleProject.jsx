@@ -13,7 +13,6 @@ const StartMultipleProject = ({ items }) => {
   const { category: categories } = useSelector((state) => state.category);
   const [multiProjectData, setMultiProjectData] = useState(null);
   const [choosenItems, setChoosenItems] = useState([]);
-  console.log("cho", choosenItems);
 
   const [selectedItem, setSelectedItem] = useState("");
   const quantities = Array.from({ length: 9 }, (_, i) => i + 1);
@@ -99,7 +98,6 @@ const StartMultipleProject = ({ items }) => {
 
   const handleFastDeliveryToggle = (e, id) => {
     const isChecked = e.target.checked;
-    console.log(e.target.checked, id);
     setChoosenItems((prev) =>
       prev.map((item) => {
         if (item.id === id) {
