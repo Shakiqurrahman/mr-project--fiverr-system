@@ -37,11 +37,15 @@ const ProjectDetailsData = () => {
     completed: 2100,
     cancelled: 250,
   };
-  const newProjectData = {
+  const ProjectOptionsData = {
     custom: 250,
     direct: 100,
     offer: 100,
     "M-D Project": 80,
+  };
+  const ProjectBuyersData = {
+    "New Buyers": 39,
+    "Repeat Buyers": 34,
   };
   const avgSellingData = {
     custom: 250,
@@ -114,12 +118,23 @@ const ProjectDetailsData = () => {
         <HorizontalBarChart
           data={finishedProjectData}
           title={"Finished Projects"}
+          filter={true}
         />
-        <HorizontalBarChart data={newProjectData} title={"New Projects"} />
+        <HorizontalBarChart
+          data={ProjectOptionsData}
+          title={"Project Options"}
+          filter={true}
+        />
+        <HorizontalBarChart
+          data={ProjectBuyersData}
+          title={"Project Buyers"}
+          filter={true}
+        />
         <HorizontalBarChart
           data={avgSellingData}
           title={"Avg Selling Price"}
           color={{ custom: "#7ba7c2", direct: "#9258c8" }}
+          filter={true}
         />
       </div>
     </>

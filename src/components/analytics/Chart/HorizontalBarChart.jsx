@@ -1,6 +1,25 @@
 import React, { useState } from "react";
 
-const HorizontalBarChart = ({ data, title, color }) => {
+const getFilterTimes = () => {
+  const currentYear = new Date().getFullYear();
+  return [
+    "Last 7 Days",
+    "Last 30 Days",
+    "Last Month",
+    "Last 3 Months",
+    "Last 6 Months",
+    "This Year",
+    `${currentYear - 1}`, // Last Year
+    `${currentYear - 2}`, // 2 Years Ago
+    "All Times",
+  ];
+};
+
+const HorizontalBarChart = ({ data, title, color, filter }) => {
+  const [filterTimes, setFilterTimes] = useState(getFilterTimes());
+  const [selectedTimeOption, setSelectedTimeOption] = useState(
+    getFilterTimes()[1],
+  );
   // Extract category names and values
   const categories = Object.keys(data);
   const values = Object.values(data);
@@ -17,6 +36,8 @@ const HorizontalBarChart = ({ data, title, color }) => {
     custom: "#c0ad83",
     direct: "#f56f6c",
     "M-D Project": "#b26f70",
+    "New Buyers": "#d97edb",
+    "Repeat Buyers": "#49cdcb",
   };
 
   // Merge the provided color prop with defaultColorMapping (priority to color prop)
@@ -38,8 +59,10 @@ const HorizontalBarChart = ({ data, title, color }) => {
       <div className="w-full">
         {/* Custom Legend */}
         <div className="relative mb-6 flex flex-col items-center gap-4 md:flex-row">
-          <h2 className="text-xl font-semibold text-primary">{title}</h2>
-          <div className="absolute left-1/2 top-1/2 flex flex-1 -translate-x-1/2 -translate-y-1/2 flex-wrap items-center justify-center">
+          <h2 className="shrink-0 text-xl font-semibold text-primary">
+            {title}
+          </h2>
+          <div className="flex flex-1 grow flex-wrap items-center justify-center">
             {categories.map((label, index) => (
               <div className="mx-2 flex items-center" key={index}>
                 <div
@@ -52,6 +75,21 @@ const HorizontalBarChart = ({ data, title, color }) => {
                 </span>
               </div>
             ))}
+          </div>
+          <div className="w-auto shrink-0 text-end lg:w-[170px]">
+            {filter && (
+              <select
+                value={selectedTimeOption}
+                onChange={(e) => setSelectedTimeOption(e.target.value)}
+                className="shrink-0 border px-2 py-1 text-sm outline-none sm:text-base"
+              >
+                {filterTimes.map((key, i) => (
+                  <option value={key} key={i}>
+                    {key}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
         </div>
 

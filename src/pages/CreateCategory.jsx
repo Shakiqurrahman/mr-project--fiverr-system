@@ -1,16 +1,19 @@
 import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import { FaEye } from "react-icons/fa";
 import { ImPlus } from "react-icons/im";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
+import PreviewImage from "../components/PreviewImage";
 import { configApi } from "../libs/configApi";
 
 // CreateCategory Component
 function CreateCategory() {
   const navigate = useNavigate();
   // Form State
+  const [preview, setPreview] = useState(false);
   const [form, setForm] = useState({
     categoryName: "",
     categoryImage: {
@@ -182,7 +185,12 @@ function CreateCategory() {
 
         {/* Image */}
         <div className="mt-10 bg-lightskyblue">
-          <h1 className="bg-primary p-3 text-white">Image</h1>
+          <h1 className="flex items-center justify-between bg-primary p-3 text-white">
+            Image{" "}
+            <button type="button" onClick={() => setPreview(true)}>
+              <FaEye className="text-2xl" />
+            </button>
+          </h1>
           <input
             type="file"
             name="image"
@@ -292,6 +300,12 @@ function CreateCategory() {
           </button>
         </div>
       </form>
+      {preview && (
+        <PreviewImage
+          url={form.categoryImage.url}
+          closePreview={() => setPreview(false)}
+        />
+      )}
     </div>
   );
 }
