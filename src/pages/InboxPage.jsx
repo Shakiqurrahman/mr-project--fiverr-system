@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import AllConversation from "../components/chat/AllConversation";
 import ChatBox from "../components/chat/ChatBox";
 import { useGetAvailableChatUsersQuery } from "../Redux/api/inboxApiSlice";
+import loading from '../assets/svg/loading.gif'
 
 const InboxPage = () => {
   const { user } = useSelector((state) => state.user);
@@ -52,7 +53,9 @@ const InboxPage = () => {
       style={{ height: `calc(100vh - ${offSetTop}px)` }}
     >
       {isLoading ? (
-        <p>Loading...</p>
+        <div className="flex justify-center items-center h-full">
+        <img src={loading} alt="" />
+        </div>
       ) : !isLoading && (isAdmin || isAvailableForChat) ? (
         <div
           className={`${isAdmin ? "" : "mx-auto max-w-[800px]"} relative flex h-full justify-center rounded-lg border shadow-md`}
