@@ -94,12 +94,15 @@ function Contact() {
         try {
           // setUploading(true);
           const response = await axios.post(uploadUrl, formData);
+          console.log(response);
           const name = file.file.name;
           const imageUrl = response.data.data.url;
+          const size = response.data.data.size;
 
           return {
             url: imageUrl,
             name,
+            size,
           };
         } catch (error) {
           console.error("Error uploading image:", error);
