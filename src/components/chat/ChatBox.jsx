@@ -106,25 +106,35 @@ const ChatBox = ({ openToggle }) => {
 
   const [visibility, setVisibility] = useState({});
 
+
+  socket?.on("message", (msg) => {
+    console.log("socket message testing.....", msg);
+    if (isAdmin) {
+      if (conversationUser === msg.userId) {
+        console.log(msg, "getting converstion user id and messages");
+        return setMessages((prevMessages) => [...prevMessages, msg]);
+      }
+    }
+    if (!isAdmin) {
+      return setMessages((prevMessages) => [...prevMessages, msg]);
+    }
+  });
+
   // Socket connection reader
-  useEffect(() => {
-    // Listen for incoming messages
-    socket?.on("message", (msg) => {
-      // if(msg.from === conversationUser){
-      setMessages((prevMessages) => [...prevMessages, msg]);
-      // }
-      // console.log("socket message testing.....",msg );
-    });
+  // useEffect(() => {
 
-    // Cleanup on component unmount
-    return () => {
-      socket?.off("message");
-    };
-  }, [socket]);
+  //   // Listen for incoming messages
 
-  const filterData = messages.filter(
-    (message) => message.userId === conversationUser,
-  );
+
+  //   // Cleanup on component unmount
+  //   return () => {
+  //     socket?.off("message");
+  //   };
+  // }, [socket]);
+
+  // const filterData = messages.filter(
+  //   (message) => message.userId === conversationUser,
+  // );
   // console.log("filtering data.....",filterData );
 
   useEffect(() => {
@@ -290,7 +300,7 @@ const ChatBox = ({ openToggle }) => {
             recipientId: conversationUser,
             ...submitForm,
           }).unwrap();
-          console.log(res);
+          // console.log(res);
         } else {
           socket.emit("user-message", {
             userId: user?.id,
@@ -300,7 +310,7 @@ const ChatBox = ({ openToggle }) => {
             recipientId: "66fba5d5dca406c532a6b338",
             ...submitForm,
           }).unwrap();
-          console.log(res);
+          // console.log(res);
         }
         return { result: "Success" };
       };
@@ -330,8 +340,6 @@ const ChatBox = ({ openToggle }) => {
     });
   };
 
-  console.log("messages", messages);
-  console.log("sender id", conversationUser);
 
   return (
     <div className="h-full">
@@ -364,7 +372,7 @@ const ChatBox = ({ openToggle }) => {
                   <button
                     type="button"
                     className="w-full text-xs hover:bg-gray-200"
-                    // onClick={() => setOpenEditMsgModal(msg)}
+                  // onClick={() => setOpenEditMsgModal(msg)}
                   >
                     Read/Unread
                   </button>
@@ -378,7 +386,7 @@ const ChatBox = ({ openToggle }) => {
                   <button
                     type="button"
                     className="w-full text-xs hover:bg-gray-200"
-                    // onClick={() => setOpenEditMsgModal(msg)}
+                  // onClick={() => setOpenEditMsgModal(msg)}
                   >
                     Block/Unblock
                   </button>
