@@ -22,6 +22,8 @@ import EmojiPicker from "./EmojiPicker";
 
 import toast from "react-hot-toast";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { configApi } from "../../libs/configApi";
+import { useFetchAllUsersQuery } from "../../Redux/api/allUserApiSlice";
 import {
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
@@ -29,7 +31,6 @@ import {
   useSendAMessageMutation,
 } from "../../Redux/api/inboxApiSlice";
 import { setChatData } from "../../Redux/features/chatSlice";
-import { configApi } from "../../libs/configApi";
 
 const ChatBox = ({ openToggle }) => {
   const dispatch = useDispatch();
@@ -78,7 +79,11 @@ const ChatBox = ({ openToggle }) => {
   // messages state
   const [messages, setMessages] = useState([]);
   // console.log('messages',messages);
-  
+
+  // recipient User
+  const { data: usersData } = useFetchAllUsersQuery();
+  const { userName: recipientUserName } =
+    usersData?.find((user) => user?.id === conversationUser) || "";
 
   useEffect(() => {
     if (user.role === "USER") {
@@ -95,7 +100,7 @@ const ChatBox = ({ openToggle }) => {
     if (getAllMessagesForUser && user.role === "USER") {
       dispatch(setChatData(getAllMessagesForUser));
       setMessages(getAllMessagesForUser);
-    } else if(chatData){
+    } else if (chatData) {
       setMessages(chatData);
     }
   }, [dispatch, getAllMessagesForUser, user, chatData]);
@@ -107,7 +112,7 @@ const ChatBox = ({ openToggle }) => {
     // Listen for incoming messages
     socket?.on("message", (msg) => {
       // if(msg.from === conversationUser){
-        setMessages((prevMessages) => [...prevMessages, msg]);
+      setMessages((prevMessages) => [...prevMessages, msg]);
       // }
       // console.log("socket message testing.....",msg );
     });
@@ -118,10 +123,11 @@ const ChatBox = ({ openToggle }) => {
     };
   }, [socket]);
 
-const filterData = messages.filter(message => message.userId === conversationUser);
-console.log('mapped data',messages.map(message => message.userId));
+  const filterData = messages.filter(
+    (message) => message.userId === conversationUser,
+  );
+  // console.log("filtering data.....",filterData );
 
-console.log("filtyring data.....",filterData );
   useEffect(() => {
     // Inital Scroll to last message
     endOfMessagesRef.current?.scrollIntoView();
@@ -330,7 +336,9 @@ console.log("filtyring data.....",filterData );
       {/* Header Part */}
       <div className="flex h-[70px] items-center justify-between rounded-tl-lg rounded-tr-lg bg-[#efefef] p-4 md:rounded-tl-none">
         <div className="">
-          <h1 className="text-base font-semibold sm:text-lg">clientusername</h1>
+          <h1 className="text-base font-semibold sm:text-lg">
+            {isAdmin ? recipientUserName : "Mahfujurrahm535"}
+          </h1>
           <div className="flex flex-col items-start text-xs sm:flex-row sm:items-center sm:gap-3 lg:text-sm">
             <p>Last seen: 18 hours ago</p>
             <Divider

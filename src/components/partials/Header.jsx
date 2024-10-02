@@ -20,7 +20,7 @@ import useSyncCart from "../../hooks/useSyncCart";
 import NotificationModal from "../Notifications/NotificationModal";
 
 function Header() {
-  const { user, loading } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const { items: cartItems } = useSelector((state) => state.cart);
   const [activeMenu, setActiveMenu] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -81,22 +81,24 @@ function Header() {
                 >
                   <NavLink to="/">Home</NavLink>
                 </li>
-                <li
-                  className="text-white hover:text-gray-300"
-                  onClick={handleClose}
-                >
-                  <Badge
-                    badgeContent={0}
-                    sx={{
-                      "& .MuiBadge-badge": {
-                        backgroundColor: "#1b8cdc",
-                        color: "white",
-                      },
-                    }}
+                {user && (
+                  <li
+                    className="text-white hover:text-gray-300"
+                    onClick={handleClose}
                   >
-                    <NavLink to="/inbox">Inbox</NavLink>
-                  </Badge>
-                </li>
+                    <Badge
+                      badgeContent={0}
+                      sx={{
+                        "& .MuiBadge-badge": {
+                          backgroundColor: "#1b8cdc",
+                          color: "white",
+                        },
+                      }}
+                    >
+                      <NavLink to="/inbox">Inbox</NavLink>
+                    </Badge>
+                  </li>
+                )}
                 <li className="hidden md:block">
                   <Badge
                     badgeContent={0}

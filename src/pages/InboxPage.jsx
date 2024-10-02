@@ -1,15 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import AllConversation from "../components/chat/AllConversation";
 import ChatBox from "../components/chat/ChatBox";
+import { useGetAvailableChatUsersQuery } from "../Redux/api/inboxApiSlice";
 
 const InboxPage = () => {
   const { user } = useSelector((state) => state.user);
   const { conversationUser } = useSelector((state) => state.chat);
+  const { data: availableUsers } = useGetAvailableChatUsersQuery();
+
   const isAdmin = user?.role === "ADMIN";
   const sectionRef = useRef(null);
   const [offSetTop, setOffSetTop] = useState(0);
   const [toggleBtn, setToggleBtn] = useState(true);
+
+  const isAvailableForChat = availableUsers?.some(
+    (availableUser) => availableUser?.id === user?.id,
+  );
+
   useEffect(() => {
     // Function to update offsetTop
     const updateOffsetTop = () => {
@@ -42,31 +51,50 @@ const InboxPage = () => {
       className="max-width py-10"
       style={{ height: `calc(100vh - ${offSetTop}px)` }}
     >
-      <div
-        className={`${isAdmin ? "" : "mx-auto max-w-[800px]"} relative flex h-full justify-center rounded-lg border shadow-md`}
-      >
-        {isAdmin && (
-          <div
-            className={`${toggleBtn ? "block bg-white" : "hidden"} absolute left-0 top-0 z-[10] h-[calc(100%_+_2px)] w-full overflow-hidden rounded-lg md:static md:block md:h-full md:w-1/3 md:rounded-bl-none md:rounded-br-none md:rounded-tr-none md:border-r`}
-          >
-            <AllConversation closeToggle={setToggleBtn} />
-          </div>
-        )}
-        <div className={`${isAdmin ? "w-full md:w-2/3" : "w-full"}`}>
-          {!conversationUser && isAdmin ? (
-            <div className="flex h-full items-center justify-center">
-              <div className="space-y-1 text-center">
-                <p className="uppercase tracking-[10px]">Welcome To</p>
-                <h1 className="text-3xl font-bold uppercase text-primary">
-                  MR Project
-                </h1>
-              </div>
+      {isAdmin || isAvailableForChat ? (
+        <div
+          className={`${isAdmin ? "" : "mx-auto max-w-[800px]"} relative flex h-full justify-center rounded-lg border shadow-md`}
+        >
+          {isAdmin && (
+            <div
+              className={`${toggleBtn ? "block bg-white" : "hidden"} absolute left-0 top-0 z-[10] h-[calc(100%_+_2px)] w-full overflow-hidden rounded-lg md:static md:block md:h-full md:w-1/3 md:rounded-bl-none md:rounded-br-none md:rounded-tr-none md:border-r`}
+            >
+              <AllConversation closeToggle={setToggleBtn} />
             </div>
-          ) : (
-            <ChatBox openToggle={setToggleBtn} />
           )}
+          <div className={`${isAdmin ? "w-full md:w-2/3" : "w-full"}`}>
+            {!conversationUser && isAdmin ? (
+              <div className="flex h-full items-center justify-center">
+                <div className="space-y-1 text-center">
+                  <p className="uppercase tracking-[10px]">Welcome To</p>
+                  <h1 className="text-3xl font-bold uppercase text-primary">
+                    MR Project
+                  </h1>
+                </div>
+              </div>
+            ) : (
+              <ChatBox openToggle={setToggleBtn} />
+            )}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="rounded-lg bg-orange-600/5 p-4 sm:p-10 sm:py-14">
+          <div className="max-w-[800px] mx-auto">
+          <p className="text-center sm:text-lg font-medium">
+            &quot; Before you send your message, please take a moment to{" "}
+            <span className="rounded-lg bg-orange-600/15 px-2 py-1 leading-loose font-semibold text-nowrap">
+              submit the contact form.
+            </span>{" "}
+            This ensures we have the details we need to get back to you. &quot;
+          </p>
+          <p className="group text-center mt-8 sm:text-lg">
+            Ready to connect with us?
+            <Link to='/contact' className="group-hover:underline text-primary"> Click here </Link>
+            to visit our contact page!
+          </p>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
