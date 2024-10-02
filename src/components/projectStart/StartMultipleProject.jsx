@@ -12,39 +12,48 @@ const StartMultipleProject = ({ items }) => {
   const dispatch = useDispatch();
   const { category: categories } = useSelector((state) => state.category);
   const [multiProjectData, setMultiProjectData] = useState(null);
-  const [choosenItems, setChoosenItems] = useState(() =>
-    items.map(
-      ({
-        images,
-        checked,
-        description,
-        designs,
-        fileFormat,
-        folder,
-        industrys,
-        relatedDesigns,
-        size,
-        subFolder,
-        tags,
+  const [choosenItems, setChoosenItems] = useState([]);
 
-        ...newItem
-      }) => {
-        const designImage = images.find((i) => i.thumbnail === true).url;
-
-        return {
-          ...newItem,
-          designImage,
-          quantity: 1,
-          isFastDelivery: false,
-          save: false,
-        };
-      },
-    ),
-  );
-  console.log("cho", choosenItems);
-
-  const [selectedItem, setSelectedItem] = useState(choosenItems[0].id);
+  const [selectedItem, setSelectedItem] = useState("");
   const quantities = Array.from({ length: 9 }, (_, i) => i + 1);
+
+  // Initial State set for choosenItems
+  useEffect(() => {
+    const itemsData = () =>
+      items?.map(
+        ({
+          images,
+          checked,
+          description,
+          designs,
+          fileFormat,
+          folder,
+          industrys,
+          relatedDesigns,
+          size,
+          subFolder,
+          tags,
+
+          ...newItem
+        }) => {
+          const designImage = images.find((i) => i.thumbnail === true).url;
+
+          return {
+            ...newItem,
+            designImage,
+            quantity: 1,
+            isFastDelivery: false,
+            save: false,
+          };
+        },
+      );
+    setChoosenItems(itemsData);
+  }, [items]);
+
+  // setting initial selectItem id
+  useEffect(() => {
+    setSelectedItem(items[0]?.id);
+  }, [items]);
 
   // Set the multi-project data from API
   useEffect(() => {
@@ -60,7 +69,7 @@ const StartMultipleProject = ({ items }) => {
 
   // Update choosenItems with category data and filter subcategories
   useEffect(() => {
-    if (categories) {
+    if (categories && choosenItems.length > 0) {
       setChoosenItems((prevItems) =>
         prevItems.map((item) => {
           const categoryObj = categories.find(
@@ -85,11 +94,10 @@ const StartMultipleProject = ({ items }) => {
         }),
       );
     }
-  }, [categories]);
+  }, [categories, choosenItems.length]);
 
   const handleFastDeliveryToggle = (e, id) => {
     const isChecked = e.target.checked;
-    console.log(e.target.checked, id);
     setChoosenItems((prev) =>
       prev.map((item) => {
         if (item.id === id) {
@@ -228,14 +236,16 @@ const StartMultipleProject = ({ items }) => {
 
   return (
     <div className="mx-auto max-w-[800px] border bg-lightskyblue">
-      <h1 className="bg-primary p-4 text-center text-xl font-semibold text-white">
+      <h1 className="mb-3 bg-primary p-4 text-center text-xl font-semibold text-white">
         You are starting a project
       </h1>
       <div className="px-3">
-        <p className="my-3 text-center text-sm sm:text-base">
-          Each section of each design should be carefully checked and saved
-          below
-        </p>
+        {choosenItems?.length > 1 && (
+          <p className="mb-3 text-center text-sm sm:text-base">
+            Each section of each design should be carefully checked and saved
+            below
+          </p>
+        )}
         <div className="flex gap-3 overflow-x-auto">
           {choosenItems.map((i) => (
             <button
