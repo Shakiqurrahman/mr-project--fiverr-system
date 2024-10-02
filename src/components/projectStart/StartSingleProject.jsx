@@ -10,7 +10,9 @@ const StartSingleProject = ({ item }) => {
   const navigate = useNavigate();
   const { loading, category, error } = useSelector((state) => state.category);
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(
+    item?.categoryName || "",
+  );
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
   const [selectedQuantity, setSelectedQuantity] = useState(1);
   const [isFastDelivery, setIsFastDelivery] = useState(false);
@@ -22,9 +24,9 @@ const StartSingleProject = ({ item }) => {
   useEffect(() => {
     if (category?.length > 0) {
       setCategories(category);
-      setSelectedCategory(item?.categoryName || category[0]?.categoryName); // Set the first category as selected by default
+      // setSelectedCategory(item?.categoryName || category[0]?.categoryName); // Set the first category as selected by default
     }
-  }, [category, item?.categoryName]);
+  }, [category]);
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
@@ -43,11 +45,11 @@ const StartSingleProject = ({ item }) => {
     [categories, selectedCategory],
   );
 
-  useEffect(() => {
-    if (selectedCategoryData?.subCategory?.length > 0) {
-      setSelectedSubCategory(selectedCategoryData.subCategory[0].subTitle); // Set first subcategory by default
-    }
-  }, [selectedCategoryData]);
+  // useEffect(() => {
+  //   if (selectedCategoryData?.subCategory?.length > 0) {
+  //     setSelectedSubCategory(selectedCategoryData.subCategory[0].subTitle); // Set first subcategory by default
+  //   }
+  // }, [selectedCategoryData]);
 
   const selectedSubCategoryData = useCallback(() => {
     return selectedSubCategory
@@ -113,124 +115,137 @@ const StartSingleProject = ({ item }) => {
             Choose the category you need
           </p>
           <div className="flex flex-col items-center justify-between gap-2 border bg-white p-6 sm:flex-row">
-            <img
-              className="h-[93px] w-32 object-cover"
-              src={selectedCategoryData?.image?.url}
-              alt={selectedCategoryData?.image?.name}
-            />
-            {item ? (
-              <h1 className="w-full px-4 text-base font-semibold sm:text-2xl">
-                {selectedCategory}
-              </h1>
-            ) : (
+            {selectedCategory && (
+              <img
+                className="h-[93px] w-32 object-cover"
+                src={selectedCategoryData?.image?.url}
+                alt={selectedCategoryData?.image?.name}
+              />
+            )}
+
+            <select
+              name="subcategory"
+              id="subcategory"
+              value={selectedCategory}
+              onChange={handleCategoryChange}
+              className={`w-full p-4 text-base font-semibold outline-none ${selectedCategory ? "sm:text-2xl" : "sm:text-lg"}`}
+            >
+              {!selectedCategory && (
+                <option className="text-base" value={""}>
+                  Select a Category First
+                </option>
+              )}
+              {categories?.map((category) => (
+                <option
+                  key={category.id}
+                  className="text-base"
+                  value={category?.categoryName}
+                >
+                  {category?.categoryName}
+                </option>
+              ))}
+            </select>
+          </div>
+          {selectedCategory && (
+            <>
+              <p className="mb-2 mt-6 text-sm sm:text-lg">
+                Choose the subcategory you need
+              </p>
               <select
                 name="subcategory"
                 id="subcategory"
-                value={selectedCategory}
-                onChange={handleCategoryChange}
-                className={`w-full p-4 text-base font-semibold outline-none sm:text-2xl`}
+                value={selectedSubCategory}
+                onChange={handleSubCategoryChange}
+                className="w-full border p-4 font-medium outline-none"
               >
-                {categories?.map((category) => (
-                  <option
-                    key={category.id}
-                    className="text-base"
-                    value={category?.categoryName}
-                  >
-                    {category?.categoryName}
+                {!selectedSubCategory && (
+                  <option value={""}>Select a Subcategory</option>
+                )}
+                {selectedCategoryData?.subCategory.map((i) => (
+                  <option key={i.id} value={i.subTitle}>
+                    {i.subTitle}
                   </option>
                 ))}
               </select>
-            )}
-          </div>
-          <p className="mb-2 mt-6 text-sm sm:text-lg">
-            Choose the subcategory you need
-          </p>
-          <select
-            name="subcategory"
-            id="subcategory"
-            value={selectedSubCategory}
-            onChange={handleSubCategoryChange}
-            className="w-full border p-4 font-medium outline-none"
-          >
-            {selectedCategoryData?.subCategory.map((i) => (
-              <option key={i.id} value={i.subTitle}>
-                {i.subTitle}
-              </option>
-            ))}
-          </select>
+            </>
+          )}
 
-          <div className="my-5 flex flex-wrap items-center gap-3 sm:flex-nowrap">
-            <div className="w-full border bg-white p-3 text-sm sm:text-base">
-              {regularDeliveryDay} Days Delivery
-            </div>
-            <div className="flex w-full items-center gap-3 sm:justify-end">
-              <div className="flex items-center gap-x-2 text-sm font-medium sm:text-base">
-                <input
-                  type="checkbox"
-                  name="extraDelivery"
-                  id="extraDelivery"
-                  className={"is-checked peer"}
-                  onChange={handleFastDeliveryToggle}
-                  checked={isFastDelivery}
-                  hidden
-                />
-                <label
-                  htmlFor="extraDelivery"
-                  className="flex h-[16px] w-[16px] cursor-pointer items-center justify-center border border-solid border-primary bg-white *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100 sm:h-[20px] sm:w-[20px]"
-                >
-                  <Check className="h-[8px] sm:h-[10px]" />
-                </label>
-                Extra Fast {extraFastDeliveryDay}
-                -day delivery
+          {selectedCategory && selectedSubCategory && (
+            <>
+              <div className="my-5 flex flex-wrap items-center gap-3 sm:flex-nowrap">
+                <div className="w-full border bg-white p-3 text-sm sm:text-base">
+                  {regularDeliveryDay} Days Delivery
+                </div>
+                <div className="flex w-full items-center gap-3 sm:justify-end">
+                  <div className="flex items-center gap-x-2 text-sm font-medium sm:text-base">
+                    <input
+                      type="checkbox"
+                      name="extraDelivery"
+                      id="extraDelivery"
+                      className={"is-checked peer"}
+                      onChange={handleFastDeliveryToggle}
+                      checked={isFastDelivery}
+                      hidden
+                    />
+                    <label
+                      htmlFor="extraDelivery"
+                      className="flex h-[16px] w-[16px] cursor-pointer items-center justify-center border border-solid border-primary bg-white *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100 sm:h-[20px] sm:w-[20px]"
+                    >
+                      <Check className="h-[8px] sm:h-[10px]" />
+                    </label>
+                    Extra Fast {extraFastDeliveryDay}
+                    -day delivery
+                  </div>
+                  <span className="mr-3 font-bold leading-none text-primary">
+                    ${fastDeliveryPrice}
+                  </span>
+                </div>
               </div>
-              <span className="mr-3 font-bold leading-none text-primary">
-                ${fastDeliveryPrice}
-              </span>
-            </div>
-          </div>
 
-          <div className="flex flex-wrap items-start gap-3 sm:flex-nowrap">
-            <div className="w-full">
-              {selectedCategoryData?.bulletPoint?.map((v, i) => (
-                <p key={i} className="my-2 flex items-center gap-2">
-                  <FaCheckCircle className="shrink-0 text-primary" /> {v}
-                </p>
-              ))}
-            </div>
-            <div className="w-full">
-              <div className="flex items-center justify-between gap-3 sm:justify-end">
-                <span className="font-medium">Quantity</span>
-                <select
-                  className="w-[150px] border bg-white p-3 font-semibold outline-none sm:w-[100px]"
-                  name="quantity"
-                  value={selectedQuantity}
-                  onChange={(e) => setSelectedQuantity(e.target.value)}
-                >
-                  {quantities.map((q) => (
-                    <option key={q} value={q}>
-                      {q}
-                    </option>
+              <div className="flex flex-wrap items-start gap-3 sm:flex-nowrap">
+                <div className="w-full">
+                  {selectedCategoryData?.bulletPoint?.map((v, i) => (
+                    <p key={i} className="my-2 flex items-center gap-2">
+                      <FaCheckCircle className="shrink-0 text-primary" /> {v}
+                    </p>
                   ))}
-                </select>
+                </div>
+                <div className="w-full">
+                  <div className="flex items-center justify-between gap-3 sm:justify-end">
+                    <span className="font-medium">Quantity</span>
+                    <select
+                      className="w-[150px] border bg-white p-3 font-semibold outline-none sm:w-[100px]"
+                      name="quantity"
+                      value={selectedQuantity}
+                      onChange={(e) => setSelectedQuantity(e.target.value)}
+                    >
+                      {quantities.map((q) => (
+                        <option key={q} value={q}>
+                          {q}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="mt-5 border bg-white p-3 text-center text-lg text-primary sm:text-2xl">
+                    Subtotal -{" "}
+                    <span className="font-semibold">
+                      ${totalAmount}
+                      USD
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div className="mt-5 border bg-white p-3 text-center text-lg text-primary sm:text-2xl">
-                Subtotal -{" "}
-                <span className="font-semibold">
-                  ${totalAmount}
-                  USD
-                </span>
-              </div>
-            </div>
-          </div>
-          <button
-            type="submit"
-            className="my-5 block w-full bg-primary p-3 text-center text-lg font-semibold text-white disabled:cursor-not-allowed disabled:bg-primary/50 sm:text-2xl"
-          >
-            Continue (Total - ${totalAmount || 0})
-          </button>
-          <p className="my-8 text-center text-sm sm:text-base">
-            Go to the payment option by clicking &quot;Continue&quot;
-          </p>
+              <button
+                type="submit"
+                className="my-5 block w-full bg-primary p-3 text-center text-lg font-semibold text-white disabled:cursor-not-allowed disabled:bg-primary/50 sm:text-2xl"
+              >
+                Continue (Total - ${totalAmount || 0})
+              </button>
+              <p className="my-8 text-center text-sm sm:text-base">
+                Go to the payment option by clicking &quot;Continue&quot;
+              </p>
+            </>
+          )}
         </form>
       </div>
     </section>
