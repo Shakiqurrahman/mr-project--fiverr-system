@@ -4,5 +4,5 @@ export const configApi = {
   api: "https://dev.mahfujurrahm535.com/api/v1/",
 
   // socket: "http://localhost:3000",
-  socket : 'https://dev.mahfujurrahm535.com'
+  socket : 'wss://dev.mahfujurrahm535.com'
 };
