@@ -28,13 +28,13 @@ import { configApi } from "../libs/configApi";
 
 function Profile({ user = {}, slug }) {
   const dispatch = useDispatch();
-  const { user: loggedUser } = useSelector((state) => state.user);
+  const { user: loggedUser, onlineUsers } = useSelector((state) => state.user);
   const [activeTab, setActiveTab] = useState("active"); // 'active' or 'completed'
   const [loading, setLoading] = useState(false);
   const [profileInfo, setProfileInfo] = useState(false);
-  const [isOnline, setIsOnline] = useState(true);
   const [showDesqEdit, setShowDesqEdit] = useState(false);
   const [description, setDescription] = useState(user?.description || "");
+
   useEffect(() => {
     // Update the state when the user prop changes
     setDescription(user?.description || "");
@@ -46,6 +46,10 @@ function Profile({ user = {}, slug }) {
   const monthYear = date.toLocaleDateString("en-US", options);
 
   const letterLogo = user?.userName?.trim().charAt(0).toUpperCase();
+
+  const isUserOnline = (userId) => {
+    return onlineUsers.some((onlineUser) => onlineUser.userId === userId);
+  };
 
   const handleProfileInfo = () => {
     setProfileInfo(!profileInfo);
@@ -123,7 +127,7 @@ function Profile({ user = {}, slug }) {
                 </div>
               )}
               <span
-                className={`absolute bottom-1.5 right-4 size-4 rounded-full border border-white  ${isOnline ? "bg-primary" : "bg-gray-400"}`}
+                className={`absolute bottom-1.5 right-4 size-4 rounded-full border border-white ${isUserOnline(user.id) ? "bg-primary" : "bg-gray-400"}`}
               ></span>
             </div>
             <h2 className="mt-3 text-center text-lg font-semibold sm:text-xl">
@@ -146,7 +150,9 @@ function Profile({ user = {}, slug }) {
             </div>
             <div className="flex justify-between gap-1 text-sm">
               <span>Last Visited</span>
-              <p className="font-semibold">Online</p>
+              <p className="font-semibold">
+                {isUserOnline(user.id) ? "Online" : "Offline"}
+              </p>
             </div>
           </div>
 

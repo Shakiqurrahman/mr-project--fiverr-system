@@ -17,8 +17,10 @@ import {
 } from "../../Redux/features/chatSlice";
 
 const AllConversation = ({ closeToggle }) => {
-  const { user, token } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  
+  const { onlineUsers } = useSelector((state) => state.user);
+  
   const [selectedOption, setSelectedOption] = useState("AllConversations");
   const [openSearch, setOpenSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,6 +33,8 @@ const AllConversation = ({ closeToggle }) => {
   const handleSelectChange = (e) => {
     setSelectedOption(e.target.value);
   };
+
+  // const isOnline = onlineUsers?.userId === user?.userId;
 
   const [chatList, setChatList] = useState([
     {
@@ -265,61 +269,64 @@ const AllConversation = ({ closeToggle }) => {
 
       <div className="chat-scrollbar flex-1 overflow-y-auto">
         {availableUsers?.length > 0 ? (
-          availableUsers?.map((chat) => (
-            <div
-              key={chat?.id}
-              className="flex cursor-pointer items-center justify-between border-b p-4 hover:bg-lightcream/50"
-              onClick={() => handleChatOpen(chat?.id)}
-            >
-              <div className="flex items-center gap-4">
-                <div className="relative">
-                  <img
-                    className="size-8 rounded-full object-cover"
-                    src={chat?.image ? chat?.image : logo}
-                    alt="logo"
-                  />
-                  {chat?.isRepeatedClient && (
+          availableUsers?.map((chat) => {
+            const isOnline = onlineUsers.some(user => user.userId === chat.id);            
+            return (
+              <div
+                key={chat?.id}
+                className="flex cursor-pointer items-center justify-between border-b p-4 hover:bg-lightcream/50"
+                onClick={() => handleChatOpen(chat?.id)}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="relative">
                     <img
-                      className={`absolute -top-1 left-1 size-3`}
-                      src={repeatIcon}
-                      alt="repeat icon"
+                      className="size-8 rounded-full object-cover"
+                      src={chat?.image ? chat?.image : logo}
+                      alt="logo"
                     />
-                  )}
-                  <span
-                    className={`absolute bottom-0 right-0 size-2 rounded-full border border-white ${chat?.isOnline ? "bg-primary" : "bg-gray-400"}`}
-                  ></span>
+                    {chat?.isRepeatedClient && (
+                      <img
+                        className={`absolute -top-1 left-1 size-3`}
+                        src={repeatIcon}
+                        alt="repeat icon"
+                      />
+                    )}
+                    <span
+                      className={`absolute bottom-0 right-0 size-2 rounded-full border border-white ${isOnline ? "bg-primary" : "bg-gray-400"}`}
+                    ></span>
+                  </div>
+                  <div>
+                    <p className="flex items-center gap-2 font-semibold">
+                      {chat?.userName}{" "}
+                      <span className="text-secondary">
+                        {chat?.isNewClient && <LuClock3 />}
+                      </span>
+                    </p>
+                    <p
+                      className={`${chat?.unreadMessages > 0 && "font-bold"} text-sm`}
+                    >
+                      {chat?.lastMessage}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="flex items-center gap-2 font-semibold">
-                    {chat?.userName}{" "}
-                    <span className="text-secondary">
-                      {chat?.isNewClient && <LuClock3 />}
-                    </span>
-                  </p>
-                  <p
-                    className={`${chat?.unreadMessages > 0 && "font-bold"} text-sm`}
-                  >
-                    {chat?.lastMessage}
-                  </p>
+                <div className="flex items-center gap-3">
+                  <div className="flex flex-col items-end gap-1">
+                    <p className="text-[12px] text-gray-500">
+                      {formatTimeAgo(chat?.lastMessageTime || 0)}
+                    </p>
+                    {chat?.unreadMessages > 0 && (
+                      <span className="size-6 rounded-full bg-primary text-center text-[10px] leading-[24px] text-white">
+                        {chat?.unreadMessages}
+                      </span>
+                    )}
+                  </div>
+                  {chat?.starred && (
+                    <IoIosStar className="text-lg text-primary" />
+                  )}
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="flex flex-col items-end gap-1">
-                  <p className="text-[12px] text-gray-500">
-                    {formatTimeAgo(chat?.lastMessageTime || 0)}
-                  </p>
-                  {chat?.unreadMessages > 0 && (
-                    <span className="size-6 rounded-full bg-primary text-center text-[10px] leading-[24px] text-white">
-                      {chat?.unreadMessages}
-                    </span>
-                  )}
-                </div>
-                {chat?.starred && (
-                  <IoIosStar className="text-lg text-primary" />
-                )}
-              </div>
-            </div>
-          ))
+            );
+          })
         ) : (
           <div className="p-4 text-center text-gray-500">No chats found</div>
         )}
