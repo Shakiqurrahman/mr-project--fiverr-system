@@ -65,7 +65,6 @@ export const inboxApiSlice = createApi({
       query: ({ receiverId }) => `message/${receiverId}`,
       transformResponse: (response) => response?.data,
       providesTags: ["getAllMessages"],
-      // refetchOnMountOrArgChange: true,
     }),
 
     // Get All Conversational Messages for admin

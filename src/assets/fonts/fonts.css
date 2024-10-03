@@ -1,0 +1,15 @@
+@font-face {
+    font-family: 'Montserrat';
+    src: url('./Montserrat-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Oswald';
+    src: url('./Oswald-VariableFont_wght.ttf') format('truetype');
+    font-weight: 200 700;
+    font-style: normal;
+  }
+  
+  
