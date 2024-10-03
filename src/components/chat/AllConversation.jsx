@@ -21,6 +21,8 @@ const AllConversation = ({ closeToggle }) => {
 
   const { onlineUsers } = useSelector((state) => state.user);
 
+  const { conversationUser } = useSelector((state) => state.chat);
+
   const [selectedOption, setSelectedOption] = useState("AllConversations");
   const [openSearch, setOpenSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -141,7 +143,7 @@ const AllConversation = ({ closeToggle }) => {
             return (
               <div
                 key={chat?.id}
-                className="flex cursor-pointer items-center justify-between border-b p-4 hover:bg-lightcream/50"
+                className={`flex cursor-pointer items-center justify-between border-b p-4 hover:bg-lightcream/50 ${chat?.id === conversationUser && 'bg-lightcream/50'}`}
                 onClick={() => handleChatOpen(chat?.id)}
               >
                 <div className="flex items-center gap-4">
