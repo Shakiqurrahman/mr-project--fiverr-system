@@ -54,8 +54,8 @@ const InboxPage = () => {
   const socket = connectSocket(`${configApi.socket}`, token);
   // all avaliable users
   useEffect(() => {
-    socket.emit("view-online-users");
-    socket.on("online-users", (onlineUsers) => {
+    socket?.emit("view-online-users");
+    socket?.on("online-users", (onlineUsers) => {
       dispatch(setOnlineUsers(onlineUsers));
     });
   }, [socket, dispatch]);
