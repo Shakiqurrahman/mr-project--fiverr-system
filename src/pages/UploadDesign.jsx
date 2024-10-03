@@ -177,7 +177,16 @@ function UploadDesign() {
           .split(",")
           .map((tag) => tag.trim())
           .filter((tag) => tag); // Clean up and remove empty tags
-        setTags([...tags, ...newTagsArr]);
+
+        const uniqueNewTagsSet = new Set(newTagsArr);
+        const existingTagsSet = new Set(tags);
+        const uniqueNewTags = [...uniqueNewTagsSet].filter(
+          (tag) => !existingTagsSet.has(tag),
+        );
+
+        if (uniqueNewTags.length > 0) {
+          setTags([...tags, ...uniqueNewTags]);
+        }
         setNewTag("");
       }
     }
@@ -210,7 +219,18 @@ function UploadDesign() {
           .split(",")
           .map((tag) => tag.trim())
           .filter((tag) => tag); // Clean up and remove empty tags
-        setRelatedTags([...relatedTags, ...newRelatedTagArr]);
+
+        const uniqueNewRelatedTagsSet = new Set(newRelatedTagArr);
+
+        const existingRelatedTagsSet = new Set(relatedTags);
+        const uniqueNewRelatedTags = [...uniqueNewRelatedTagsSet].filter(
+          (tag) => !existingRelatedTagsSet.has(tag),
+        );
+
+        if (uniqueNewRelatedTags.length > 0) {
+          setRelatedTags([...relatedTags, ...uniqueNewRelatedTags]);
+        }
+
         setNewRelatedTag("");
       }
     }
@@ -280,7 +300,20 @@ function UploadDesign() {
     if (e.key === "Enter") {
       e.preventDefault();
       if (newIndustrie) {
-        setIndustries([...industries, newIndustrie]);
+        const newIndustriesArr = newIndustrie
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter((tag) => tag);
+
+        const uniqueNewIndustriesSet = new Set(newIndustriesArr);
+        const existingIndustriesSet = new Set(industries);
+        const uniqueNewIndustries = [...uniqueNewIndustriesSet].filter(
+          (tag) => !existingIndustriesSet.has(tag),
+        );
+
+        if (uniqueNewIndustries.length > 0) {
+          setIndustries([...industries, ...uniqueNewIndustries]);
+        }
         setNewIndustrie("");
       }
     }
@@ -305,7 +338,20 @@ function UploadDesign() {
     if (e.key === "Enter") {
       e.preventDefault();
       if (newDesign) {
-        setDesigns([...designs, newDesign]);
+        const newDesignsArr = newDesign
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter((tag) => tag);
+
+        const uniqueNewDesignsSet = new Set(newDesignsArr);
+        const existingDesignsSet = new Set(designs);
+        const uniqueNewDesigns = [...uniqueNewDesignsSet].filter(
+          (tag) => !existingDesignsSet.has(tag),
+        );
+
+        if (uniqueNewDesigns.length > 0) {
+          setDesigns([...designs, ...uniqueNewDesigns]);
+        }
         setNewDesign("");
       }
     }
