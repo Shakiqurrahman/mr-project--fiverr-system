@@ -18,9 +18,9 @@ import {
 
 const AllConversation = ({ closeToggle }) => {
   const dispatch = useDispatch();
-  
+
   const { onlineUsers } = useSelector((state) => state.user);
-  
+
   const [selectedOption, setSelectedOption] = useState("AllConversations");
   const [openSearch, setOpenSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,139 +34,6 @@ const AllConversation = ({ closeToggle }) => {
     setSelectedOption(e.target.value);
   };
 
-  // const isOnline = onlineUsers?.userId === user?.userId;
-
-  const [chatList, setChatList] = useState([
-    {
-      id: 1,
-      name: "John Doe",
-      lastMessage: "Hi there!",
-      lastMessageTime: new Date(Date.now() - 48920000005), //1 year ago
-      unreadMessages: 0,
-      starred: false,
-      isOnline: true,
-      isRepeatedClient: true,
-      isNewClient: true,
-      archived: false,
-      customOffer: false,
-    },
-    {
-      id: 2,
-      name: "Shakespeare",
-      lastMessage: "Hi there!",
-      lastMessageTime: new Date(Date.now() - 3600000), // 1 hour ago
-      unreadMessages: 0,
-      starred: true,
-      archived: false,
-      customOffer: true,
-    },
-    {
-      id: 3,
-      name: "Mark Zuckerburg",
-      lastMessage: "Hi there!",
-      lastMessageTime: new Date(Date.now() - 60000), // 1 minute ago
-      unreadMessages: 0,
-      starred: true,
-      archived: false,
-      customOffer: true,
-    },
-    {
-      id: 4,
-      name: "Donald Trump",
-      lastMessage: "Hi there!",
-      lastMessageTime: new Date(Date.now()), // just now
-      unreadMessages: 0,
-      starred: true,
-      archived: false,
-      isOnline: true,
-      customOffer: true,
-    },
-    {
-      id: 5,
-      name: "Puthin",
-      lastMessage: "Hi there!",
-      lastMessageTime: new Date(Date.now() - 1209600000), // 14 days ago
-      unreadMessages: 0,
-      starred: false,
-      archived: false,
-      customOffer: true,
-    },
-    {
-      id: 6,
-      name: "Mudi",
-      lastMessage: "Hi Hashuuu!",
-      lastMessageTime: new Date(Date.now() - 1209600000), // 14 days ago
-      unreadMessages: 2,
-      starred: true,
-      isRepeatedClient: true,
-      archived: false,
-      customOffer: true,
-    },
-    {
-      id: 7,
-      name: "Sheikh Hasina",
-      lastMessage: "Hello Modhuu!",
-      lastMessageTime: new Date(Date.now() - 1209600000), // 14 days ago
-      unreadMessages: 3,
-      starred: false,
-      isOnline: true,
-      archived: false,
-      customOffer: false,
-    },
-    {
-      id: 8,
-      name: "John Doe",
-      lastMessage: "Hi there!",
-      lastMessageTime: new Date(Date.now() - 1209600000), // 14 days ago
-      unreadMessages: 0,
-      starred: false,
-      isOnline: true,
-      archived: false,
-      isNewClient: true,
-      customOffer: false,
-    },
-    {
-      id: 9,
-      name: "John Doe",
-      lastMessage: "Hi there!",
-      lastMessageTime: new Date(Date.now() - 1209600000), // 14 days ago
-      unreadMessages: 0,
-      starred: false,
-      archived: false,
-      customOffer: false,
-    },
-    {
-      id: 10,
-      name: "John Doe",
-      lastMessage: "Hi there!",
-      lastMessageTime: new Date(Date.now() - 1209600000), // 14 days ago
-      unreadMessages: 0,
-      starred: false,
-      archived: false,
-      customOffer: false,
-    },
-    {
-      id: 11,
-      name: "John Doe",
-      lastMessage: "Hi there!",
-      lastMessageTime: new Date(Date.now() - 1209600000), // 14 days ago
-      unreadMessages: 0,
-      starred: false,
-      archived: false,
-      customOffer: false,
-    },
-    {
-      id: 12,
-      name: "John Doe",
-      lastMessage: "Hi there!",
-      lastMessageTime: new Date(Date.now() - 1209600000), // 14 days ago
-      unreadMessages: 0,
-      starred: false,
-      archived: false,
-      customOffer: false,
-    },
-  ]);
-
   useEffect(() => {
     if (getAllMessages) {
       dispatch(setChatData(getAllMessages));
@@ -175,7 +42,8 @@ const AllConversation = ({ closeToggle }) => {
 
   // Filter chat list based on selected option
   const getFilteredChatList = () => {
-    let filteredChats = chatList;
+    let filteredChats = availableUsers;
+    console.log("filter", filteredChats);
 
     switch (selectedOption) {
       case "unread":
@@ -201,7 +69,7 @@ const AllConversation = ({ closeToggle }) => {
     // Apply search filter if search is active
     if (searchQuery.trim() !== "") {
       filteredChats = filteredChats.filter((chat) =>
-        chat.name.toLowerCase().includes(searchQuery.toLowerCase()),
+        chat?.userName?.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
 
@@ -216,11 +84,9 @@ const AllConversation = ({ closeToggle }) => {
 
   const handleChatOpen = (id) => {
     dispatch(setConversationUser(id));
-    triggerGetAllMessages(
-      {
-        receiverId: id,
-      },
-    );
+    triggerGetAllMessages({
+      receiverId: id,
+    });
     closeToggle(false);
   };
 
@@ -267,9 +133,11 @@ const AllConversation = ({ closeToggle }) => {
       </div>
 
       <div className="chat-scrollbar flex-1 overflow-y-auto">
-        {availableUsers?.length > 0 ? (
-          availableUsers?.map((chat) => {
-            const isOnline = onlineUsers.some(user => user.userId === chat.id);            
+        {filteredChatList?.length > 0 ? (
+          filteredChatList?.map((chat) => {
+            const isOnline = onlineUsers.some(
+              (user) => user.userId === chat.id,
+            );
             return (
               <div
                 key={chat?.id}
@@ -283,7 +151,7 @@ const AllConversation = ({ closeToggle }) => {
                       src={chat?.image ? chat?.image : logo}
                       alt="logo"
                     />
-                    {chat?.isRepeatedClient && (
+                    {chat?.status === "Repeated Client" && (
                       <img
                         className={`absolute -top-1 left-1 size-3`}
                         src={repeatIcon}
@@ -298,7 +166,7 @@ const AllConversation = ({ closeToggle }) => {
                     <p className="flex items-center gap-2 font-semibold">
                       {chat?.userName}{" "}
                       <span className="text-secondary">
-                        {chat?.isNewClient && <LuClock3 />}
+                        {chat?.status === "New Client"  && <LuClock3 />}
                       </span>
                     </p>
                     <p
