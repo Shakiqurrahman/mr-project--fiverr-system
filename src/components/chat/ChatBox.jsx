@@ -64,7 +64,7 @@ const ChatBox = ({ openToggle }) => {
 
   // messages state
   const [messages, setMessages] = useState([]);
-  console.log('messages', messages);
+  console.log("messages", messages);
 
   // recipient User
   const { data: usersData } = useFetchAllUsersQuery();
@@ -93,12 +93,8 @@ const ChatBox = ({ openToggle }) => {
 
   const [visibility, setVisibility] = useState({});
 
-
-
-
   // Socket connection reader
   useEffect(() => {
-
     // Listen for incoming messages
     socket?.on("message", (msg) => {
       console.log("socket message testing.....", msg);
@@ -110,11 +106,6 @@ const ChatBox = ({ openToggle }) => {
       socket?.off("message");
     };
   }, [conversationUser, isAdmin, socket]);
-
-  // const filterData = messages.filter(
-  //   (message) => message.userId === conversationUser,
-  // );
-  // console.log("filtering data.....",filterData );
 
   useEffect(() => {
     // Inital Scroll to last message
@@ -322,10 +313,14 @@ const ChatBox = ({ openToggle }) => {
   console.log("messages", messages);
   console.log("sender id", conversationUser);
 
-
-  const filerMessage = messages?.filter(message => conversationUser === message.userId);
-  console.log(filerMessage, "filter message");
-
+  useEffect(() => {
+    if (isAdmin) {
+      const filerMessage = messages?.filter(
+        (message) => conversationUser === message.userId,
+      );
+      setMessages((prevMessages) => [...prevMessages, ...filerMessage]);
+    }
+  }, []);
 
   return (
     <div className="h-full">
@@ -358,7 +353,7 @@ const ChatBox = ({ openToggle }) => {
                   <button
                     type="button"
                     className="w-full text-xs hover:bg-gray-200"
-                  // onClick={() => setOpenEditMsgModal(msg)}
+                    // onClick={() => setOpenEditMsgModal(msg)}
                   >
                     Read/Unread
                   </button>
@@ -372,7 +367,7 @@ const ChatBox = ({ openToggle }) => {
                   <button
                     type="button"
                     className="w-full text-xs hover:bg-gray-200"
-                  // onClick={() => setOpenEditMsgModal(msg)}
+                    // onClick={() => setOpenEditMsgModal(msg)}
                   >
                     Block/Unblock
                   </button>
@@ -409,523 +404,529 @@ const ChatBox = ({ openToggle }) => {
       >
         {/* All message Container */}
         {/* Each message block */}
-        {isAdmin ? <div>
-          {filerMessage?.map((msg, i) => (
-            <div key={i} className="group mt-3 flex items-start gap-3 px-3">
-              <div className="shrink-0">
-                <img
-                  src={msg?.userImage ? msg?.userImage : logo}
-                  alt=""
-                  className="h-[30px] w-[30px] rounded-full object-cover"
-                />
-              </div>
-              <div className="grow">
-                <div className="mt-1 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <h1 className="font-semibold">
-                      {user?.userName === msg?.senderUserName
-                        ? "Me"
-                        : msg?.senderUserName}
-                    </h1>
-                    <p className="text-xs text-black/50">
-                      {msg?.msgDate}, {msg?.msgTime?.toUpperCase()}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3 text-black/50 opacity-0 group-hover:opacity-100">
-                    <button type="button">
-                      <BsFillReplyFill className="text-xl" />
-                    </button>
-                    {visibility[msg?.id] && (
-                      <button type="button">
-                        <FaTrashAlt />
-                      </button>
-                    )}
-                  </div>
+        {isAdmin ? (
+          <div>
+            {messages?.map((msg, i) => (
+              <div key={i} className="group mt-3 flex items-start gap-3 px-3">
+                <div className="shrink-0">
+                  <img
+                    src={msg?.userImage ? msg?.userImage : logo}
+                    alt=""
+                    className="h-[30px] w-[30px] rounded-full object-cover"
+                  />
                 </div>
-                {/* Here is the message text to preview */}
-                {msg?.messageText && (
-                  <div className="mt-1 w-11/12">
-                    <p>{msg?.messageText}</p>
+                <div className="grow">
+                  <div className="mt-1 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <h1 className="font-semibold">
+                        {user?.userName === msg?.senderUserName
+                          ? "Me"
+                          : msg?.senderUserName}
+                      </h1>
+                      <p className="text-xs text-black/50">
+                        {msg?.msgDate}, {msg?.msgTime?.toUpperCase()}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3 text-black/50 opacity-0 group-hover:opacity-100">
+                      <button type="button">
+                        <BsFillReplyFill className="text-xl" />
+                      </button>
+                      {visibility[msg?.id] && (
+                        <button type="button">
+                          <FaTrashAlt />
+                        </button>
+                      )}
+                    </div>
                   </div>
-                )}
-                {/* Here is the contact form message to preview */}
-                {msg.contactForm && (
-                  <div className="mt-1">
-                    <h1 className="font-semibold">Contact Form</h1>
-                    <p className="my-1">
-                      <span className="font-semibold">Name: </span>{" "}
-                      {msg.contactForm.name}
-                    </p>
-                    <p className="my-1">
-                      <span className="font-semibold">Email: </span>{" "}
-                      {msg.contactForm.email}
-                    </p>
-                    <p className="my-1">
-                      <span className="font-semibold">Website/Facebook: </span>{" "}
-                      {msg.contactForm.website}
-                    </p>
-                    <p className="my-1">
-                      <span className="font-semibold">Example design:</span>
-                    </p>
-                    {msg.attachment && msg.attachment.length > 0 && (
-                      <div className="relative mt-2">
-                        {msg?.contactForm?.exampleDesign?.length > 3 && (
-                          <Link className="mb-2 inline-block text-sm font-medium text-primary">
-                            Download All
-                          </Link>
-                        )}
-                        <div className="grid grid-cols-3 gap-3">
-                          {msg?.contactForm?.exampleDesign?.map((att, i) => (
-                            <div key={i}>
-                              <img
-                                src={att?.url}
-                                alt=""
-                                className="h-[180px] w-full object-cover"
-                              />
-                              <Link className="mt-2 flex items-center justify-center text-xs">
-                                <BiDownload className="shrink-0 text-lg text-primary" />
-                                <p
-                                  className="mx-2 line-clamp-1 font-medium"
-                                  title={att?.name}
+                  {/* Here is the message text to preview */}
+                  {msg?.messageText && (
+                    <div className="mt-1 w-11/12">
+                      <p>{msg?.messageText}</p>
+                    </div>
+                  )}
+                  {/* Here is the contact form message to preview */}
+                  {msg.contactForm && (
+                    <div className="mt-1">
+                      <h1 className="font-semibold">Contact Form</h1>
+                      <p className="my-1">
+                        <span className="font-semibold">Name: </span>{" "}
+                        {msg.contactForm.name}
+                      </p>
+                      <p className="my-1">
+                        <span className="font-semibold">Email: </span>{" "}
+                        {msg.contactForm.email}
+                      </p>
+                      <p className="my-1">
+                        <span className="font-semibold">
+                          Website/Facebook:{" "}
+                        </span>{" "}
+                        {msg.contactForm.website}
+                      </p>
+                      <p className="my-1">
+                        <span className="font-semibold">Example design:</span>
+                      </p>
+                      {msg.attachment && msg.attachment.length > 0 && (
+                        <div className="relative mt-2">
+                          {msg?.contactForm?.exampleDesign?.length > 3 && (
+                            <Link className="mb-2 inline-block text-sm font-medium text-primary">
+                              Download All
+                            </Link>
+                          )}
+                          <div className="grid grid-cols-3 gap-3">
+                            {msg?.contactForm?.exampleDesign?.map((att, i) => (
+                              <div key={i}>
+                                <img
+                                  src={att?.url}
+                                  alt=""
+                                  className="h-[180px] w-full object-cover"
+                                />
+                                <Link className="mt-2 flex items-center justify-center text-xs">
+                                  <BiDownload className="shrink-0 text-lg text-primary" />
+                                  <p
+                                    className="mx-2 line-clamp-1 font-medium"
+                                    title={att?.name}
+                                  >
+                                    {att?.name}
+                                  </p>
+                                  <span className="shrink-0 text-black/50">
+                                    ({formatFileSize(att?.size)})
+                                  </span>
+                                </Link>
+                              </div>
+                            ))}
+                          </div>
+                          {msg?.contactForm?.exampleDesign?.length >= 6 &&
+                            (!expand ? (
+                              <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
+                                <button
+                                  className="rounded-full border bg-white"
+                                  onClick={() => setExpand(!expand)}
                                 >
-                                  {att?.name}
-                                </p>
-                                <span className="shrink-0 text-black/50">
-                                  ({formatFileSize(att?.size)})
-                                </span>
-                              </Link>
-                            </div>
-                          ))}
+                                  <img
+                                    src={DownArrow}
+                                    alt=""
+                                    className="h-[50px] w-[50px]"
+                                  />
+                                </button>
+                              </div>
+                            ) : (
+                              <div className="relative z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-5">
+                                <button
+                                  className="rounded-full border bg-white"
+                                  onClick={() => setExpand(!expand)}
+                                >
+                                  <img
+                                    src={UpArrow}
+                                    alt=""
+                                    className="h-[50px] w-[50px]"
+                                  />
+                                </button>
+                              </div>
+                            ))}
                         </div>
-                        {msg?.contactForm?.exampleDesign?.length >= 6 &&
-                          (!expand ? (
-                            <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
-                              <button
-                                className="rounded-full border bg-white"
-                                onClick={() => setExpand(!expand)}
-                              >
-                                <img
-                                  src={DownArrow}
-                                  alt=""
-                                  className="h-[50px] w-[50px]"
-                                />
-                              </button>
-                            </div>
-                          ) : (
-                            <div className="relative z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-5">
-                              <button
-                                className="rounded-full border bg-white"
-                                onClick={() => setExpand(!expand)}
-                              >
-                                <img
-                                  src={UpArrow}
-                                  alt=""
-                                  className="h-[50px] w-[50px]"
-                                />
-                              </button>
-                            </div>
-                          ))}
-                      </div>
-                    )}
+                      )}
 
-                    <p className="mt-5">
-                      <span className="font-semibold">Message: </span>{" "}
-                      {msg.contactForm.messageText}
-                    </p>
-                  </div>
-                )}
-                {/* Here is the offer template to preview */}
-                {msg.customOffer && (
-                  <div className="mt-1">
-                    <p>Custom Offer</p>
-                    <div className="border bg-lightskyblue">
-                      <div className="flex items-center justify-between gap-3 bg-primary/20 p-3">
-                        <div className="flex items-center gap-3">
-                          <img
-                            src={msg.customOffer.thumbnail}
-                            className="h-[60px] w-[80px] object-cover"
-                            alt=""
-                          />
-                          <h1 className="text-2xl font-semibold">
-                            {msg.customOffer.title}
-                          </h1>
-                        </div>
-                        <span className="shrink-0 px-3 text-3xl font-semibold text-primary">
-                          ${msg.customOffer.price}
-                        </span>
-                      </div>
-                      <div className="p-3">
-                        <p className="mb-5 mt-2">{msg.customOffer.desc}</p>
-                        <div className="flex items-center gap-2 font-medium">
-                          <FaCheckCircle className="text-primary" />
-                          <span>
-                            {msg.customOffer.deliveryCount +
-                              " " +
-                              msg.customOffer.deliveryWay}{" "}
-                            delivery
+                      <p className="mt-5">
+                        <span className="font-semibold">Message: </span>{" "}
+                        {msg.contactForm.messageText}
+                      </p>
+                    </div>
+                  )}
+                  {/* Here is the offer template to preview */}
+                  {msg.customOffer && (
+                    <div className="mt-1">
+                      <p>Custom Offer</p>
+                      <div className="border bg-lightskyblue">
+                        <div className="flex items-center justify-between gap-3 bg-primary/20 p-3">
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={msg.customOffer.thumbnail}
+                              className="h-[60px] w-[80px] object-cover"
+                              alt=""
+                            />
+                            <h1 className="text-2xl font-semibold">
+                              {msg.customOffer.title}
+                            </h1>
+                          </div>
+                          <span className="shrink-0 px-3 text-3xl font-semibold text-primary">
+                            ${msg.customOffer.price}
                           </span>
                         </div>
-                        <div className="mt-4">
-                          {isAdmin ? (
-                            <button
-                              type="button"
-                              className="block w-full bg-primary p-2 text-center font-semibold text-white"
-                            >
-                              Withdraw Offer
-                            </button>
-                          ) : (
-                            <div className="flex gap-3">
-                              <button
-                                type="button"
-                                className="block w-1/2 bg-primary p-2 text-center font-semibold text-white"
-                              >
-                                Accept
-                              </button>
-                              <button
-                                type="button"
-                                className="block w-1/2 bg-gray-400 p-2 text-center font-semibold text-white"
-                              >
-                                Decline
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                {/* Here is Image Upload Preview part */}
-                {msg.attachment && msg.attachment.length > 0 && (
-                  <div className="relative mt-2">
-                    {msg.attachment.length > 3 && (
-                      <Link
-                        onClick={() => handleDownloadAll(msg.attachment)}
-                        className="mb-2 inline-block text-sm font-medium text-primary"
-                      >
-                        Download All
-                      </Link>
-                    )}
-                    <div className="grid grid-cols-3 gap-3">
-                      {msg.attachment.map((att, i) => (
-                        <div key={i}>
-                          <img
-                            src={att.url}
-                            alt=""
-                            className="h-[180px] w-full object-cover"
-                          />
-                          {console.log(att)}
-                          <a
-                            href={att.url}
-                            download={att.name}
-                            className="mt-2 flex items-center justify-center text-xs"
-                          >
-                            <BiDownload className="shrink-0 text-lg text-primary" />
-                            <p
-                              className="mx-2 line-clamp-1 font-medium"
-                              title={att.name}
-                            >
-                              {att.name}
-                            </p>
-                            <span className="shrink-0 text-black/50">
-                              ({formatFileSize(att.size)})
+                        <div className="p-3">
+                          <p className="mb-5 mt-2">{msg.customOffer.desc}</p>
+                          <div className="flex items-center gap-2 font-medium">
+                            <FaCheckCircle className="text-primary" />
+                            <span>
+                              {msg.customOffer.deliveryCount +
+                                " " +
+                                msg.customOffer.deliveryWay}{" "}
+                              delivery
                             </span>
-                          </a>
-                        </div>
-                      ))}
-                    </div>
-                    {msg.attachment?.length >= 6 &&
-                      (!expand ? (
-                        <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
-                          <button
-                            className="rounded-full border bg-white"
-                            onClick={() => setExpand(!expand)}
-                          >
-                            <img
-                              src={DownArrow}
-                              alt=""
-                              className="h-[50px] w-[50px]"
-                            />
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="relative z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-5">
-                          <button
-                            className="rounded-full border bg-white"
-                            onClick={() => setExpand(!expand)}
-                          >
-                            <img
-                              src={UpArrow}
-                              alt=""
-                              className="h-[50px] w-[50px]"
-                            />
-                          </button>
-                        </div>
-                      ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div> : <div>
-          {messages?.map((msg, i) => (
-            <div key={i} className="group mt-3 flex items-start gap-3 px-3">
-              <div className="shrink-0">
-                <img
-                  src={msg?.userImage ? msg?.userImage : logo}
-                  alt=""
-                  className="h-[30px] w-[30px] rounded-full object-cover"
-                />
-              </div>
-              <div className="grow">
-                <div className="mt-1 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <h1 className="font-semibold">
-                      {user?.userName === msg?.senderUserName
-                        ? "Me"
-                        : msg?.senderUserName}
-                    </h1>
-                    <p className="text-xs text-black/50">
-                      {msg?.msgDate}, {msg?.msgTime?.toUpperCase()}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3 text-black/50 opacity-0 group-hover:opacity-100">
-                    <button type="button">
-                      <BsFillReplyFill className="text-xl" />
-                    </button>
-                    {visibility[msg?.id] && (
-                      <button type="button">
-                        <FaTrashAlt />
-                      </button>
-                    )}
-                  </div>
-                </div>
-                {/* Here is the message text to preview */}
-                {msg?.messageText && (
-                  <div className="mt-1 w-11/12">
-                    <p>{msg?.messageText}</p>
-                  </div>
-                )}
-                {/* Here is the contact form message to preview */}
-                {msg.contactForm && (
-                  <div className="mt-1">
-                    <h1 className="font-semibold">Contact Form</h1>
-                    <p className="my-1">
-                      <span className="font-semibold">Name: </span>{" "}
-                      {msg.contactForm.name}
-                    </p>
-                    <p className="my-1">
-                      <span className="font-semibold">Email: </span>{" "}
-                      {msg.contactForm.email}
-                    </p>
-                    <p className="my-1">
-                      <span className="font-semibold">Website/Facebook: </span>{" "}
-                      {msg.contactForm.website}
-                    </p>
-                    <p className="my-1">
-                      <span className="font-semibold">Example design:</span>
-                    </p>
-                    {msg.attachment && msg.attachment.length > 0 && (
-                      <div className="relative mt-2">
-                        {msg?.contactForm?.exampleDesign?.length > 3 && (
-                          <Link className="mb-2 inline-block text-sm font-medium text-primary">
-                            Download All
-                          </Link>
-                        )}
-                        <div className="grid grid-cols-3 gap-3">
-                          {msg?.contactForm?.exampleDesign?.map((att, i) => (
-                            <div key={i}>
-                              <img
-                                src={att?.url}
-                                alt=""
-                                className="h-[180px] w-full object-cover"
-                              />
-                              <Link className="mt-2 flex items-center justify-center text-xs">
-                                <BiDownload className="shrink-0 text-lg text-primary" />
-                                <p
-                                  className="mx-2 line-clamp-1 font-medium"
-                                  title={att?.name}
+                          </div>
+                          <div className="mt-4">
+                            {isAdmin ? (
+                              <button
+                                type="button"
+                                className="block w-full bg-primary p-2 text-center font-semibold text-white"
+                              >
+                                Withdraw Offer
+                              </button>
+                            ) : (
+                              <div className="flex gap-3">
+                                <button
+                                  type="button"
+                                  className="block w-1/2 bg-primary p-2 text-center font-semibold text-white"
                                 >
-                                  {att?.name}
-                                </p>
-                                <span className="shrink-0 text-black/50">
-                                  ({formatFileSize(att?.size)})
-                                </span>
-                              </Link>
-                            </div>
-                          ))}
+                                  Accept
+                                </button>
+                                <button
+                                  type="button"
+                                  className="block w-1/2 bg-gray-400 p-2 text-center font-semibold text-white"
+                                >
+                                  Decline
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                        {msg?.contactForm?.exampleDesign?.length >= 6 &&
-                          (!expand ? (
-                            <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
-                              <button
-                                className="rounded-full border bg-white"
-                                onClick={() => setExpand(!expand)}
-                              >
-                                <img
-                                  src={DownArrow}
-                                  alt=""
-                                  className="h-[50px] w-[50px]"
-                                />
-                              </button>
-                            </div>
-                          ) : (
-                            <div className="relative z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-5">
-                              <button
-                                className="rounded-full border bg-white"
-                                onClick={() => setExpand(!expand)}
-                              >
-                                <img
-                                  src={UpArrow}
-                                  alt=""
-                                  className="h-[50px] w-[50px]"
-                                />
-                              </button>
-                            </div>
-                          ))}
                       </div>
-                    )}
-
-                    <p className="mt-5">
-                      <span className="font-semibold">Message: </span>{" "}
-                      {msg.contactForm.messageText}
-                    </p>
+                    </div>
+                  )}
+                  {/* Here is Image Upload Preview part */}
+                  {msg.attachment && msg.attachment.length > 0 && (
+                    <div className="relative mt-2">
+                      {msg.attachment.length > 3 && (
+                        <Link
+                          onClick={() => handleDownloadAll(msg.attachment)}
+                          className="mb-2 inline-block text-sm font-medium text-primary"
+                        >
+                          Download All
+                        </Link>
+                      )}
+                      <div className="grid grid-cols-3 gap-3">
+                        {msg.attachment.map((att, i) => (
+                          <div key={i}>
+                            <img
+                              src={att.url}
+                              alt=""
+                              className="h-[180px] w-full object-cover"
+                            />
+                            {console.log(att)}
+                            <a
+                              href={att.url}
+                              download={att.name}
+                              className="mt-2 flex items-center justify-center text-xs"
+                            >
+                              <BiDownload className="shrink-0 text-lg text-primary" />
+                              <p
+                                className="mx-2 line-clamp-1 font-medium"
+                                title={att.name}
+                              >
+                                {att.name}
+                              </p>
+                              <span className="shrink-0 text-black/50">
+                                ({formatFileSize(att.size)})
+                              </span>
+                            </a>
+                          </div>
+                        ))}
+                      </div>
+                      {msg.attachment?.length >= 6 &&
+                        (!expand ? (
+                          <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
+                            <button
+                              className="rounded-full border bg-white"
+                              onClick={() => setExpand(!expand)}
+                            >
+                              <img
+                                src={DownArrow}
+                                alt=""
+                                className="h-[50px] w-[50px]"
+                              />
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="relative z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-5">
+                            <button
+                              className="rounded-full border bg-white"
+                              onClick={() => setExpand(!expand)}
+                            >
+                              <img
+                                src={UpArrow}
+                                alt=""
+                                className="h-[50px] w-[50px]"
+                              />
+                            </button>
+                          </div>
+                        ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div>
+            {messages?.map((msg, i) => (
+              <div key={i} className="group mt-3 flex items-start gap-3 px-3">
+                <div className="shrink-0">
+                  <img
+                    src={msg?.userImage ? msg?.userImage : logo}
+                    alt=""
+                    className="h-[30px] w-[30px] rounded-full object-cover"
+                  />
+                </div>
+                <div className="grow">
+                  <div className="mt-1 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <h1 className="font-semibold">
+                        {user?.userName === msg?.senderUserName
+                          ? "Me"
+                          : msg?.senderUserName}
+                      </h1>
+                      <p className="text-xs text-black/50">
+                        {msg?.msgDate}, {msg?.msgTime?.toUpperCase()}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3 text-black/50 opacity-0 group-hover:opacity-100">
+                      <button type="button">
+                        <BsFillReplyFill className="text-xl" />
+                      </button>
+                      {visibility[msg?.id] && (
+                        <button type="button">
+                          <FaTrashAlt />
+                        </button>
+                      )}
+                    </div>
                   </div>
-                )}
-                {/* Here is the offer template to preview */}
-                {msg.customOffer && (
-                  <div className="mt-1">
-                    <p>Custom Offer</p>
-                    <div className="border bg-lightskyblue">
-                      <div className="flex items-center justify-between gap-3 bg-primary/20 p-3">
-                        <div className="flex items-center gap-3">
-                          <img
-                            src={msg.customOffer.thumbnail}
-                            className="h-[60px] w-[80px] object-cover"
-                            alt=""
-                          />
-                          <h1 className="text-2xl font-semibold">
-                            {msg.customOffer.title}
-                          </h1>
+                  {/* Here is the message text to preview */}
+                  {msg?.messageText && (
+                    <div className="mt-1 w-11/12">
+                      <p>{msg?.messageText}</p>
+                    </div>
+                  )}
+                  {/* Here is the contact form message to preview */}
+                  {msg.contactForm && (
+                    <div className="mt-1">
+                      <h1 className="font-semibold">Contact Form</h1>
+                      <p className="my-1">
+                        <span className="font-semibold">Name: </span>{" "}
+                        {msg.contactForm.name}
+                      </p>
+                      <p className="my-1">
+                        <span className="font-semibold">Email: </span>{" "}
+                        {msg.contactForm.email}
+                      </p>
+                      <p className="my-1">
+                        <span className="font-semibold">
+                          Website/Facebook:{" "}
+                        </span>{" "}
+                        {msg.contactForm.website}
+                      </p>
+                      <p className="my-1">
+                        <span className="font-semibold">Example design:</span>
+                      </p>
+                      {msg.attachment && msg.attachment.length > 0 && (
+                        <div className="relative mt-2">
+                          {msg?.contactForm?.exampleDesign?.length > 3 && (
+                            <Link className="mb-2 inline-block text-sm font-medium text-primary">
+                              Download All
+                            </Link>
+                          )}
+                          <div className="grid grid-cols-3 gap-3">
+                            {msg?.contactForm?.exampleDesign?.map((att, i) => (
+                              <div key={i}>
+                                <img
+                                  src={att?.url}
+                                  alt=""
+                                  className="h-[180px] w-full object-cover"
+                                />
+                                <Link className="mt-2 flex items-center justify-center text-xs">
+                                  <BiDownload className="shrink-0 text-lg text-primary" />
+                                  <p
+                                    className="mx-2 line-clamp-1 font-medium"
+                                    title={att?.name}
+                                  >
+                                    {att?.name}
+                                  </p>
+                                  <span className="shrink-0 text-black/50">
+                                    ({formatFileSize(att?.size)})
+                                  </span>
+                                </Link>
+                              </div>
+                            ))}
+                          </div>
+                          {msg?.contactForm?.exampleDesign?.length >= 6 &&
+                            (!expand ? (
+                              <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
+                                <button
+                                  className="rounded-full border bg-white"
+                                  onClick={() => setExpand(!expand)}
+                                >
+                                  <img
+                                    src={DownArrow}
+                                    alt=""
+                                    className="h-[50px] w-[50px]"
+                                  />
+                                </button>
+                              </div>
+                            ) : (
+                              <div className="relative z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-5">
+                                <button
+                                  className="rounded-full border bg-white"
+                                  onClick={() => setExpand(!expand)}
+                                >
+                                  <img
+                                    src={UpArrow}
+                                    alt=""
+                                    className="h-[50px] w-[50px]"
+                                  />
+                                </button>
+                              </div>
+                            ))}
                         </div>
-                        <span className="shrink-0 px-3 text-3xl font-semibold text-primary">
-                          ${msg.customOffer.price}
-                        </span>
-                      </div>
-                      <div className="p-3">
-                        <p className="mb-5 mt-2">{msg.customOffer.desc}</p>
-                        <div className="flex items-center gap-2 font-medium">
-                          <FaCheckCircle className="text-primary" />
-                          <span>
-                            {msg.customOffer.deliveryCount +
-                              " " +
-                              msg.customOffer.deliveryWay}{" "}
-                            delivery
+                      )}
+
+                      <p className="mt-5">
+                        <span className="font-semibold">Message: </span>{" "}
+                        {msg.contactForm.messageText}
+                      </p>
+                    </div>
+                  )}
+                  {/* Here is the offer template to preview */}
+                  {msg.customOffer && (
+                    <div className="mt-1">
+                      <p>Custom Offer</p>
+                      <div className="border bg-lightskyblue">
+                        <div className="flex items-center justify-between gap-3 bg-primary/20 p-3">
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={msg.customOffer.thumbnail}
+                              className="h-[60px] w-[80px] object-cover"
+                              alt=""
+                            />
+                            <h1 className="text-2xl font-semibold">
+                              {msg.customOffer.title}
+                            </h1>
+                          </div>
+                          <span className="shrink-0 px-3 text-3xl font-semibold text-primary">
+                            ${msg.customOffer.price}
                           </span>
                         </div>
-                        <div className="mt-4">
-                          {isAdmin ? (
-                            <button
-                              type="button"
-                              className="block w-full bg-primary p-2 text-center font-semibold text-white"
-                            >
-                              Withdraw Offer
-                            </button>
-                          ) : (
-                            <div className="flex gap-3">
+                        <div className="p-3">
+                          <p className="mb-5 mt-2">{msg.customOffer.desc}</p>
+                          <div className="flex items-center gap-2 font-medium">
+                            <FaCheckCircle className="text-primary" />
+                            <span>
+                              {msg.customOffer.deliveryCount +
+                                " " +
+                                msg.customOffer.deliveryWay}{" "}
+                              delivery
+                            </span>
+                          </div>
+                          <div className="mt-4">
+                            {isAdmin ? (
                               <button
                                 type="button"
-                                className="block w-1/2 bg-primary p-2 text-center font-semibold text-white"
+                                className="block w-full bg-primary p-2 text-center font-semibold text-white"
                               >
-                                Accept
+                                Withdraw Offer
                               </button>
-                              <button
-                                type="button"
-                                className="block w-1/2 bg-gray-400 p-2 text-center font-semibold text-white"
-                              >
-                                Decline
-                              </button>
-                            </div>
-                          )}
+                            ) : (
+                              <div className="flex gap-3">
+                                <button
+                                  type="button"
+                                  className="block w-1/2 bg-primary p-2 text-center font-semibold text-white"
+                                >
+                                  Accept
+                                </button>
+                                <button
+                                  type="button"
+                                  className="block w-1/2 bg-gray-400 p-2 text-center font-semibold text-white"
+                                >
+                                  Decline
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                )}
-                {/* Here is Image Upload Preview part */}
-                {msg.attachment && msg.attachment.length > 0 && (
-                  <div className="relative mt-2">
-                    {msg.attachment.length > 3 && (
-                      <Link
-                        onClick={() => handleDownloadAll(msg.attachment)}
-                        className="mb-2 inline-block text-sm font-medium text-primary"
-                      >
-                        Download All
-                      </Link>
-                    )}
-                    <div className="grid grid-cols-3 gap-3">
-                      {msg.attachment.map((att, i) => (
-                        <div key={i}>
-                          <img
-                            src={att.url}
-                            alt=""
-                            className="h-[180px] w-full object-cover"
-                          />
-                          {console.log(att)}
-                          <a
-                            href={att.url}
-                            download={att.name}
-                            className="mt-2 flex items-center justify-center text-xs"
-                          >
-                            <BiDownload className="shrink-0 text-lg text-primary" />
-                            <p
-                              className="mx-2 line-clamp-1 font-medium"
-                              title={att.name}
+                  )}
+                  {/* Here is Image Upload Preview part */}
+                  {msg.attachment && msg.attachment.length > 0 && (
+                    <div className="relative mt-2">
+                      {msg.attachment.length > 3 && (
+                        <Link
+                          onClick={() => handleDownloadAll(msg.attachment)}
+                          className="mb-2 inline-block text-sm font-medium text-primary"
+                        >
+                          Download All
+                        </Link>
+                      )}
+                      <div className="grid grid-cols-3 gap-3">
+                        {msg.attachment.map((att, i) => (
+                          <div key={i}>
+                            <img
+                              src={att.url}
+                              alt=""
+                              className="h-[180px] w-full object-cover"
+                            />
+                            {console.log(att)}
+                            <a
+                              href={att.url}
+                              download={att.name}
+                              className="mt-2 flex items-center justify-center text-xs"
                             >
-                              {att.name}
-                            </p>
-                            <span className="shrink-0 text-black/50">
-                              ({formatFileSize(att.size)})
-                            </span>
-                          </a>
-                        </div>
-                      ))}
+                              <BiDownload className="shrink-0 text-lg text-primary" />
+                              <p
+                                className="mx-2 line-clamp-1 font-medium"
+                                title={att.name}
+                              >
+                                {att.name}
+                              </p>
+                              <span className="shrink-0 text-black/50">
+                                ({formatFileSize(att.size)})
+                              </span>
+                            </a>
+                          </div>
+                        ))}
+                      </div>
+                      {msg.attachment?.length >= 6 &&
+                        (!expand ? (
+                          <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
+                            <button
+                              className="rounded-full border bg-white"
+                              onClick={() => setExpand(!expand)}
+                            >
+                              <img
+                                src={DownArrow}
+                                alt=""
+                                className="h-[50px] w-[50px]"
+                              />
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="relative z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-5">
+                            <button
+                              className="rounded-full border bg-white"
+                              onClick={() => setExpand(!expand)}
+                            >
+                              <img
+                                src={UpArrow}
+                                alt=""
+                                className="h-[50px] w-[50px]"
+                              />
+                            </button>
+                          </div>
+                        ))}
                     </div>
-                    {msg.attachment?.length >= 6 &&
-                      (!expand ? (
-                        <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
-                          <button
-                            className="rounded-full border bg-white"
-                            onClick={() => setExpand(!expand)}
-                          >
-                            <img
-                              src={DownArrow}
-                              alt=""
-                              className="h-[50px] w-[50px]"
-                            />
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="relative z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-5">
-                          <button
-                            className="rounded-full border bg-white"
-                            onClick={() => setExpand(!expand)}
-                          >
-                            <img
-                              src={UpArrow}
-                              alt=""
-                              className="h-[50px] w-[50px]"
-                            />
-                          </button>
-                        </div>
-                      ))}
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>}
-
-
+            ))}
+          </div>
+        )}
 
         <div ref={endOfMessagesRef} />
       </div>
