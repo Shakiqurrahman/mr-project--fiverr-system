@@ -210,7 +210,6 @@ function Contact() {
             </div>
           ))}
         </div>
-        {/* {errorImg && <p className="text-sm text-red-600">{errorImg}</p>} */}
 
         <textarea
           name="Message"

@@ -65,7 +65,6 @@ const ChatBox = ({ openToggle }) => {
 
   // messages state
   const [messages, setMessages] = useState([]);
-  console.log("messages", messages);
 
   // recipient User
   const { data: usersData } = useFetchAllUsersQuery();
@@ -97,7 +96,6 @@ const ChatBox = ({ openToggle }) => {
   useEffect(() => {
     // Listen for incoming messages
     socket?.on("message", (msg) => {
-      console.log("socket message testing.....", msg);
       if(!isAdmin) {
         setMessages((prevMessages) => [...prevMessages, msg]);
       }
@@ -105,8 +103,7 @@ const ChatBox = ({ openToggle }) => {
       let filter = msg.userId === conversationUser && msg;
       if (isAdmin && filter) {
         setMessages(prev => [...prev, filter]);
-        dispatch(inboxApiSlice?.util?.invalidateTags(['Messages']))
-        
+        // dispatch(inboxApiSlice?.util?.invalidateTags(['Messages']))
       }
       
     });
@@ -249,11 +246,24 @@ const ChatBox = ({ openToggle }) => {
     // Reset the file input to allow re-uploading the same file
     fileInputRef.current.value = null;
   };
-  // console.log(conversationUser);
 
   // click outside the box it will be toggled
   useOutsideClick(menuRef, () => setQucikMsgBtnController(null));
   useOutsideClick(dotMenuRef, () => setExpandDot(false));
+
+
+  // time & date stamps
+  const date = new Date();
+    const msgDate = date.toLocaleDateString([], {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+    const msgTime = date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
 
   // handler for Submitting/Send a Message
   const handleSubmitMessage = async (e) => {
@@ -268,8 +278,12 @@ const ChatBox = ({ openToggle }) => {
         }));
         const submitForm = {
           messageText: textValue,
+          senderUserName : user?.userName,
+          userImage : user?.image,
           attachment: attachments || [],
           customOffer: null,
+          msgDate,
+          msgTime,
         };
         if (isAdmin) {
           socket?.emit("admin-message", {
@@ -319,18 +333,6 @@ const ChatBox = ({ openToggle }) => {
       document.body.removeChild(link); // Clean up
     });
   };
-
-  console.log("messages", messages);
-  console.log("sender id", conversationUser);
-
-  // useEffect(() => {
-  //   if (isAdmin) {
-  //     const filerMessage = messages?.filter(
-  //       (message) => conversationUser === message.userId,
-  //     );
-  //     setMessages((prevMessages) => [...prevMessages, ...filerMessage]);
-  //   }
-  // }, []);
 
   return (
     <div className="h-full">
