@@ -65,7 +65,7 @@ export const inboxApiSlice = createApi({
       query: ({ receiverId }) => `message/${receiverId}`,
       transformResponse: (response) => response?.data,
       providesTags: ["getAllMessages"],
-      pollingInterval: 1000,
+      // refetchOnMountOrArgChange: true,
     }),
 
     // Get All Conversational Messages for admin
@@ -76,6 +76,7 @@ export const inboxApiSlice = createApi({
         body: newMessage,
       }),
       invalidatesTags: ["getAllMessages"],
+      
     }),
 
     // Create start contact for Message

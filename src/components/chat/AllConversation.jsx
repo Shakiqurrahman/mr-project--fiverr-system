@@ -220,7 +220,6 @@ const AllConversation = ({ closeToggle }) => {
       {
         receiverId: id,
       },
-      { pollingInterval: 1000 },
     );
     closeToggle(false);
   };

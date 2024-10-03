@@ -24,6 +24,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { configApi } from "../../libs/configApi";
 import { useFetchAllUsersQuery } from "../../Redux/api/allUserApiSlice";
 import {
+  inboxApiSlice,
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
   useLazyGetAllMessagesQuery,
@@ -77,7 +78,6 @@ const ChatBox = ({ openToggle }) => {
         {
           receiverId: "66fba5d5dca406c532a6b338",
         },
-        { pollingInterval: 1000 },
       );
     }
   }, [user, triggerGetAllMessages]);
@@ -86,7 +86,7 @@ const ChatBox = ({ openToggle }) => {
     if (getAllMessagesForUser && user.role === "USER") {
       dispatch(setChatData(getAllMessagesForUser));
       setMessages(getAllMessagesForUser);
-    } else if (chatData) {
+    } else if (chatData) {      
       setMessages(chatData);
     }
   }, [dispatch, getAllMessagesForUser, user, chatData]);
@@ -98,14 +98,24 @@ const ChatBox = ({ openToggle }) => {
     // Listen for incoming messages
     socket?.on("message", (msg) => {
       console.log("socket message testing.....", msg);
-      setMessages((prevMessages) => [...prevMessages, msg]);
+      if(!isAdmin) {
+        setMessages((prevMessages) => [...prevMessages, msg]);
+      }
+            
+      let filter = msg.userId === conversationUser && msg;
+      if (isAdmin && filter) {
+        setMessages(prev => [...prev, filter]);
+        dispatch(inboxApiSlice?.util?.invalidateTags(['Messages']))
+        
+      }
+      
     });
 
     // Cleanup on component unmount
     return () => {
       socket?.off("message");
     };
-  }, [conversationUser, isAdmin, socket]);
+  }, [conversationUser, isAdmin, socket, messages]);
 
   useEffect(() => {
     // Inital Scroll to last message
@@ -118,7 +128,7 @@ const ChatBox = ({ openToggle }) => {
       const currentTime = new Date();
 
       messages?.forEach((message) => {
-        const messageDate = new Date(`${message.msgDate} ${message.msgTime}`);
+        const messageDate = new Date(`${message?.msgDate} ${message?.msgTime}`);
         const fiveMinutesLater = new Date(
           messageDate.getTime() + 5 * 60 * 1000,
         );
@@ -262,7 +272,7 @@ const ChatBox = ({ openToggle }) => {
           customOffer: null,
         };
         if (isAdmin) {
-          socket.emit("admin-message", {
+          socket?.emit("admin-message", {
             userId: conversationUser,
             ...submitForm,
           });
@@ -272,7 +282,7 @@ const ChatBox = ({ openToggle }) => {
           }).unwrap();
           console.log(res);
         } else {
-          socket.emit("user-message", {
+          socket?.emit("user-message", {
             userId: user?.id,
             ...submitForm,
           });
@@ -313,14 +323,14 @@ const ChatBox = ({ openToggle }) => {
   console.log("messages", messages);
   console.log("sender id", conversationUser);
 
-  useEffect(() => {
-    if (isAdmin) {
-      const filerMessage = messages?.filter(
-        (message) => conversationUser === message.userId,
-      );
-      setMessages((prevMessages) => [...prevMessages, ...filerMessage]);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (isAdmin) {
+  //     const filerMessage = messages?.filter(
+  //       (message) => conversationUser === message.userId,
+  //     );
+  //     setMessages((prevMessages) => [...prevMessages, ...filerMessage]);
+  //   }
+  // }, []);
 
   return (
     <div className="h-full">
@@ -445,7 +455,7 @@ const ChatBox = ({ openToggle }) => {
                     </div>
                   )}
                   {/* Here is the contact form message to preview */}
-                  {msg.contactForm && (
+                  {msg?.contactForm && (
                     <div className="mt-1">
                       <h1 className="font-semibold">Contact Form</h1>
                       <p className="my-1">
@@ -533,19 +543,19 @@ const ChatBox = ({ openToggle }) => {
                     </div>
                   )}
                   {/* Here is the offer template to preview */}
-                  {msg.customOffer && (
+                  {msg?.customOffer && (
                     <div className="mt-1">
                       <p>Custom Offer</p>
                       <div className="border bg-lightskyblue">
                         <div className="flex items-center justify-between gap-3 bg-primary/20 p-3">
                           <div className="flex items-center gap-3">
                             <img
-                              src={msg.customOffer.thumbnail}
+                              src={msg?.customOffer.thumbnail}
                               className="h-[60px] w-[80px] object-cover"
                               alt=""
                             />
                             <h1 className="text-2xl font-semibold">
-                              {msg.customOffer.title}
+                              {msg?.customOffer.title}
                             </h1>
                           </div>
                           <span className="shrink-0 px-3 text-3xl font-semibold text-primary">
@@ -553,7 +563,7 @@ const ChatBox = ({ openToggle }) => {
                           </span>
                         </div>
                         <div className="p-3">
-                          <p className="mb-5 mt-2">{msg.customOffer.desc}</p>
+                          <p className="mb-5 mt-2">{msg?.customOffer?.desc}</p>
                           <div className="flex items-center gap-2 font-medium">
                             <FaCheckCircle className="text-primary" />
                             <span>
@@ -593,9 +603,9 @@ const ChatBox = ({ openToggle }) => {
                     </div>
                   )}
                   {/* Here is Image Upload Preview part */}
-                  {msg.attachment && msg.attachment.length > 0 && (
+                  {msg?.attachment && msg?.attachment?.length > 0 && (
                     <div className="relative mt-2">
-                      {msg.attachment.length > 3 && (
+                      {msg?.attachment.length > 3 && (
                         <Link
                           onClick={() => handleDownloadAll(msg.attachment)}
                           className="mb-2 inline-block text-sm font-medium text-primary"
@@ -604,7 +614,7 @@ const ChatBox = ({ openToggle }) => {
                         </Link>
                       )}
                       <div className="grid grid-cols-3 gap-3">
-                        {msg.attachment.map((att, i) => (
+                        {msg?.attachment.map((att, i) => (
                           <div key={i}>
                             <img
                               src={att.url}
@@ -631,7 +641,7 @@ const ChatBox = ({ openToggle }) => {
                           </div>
                         ))}
                       </div>
-                      {msg.attachment?.length >= 6 &&
+                      {msg?.attachment?.length >= 6 &&
                         (!expand ? (
                           <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
                             <button

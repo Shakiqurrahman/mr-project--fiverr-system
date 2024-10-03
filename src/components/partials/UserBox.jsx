@@ -1,5 +1,5 @@
 import { Divider, Menu, MenuItem, Skeleton } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../Redux/features/userSlice";
@@ -8,7 +8,10 @@ import { disconnectSocket } from "../../libs/socketService";
 function UserBox() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const { user, loading } = useSelector((state) => state.user);
+  const isAuthorized = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);  
+
   const handleLogout = () => {
     dispatch(logout());
     disconnectSocket();
@@ -33,7 +36,6 @@ function UserBox() {
         className="size-10 rounded-full bg-[rgba(255,255,255,0.20)] object-cover"
         src={user?.image}
         alt="user"
-      
       />
     );
   } else {
@@ -102,9 +104,11 @@ function UserBox() {
         <Link to="/billing-information">
           <MenuItem onClick={handleClose}>Billing Information</MenuItem>
         </Link>
-        <Link to="/payment-methods">
-          <MenuItem onClick={handleClose}>Payment Methods</MenuItem>
-        </Link>
+        {isAuthorized && (
+          <Link to="/payment-methods">
+            <MenuItem onClick={handleClose}>Payment Methods</MenuItem>
+          </Link>
+        )}
         <Link to="/affiliate">
           <MenuItem onClick={handleClose}>Affiliate</MenuItem>
         </Link>
