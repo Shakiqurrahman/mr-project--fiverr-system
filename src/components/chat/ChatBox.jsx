@@ -115,7 +115,7 @@ const ChatBox = ({ openToggle }) => {
     return () => {
       socket?.off("message");
     };
-  }, [conversationUser, isAdmin, socket, messages]);
+  }, [conversationUser, isAdmin, socket, messages, dispatch]);
 
   useEffect(() => {
     // Inital Scroll to last message

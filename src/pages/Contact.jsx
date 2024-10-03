@@ -133,7 +133,7 @@ function Contact() {
     <div className="max-width">
       <h1 className="mx-auto mt-[40px] max-w-[700px] text-center text-2xl">
         If you have any questions or inquiries about our services, please feel
-        free to contact us by filling out this form
+        free to contact us by filling out this form.
       </h1>
 
       <form
@@ -141,7 +141,7 @@ function Contact() {
         className="mx-auto mt-10 max-w-[800px] rounded-xl bg-[#FFEFEF] p-5"
       >
         <input
-          className="mt-5 block w-full border border-solid border-gray-400 p-3 outline-0"
+          className="mt-5 block w-full border border-solid border-gray-400 p-3 outline-0 text-base"
           type="text"
           name="name"
           value={value.name}
@@ -149,7 +149,7 @@ function Contact() {
           onChange={handleChange}
         />
         <input
-          className="mt-5 block w-full border border-solid border-gray-400 p-3 outline-0"
+          className="mt-5 block w-full border border-solid border-gray-400 p-3 outline-0 text-base"
           type="email"
           name="email"
           value={value.email}
@@ -157,7 +157,7 @@ function Contact() {
           onChange={handleChange}
         />
         <input
-          className="mt-5 block w-full border border-solid border-gray-400 p-3 outline-0"
+          className="mt-5 block w-full border border-solid border-gray-400 p-3 outline-0 text-base"
           type="text"
           name="link"
           value={value.link}
@@ -174,7 +174,7 @@ function Contact() {
           onChange={handleFileChange}
         />
         <label
-          className="mt-5 flex w-full cursor-pointer justify-between border border-solid border-gray-400 bg-white p-3"
+          className="mt-5 flex w-full cursor-pointer items-center justify-between border border-solid border-gray-400 bg-white p-3"
           htmlFor="file"
         >
           <span className="text-gray-400">Example design</span>
@@ -214,7 +214,7 @@ function Contact() {
 
         <textarea
           name="Message"
-          className="cusotomTextarea mt-5 h-auto min-h-[100px] w-full border border-solid border-gray-400 p-3 outline-none"
+          className="cusotomTextarea mt-5 h-auto min-h-[100px] w-full border border-solid border-gray-400 p-3 outline-none text-base"
           value={value.Message}
           onChange={handleChange}
           placeholder="Message"
