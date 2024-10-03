@@ -30,6 +30,7 @@ const StartSingleProject = ({ item }) => {
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
+    setSelectedSubCategory("");
   };
 
   const handleSubCategoryChange = (e) => {
