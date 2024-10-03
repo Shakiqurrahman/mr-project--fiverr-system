@@ -23,6 +23,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { configApi } from "../../libs/configApi";
 import { useFetchAllUsersQuery } from "../../Redux/api/allUserApiSlice";
 import {
+  inboxApiSlice,
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
   useLazyGetAllMessagesQuery,
@@ -100,6 +101,8 @@ const ChatBox = ({ openToggle }) => {
       if (isAdmin && filter) {
         setMessages((prev) => [...prev, filter]);
         // dispatch(inboxApiSlice?.util?.invalidateTags(['Messages']))
+        console.log(filter);
+        
       }
     });
 
