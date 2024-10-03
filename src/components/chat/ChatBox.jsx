@@ -6,7 +6,6 @@ import { IoIosArrowDown, IoIosArrowUp, IoIosAttach } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import logo from "../../assets/images/default_user.png";
 import DownArrow from "../../assets/images/icons/Down Arrow.svg";
 import UpArrow from "../../assets/images/icons/Upper Arrow.svg";
 import { useLocalStorageObject } from "../../hooks/useLocalStorageObject";
@@ -24,7 +23,6 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { configApi } from "../../libs/configApi";
 import { useFetchAllUsersQuery } from "../../Redux/api/allUserApiSlice";
 import {
-  inboxApiSlice,
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
   useLazyGetAllMessagesQuery,
@@ -73,11 +71,9 @@ const ChatBox = ({ openToggle }) => {
 
   useEffect(() => {
     if (user.role === "USER") {
-      triggerGetAllMessages(
-        {
-          receiverId: "66fba5d5dca406c532a6b338",
-        },
-      );
+      triggerGetAllMessages({
+        receiverId: "66fba5d5dca406c532a6b338",
+      });
     }
   }, [user, triggerGetAllMessages]);
 
@@ -85,7 +81,7 @@ const ChatBox = ({ openToggle }) => {
     if (getAllMessagesForUser && user.role === "USER") {
       dispatch(setChatData(getAllMessagesForUser));
       setMessages(getAllMessagesForUser);
-    } else if (chatData) {      
+    } else if (chatData) {
       setMessages(chatData);
     }
   }, [dispatch, getAllMessagesForUser, user, chatData]);
@@ -96,16 +92,15 @@ const ChatBox = ({ openToggle }) => {
   useEffect(() => {
     // Listen for incoming messages
     socket?.on("message", (msg) => {
-      if(!isAdmin) {
+      if (!isAdmin) {
         setMessages((prevMessages) => [...prevMessages, msg]);
       }
-            
+
       let filter = msg.userId === conversationUser && msg;
       if (isAdmin && filter) {
-        setMessages(prev => [...prev, filter]);
+        setMessages((prev) => [...prev, filter]);
         // dispatch(inboxApiSlice?.util?.invalidateTags(['Messages']))
       }
-      
     });
 
     // Cleanup on component unmount
@@ -251,19 +246,18 @@ const ChatBox = ({ openToggle }) => {
   useOutsideClick(menuRef, () => setQucikMsgBtnController(null));
   useOutsideClick(dotMenuRef, () => setExpandDot(false));
 
-
   // time & date stamps
   const date = new Date();
-    const msgDate = date.toLocaleDateString([], {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-    const msgTime = date.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
+  const msgDate = date.toLocaleDateString([], {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+  const msgTime = date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
 
   // handler for Submitting/Send a Message
   const handleSubmitMessage = async (e) => {
@@ -278,8 +272,8 @@ const ChatBox = ({ openToggle }) => {
         }));
         const submitForm = {
           messageText: textValue,
-          senderUserName : user?.userName,
-          userImage : user?.image,
+          senderUserName: user?.userName,
+          userImage: user?.image,
           attachment: attachments || [],
           customOffer: null,
           msgDate,
@@ -294,7 +288,6 @@ const ChatBox = ({ openToggle }) => {
             recipientId: conversationUser,
             ...submitForm,
           }).unwrap();
-          console.log(res);
         } else {
           socket?.emit("user-message", {
             userId: user?.id,
@@ -304,7 +297,6 @@ const ChatBox = ({ openToggle }) => {
             recipientId: "66fba5d5dca406c532a6b338",
             ...submitForm,
           }).unwrap();
-          console.log(res);
         }
         return { result: "Success" };
       };
@@ -416,16 +408,24 @@ const ChatBox = ({ openToggle }) => {
       >
         {/* All message Container */}
         {/* Each message block */}
-        {isAdmin ? (
-          <div>
-            {messages?.map((msg, i) => (
+
+        <div>
+          {messages?.map((msg, i) => {
+            const letterLogo = msg?.senderUserName?.charAt(0).toUpperCase();
+            return (
               <div key={i} className="group mt-3 flex items-start gap-3 px-3">
-                <div className="shrink-0">
-                  <img
-                    src={msg?.userImage ? msg?.userImage : logo}
-                    alt=""
-                    className="h-[30px] w-[30px] rounded-full object-cover"
-                  />
+                <div className="shrink-0 bg-[#ffefef] size-[30px] flex justify-center items-center rounded-full">
+                  {msg?.userImage ? (
+                    <img
+                      src={msg?.userImage}
+                      alt=""
+                      className="size-full rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className=" font-bold text-[#7c7c7c]/50 text-xl">
+                      {letterLogo}
+                    </div>
+                  )}
                 </div>
                 <div className="grow">
                   <div className="mt-1 flex items-center justify-between">
@@ -675,270 +675,9 @@ const ChatBox = ({ openToggle }) => {
                   )}
                 </div>
               </div>
-            ))}
-          </div>
-        ) : (
-          <div>
-            {messages?.map((msg, i) => (
-              <div key={i} className="group mt-3 flex items-start gap-3 px-3">
-                <div className="shrink-0">
-                  <img
-                    src={msg?.userImage ? msg?.userImage : logo}
-                    alt=""
-                    className="h-[30px] w-[30px] rounded-full object-cover"
-                  />
-                </div>
-                <div className="grow">
-                  <div className="mt-1 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <h1 className="font-semibold">
-                        {user?.userName === msg?.senderUserName
-                          ? "Me"
-                          : msg?.senderUserName}
-                      </h1>
-                      <p className="text-xs text-black/50">
-                        {msg?.msgDate}, {msg?.msgTime?.toUpperCase()}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-3 text-black/50 opacity-0 group-hover:opacity-100">
-                      <button type="button">
-                        <BsFillReplyFill className="text-xl" />
-                      </button>
-                      {visibility[msg?.id] && (
-                        <button type="button">
-                          <FaTrashAlt />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                  {/* Here is the message text to preview */}
-                  {msg?.messageText && (
-                    <div className="mt-1 w-11/12">
-                      <p>{msg?.messageText}</p>
-                    </div>
-                  )}
-                  {/* Here is the contact form message to preview */}
-                  {msg.contactForm && (
-                    <div className="mt-1">
-                      <h1 className="font-semibold">Contact Form</h1>
-                      <p className="my-1">
-                        <span className="font-semibold">Name: </span>{" "}
-                        {msg.contactForm.name}
-                      </p>
-                      <p className="my-1">
-                        <span className="font-semibold">Email: </span>{" "}
-                        {msg.contactForm.email}
-                      </p>
-                      <p className="my-1">
-                        <span className="font-semibold">
-                          Website/Facebook:{" "}
-                        </span>{" "}
-                        {msg.contactForm.website}
-                      </p>
-                      <p className="my-1">
-                        <span className="font-semibold">Example design:</span>
-                      </p>
-                      {msg.attachment && msg.attachment.length > 0 && (
-                        <div className="relative mt-2">
-                          {msg?.contactForm?.exampleDesign?.length > 3 && (
-                            <Link className="mb-2 inline-block text-sm font-medium text-primary">
-                              Download All
-                            </Link>
-                          )}
-                          <div className="grid grid-cols-3 gap-3">
-                            {msg?.contactForm?.exampleDesign?.map((att, i) => (
-                              <div key={i}>
-                                <img
-                                  src={att?.url}
-                                  alt=""
-                                  className="h-[180px] w-full object-cover"
-                                />
-                                <Link className="mt-2 flex items-center justify-center text-xs">
-                                  <BiDownload className="shrink-0 text-lg text-primary" />
-                                  <p
-                                    className="mx-2 line-clamp-1 font-medium"
-                                    title={att?.name}
-                                  >
-                                    {att?.name}
-                                  </p>
-                                  <span className="shrink-0 text-black/50">
-                                    ({formatFileSize(att?.size)})
-                                  </span>
-                                </Link>
-                              </div>
-                            ))}
-                          </div>
-                          {msg?.contactForm?.exampleDesign?.length >= 6 &&
-                            (!expand ? (
-                              <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
-                                <button
-                                  className="rounded-full border bg-white"
-                                  onClick={() => setExpand(!expand)}
-                                >
-                                  <img
-                                    src={DownArrow}
-                                    alt=""
-                                    className="h-[50px] w-[50px]"
-                                  />
-                                </button>
-                              </div>
-                            ) : (
-                              <div className="relative z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-5">
-                                <button
-                                  className="rounded-full border bg-white"
-                                  onClick={() => setExpand(!expand)}
-                                >
-                                  <img
-                                    src={UpArrow}
-                                    alt=""
-                                    className="h-[50px] w-[50px]"
-                                  />
-                                </button>
-                              </div>
-                            ))}
-                        </div>
-                      )}
-
-                      <p className="mt-5">
-                        <span className="font-semibold">Message: </span>{" "}
-                        {msg.contactForm.messageText}
-                      </p>
-                    </div>
-                  )}
-                  {/* Here is the offer template to preview */}
-                  {msg.customOffer && (
-                    <div className="mt-1">
-                      <p>Custom Offer</p>
-                      <div className="border bg-lightskyblue">
-                        <div className="flex items-center justify-between gap-3 bg-primary/20 p-3">
-                          <div className="flex items-center gap-3">
-                            <img
-                              src={msg.customOffer.thumbnail}
-                              className="h-[60px] w-[80px] object-cover"
-                              alt=""
-                            />
-                            <h1 className="text-2xl font-semibold">
-                              {msg.customOffer.title}
-                            </h1>
-                          </div>
-                          <span className="shrink-0 px-3 text-3xl font-semibold text-primary">
-                            ${msg.customOffer.price}
-                          </span>
-                        </div>
-                        <div className="p-3">
-                          <p className="mb-5 mt-2">{msg.customOffer.desc}</p>
-                          <div className="flex items-center gap-2 font-medium">
-                            <FaCheckCircle className="text-primary" />
-                            <span>
-                              {msg.customOffer.deliveryCount +
-                                " " +
-                                msg.customOffer.deliveryWay}{" "}
-                              delivery
-                            </span>
-                          </div>
-                          <div className="mt-4">
-                            {isAdmin ? (
-                              <button
-                                type="button"
-                                className="block w-full bg-primary p-2 text-center font-semibold text-white"
-                              >
-                                Withdraw Offer
-                              </button>
-                            ) : (
-                              <div className="flex gap-3">
-                                <button
-                                  type="button"
-                                  className="block w-1/2 bg-primary p-2 text-center font-semibold text-white"
-                                >
-                                  Accept
-                                </button>
-                                <button
-                                  type="button"
-                                  className="block w-1/2 bg-gray-400 p-2 text-center font-semibold text-white"
-                                >
-                                  Decline
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  {/* Here is Image Upload Preview part */}
-                  {msg.attachment && msg.attachment.length > 0 && (
-                    <div className="relative mt-2">
-                      {msg.attachment.length > 3 && (
-                        <Link
-                          onClick={() => handleDownloadAll(msg.attachment)}
-                          className="mb-2 inline-block text-sm font-medium text-primary"
-                        >
-                          Download All
-                        </Link>
-                      )}
-                      <div className="grid grid-cols-3 gap-3">
-                        {msg.attachment.map((att, i) => (
-                          <div key={i}>
-                            <img
-                              src={att.url}
-                              alt=""
-                              className="h-[180px] w-full object-cover"
-                            />
-                            {console.log(att)}
-                            <a
-                              href={att.url}
-                              download={att.name}
-                              className="mt-2 flex items-center justify-center text-xs"
-                            >
-                              <BiDownload className="shrink-0 text-lg text-primary" />
-                              <p
-                                className="mx-2 line-clamp-1 font-medium"
-                                title={att.name}
-                              >
-                                {att.name}
-                              </p>
-                              <span className="shrink-0 text-black/50">
-                                ({formatFileSize(att.size)})
-                              </span>
-                            </a>
-                          </div>
-                        ))}
-                      </div>
-                      {msg.attachment?.length >= 6 &&
-                        (!expand ? (
-                          <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
-                            <button
-                              className="rounded-full border bg-white"
-                              onClick={() => setExpand(!expand)}
-                            >
-                              <img
-                                src={DownArrow}
-                                alt=""
-                                className="h-[50px] w-[50px]"
-                              />
-                            </button>
-                          </div>
-                        ) : (
-                          <div className="relative z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-5">
-                            <button
-                              className="rounded-full border bg-white"
-                              onClick={() => setExpand(!expand)}
-                            >
-                              <img
-                                src={UpArrow}
-                                alt=""
-                                className="h-[50px] w-[50px]"
-                              />
-                            </button>
-                          </div>
-                        ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+            );
+          })}
+        </div>
 
         <div ref={endOfMessagesRef} />
       </div>
