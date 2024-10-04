@@ -3,12 +3,12 @@ import { useLocation } from "react-router-dom";
 import NotificationPopper from "../components/Notifications/NotificationPopper";
 import PaymentTabs from "../components/PaymentTabs";
 import { ToggleSwitch } from "../libs/ToggleSwitch";
+import { loadStripe } from "@stripe/stripe-js";
+import { configApi, STRIPE_PUBLIC_KEY } from "../libs/configApi";
+import axios from "axios";
 
 const PaymentPage = () => {
-  //just for testing purposes
-  const [showNotification, setShowNotification] = useState(false);
-
-  const { state } = useLocation();
+const { state } = useLocation();
   const [activeTab, setActiveTab] = useState(null);
   const [fastDelivery, setFastDelivery] = useState(
     state?.isFastDelivery || false,
@@ -35,10 +35,22 @@ const PaymentPage = () => {
     e.preventDefault();
   };
 
+  const items = [
+    { name: 'Design 1', price: 2000, quantity: 1, image: 'image-url-1' },
+  ];
 
-  const handlePayment = () => {
-    // for testing the notification
-    setShowNotification(true);
+
+  const handlePayment = async() => {
+    try {
+      const response = await axios.post(`${configApi.api}api/checkout-session`, { items });
+      const sessionId = response.data.id;
+
+      // Redirect to Stripe Checkout
+      const stripe = window.Stripe(STRIPE_PUBLIC_KEY); // Replace with your publishable key
+      await stripe.redirectToCheckout({ sessionId });
+    } catch (error) {
+      console.error('Error redirecting to checkout:', error);
+    }
   }
 
   return (
@@ -178,16 +190,6 @@ const PaymentPage = () => {
           </form>
         </div>
       </div>
-      {/* notification testing  */}
-      {showNotification && (
-        <NotificationPopper
-          logo={""}
-          isOnline={true}
-          type={"Order"}
-          userName={"Shake75"}
-          onClose={() => setShowNotification(false)}
-        />
-      )}
     </section>
   );
 };

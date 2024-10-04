@@ -98,12 +98,14 @@ const ChatBox = ({ openToggle }) => {
         setMessages((prevMessages) => [...prevMessages, msg]);
       }
 
+      console.log('message',msg);
       let filter = msg.userId === conversationUser && msg;
       if (isAdmin && filter) {
         setMessages((prev) => [...prev, filter]);
         // dispatch(inboxApiSlice?.util?.invalidateTags(['Messages']))
       }
     });
+    
 
     // Cleanup on component unmount
     return () => {
@@ -445,7 +447,7 @@ const ChatBox = ({ openToggle }) => {
                           ? "Me"
                           : msg?.senderUserName}
                       </h1>
-                      <p className="text-[10px] text-black/50 sm:text-xs">
+                      <p className="text-[10px] sm:text-xs text-black/50">
                         {msgDate}, {msgTime?.toUpperCase()}
                       </p>
                     </div>
