@@ -45,7 +45,6 @@ const AllConversation = ({ closeToggle }) => {
   // Filter chat list based on selected option
   const getFilteredChatList = () => {
     let filteredChats = availableUsers;
-    console.log("filter", filteredChats);
 
     switch (selectedOption) {
       case "unread":
