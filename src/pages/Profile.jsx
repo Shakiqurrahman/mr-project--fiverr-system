@@ -19,16 +19,17 @@ import { LiaEditSolid } from "react-icons/lia";
 import { PiNotionLogoBold } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { setUser } from "../Redux/features/userSlice";
+import { setOnlineUsers, setUser } from "../Redux/features/userSlice";
 import ActiveProjects from "../components/customer-profile/ActiveProjects";
 import AllReviews from "../components/customer-profile/AllReviews";
 import CompletedProjects from "../components/customer-profile/CompletedProjects";
 import ProfileInfo from "../components/customer-profile/ProfileInfo";
 import { configApi } from "../libs/configApi";
+import { connectSocket } from "../libs/socketService";
 
 function Profile({ user = {}, slug }) {
   const dispatch = useDispatch();
-  const { user: loggedUser, onlineUsers } = useSelector((state) => state.user);
+  const { user: loggedUser, onlineUsers, token } = useSelector((state) => state.user);
   const [activeTab, setActiveTab] = useState("active"); // 'active' or 'completed'
   const [loading, setLoading] = useState(false);
   const [profileInfo, setProfileInfo] = useState(false);
@@ -46,6 +47,15 @@ function Profile({ user = {}, slug }) {
   const monthYear = date.toLocaleDateString("en-US", options);
 
   const letterLogo = user?.userName?.trim().charAt(0).toUpperCase();
+
+  const socket = connectSocket(`${configApi.socket}`, token);
+  // all avaliable users
+  useEffect(() => {
+    socket?.emit("view-online-users");
+    socket?.on("online-users", (onlineUsers) => {
+      dispatch(setOnlineUsers(onlineUsers));
+    });
+  }, [socket, dispatch]);
 
   const isUserOnline = (userId) => {
     return onlineUsers.some((onlineUser) => onlineUser.userId === userId);
