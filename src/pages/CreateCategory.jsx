@@ -113,6 +113,12 @@ function CreateCategory() {
     }
   };
 
+  const handleImgPreview = () => {
+    if (form.categoryImage.url) {
+      setPreview(true);
+    }
+  };
+
   const addBullet = () => {
     if (newBullet.trim() === "") return;
     setBullets([...bullets, newBullet]);
@@ -187,7 +193,7 @@ function CreateCategory() {
         <div className="mt-10 bg-lightskyblue">
           <h1 className="flex items-center justify-between bg-primary p-3 text-white">
             Image{" "}
-            <button type="button" onClick={() => setPreview(true)}>
+            <button type="button" onClick={handleImgPreview}>
               <FaEye className="text-2xl" />
             </button>
           </h1>

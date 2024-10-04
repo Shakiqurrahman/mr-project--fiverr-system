@@ -1,13 +1,13 @@
 function CountryList({ country, handleChange }) {
   return (
     <div>
-      <label htmlFor="country" className="block px-2 pt-2">
+      <label htmlFor="country" className="block px-2 pt-4">
         Country
       </label>
       <select
         id="country"
         name="country"
-        className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-3 outline-none"
+        className="bg-white block w-full p-2 border border-solid border-[#e7e7e7] mt-1 outline-none"
         value={country}
         onChange={handleChange}
       >

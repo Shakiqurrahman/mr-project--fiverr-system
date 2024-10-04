@@ -116,43 +116,43 @@ function SignUpForm({ handleClick }) {
             <CountryList country={field.value} handleChange={field.onChange} />
           )}
         />
-        <label className="block px-2 pt-2">Full Name</label>
+        <label className="block px-2 pt-4">Full Name</label>
         <input
           type="text"
           {...control.register("name")}
           className={`${
             errors.name ? "border-red-500" : "border-[#e7e7e7]"
-          } mt-3 block w-full border border-solid bg-white p-2 outline-none`}
+          } mt-1 block w-full border border-solid bg-white p-2 outline-none`}
         />
         {errors.name && (
           <p className="text-sm text-red-500">{errors.name.message}</p>
         )}
 
-        <label className="block px-2 pt-2">Username</label>
+        <label className="block px-2 pt-4">Username</label>
         <input
           type="text"
           {...control.register("username")}
           className={`${
             errors.username ? "border-red-500" : "border-[#e7e7e7]"
-          } mt-3 block w-full border border-solid bg-white p-2 outline-none`}
+          } mt-1 block w-full border border-solid bg-white p-2 outline-none`}
         />
         {errors.username && (
           <p className="text-sm text-red-500">{errors.username.message}</p>
         )}
 
-        <label className="block px-2 pt-2">Email</label>
+        <label className="block px-2 pt-4">Email</label>
         <input
           type="email"
           {...control.register("email")}
           className={`${
             errors.email ? "border-red-500" : "border-[#e7e7e7]"
-          } mt-3 block w-full border border-solid bg-white p-2 outline-none`}
+          } mt-1 block w-full border border-solid bg-white p-2 outline-none`}
         />
         {errors.email && (
           <p className="text-sm text-red-500">{errors.email.message}</p>
         )}
 
-        <label className="block px-2 pt-2">Set Password</label>
+        <label className="block px-2 pt-4">Set Password</label>
         <div className="relative">
           <button
             type="button"
@@ -166,14 +166,14 @@ function SignUpForm({ handleClick }) {
             {...control.register("password")}
             className={`${
               errors.password ? "border-red-500" : "border-[#e7e7e7]"
-            } z-0 mt-3 block w-full border border-solid bg-white p-2 outline-none`}
+            } z-0 mt-1 block w-full border border-solid bg-white p-2 outline-none`}
           />
         </div>
         {errors.password && (
           <p className="text-sm text-red-500">{errors.password.message}</p>
         )}
 
-        <label className="block px-2 pt-2">Confirm Password</label>
+        <label className="block px-2 pt-4">Confirm Password</label>
         <div className="relative">
           <button
             type="button"
@@ -187,7 +187,7 @@ function SignUpForm({ handleClick }) {
             {...control.register("confirmPassword")}
             className={`${
               errors.confirmPassword ? "border-red-500" : "border-[#e7e7e7]"
-            } z-0 mt-3 block w-full border border-solid bg-white p-2 outline-none`}
+            } z-0 mt-1 block w-full border border-solid bg-white p-2 outline-none`}
           />
         </div>
         {errors.confirmPassword && (
@@ -198,7 +198,7 @@ function SignUpForm({ handleClick }) {
 
         <button
           type="submit"
-          className={`my-4 flex h-[45px] w-full items-center justify-center bg-primary py-2 text-lg font-medium text-white disabled:cursor-not-allowed`}
+          className={`mt-5 mb-1 flex h-[45px] w-full items-center justify-center bg-primary py-2 text-lg font-medium text-white disabled:cursor-not-allowed`}
           disabled={loading}
         >
           {loading ? (

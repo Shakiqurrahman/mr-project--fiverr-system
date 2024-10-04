@@ -449,7 +449,7 @@ function UploadDesign() {
             <input
               type="text"
               name="title"
-              className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+              className="mt-1 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
               onChange={handleChange}
               required
             />
@@ -457,7 +457,7 @@ function UploadDesign() {
               There was an error!
             </p>
           </div>
-          <div className="mt-2 flex flex-col">
+          <div className="mt-3 flex flex-col">
             <label className="block px-2">Description</label>
             <Editor
               apiKey="58wpfurekzo6c0xguijfdjdm4un9yozey638o61t47zosj2t"
@@ -469,13 +469,13 @@ function UploadDesign() {
               There was an error!
             </p>
           </div>
-          <div className="mt-2 flex flex-col gap-2 md:flex-row">
+          <div className="mt-3 flex flex-col gap-2 md:flex-row">
             <div className="w-full">
               <label className="block px-2">Category</label>
               <select
                 disabled={loading}
                 name="category"
-                className="mt-3 block min-h-11 w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+                className="mt-1 block min-h-11 w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
                 value={selectedCategory}
                 onChange={handleCategoryChange}
               >
@@ -496,7 +496,7 @@ function UploadDesign() {
               <select
                 disabled={loading}
                 name="subcategory"
-                className="custom-arrow mt-3 block min-h-11 w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+                className="custom-arrow mt-1 block min-h-11 w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
                 value={selectedSubCategory}
                 onChange={handleSubCategoryChange}
               >
@@ -512,13 +512,13 @@ function UploadDesign() {
               </p>
             </div>
           </div>
-          <div className="mt-2 flex flex-col gap-2 md:flex-row">
+          <div className="mt-3 flex flex-col gap-2 md:flex-row">
             <div className="w-full">
               <label className="block px-2">Size</label>
               <input
                 type="text"
                 name="size"
-                className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+                className="mt-1 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
                 onChange={handleChange}
                 required
               />
@@ -531,7 +531,7 @@ function UploadDesign() {
               <input
                 type="text"
                 name="fileFormat"
-                className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+                className="mt-1 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
                 onChange={handleChange}
                 required
               />
@@ -540,7 +540,7 @@ function UploadDesign() {
               </p>
             </div>
           </div>
-          <div className="mt-2 flex flex-col">
+          <div className="mt-3 flex flex-col">
             <label className="block px-2 pt-2">Image</label>
             <input
               name="images"
@@ -553,7 +553,7 @@ function UploadDesign() {
             />
             <label
               htmlFor="images"
-              className="mt-2 block w-full cursor-pointer border border-solid bg-white p-3 text-center"
+              className="mt-1 block w-full cursor-pointer border border-solid bg-white p-3 text-center"
             >
               Upload Images
             </label>
@@ -599,9 +599,9 @@ function UploadDesign() {
             </div>
             {/* {errorImg && <p className="text-sm text-red-400">{errorImg}</p>} */}
           </div>
-          <div className="mt-2 flex flex-col">
+          <div className=" flex flex-col">
             <label className="block px-2">Tags</label>
-            <div className="mt-3 flex w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none">
+            <div className="mt-1 flex w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none">
               {tags.map((item, index) => (
                 <span
                   key={index}
@@ -629,7 +629,7 @@ function UploadDesign() {
           </div>
           <div className="mt-5 flex flex-col">
             <label className="block px-2">Related Designs</label>
-            <div className="mt-3 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none">
+            <div className="mt-1 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none">
               {relatedTags?.map((item, index) => (
                 <span
                   key={index}
@@ -682,7 +682,7 @@ function UploadDesign() {
                 list="folder"
                 value={newFolder}
                 onChange={(e) => setNewFolder(e.target.value)}
-                className="mt-3 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+                className="mt-1 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
               />
               <Datalist
                 id={"folder"}
@@ -711,7 +711,7 @@ function UploadDesign() {
                 list="subFolder"
                 value={newSubFolder}
                 onChange={addNewSubFolder}
-                className="mt-3 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+                className="mt-1 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
               />
               <Datalist
                 id={"subFolder"}
@@ -736,7 +736,7 @@ function UploadDesign() {
           <div className="flex flex-wrap gap-2 sm:flex-nowrap">
             <div className="mt-5 flex w-full flex-col sm:w-1/2">
               <label className="block px-2">Industries</label>
-              <div className="mt-3 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none">
+              <div className="mt-1 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none">
                 {industries.map((item, index) => (
                   <span
                     key={index}
@@ -783,7 +783,7 @@ function UploadDesign() {
             </div>
             <div className="mt-5 flex w-full flex-col sm:w-1/2">
               <label className="block px-2">Designs</label>
-              <div className="mt-3 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none">
+              <div className="mt-1 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none">
                 {designs.map((item, index) => (
                   <span
                     key={index}
