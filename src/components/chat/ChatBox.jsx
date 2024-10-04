@@ -20,7 +20,6 @@ import EmojiPicker from "./EmojiPicker";
 
 import toast from "react-hot-toast";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { configApi } from "../../libs/configApi";
 import { useFetchAllUsersQuery } from "../../Redux/api/allUserApiSlice";
 import {
   useDeleteQuickResMsgMutation,
@@ -30,6 +29,7 @@ import {
   useSendAMessageMutation,
 } from "../../Redux/api/inboxApiSlice";
 import { setChatData } from "../../Redux/features/chatSlice";
+import { configApi } from "../../libs/configApi";
 
 const ChatBox = ({ openToggle }) => {
   const dispatch = useDispatch();
@@ -332,8 +332,8 @@ const ChatBox = ({ openToggle }) => {
     availableUsers.find((user) => user.id === conversationUser)?.totalOrder ||
     0;
 
-    const localTime = msgTime;
-    const localDate = msgDate;
+  const localTime = msgTime;
+  const localDate = msgDate;
   return (
     <div className="h-full">
       {/* Header Part */}
@@ -347,7 +347,9 @@ const ChatBox = ({ openToggle }) => {
             <Divider
               className={"hidden h-[15px] w-[2px] !bg-black/50 sm:block"}
             />
-            <p className="hidden sm:block">Local time: {localTime}, {localDate}</p>
+            <p className="hidden sm:block">
+              Local time: {localTime}, {localDate}
+            </p>
           </div>
         </div>
         {isAdmin && (
@@ -438,13 +440,13 @@ const ChatBox = ({ openToggle }) => {
                 <div className="grow">
                   <div className="mt-1 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <h1 className="font-semibold text-sm sm:text-base">
+                      <h1 className="text-sm font-semibold sm:text-base">
                         {user?.userName === msg?.senderUserName
                           ? "Me"
                           : msg?.senderUserName}
                       </h1>
-                      <p className="text-[10px] sm:text-xs text-black/50">
-                        {msg?.msgDate}, {msg?.msgTime?.toUpperCase()}
+                      <p className="text-[10px] text-black/50 sm:text-xs">
+                        {msgDate}, {msgTime?.toUpperCase()}
                       </p>
                     </div>
                     <div className="flex items-center gap-3 text-black/50 opacity-0 group-hover:opacity-100">
