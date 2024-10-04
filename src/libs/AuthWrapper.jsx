@@ -38,7 +38,6 @@ const AuthWrapper = ({ children }) => {
     // Fetch immediately on mount
     fetchOnlineUsers();
 
-    // Set up the interval to fetch every 3 seconds
     const intervalId = setInterval(() => {
       fetchOnlineUsers();
     }, 1000 * 60);

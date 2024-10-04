@@ -23,9 +23,9 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { configApi } from "../../libs/configApi";
 import { useFetchAllUsersQuery } from "../../Redux/api/allUserApiSlice";
 import {
-  inboxApiSlice,
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
+  useGetAvailableChatUsersQuery,
   useLazyGetAllMessagesQuery,
   useSendAMessageMutation,
 } from "../../Redux/api/inboxApiSlice";
@@ -38,6 +38,7 @@ const ChatBox = ({ openToggle }) => {
   // getAllMessages
   const [triggerGetAllMessages, { data: getAllMessagesForUser }] =
     useLazyGetAllMessagesQuery();
+  const { data: availableUsers } = useGetAvailableChatUsersQuery();
 
   //Set the conversation user id
   const { conversationUser, chatData } = useSelector((state) => state.chat);
@@ -101,8 +102,6 @@ const ChatBox = ({ openToggle }) => {
       if (isAdmin && filter) {
         setMessages((prev) => [...prev, filter]);
         // dispatch(inboxApiSlice?.util?.invalidateTags(['Messages']))
-        console.log(filter);
-        
       }
     });
 
@@ -329,6 +328,12 @@ const ChatBox = ({ openToggle }) => {
     });
   };
 
+  const totalOrderHasDone =
+    availableUsers.find((user) => user.id === conversationUser)?.totalOrder ||
+    0;
+
+    const localTime = msgTime;
+    const localDate = msgDate;
   return (
     <div className="h-full">
       {/* Header Part */}
@@ -342,13 +347,13 @@ const ChatBox = ({ openToggle }) => {
             <Divider
               className={"hidden h-[15px] w-[2px] !bg-black/50 sm:block"}
             />
-            <p className="hidden sm:block">Local time: 1:10 PM, May 29, 2023</p>
+            <p className="hidden sm:block">Local time: {localTime}, {localDate}</p>
           </div>
         </div>
         {isAdmin && (
           <div className="flex items-center justify-end gap-1 sm:gap-3">
             <div className="flex h-[30px] w-[30px] items-center justify-center rounded-full border border-slate-300 text-xs font-semibold">
-              3
+              {totalOrderHasDone}
             </div>
             <div className="relative" onClick={() => setExpandDot(!expandDot)}>
               <BsThreeDotsVertical className="text-2xl" />
@@ -407,7 +412,7 @@ const ChatBox = ({ openToggle }) => {
       </div>
       {/* Conversation Field */}
       <div
-        className={`${quickResponse && selectedImages?.length > 0 ? "h-[calc(100%_-_491px)]" : quickResponse ? "h-[calc(100%_-_350px)]" : selectedImages?.length > 0 ? "h-[calc(100%_-_391px)]" : "h-[calc(100%_-_250px)]"} overflow-y-auto p-5`}
+        className={`${quickResponse && selectedImages?.length > 0 ? "h-[calc(100%_-_491px)]" : quickResponse ? "h-[calc(100%_-_350px)]" : selectedImages?.length > 0 ? "h-[calc(100%_-_391px)]" : "h-[calc(100%_-_250px)]"} overflow-y-auto p-2 sm:p-5`}
       >
         {/* All message Container */}
         {/* Each message block */}
@@ -417,7 +422,7 @@ const ChatBox = ({ openToggle }) => {
             const letterLogo = msg?.senderUserName?.charAt(0).toUpperCase();
             return (
               <div key={i} className="group mt-3 flex items-start gap-3 px-3">
-                <div className="shrink-0 bg-[#ffefef] size-[30px] flex justify-center items-center rounded-full">
+                <div className="flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[#ffefef]">
                   {msg?.userImage ? (
                     <img
                       src={msg?.userImage}
@@ -425,7 +430,7 @@ const ChatBox = ({ openToggle }) => {
                       className="size-full rounded-full object-cover"
                     />
                   ) : (
-                    <div className=" font-bold text-[#7c7c7c]/50 text-xl">
+                    <div className="text-xl font-bold text-[#7c7c7c]/50">
                       {letterLogo}
                     </div>
                   )}
@@ -433,12 +438,12 @@ const ChatBox = ({ openToggle }) => {
                 <div className="grow">
                   <div className="mt-1 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <h1 className="font-semibold">
+                      <h1 className="font-semibold text-sm sm:text-base">
                         {user?.userName === msg?.senderUserName
                           ? "Me"
                           : msg?.senderUserName}
                       </h1>
-                      <p className="text-xs text-black/50">
+                      <p className="text-[10px] sm:text-xs text-black/50">
                         {msg?.msgDate}, {msg?.msgTime?.toUpperCase()}
                       </p>
                     </div>
@@ -456,7 +461,7 @@ const ChatBox = ({ openToggle }) => {
                   {/* Here is the message text to preview */}
                   {msg?.messageText && (
                     <div className="mt-1 w-11/12">
-                      <p>{msg?.messageText}</p>
+                      <p className="text-sm sm:text-base">{msg?.messageText}</p>
                     </div>
                   )}
                   {/* Here is the contact form message to preview */}
