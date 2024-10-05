@@ -1,10 +1,28 @@
-import React from "react";
-import { FaPlus } from "react-icons/fa6";
-import { useFetchAllUsersQuery } from "../Redux/api/allUserApiSlice";
+import React, { useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { FaPlus } from "react-icons/fa6";
+import { IoMdCheckmark } from "react-icons/io";
+import { IoChevronDown } from "react-icons/io5";
+import { useSelector } from "react-redux";
+import useOutsideClick from "../hooks/useOutsideClick";
+import {
+  useFetchAllUsersQuery,
+  useUpdateUserRolesMutation,
+} from "../Redux/api/allUserApiSlice";
+import AddInAdminPanelModal from "../components/AddInAdminPanelModal";
 
 const AdminPanel = () => {
-  const { data: usersData, refetch, isLoading } = useFetchAllUsersQuery();
+  const selectionRef = useRef();
+  const { user: ownData } = useSelector((state) => state.user);
+  const { data: usersData, isLoading } = useFetchAllUsersQuery();
+  const [updateUserRoles, { isLoading: isUpdating }] =
+    useUpdateUserRolesMutation();
+
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [userRoles, setUserRoles] = useState({});
+  const [showAddModal, setShowAddModal] = useState(false);
+
   const adminPanel = usersData?.filter((user) =>
     ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role),
   );
@@ -21,20 +39,72 @@ const AdminPanel = () => {
         return "#f1f1f3";
     }
   };
+
+  const roles = ["SUPER_ADMIN", "ADMIN", "SUB_ADMIN", "USER"];
+
+  const handleRoleChange = (userId, newRole) => {
+    setUserRoles((prevRoles) => ({
+      ...prevRoles,
+      [userId]: newRole,
+    }));
+    setSelectedUser(null);
+
+    console.log("User ID:", userId, "New Role:", newRole);
+  };
+
+  const getDisplayRole = (user) => {
+    return userRoles[user?.id] || user?.role;
+  };
+
+  const handleSaveChanges = async () => {
+    const usersToUpdate = Object.keys(userRoles).map((userId) => ({
+      user_id: userId,
+      role: userRoles[userId],
+    }));
+    console.log("Users updated successfully:", usersToUpdate);
+    if (usersToUpdate.length > 0) {
+      try {
+        await updateUserRoles({ users: usersToUpdate });
+        toast.success("Users updated successfully!");
+        setUserRoles({});
+      } catch (err) {
+        console.error("Error updating users:", err);
+        toast.error("Failed to update!");
+      }
+    }
+  };
+
+  useOutsideClick(selectionRef, () => setSelectedUser(null));
   return (
-    <section className="max-width my-10 ">
+    <section className="max-width my-10">
       {isLoading ? (
-        <div className=" min-h-[500px] flex justify-center items-center">
+        <div className="flex min-h-[500px] items-center justify-center">
           <AiOutlineLoading3Quarters className="animate-spin text-4xl text-primary" />
         </div>
       ) : (
         <>
           <div className="mb-4 flex items-center justify-between gap-2">
             <h1 className="text-2xl font-bold text-primary">ADMIN PANEL</h1>
-            <button className="flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm text-white">
-              <FaPlus />
-              Add New User
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={handleSaveChanges}
+                disabled={isUpdating || Object.keys(userRoles).length === 0}
+                className="shadow-btn-shado bg-whit flex h-10 w-36 items-center justify-center gap-2 rounded-md border bg-primary px-4 py-2 text-sm text-white duration-300 disabled:bg-primary/40"
+              >
+                {isUpdating ? (
+                  <AiOutlineLoading3Quarters className="animate-spin text-white" />
+                ) : (
+                  "Save Changes"
+                )}
+              </button>
+              <button
+                onClick={() => setShowAddModal(true)}
+                className="flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm text-white"
+              >
+                <FaPlus />
+                Add New User
+              </button>
+            </div>
           </div>
           <div className="dashboard-overflow-x rounded-md shadow-lg">
             <div className="min-w-[700px] bg-[#f9faff]">
@@ -52,6 +122,10 @@ const AdminPanel = () => {
                       .toUpperCase();
 
                     const bgColor = getRoleColor(user?.role);
+
+                    const currentRole = getDisplayRole(user);
+
+                    const owned = user?.id === ownData.id;
                     return (
                       <div
                         key={user?.id}
@@ -60,7 +134,7 @@ const AdminPanel = () => {
                         <div className="flex w-1/3 items-center gap-3">
                           {user?.image ? (
                             <img
-                              className="size-10 flex-shrink-0 rounded-full object-cover bg-[#ffefef]/80"
+                              className="size-10 flex-shrink-0 rounded-full bg-[#ffefef]/80 object-cover"
                               src={user?.image}
                               alt="logo"
                             />
@@ -92,7 +166,58 @@ const AdminPanel = () => {
                             {user?.role.replace("_", " ")}
                           </p>
                         </div>
-                        <p className="w-1/3 text-center">Actions</p>
+                        {owned ? (
+                          <div className="flex w-1/3 justify-center">
+                            <p className="font-semibold text-black/50">OWNED</p>
+                          </div>
+                        ) : (
+                          <div className="flex w-1/3 justify-center">
+                            <button
+                              onClick={() =>
+                                setSelectedUser(
+                                  selectedUser === user?.id ? null : user?.id,
+                                )
+                              }
+                              className={`flex items-center gap-1 rounded-md px-4 py-1.5 font-semibold text-primary ${!selectedUser && "hover:bg-[#e2e8f0]"}`}
+                            >
+                              {currentRole.replace("_", " ")}
+                              <IoChevronDown className="text-[17px]" />
+                            </button>
+
+                            {/* Custom selection dropdown */}
+                            {selectedUser === user?.id && (
+                              <ul
+                                ref={selectionRef}
+                                className="absolute z-10 mt-1 w-48 overflow-hidden rounded-md bg-white shadow-lg"
+                              >
+                                {roles.map((role) => {
+                                  const isSelected = userRoles[user?.id]
+                                    ? role === userRoles[user?.id]
+                                    : role === user?.role;
+
+                                  return (
+                                    <li
+                                      key={role}
+                                      onClick={() =>
+                                        handleRoleChange(user?.id, role)
+                                      }
+                                      className={`flex cursor-pointer justify-between gap-2 px-4 py-2 font-semibold hover:bg-gray-200 ${
+                                        isSelected
+                                          ? "text-primary"
+                                          : "text-black"
+                                      }`}
+                                    >
+                                      {role.replace("_", " ")}
+                                      {isSelected && (
+                                        <IoMdCheckmark className="text-[17px] text-primary" />
+                                      )}
+                                    </li>
+                                  );
+                                })}
+                              </ul>
+                            )}
+                          </div>
+                        )}
                       </div>
                     );
                   })}
@@ -102,6 +227,14 @@ const AdminPanel = () => {
           </div>
         </>
       )}
+      {
+        showAddModal && (
+          <AddInAdminPanelModal
+            handleClose={() => setShowAddModal(false)}
+            users={usersData}
+          />
+        )
+      }
     </section>
   );
 };

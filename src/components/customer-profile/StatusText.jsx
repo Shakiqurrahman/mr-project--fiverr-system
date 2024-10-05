@@ -12,6 +12,8 @@ export const getStatusText = (status) => {
       return <span className="text-primary">{status}</span>;
     case "Canceled":
       return <span className="text-canceled">{status}</span>;
+    case "Dispute":
+      return <span className="text-dispute">{status}</span>;
     default:
       return <span>{status}</span>;
   }

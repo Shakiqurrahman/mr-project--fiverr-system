@@ -40,7 +40,6 @@ const offerProjectPersistConfig = {
 //   whitelist: ['queries', 'mutations'],
 // };
 
-
 // Persisted reducers
 const persistedUserReducer = persistReducer(userPersistConfig, userSlice);
 

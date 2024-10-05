@@ -13,6 +13,11 @@ export default {
         waiting: "#9d0e66",
         delivered: "#0e97a0",
         canceled: "#e60006",
+        dispute : "#fb9715"
+      },
+      boxShadow: {
+        "btn-shadow":
+          "0px 0px 5px 1px rgba(0, 0, 0, 0.10)",
       },
     },
     plugins: [],

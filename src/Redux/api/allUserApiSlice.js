@@ -14,12 +14,25 @@ export const allUserApiSlice = createApi({
       return headers;
     },
   }),
+  refetchOnMountOrArgChange: true,
+  tagTypes: ["usersRole"],
   endpoints: (builder) => ({
     fetchAllUsers: builder.query({
       query: () => "all-user",
       transformResponse: (response) => response?.data,
+      providesTags: ["usersRole"],
+    }),
+
+    //update users role
+    updateUserRoles: builder.mutation({
+      query: (data) => ({
+        url: 'role/manage-role',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['usersRole'],
     }),
   }),
 });
 
-export const { useFetchAllUsersQuery } = allUserApiSlice;
+export const { useFetchAllUsersQuery, useUpdateUserRolesMutation } = allUserApiSlice;
