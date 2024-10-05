@@ -20,7 +20,7 @@ const ProfileLayout = () => {
   }, [user, refetch]);
 
   return isLoading ? (
-    <div className="min-h-[calc(100vh_-_136px)] max-width flex justify-center items-center">
+    <div className="min-h-[calc(100vh_-_136px)] max-width flex justify-center items-center text-primary">
       <AiOutlineLoading3Quarters  className="text-4xl animate-spin"/>
     </div>
   ) : user ? (

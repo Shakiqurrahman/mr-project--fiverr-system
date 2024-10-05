@@ -60,7 +60,6 @@ const DashboardProjects = () => {
   ];
 
   const [addDesignerModal, setAddDesignerModal] = useState(false);
-  console.log(addDesignerModal);
 
   const [selectedProjectType, setSelectedProjectType] = useState(
     projectType[0]?.name || "",
@@ -243,7 +242,7 @@ const DashboardProjects = () => {
                   <img
                     src={project?.image?.url}
                     alt={project?.image?.name}
-                    className="h-[74px] w-[100px] flex-shrink-0 border object-cover"
+                    className="h-[74px] w-[100px] flex-shrink-0 border object-cover bg-[#ffefef]/80"
                   />
                   <Link
                     to={`/${project?.client?.userName}`}
@@ -254,7 +253,7 @@ const DashboardProjects = () => {
                         <img
                           src={project?.client?.avatar}
                           alt={project?.client?.name}
-                          className="size-10 rounded-full border object-cover"
+                          className="size-10 rounded-full border object-cover bg-gray-200"
                         />
                       ) : (
                         <div className="flex size-10 items-center justify-center rounded-full border bg-gray-200 object-cover text-2xl font-bold text-[#3b3b3b]/50">
