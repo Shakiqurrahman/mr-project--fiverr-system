@@ -76,7 +76,11 @@ const InboxDrawerModal = ({ close }) => {
           Inbox
           <span>(0)</span>
         </h1>
-        <Link className="text-primary" to={"/inbox"}>
+        <Link
+          className="text-primary"
+          to={"/inbox"}
+          onClick={() => close(false)}
+        >
           See All In Inbox
         </Link>
       </div>
