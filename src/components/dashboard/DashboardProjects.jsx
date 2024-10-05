@@ -103,7 +103,7 @@ const DashboardProjects = () => {
     },
     {
       id: 3,
-      status: "Revision",
+      status: "Dispute",
       price: 30,
       deadline: "2024-09-25T02:51:59Z",
       image: {

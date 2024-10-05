@@ -19,6 +19,10 @@ const CurrentMonthStats = () => {
           <span>Cancelled Projects</span>
           <p className="font-semibold">1 ($35)</p>
         </div>
+        <div className="flex justify-between gap-1 text-sm">
+          <span>Avg. Selling Price</span>
+          <p className="font-semibold">$32.55</p>
+        </div>
       </div>
     </div>
   );

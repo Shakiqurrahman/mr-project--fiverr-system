@@ -61,19 +61,19 @@ const AllTimeStats = () => {
         </div>
 
         <div className="space-y-2">
-          <div className="flex flex-col gap-1 text-sm">
+          <div className="flex justify-between flex-wrap gap-1 text-sm">
             <span>Completed Projects</span>
             <p className="font-semibold">950</p>
           </div>
-          <div className="flex flex-col gap-1 text-sm">
+          <div className="flex justify-between flex-wrap gap-1 text-sm">
             <span>Earnings</span>
             <p className="font-semibold">$12,50432</p>
           </div>
-          <div className="flex flex-col gap-1 text-sm">
+          <div className="flex justify-between flex-wrap gap-1 text-sm">
             <span>Cancelled Projects</span>
             <p className="font-semibold">9 ($230)</p>
           </div>
-          <div className="flex flex-col gap-1 text-sm">
+          <div className="flex justify-between flex-wrap gap-1 text-sm">
             <span>Avg. Selling Price</span>
             <p className="font-semibold">$32.55</p>
           </div>
