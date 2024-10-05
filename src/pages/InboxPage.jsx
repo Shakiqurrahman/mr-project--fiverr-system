@@ -16,7 +16,9 @@ const InboxPage = () => {
   const { conversationUser } = useSelector((state) => state.chat);
   const { data: availableUsers, isLoading } = useGetAvailableChatUsersQuery();
 
-  const isAdmin = user?.role === "ADMIN";
+  const isAuthorized = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(
+    user?.role,
+  );
   const sectionRef = useRef(null);
   const [offSetTop, setOffSetTop] = useState(0);
   const [toggleBtn, setToggleBtn] = useState(true);
@@ -70,19 +72,19 @@ const InboxPage = () => {
         <div className="flex h-full items-center justify-center">
           <img src={loading} alt="" />
         </div>
-      ) : !isLoading && (isAdmin || isAvailableForChat) ? (
+      ) : !isLoading && (isAuthorized || isAvailableForChat) ? (
         <div
-          className={`${isAdmin ? "" : "mx-auto max-w-[800px]"} relative flex h-full justify-center rounded-lg border shadow-md`}
+          className={`${isAuthorized ? "" : "mx-auto max-w-[800px]"} relative flex h-full justify-center rounded-lg border shadow-md`}
         >
-          {isAdmin && (
+          {isAuthorized && (
             <div
               className={`${toggleBtn ? "block bg-white" : "hidden"} absolute left-0 top-0 z-[10] h-[calc(100%_+_2px)] w-full overflow-hidden rounded-lg md:static md:block md:h-full md:w-1/3 md:rounded-bl-none md:rounded-br-none md:rounded-tr-none md:border-r`}
             >
               <AllConversation closeToggle={setToggleBtn} />
             </div>
           )}
-          <div className={`${isAdmin ? "w-full md:w-2/3" : "w-full"}`}>
-            {!conversationUser && isAdmin ? (
+          <div className={`${isAuthorized ? "w-full md:w-2/3" : "w-full"}`}>
+            {!conversationUser && isAuthorized ? (
               <div className="flex h-full items-center justify-center">
                 <div className="space-y-1 text-center">
                   <p className="uppercase tracking-[10px]">Welcome To</p>

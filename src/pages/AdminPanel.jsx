@@ -5,12 +5,12 @@ import { FaPlus } from "react-icons/fa6";
 import { IoMdCheckmark } from "react-icons/io";
 import { IoChevronDown } from "react-icons/io5";
 import { useSelector } from "react-redux";
+import AddInAdminPanelModal from "../components/AddInAdminPanelModal";
 import useOutsideClick from "../hooks/useOutsideClick";
 import {
   useFetchAllUsersQuery,
   useUpdateUserRolesMutation,
 } from "../Redux/api/allUserApiSlice";
-import AddInAdminPanelModal from "../components/AddInAdminPanelModal";
 
 const AdminPanel = () => {
   const selectionRef = useRef();
@@ -171,7 +171,7 @@ const AdminPanel = () => {
                             <p className="font-semibold text-black/50">OWNED</p>
                           </div>
                         ) : (
-                          <div className="flex w-1/3 justify-center">
+                          <div className="flex w-1/3 justify-center relative">
                             <button
                               onClick={() =>
                                 setSelectedUser(
@@ -188,7 +188,7 @@ const AdminPanel = () => {
                             {selectedUser === user?.id && (
                               <ul
                                 ref={selectionRef}
-                                className="absolute z-10 mt-1 w-48 overflow-hidden rounded-md bg-white shadow-lg"
+                                className="absolute top-0 z-10 mt-1 w-48 overflow-hidden rounded-md bg-white shadow-lg"
                               >
                                 {roles.map((role) => {
                                   const isSelected = userRoles[user?.id]
@@ -227,14 +227,13 @@ const AdminPanel = () => {
           </div>
         </>
       )}
-      {
-        showAddModal && (
-          <AddInAdminPanelModal
-            handleClose={() => setShowAddModal(false)}
-            users={usersData}
-          />
-        )
-      }
+      {showAddModal && (
+        <AddInAdminPanelModal
+          handleClose={() => setShowAddModal(false)}
+          users={usersData}
+          roles={roles}
+        />
+      )}
     </section>
   );
 };

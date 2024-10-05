@@ -22,7 +22,6 @@ import toast from "react-hot-toast";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useFetchAllUsersQuery } from "../../Redux/api/allUserApiSlice";
 import {
-  inboxApiSlice,
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
   useGetAvailableChatUsersQuery,
@@ -55,7 +54,8 @@ const ChatBox = ({ openToggle }) => {
   const { data: quickMsgs } = useFetchQuickResMsgQuery();
   const [deleteQuickResMsg] = useDeleteQuickResMsgMutation();
 
-  const isAdmin = user?.role === "ADMIN";
+  const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
+  
   const menuRef = useRef(null);
   const fileInputRef = useRef(null);
   const [selectedImages, setSelectedImages] = useState([]);
@@ -99,14 +99,13 @@ const ChatBox = ({ openToggle }) => {
         setMessages((prevMessages) => [...prevMessages, msg]);
       }
 
-      console.log('message',msg, conversationUser);
+      console.log("message", msg, conversationUser);
       let filter = msg.userId === conversationUser && msg;
       if (isAdmin && filter) {
         setMessages((prev) => [...prev, filter]);
         // dispatch(inboxApiSlice?.util?.invalidateTags(['Messages']))
       }
     });
-    
 
     // Cleanup on component unmount
     return () => {
@@ -448,7 +447,7 @@ const ChatBox = ({ openToggle }) => {
                           ? "Me"
                           : msg?.senderUserName}
                       </h1>
-                      <p className="text-[10px] sm:text-xs text-black/50">
+                      <p className="text-[10px] text-black/50 sm:text-xs">
                         {msgDate}, {msgTime?.toUpperCase()}
                       </p>
                     </div>
