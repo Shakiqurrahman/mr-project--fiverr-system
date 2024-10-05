@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Layout from "../AllRoutes/Layout";
 import SocialMediasForm from "../components/SocialMediasForm";
 import About from "../pages/About";
+import AdminPanel from "../pages/AdminPanel";
 import Affiliate from "../pages/Affiliate";
 import AllCategory from "../pages/AllCategory";
 import AllCompletedProjects from "../pages/AllCompletedProjects";
@@ -43,6 +44,7 @@ import ChatLayout from "./ChatLayout";
 import AdminRoute from "./private-route/AdminRoute";
 import PrivateRoute from "./private-route/PrivateRoute";
 import UnAuthenticatedRoute from "./private-route/UnAuthenticatedRoute";
+import SuperAdminRoute from "./private-route/SuperAdminRoute";
 
 export const router = createBrowserRouter([
   {
@@ -147,15 +149,19 @@ export const router = createBrowserRouter([
       },
       {
         path: "/:userName",
-        element: (
-          // <PrivateRoute>
-          <ProfileLayout />
-          // </PrivateRoute>
-        ),
+        element: <ProfileLayout />,
       },
       {
         path: "/billing-information",
         element: <SetupProfile from_profile={true} />,
+      },
+      {
+        path: "/admin-panel",
+        element: (
+          <SuperAdminRoute>
+            <AdminPanel />
+          </SuperAdminRoute>
+        ),
       },
       {
         path: "/change-password",

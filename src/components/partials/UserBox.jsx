@@ -109,6 +109,11 @@ function UserBox() {
             <MenuItem onClick={handleClose}>Payment Methods</MenuItem>
           </Link>
         )}
+        {user.role === "SUPER_ADMIN" && (
+          <Link to="/admin-panel">
+            <MenuItem onClick={handleClose}>Admin Panel</MenuItem>
+          </Link>
+        )}
         <Link to="/affiliate">
           <MenuItem onClick={handleClose}>Affiliate</MenuItem>
         </Link>

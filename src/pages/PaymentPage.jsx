@@ -1,19 +1,19 @@
-import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
-import NotificationPopper from "../components/Notifications/NotificationPopper";
-import PaymentTabs from "../components/PaymentTabs";
-import { ToggleSwitch } from "../libs/ToggleSwitch";
-import { loadStripe } from "@stripe/stripe-js";
-import { configApi, STRIPE_PUBLIC_KEY } from "../libs/configApi";
 import axios from "axios";
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import Check from "../assets/svg/Check";
+import PaymentTabs from "../components/PaymentTabs";
+import { configApi, STRIPE_PUBLIC_KEY } from "../libs/configApi";
+import { ToggleSwitch } from "../libs/ToggleSwitch";
 
 const PaymentPage = () => {
-const { state } = useLocation();
+  const { state } = useLocation();
   const [activeTab, setActiveTab] = useState(null);
+  const [isAcceptingCondition, SetIsAcceptingCondition] = useState(false);
   const [fastDelivery, setFastDelivery] = useState(
     state?.isFastDelivery || false,
   );
-  
+
   const [designs, setDesigns] = useState(state || []);
   const [designsList, setDesignsList] = useState(state?.designs || []);
 
@@ -36,27 +36,29 @@ const { state } = useLocation();
   };
 
   const items = [
-    { name: 'Design 1', price: 2000, quantity: 1, image: 'image-url-1' },
+    { name: "Design 1", price: 2000, quantity: 1, image: "image-url-1" },
   ];
 
-
-  const handlePayment = async() => {
+  const handlePayment = async () => {
     try {
-      const response = await axios.post(`${configApi.api}api/checkout-session`, { items });
+      const response = await axios.post(
+        `${configApi.api}api/checkout-session`,
+        { items },
+      );
       const sessionId = response.data.id;
 
       // Redirect to Stripe Checkout
       const stripe = window.Stripe(STRIPE_PUBLIC_KEY); // Replace with your publishable key
       await stripe.redirectToCheckout({ sessionId });
     } catch (error) {
-      console.error('Error redirecting to checkout:', error);
+      console.error("Error redirecting to checkout:", error);
     }
-  }
+  };
 
   return (
     <section className="max-width my-10">
       <h1 className="mb-4 text-center text-lg font-semibold sm:mb-10 sm:text-[28px]">
-      Review and Complete Your Payment
+        Review and Complete Your Payment
       </h1>
       <div className="mx-auto max-w-[800px]">
         <div className="mb-6 border bg-sky-200/60 p-4 px-2 sm:p-6">
@@ -105,6 +107,29 @@ const { state } = useLocation();
         {/* Tab Navigation */}
         <PaymentTabs handleTabClick={handleTabClick} activeTab={activeTab} />
         <div className="border bg-lightskyblue p-4 sm:p-6">
+          <div className="flex items-center gap-x-2 text-sm font-medium sm:text-base">
+            <input
+              type="checkbox"
+              name="extraDelivery"
+              id="extraDelivery"
+              className={"is-checked peer"}
+              onChange={() => SetIsAcceptingCondition(!isAcceptingCondition)}
+              checked={isAcceptingCondition}
+              hidden
+            />
+            <label
+              htmlFor="extraDelivery"
+              className="flex h-[16px] w-[16px] cursor-pointer items-center justify-center border border-solid border-primary bg-white *:opacity-0 peer-[.is-checked]:peer-checked:*:opacity-100 sm:h-[20px] sm:w-[20px]"
+            >
+              <Check className="h-[8px] sm:h-[10px]" />
+            </label>
+            <label htmlFor="extraDelivery" className="cursor-pointer">
+              I accept the{" "}
+              <Link className="text-primary" to="/termsandconditions">
+                terms & condition
+              </Link>
+            </label>
+          </div>
           <form onSubmit={handleSubmit} className="mt-4 space-y-8">
             {/* payment details  */}
             <div className="flex flex-col items-center gap-8 border bg-white p-4 sm:flex-row sm:gap-16 sm:p-6">
@@ -172,20 +197,22 @@ const { state } = useLocation();
                   </span>
                 </li>
               </ul>
+
               <div className="w-full">
                 <p className="mb-4 text-center">Single Payment</p>
                 <button
                   type="submit"
                   onClick={handlePayment}
-                  disabled={!activeTab}
-                  className="w-full rounded-2xl bg-primary py-4 text-xl font-semibold text-white transition-colors duration-300 disabled:bg-primary/50 disabled:cursor-not-allowed"
+                  disabled={!(activeTab && isAcceptingCondition)}
+                  className="w-full rounded-2xl bg-primary py-4 text-xl font-semibold text-white transition-colors duration-300 disabled:cursor-not-allowed disabled:bg-primary/50"
                 >
                   Pay Now
                 </button>
               </div>
             </div>
             <p className="!mt-6 text-center text-base font-medium">
-              Go to the Project Requirement option by clicking on &quot;Pay Now&quot;
+              Go to the Project Requirement option by clicking on &quot;Pay
+              Now&quot;
             </p>
           </form>
         </div>
