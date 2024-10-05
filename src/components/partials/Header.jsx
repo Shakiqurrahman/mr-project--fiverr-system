@@ -18,14 +18,18 @@ import "react-modern-drawer/dist/index.css";
 
 import useSyncCart from "../../hooks/useSyncCart";
 import NotificationModal from "../Notifications/NotificationModal";
+import InboxDrawerModal from "../chat/InboxDrawerModal";
 
 function Header() {
   const { user } = useSelector((state) => state.user);
   const { items: cartItems } = useSelector((state) => state.cart);
   const [activeMenu, setActiveMenu] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [openInboxDrawer, setOpenInboxDrawer] = useState(false);
   const [openNotifications, setOpenNotifications] = useState(false);
   const [openNotificationDrawer, setOpenNotificationDrawer] = useState(false);
+
+  const isAuthorized = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
 
   const handleClose = () => {
     setActiveMenu(false);
@@ -81,7 +85,39 @@ function Header() {
                 >
                   <NavLink to="/">Home</NavLink>
                 </li>
-                {user && (
+                {isAuthorized ? (
+                  <li
+                    className="text-white hover:text-gray-300"
+                    onClick={handleClose}
+                  >
+                    <Badge
+                      badgeContent={0}
+                      sx={{
+                        "& .MuiBadge-badge": {
+                          backgroundColor: "#1b8cdc",
+                          color: "white",
+                        },
+                      }}
+                    >
+                      <button
+                        type="button"
+                        className="hidden md:block"
+                        onClick={() => setOpenInboxDrawer(true)}
+                      >
+                        Inbox
+                      </button>
+                      {/* Inbox Drawer for pc version */}
+                      {openInboxDrawer && (
+                        <InboxDrawerModal close={setOpenInboxDrawer} />
+                      )}
+
+                      {/* Inbox Navlink for mobile version */}
+                      <NavLink to="/inbox" className="block md:hidden">
+                        Inbox
+                      </NavLink>
+                    </Badge>
+                  </li>
+                ) : (
                   <li
                     className="text-white hover:text-gray-300"
                     onClick={handleClose}

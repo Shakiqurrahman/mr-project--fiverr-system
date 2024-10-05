@@ -138,10 +138,10 @@ function Contact() {
 
       <form
         onSubmit={handleSubmit}
-        className="mx-auto mt-10 max-w-[800px] rounded-xl bg-[#FFEFEF] p-5"
+        className="mx-auto mt-10 max-w-[800px] rounded-xl bg-lightskyblue p-5"
       >
         <input
-          className="mt-5 block w-full border border-solid border-gray-400 p-3 outline-0 text-base"
+          className="mt-5 block w-full border border-solid border-gray-400 p-3 text-base outline-0"
           type="text"
           name="name"
           value={value.name}
@@ -149,7 +149,7 @@ function Contact() {
           onChange={handleChange}
         />
         <input
-          className="mt-5 block w-full border border-solid border-gray-400 p-3 outline-0 text-base"
+          className="mt-5 block w-full border border-solid border-gray-400 p-3 text-base outline-0"
           type="email"
           name="email"
           value={value.email}
@@ -157,7 +157,7 @@ function Contact() {
           onChange={handleChange}
         />
         <input
-          className="mt-5 block w-full border border-solid border-gray-400 p-3 outline-0 text-base"
+          className="mt-5 block w-full border border-solid border-gray-400 p-3 text-base outline-0"
           type="text"
           name="link"
           value={value.link}
@@ -213,7 +213,7 @@ function Contact() {
 
         <textarea
           name="Message"
-          className="cusotomTextarea mt-5 h-auto min-h-[100px] w-full border border-solid border-gray-400 p-3 outline-none text-base"
+          className="cusotomTextarea mt-5 h-auto min-h-[100px] w-full border border-solid border-gray-400 p-3 text-base outline-none"
           value={value.Message}
           onChange={handleChange}
           placeholder="Message"

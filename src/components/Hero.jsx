@@ -23,7 +23,7 @@ const Hero = () => {
   const { user } = useSelector((state) => state.user);
   const adminRole = user?.role === "ADMIN";
 
-  const offerProjects = useSelector((state) => state.offerProject.offerProject);  
+  const offerProjects = useSelector((state) => state.offerProject.offerProject);
   const { data, isLoading, error } = useFetchOfferProjectQuery();
 
   const { control, handleSubmit, watch, setValue } = useForm();
@@ -82,7 +82,7 @@ const Hero = () => {
   };
 
   const offerProjectsData = offerProjects?.designs || [];
-  
+
   return (
     <section
       className="relative overflow-hidden bg-cover bg-center"
@@ -128,9 +128,14 @@ const Hero = () => {
           </div>
           <div className="relative w-[80%] border-2 border-dashed border-primary px-6 py-10 lg:w-full">
             {/* setting icon  */}
-            {adminRole &&
-              <CiSettings onClick={()=> navigate('/offer-project', {state: offerProjects})} className="absolute right-1.5 top-1.5 cursor-pointer text-2xl" />
-            }
+            {adminRole && (
+              <CiSettings
+                onClick={() =>
+                  navigate("/offer-project", { state: offerProjects })
+                }
+                className="absolute right-1.5 top-1.5 cursor-pointer text-2xl"
+              />
+            )}
             {/* big deal */}
             <img
               className="md:size-54 absolute -left-16 -top-16 z-[80] ml-2 size-32 sm:-left-20 sm:size-40 md:-left-20 md:-top-20 md:ml-0 xl:-left-28 xl:-top-24 xl:size-60"
@@ -175,7 +180,7 @@ const Hero = () => {
                       render={({ field }) => (
                         <label className="flex cursor-pointer items-center gap-2">
                           <input
-                            className="size-4"
+                            className="size-4 shrink-0"
                             type="checkbox"
                             id={item.designName}
                             {...field}
@@ -212,11 +217,7 @@ const Hero = () => {
                             name={`${item.designName}_side`}
                             control={control}
                             render={({ field }) => (
-                              <input
-                                type="radio"
-                                {...field}
-                                value={type}
-                              />
+                              <input type="radio" {...field} value={type} />
                             )}
                           />
                           <span className="select-none text-sm">{type}</span>
