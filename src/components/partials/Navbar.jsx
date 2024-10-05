@@ -6,7 +6,7 @@ import DropDownMenu from "./DropDownMenu";
 const Navbar = () => {
   const { user } = useSelector((state) => state.user);
 
-  const isAuthorized = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);  
+  const isAuthorized = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
   // const userRole = user?.role === "USER";
 
   return (

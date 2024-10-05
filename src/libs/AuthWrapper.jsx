@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useFetchUserDataQuery } from "../Redux/api/apiSlice";
 import { logout, setOnlineUsers, setUser } from "../Redux/features/userSlice";
 import { configApi } from "./configApi";
@@ -10,6 +10,7 @@ const AuthWrapper = ({ children }) => {
   const dispatch = useDispatch();
   const { data: user, error } = useFetchUserDataQuery(null, {
     skip: !Cookies.get("authToken"),
+    pollingInterval: 5000,
   });
 
   useEffect(() => {
