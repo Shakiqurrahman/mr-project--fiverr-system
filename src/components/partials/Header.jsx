@@ -29,6 +29,8 @@ function Header() {
   const [openNotifications, setOpenNotifications] = useState(false);
   const [openNotificationDrawer, setOpenNotificationDrawer] = useState(false);
 
+  const isAuthorized = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
+
   const handleClose = () => {
     setActiveMenu(false);
   };
@@ -83,7 +85,7 @@ function Header() {
                 >
                   <NavLink to="/">Home</NavLink>
                 </li>
-                {user?.role !== "USER" ? (
+                {isAuthorized ? (
                   <li
                     className="text-white hover:text-gray-300"
                     onClick={handleClose}
