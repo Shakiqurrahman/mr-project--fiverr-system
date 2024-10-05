@@ -67,7 +67,7 @@ const InboxDrawerModal = ({ close }) => {
   useOutsideClick(wrapperRef, () => close(false));
   return (
     <div
-      className="absolute right-0 top-10 w-[400px] rounded-md bg-white text-black shadow-lg"
+      className="absolute right-0 top-10 w-[400px] translate-x-full rounded-md bg-white text-black shadow-lg lg:translate-x-0"
       ref={wrapperRef}
     >
       <div className="flex items-center justify-between gap-3 border-b p-4 font-semibold">
