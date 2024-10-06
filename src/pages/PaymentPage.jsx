@@ -1,3 +1,4 @@
+import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -6,6 +7,7 @@ import PaymentTabs from "../components/PaymentTabs";
 import { configApi, STRIPE_PUBLIC_KEY } from "../libs/configApi";
 import { ToggleSwitch } from "../libs/ToggleSwitch";
 
+const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 const PaymentPage = () => {
   const { state } = useLocation();
   const [activeTab, setActiveTab] = useState(null);
@@ -15,7 +17,7 @@ const PaymentPage = () => {
   );
 
   const [designs, setDesigns] = useState(state || []);
-  const [designsList, setDesignsList] = useState(state?.designs || []);
+  // const [designsList, setDesignsList] = useState(state?.designs || []);
 
   // Function to handle tab click
   const handleTabClick = (tab) => {
@@ -74,7 +76,7 @@ const PaymentPage = () => {
       const sessionId = response.data.id;
 
       // Redirect to Stripe Checkout
-      const stripe = window.Stripe(STRIPE_PUBLIC_KEY); // Replace with your publishable key
+      const stripe = await stripePromise;
       await stripe.redirectToCheckout({ sessionId });
     } catch (error) {
       console.error("Error redirecting to checkout:", error);
