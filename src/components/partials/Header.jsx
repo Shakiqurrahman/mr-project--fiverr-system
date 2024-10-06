@@ -29,7 +29,9 @@ function Header() {
   const [openNotifications, setOpenNotifications] = useState(false);
   const [openNotificationDrawer, setOpenNotificationDrawer] = useState(false);
 
-  const isAuthorized = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
+  const isAuthorized = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(
+    user?.role,
+  );
 
   const handleClose = () => {
     setActiveMenu(false);
@@ -118,22 +120,24 @@ function Header() {
                     </Badge>
                   </li>
                 ) : (
-                  <li
-                    className="text-white hover:text-gray-300"
-                    onClick={handleClose}
-                  >
-                    <Badge
-                      badgeContent={0}
-                      sx={{
-                        "& .MuiBadge-badge": {
-                          backgroundColor: "#1b8cdc",
-                          color: "white",
-                        },
-                      }}
+                  user && (
+                    <li
+                      className="text-white hover:text-gray-300"
+                      onClick={handleClose}
                     >
-                      <NavLink to="/inbox">Inbox</NavLink>
-                    </Badge>
-                  </li>
+                      <Badge
+                        badgeContent={0}
+                        sx={{
+                          "& .MuiBadge-badge": {
+                            backgroundColor: "#1b8cdc",
+                            color: "white",
+                          },
+                        }}
+                      >
+                        <NavLink to="/inbox">Inbox</NavLink>
+                      </Badge>
+                    </li>
+                  )
                 )}
                 <li className="hidden md:block">
                   <Badge

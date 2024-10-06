@@ -7,6 +7,7 @@ import dollerBill from '../assets/images/icons/dollar-bill.png';
 import prevBtn from '../assets/images/icons/Left Arrow.svg';
 import nextBtn from '../assets/images/icons/Right Arrow.svg';
 import PageHeaderWithText from '../components/PageHeaderWithText';
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 function Affiliate() {
     return (
@@ -113,7 +114,7 @@ function Affiliate() {
                                 <p className="w-[18%] sm:w-[15%]">1</p>
                                 <p className="w-[18%] sm:w-[15%]">0</p>
                                 <button className="w-[6%] sm:w-[5%]">
-                                    <FaTrashAlt className="text-sm" />
+                                    <RiDeleteBin6Line className="text-sm" />
                                 </button>
                             </li>
                             <li className="flex gap-1 sm:gap-2  text-sm mt-3 text-center border-b border-gray-500 p-1 items-center">
@@ -124,7 +125,7 @@ function Affiliate() {
                                 <p className="w-[18%] sm:w-[15%]">0</p>
                                 <p className="w-[18%] sm:w-[15%]">0</p>
                                 <button className="w-[6%] sm:w-[5%]">
-                                    <FaTrashAlt className="text-sm" />
+                                    <RiDeleteBin6Line className="text-sm" />
                                 </button>
                             </li>
                             <li className="flex gap-1 sm:gap-2  text-sm mt-3 text-center border-b border-gray-500 p-1 items-center">
@@ -135,7 +136,7 @@ function Affiliate() {
                                 <p className="w-[18%] sm:w-[15%]">5</p>
                                 <p className="w-[18%] sm:w-[15%]">0</p>
                                 <button className="w-[6%] sm:w-[5%]">
-                                    <FaTrashAlt className="text-sm" />
+                                    <RiDeleteBin6Line className="text-sm" />
                                 </button>
                             </li>
                             <li className="flex gap-1 sm:gap-2  text-sm  mt-3 text-center border-b border-gray-500 p-1 items-center">
@@ -146,7 +147,7 @@ function Affiliate() {
                                 <p className="w-[18%] sm:w-[15%]">0</p>
                                 <p className="w-[18%] sm:w-[15%]">0</p>
                                 <button className="w-[6%] sm:w-[5%]">
-                                    <FaTrashAlt className="text-sm" />
+                                    <RiDeleteBin6Line className="text-sm" />
                                 </button>
                             </li>
                         </ul>

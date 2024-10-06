@@ -108,7 +108,7 @@ function SignInForm({ handleClick }) {
         <div className="relative">
           <button
             type="button"
-            className="absolute right-[20px] top-1/2 z-10 -translate-y-1/2 text-lg text-primary sm:text-2xl"
+            className="absolute right-[20px] top-1/2 z-10 -translate-y-1/2 text-lg text-primary sm:text-xl"
             onClick={() => dispatch(toggleShowPassword())}
           >
             {showPassword ? <FaEyeSlash /> : <FaEye />}
