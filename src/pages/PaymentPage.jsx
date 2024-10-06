@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Check from "../assets/svg/Check";
 import PaymentTabs from "../components/PaymentTabs";
@@ -35,15 +35,41 @@ const PaymentPage = () => {
     e.preventDefault();
   };
 
-  const items = [
-    { name: "Design 1", price: 2000, quantity: 1, image: "image-url-1" },
-  ];
+  // const items = [
+  // { name: "Design 1", price: 2000, quantity: 1, image: "image-url-1" },
+  // ];
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    if (Array.isArray(designs?.designs)) {
+      console.log(designs);
+      const designsArr = designs?.designs?.map((design) => ({
+        ...design,
+        subTotal: design.subCategory.subAmount,
+      }));
+      setItems(designsArr);
+    } else {
+      setItems([{ ...designs, isFastDelivery: fastDelivery, totalAmount }]);
+    }
+  }, [designs, fastDelivery, totalAmount]);
 
   const handlePayment = async () => {
+    const itemsData = items?.map((item) => ({
+      name: item.title,
+      baseAmount: parseInt(item.subTotal),
+      quantity: parseInt(item.selectedQuantity) || parseInt(item.quantity),
+      isFastDelivery: item.isFastDelivery,
+      fastDeliveryPrice:
+        parseInt(item.fastDeliveryAmount) || parseInt(item.fastDeliveryPrice),
+    }));
+    const data = {
+      items: itemsData,
+      totalAmount: designs?.totalAmount || totalAmount,
+    };
     try {
       const response = await axios.post(
         `${configApi.api}api/checkout-session`,
-        { items },
+        { data },
       );
       const sessionId = response.data.id;
 

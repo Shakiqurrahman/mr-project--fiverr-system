@@ -110,47 +110,49 @@ function PriceList() {
           provide you the template/source file through a project.
         </p>
         <div
-          className={`flex items-center ${user?.role === "ADMIN" ? "justify-center sm:justify-between" : "justify-center"} flex-wrap sm:flex-nowrap`}
+          className={`flex items-center ${user?.role === "ADMIN" || user?.role === "SUPER_ADMIN" ? "justify-center sm:justify-between" : "justify-center"} flex-wrap sm:flex-nowrap`}
         >
-          {user?.role === "ADMIN" && (
-            <div>
-              <button
-                className={`${isDraggable ? "hidden" : "block"} rounded-[30px] border border-solid border-primary bg-lightskyblue px-4 py-1 duration-300 hover:bg-primary hover:text-white`}
-                onClick={() => setIsDraggable(true)}
-              >
-                CUSTOMISE
-              </button>
-              {isDraggable && (
-                <div className="flex gap-4">
-                  <button
-                    className="flex h-[35px] w-[35px] items-center justify-center rounded-full border-2 border-solid border-primary bg-[#EEF7FE]"
-                    onClick={handleSave}
-                  >
-                    <Check className={"h-4 w-4"} />
-                  </button>
-                  <button
-                    className="flex h-[35px] w-[35px] items-center justify-center rounded-full border-2 border-solid border-canceled bg-[#EEF7FE]"
-                    onClick={handleCancel}
-                  >
-                    <IoMdClose className="text-xl text-canceled" />
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
+          {user?.role === "ADMIN" ||
+            (user?.role === "SUPER_ADMIN" && (
+              <div>
+                <button
+                  className={`${isDraggable ? "hidden" : "block"} rounded-[30px] border border-solid border-primary bg-lightskyblue px-4 py-1 duration-300 hover:bg-primary hover:text-white`}
+                  onClick={() => setIsDraggable(true)}
+                >
+                  CUSTOMISE
+                </button>
+                {isDraggable && (
+                  <div className="flex gap-4">
+                    <button
+                      className="flex h-[35px] w-[35px] items-center justify-center rounded-full border-2 border-solid border-primary bg-[#EEF7FE]"
+                      onClick={handleSave}
+                    >
+                      <Check className={"h-4 w-4"} />
+                    </button>
+                    <button
+                      className="flex h-[35px] w-[35px] items-center justify-center rounded-full border-2 border-solid border-canceled bg-[#EEF7FE]"
+                      onClick={handleCancel}
+                    >
+                      <IoMdClose className="text-xl text-canceled" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
           <h1
-            className={`${user?.role === "ADMIN" ? "my-5 sm:my-0" : ""} w-full text-center text-xl font-semibold text-primary sm:my-0 sm:w-auto sm:text-3xl`}
+            className={`${user?.role === "ADMIN" || user?.role === "SUPER_ADMIN" ? "my-5 sm:my-0" : ""} w-full text-center text-xl font-semibold text-primary sm:my-0 sm:w-auto sm:text-3xl`}
           >
             PRICE LIST
           </h1>
-          {user?.role === "ADMIN" && (
-            <Link
-              to={"/create-category"}
-              className="rounded-[30px] border border-solid border-primary bg-lightskyblue px-4 py-1 duration-300 hover:bg-primary hover:text-white"
-            >
-              CREATE
-            </Link>
-          )}
+          {user?.role === "ADMIN" ||
+            (user?.role === "SUPER_ADMIN" && (
+              <Link
+                to={"/create-category"}
+                className="rounded-[30px] border border-solid border-primary bg-lightskyblue px-4 py-1 duration-300 hover:bg-primary hover:text-white"
+              >
+                CREATE
+              </Link>
+            ))}
         </div>
         <Reorder.Group
           axis="y"
@@ -175,36 +177,39 @@ function PriceList() {
                 >
                   <div className="flex items-center justify-between bg-lightcream p-2">
                     <div className="relative flex items-center gap-1 sm:gap-4">
-                      {user?.role === "ADMIN" && (
-                        <>
-                          <button
-                            className="text-lg text-gray-600 sm:text-3xl"
-                            onClick={() => handleController(category.id)}
-                          >
-                            <BsThreeDotsVertical />
-                          </button>
-                          {controller === category.id && (
-                            <div
-                              className="absolute left-10 top-0 z-10 min-w-[150px] rounded-lg border border-solid bg-white py-2 text-center *:block *:p-[5px_15px]"
-                              ref={menuRef}
+                      {user?.role === "ADMIN" ||
+                        (user?.role === "SUPER_ADMIN" && (
+                          <>
+                            <button
+                              className="text-lg text-gray-600 sm:text-3xl"
+                              onClick={() => handleController(category.id)}
                             >
-                              <Link
-                                to="/edit-category"
-                                state={category}
-                                className="text-sm hover:bg-gray-200"
+                              <BsThreeDotsVertical />
+                            </button>
+                            {controller === category.id && (
+                              <div
+                                className="absolute left-10 top-0 z-10 min-w-[150px] rounded-lg border border-solid bg-white py-2 text-center *:block *:p-[5px_15px]"
+                                ref={menuRef}
                               >
-                                Edit
-                              </Link>
-                              <button
-                                onClick={() => handleDelete(category.id)}
-                                className="w-full text-sm hover:bg-gray-200"
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          )}
-                        </>
-                      )}
+                                <Link
+                                  to="/edit-category"
+                                  state={category}
+                                  className="text-sm hover:bg-gray-200"
+                                >
+                                  Edit
+                                </Link>
+                                {user?.role === "SUPER_ADMIN" && (
+                                  <button
+                                    onClick={() => handleDelete(category.id)}
+                                    className="w-full text-sm hover:bg-gray-200"
+                                  >
+                                    Delete
+                                  </button>
+                                )}
+                              </div>
+                            )}
+                          </>
+                        ))}
                       <h1 className="text-sm font-semibold sm:text-lg">
                         {category.categoryName}
                       </h1>
