@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaPlus } from "react-icons/fa6";
@@ -13,6 +13,7 @@ import {
 } from "../Redux/api/allUserApiSlice";
 
 const AdminPanel = () => {
+  const buttonsRef = useRef([]);
   const selectionRef = useRef();
   const { user: ownData } = useSelector((state) => state.user);
   const { data: usersData, isLoading } = useFetchAllUsersQuery();
@@ -22,6 +23,10 @@ const AdminPanel = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [userRoles, setUserRoles] = useState({});
   const [showAddModal, setShowAddModal] = useState(false);
+  const [dropdownX, setDropdownX] = useState(0);
+  const [dropdownY, setDropdownY] = useState(0);
+  const [userRole, setUserRole] = useState("");
+  const [userId, setUserId] = useState("");
 
   const adminPanel = usersData?.filter((user) =>
     ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role),
@@ -42,14 +47,21 @@ const AdminPanel = () => {
 
   const roles = ["SUPER_ADMIN", "ADMIN", "SUB_ADMIN", "USER"];
 
+  const handleSelectedButton = (id, role, index) => {
+    const { x, y } = buttonsRef.current[index].getBoundingClientRect();
+    setDropdownX(x);
+    setDropdownY(y);
+    setUserRole(role);
+    setUserId(id);
+    setSelectedUser(selectedUser === id ? null : id);
+  };
+
   const handleRoleChange = (userId, newRole) => {
     setUserRoles((prevRoles) => ({
       ...prevRoles,
       [userId]: newRole,
     }));
     setSelectedUser(null);
-
-    console.log("User ID:", userId, "New Role:", newRole);
   };
 
   const getDisplayRole = (user) => {
@@ -83,7 +95,7 @@ const AdminPanel = () => {
         </div>
       ) : (
         <>
-          <div className="mb-4 flex items-center justify-between gap-2">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2 sm:flex-nowrap">
             <h1 className="text-2xl font-bold text-primary">ADMIN PANEL</h1>
             <div className="flex gap-2">
               <button
@@ -115,7 +127,7 @@ const AdminPanel = () => {
                   <p className="w-1/3 text-center font-semibold">Actions</p>
                 </div>
                 <div className="rounded-md bg-white px-3 text-sm">
-                  {adminPanel?.map((user) => {
+                  {adminPanel?.map((user, index) => {
                     const letterLogo = user?.userName
                       ?.trim()
                       .charAt(0)
@@ -139,7 +151,7 @@ const AdminPanel = () => {
                               alt="logo"
                             />
                           ) : (
-                            <div className="flex size-10 items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-2xl font-bold text-[#3b3b3b]/50">
+                            <div className="flex size-10 flex-shrink-0 items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-2xl font-bold text-[#3b3b3b]/50">
                               {letterLogo}
                             </div>
                           )}
@@ -167,15 +179,18 @@ const AdminPanel = () => {
                           </p>
                         </div>
                         {owned ? (
-                          <div className="flex w-1/3 justify-center">
+                          <div className="relative flex w-1/3 justify-center">
                             <p className="font-semibold text-black/50">OWNED</p>
                           </div>
                         ) : (
-                          <div className="flex w-1/3 justify-center relative">
+                          <div className="relative flex w-1/3 justify-center">
                             <button
+                              ref={(el) => (buttonsRef.current[index] = el)}
                               onClick={() =>
-                                setSelectedUser(
-                                  selectedUser === user?.id ? null : user?.id,
+                                handleSelectedButton(
+                                  user?.id,
+                                  user?.role,
+                                  index,
                                 )
                               }
                               className={`flex items-center gap-1 rounded-md px-4 py-1.5 font-semibold text-primary ${!selectedUser && "hover:bg-[#e2e8f0]"}`}
@@ -183,39 +198,6 @@ const AdminPanel = () => {
                               {currentRole.replace("_", " ")}
                               <IoChevronDown className="text-[17px]" />
                             </button>
-
-                            {/* Custom selection dropdown */}
-                            {selectedUser === user?.id && (
-                              <ul
-                                ref={selectionRef}
-                                className="absolute top-0 z-10 mt-1 w-48 overflow-hidden rounded-md bg-white shadow-lg"
-                              >
-                                {roles.map((role) => {
-                                  const isSelected = userRoles[user?.id]
-                                    ? role === userRoles[user?.id]
-                                    : role === user?.role;
-
-                                  return (
-                                    <li
-                                      key={role}
-                                      onClick={() =>
-                                        handleRoleChange(user?.id, role)
-                                      }
-                                      className={`flex cursor-pointer justify-between gap-2 px-4 py-2 font-semibold hover:bg-gray-200 ${
-                                        isSelected
-                                          ? "text-primary"
-                                          : "text-black"
-                                      }`}
-                                    >
-                                      {role.replace("_", " ")}
-                                      {isSelected && (
-                                        <IoMdCheckmark className="text-[17px] text-primary" />
-                                      )}
-                                    </li>
-                                  );
-                                })}
-                              </ul>
-                            )}
                           </div>
                         )}
                       </div>
@@ -233,6 +215,35 @@ const AdminPanel = () => {
           users={usersData}
           roles={roles}
         />
+      )}
+      {/* Custom selection dropdown */}
+      {selectedUser === userId && (
+        <ul
+          ref={selectionRef}
+          className="absolute z-10 mt-1 w-48 overflow-hidden rounded-md bg-white shadow-lg"
+          style={{ top: `${dropdownY}px`, left: `${dropdownX - 50}px` }}
+        >
+          {roles.map((role) => {
+            const isSelected = userRoles[userId]
+              ? role === userRoles[userId]
+              : role === userRole;
+
+            return (
+              <li
+                key={role}
+                onClick={() => handleRoleChange(userId, role)}
+                className={`flex cursor-pointer justify-between gap-2 px-4 py-2 text-sm font-semibold hover:bg-gray-200 ${
+                  isSelected ? "text-primary" : "text-black"
+                }`}
+              >
+                {role.replace("_", " ")}
+                {isSelected && (
+                  <IoMdCheckmark className="text-[17px] text-primary" />
+                )}
+              </li>
+            );
+          })}
+        </ul>
       )}
     </section>
   );

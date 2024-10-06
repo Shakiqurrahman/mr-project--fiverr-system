@@ -8,12 +8,12 @@ import ProjectCard from "./ProjectCard";
 function CategoryCards({ title, path, subCategory = [], titleSlug }) {
   const settings = {
     dots: false,
-    infinite: false,
+    infinite: subCategory?.length > 3 ? true : false,
     speed: 500,
     slidesToShow: 3,
     className: "category-cards",
     slidesToScroll: 1,
-    arrows: true,
+    arrows: subCategory?.length > 3 ? true : false,
     autoplay: true,
     autoplaySpeed: 1500,
     nextArrow: <NextArrow />,
