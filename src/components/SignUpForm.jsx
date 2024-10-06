@@ -156,7 +156,7 @@ function SignUpForm({ handleClick }) {
         <div className="relative">
           <button
             type="button"
-            className="absolute right-[20px] top-1/2 z-10 -translate-y-1/2 text-lg text-primary sm:text-2xl"
+            className="absolute right-[20px] top-1/2 z-10 -translate-y-1/2 text-lg text-primary sm:text-xl"
             onClick={() => dispatch(toggleShowNewPassword())}
           >
             {showNewPassword ? <FaEyeSlash /> : <FaEye />}
@@ -177,7 +177,7 @@ function SignUpForm({ handleClick }) {
         <div className="relative">
           <button
             type="button"
-            className="absolute right-[20px] top-1/2 z-10 -translate-y-1/2 text-lg text-primary sm:text-2xl"
+            className="absolute right-[20px] top-1/2 z-10 -translate-y-1/2 text-lg text-primary sm:text-xl"
             onClick={() => dispatch(toggleShowConfirmPassword())}
           >
             {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
