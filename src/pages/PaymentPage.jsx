@@ -43,7 +43,7 @@ const PaymentPage = () => {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    if (Array.isArray(designs?.designs)) {
+    if (Array.isArray(designs?.designs) && !designs?.freeDesign) {
       console.log(designs);
       const designsArr = designs?.designs?.map((design) => ({
         ...design,
@@ -59,11 +59,12 @@ const PaymentPage = () => {
     const itemsData = items?.map((item) => ({
       name: item.title,
       baseAmount: parseInt(item.subTotal),
-      quantity: parseInt(item.selectedQuantity) || parseInt(item.quantity),
+      quantity: parseInt(item.selectedQuantity) || parseInt(item.quantity) || 1,
       isFastDelivery: item.isFastDelivery,
       fastDeliveryPrice:
         parseInt(item.fastDeliveryAmount) || parseInt(item.fastDeliveryPrice),
     }));
+    console.log(itemsData);
     const data = {
       items: itemsData,
       totalAmount: designs?.totalAmount || totalAmount,
