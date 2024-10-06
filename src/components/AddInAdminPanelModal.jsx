@@ -129,7 +129,7 @@ const AddInAdminPanelModal = ({ handleClose, users, roles }) => {
                   </p>
                 </div>
               </div>
-              <div className="w-1/3">
+              <div className="relative w-1/3 shrink-0">
                 <button
                   onClick={() => setShowSelection(true)}
                   className={`flex items-center gap-1 rounded-md px-4 py-1.5 font-semibold text-primary ${!showSelection && "hover:bg-[#e2e8f0]"}`}
@@ -142,7 +142,7 @@ const AddInAdminPanelModal = ({ handleClose, users, roles }) => {
                 {showSelection && (
                   <ul
                     ref={selectionRef}
-                    className="absolute z-10 mt-1 w-48 overflow-hidden rounded-md bg-white shadow-lg"
+                    className="absolute right-0 top-full z-10 mt-1 w-48 overflow-hidden rounded-md bg-white shadow-lg"
                   >
                     {roles?.map((role) => {
                       const isSelected = role === searchedUser?.role;
