@@ -17,7 +17,6 @@ const PaymentPage = () => {
   );
 
   const [designs, setDesigns] = useState(state || []);
-  // const [designsList, setDesignsList] = useState(state?.designs || []);
 
   // Function to handle tab click
   const handleTabClick = (tab) => {
@@ -37,9 +36,6 @@ const PaymentPage = () => {
     e.preventDefault();
   };
 
-  // const items = [
-  // { name: "Design 1", price: 2000, quantity: 1, image: "image-url-1" },
-  // ];
   const [items, setItems] = useState([]);
 
   useEffect(() => {
@@ -64,7 +60,6 @@ const PaymentPage = () => {
       fastDeliveryPrice:
         parseInt(item.fastDeliveryAmount) || parseInt(item.fastDeliveryPrice),
     }));
-    console.log(itemsData);
     const data = {
       items: itemsData,
       totalAmount: designs?.totalAmount || totalAmount,
