@@ -30,8 +30,12 @@ const AddInAdminPanelModal = ({ handleClose, users, roles }) => {
         user?.email?.toLowerCase().includes(search.toLowerCase()) &&
         user?.role === "USER",
     );
+    const isAlreadyExists = users?.find((user) => user?.role !== "USER");
+
     if (search && search === filteredUsers?.email) {
       setSearchEmail(search);
+    } else if (isAlreadyExists) {
+      setResultText("This user is already exists in admin panel.");
     } else {
       setResultText("Sorry, we couldn't find any users.");
     }
