@@ -29,12 +29,12 @@ function SingleProductPage() {
 
   const settings = {
     dots: false,
-    infinite: true,
+    infinite: images?.length > 1 ? true : false,
     speed: 800,
     slidesToShow: 1,
     // className: "category-cards",
     slidesToScroll: 1,
-    arrows: true,
+    arrows: images?.length > 1 ? true : false,
     autoplay: true,
     autoplaySpeed: 3000,
     responsive: [
@@ -122,7 +122,7 @@ function SingleProductPage() {
   const handleStartProject = (e) => {
     e.preventDefault();
     const data = [design];
-    navigate("/project", { state: {items: data} });
+    navigate("/project", { state: { items: data } });
   };
 
   // Determine which tags to show
