@@ -1,5 +1,7 @@
 import DeliveryTimer from "./sidebar-components/DeliveryTimer";
 import OrderProjectDetails from "./sidebar-components/OrderProjectDetails";
+import PrivateNote from "./sidebar-components/PrivateNote";
+import TrackProject from "./sidebar-components/TrackProject";
 
 const OrderSidePanel = () => {
   // Set delivery time in milliseconds
@@ -10,8 +12,28 @@ const OrderSidePanel = () => {
       <div className="mb-5">
         <DeliveryTimer deliveryTime={deliveryDate} />
       </div>
+
       {/* Project Details */}
-      <OrderProjectDetails />
+      <div className="mb-5">
+        <OrderProjectDetails />
+      </div>
+
+      {/* Track Project */}
+      <div className="mb-5">
+        <TrackProject />
+      </div>
+
+      {/* Private Note */}
+      <div className="mb-5">
+        <PrivateNote />
+      </div>
+
+      {/* cancel project button  */}
+      <div>
+        <button className="w-full bg-revision py-3 text-center font-semibold text-white duration-300 hover:bg-revision/70">
+          Cancel Project
+        </button>
+      </div>
     </div>
   );
 };

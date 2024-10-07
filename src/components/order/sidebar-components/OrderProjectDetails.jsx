@@ -1,60 +1,8 @@
-import { useEffect, useState } from "react";
 import projectThumbnail from "../../../assets/images/project-thumbnail.jpg";
+import { getStatusText } from "../../customer-profile/StatusText";
 
 const OrderProjectDetails = () => {
-  const [projectStatus, setProjectStatus] = useState({
-    status: "",
-    colorClass: "",
-  });
   const status = "Ongoing";
-  useEffect(() => {
-    switch (status) {
-      case "Revision":
-        setProjectStatus({
-          status: "Revision",
-          colorClass: "text-revision",
-        });
-        break;
-      case "Ongoing":
-        setProjectStatus({
-          status: "Ongoing",
-          colorClass: "text-ongoing",
-        });
-        break;
-      case "Waiting":
-        setProjectStatus({
-          status: "Waiting",
-          colorClass: "text-waiting",
-        });
-        break;
-      case "Delivered":
-        setProjectStatus({
-          status: "Delivered",
-          colorClass: "text-delivered",
-        });
-        break;
-      case "Completed":
-        setProjectStatus({
-          status: "Completed",
-          colorClass: "text-primary",
-        });
-        break;
-      case "Canceled":
-        setProjectStatus({
-          status: "Canceled",
-          colorClass: "text-canceled",
-        });
-        break;
-      case "Dispute":
-        setProjectStatus({
-          status: "Dispute",
-          colorClass: "text-dispute",
-        });
-        break;
-      default:
-        break;
-    }
-  }, []);
   return (
     <div className="bg-lightskyblue p-3">
       <h1 className="text-xl font-semibold">Project Details</h1>
@@ -62,9 +10,7 @@ const OrderProjectDetails = () => {
         <img src={projectThumbnail} alt="" className="w-[100px]" />
         <div>
           <h1 className="text-lg">Door Hanger Design</h1>
-          <span className={`font-bold ${projectStatus?.colorClass}`}>
-            {projectStatus?.status}
-          </span>
+          <p className="font-bold">{getStatusText(status)}</p>
         </div>
       </div>
       <ul>
