@@ -1,5 +1,6 @@
 import DeliveryTimer from "./sidebar-components/DeliveryTimer";
 import OrderProjectDetails from "./sidebar-components/OrderProjectDetails";
+import TrackProject from "./sidebar-components/TrackProject";
 
 const OrderSidePanel = () => {
   // Set delivery time in milliseconds
@@ -10,8 +11,14 @@ const OrderSidePanel = () => {
       <div className="mb-5">
         <DeliveryTimer deliveryTime={deliveryDate} />
       </div>
+
       {/* Project Details */}
-      <OrderProjectDetails />
+      <div className="mb-5">
+        <OrderProjectDetails />
+      </div>
+
+      {/* Track Project */}
+      <TrackProject />
     </div>
   );
 };
