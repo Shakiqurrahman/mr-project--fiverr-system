@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import projectThumbnail from "../../../assets/images/project-thumbnail.jpg";
 import { getStatusText } from "../../customer-profile/StatusText";
 
