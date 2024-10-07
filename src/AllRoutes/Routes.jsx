@@ -27,6 +27,7 @@ import Industries from "../pages/Industries";
 import Join from "../pages/Join";
 import MultiProject from "../pages/MultiProject";
 import OfferProject from "../pages/OfferProject";
+import Order from "../pages/Order";
 import PaymentPage from "../pages/PaymentPage";
 import PriceList from "../pages/PriceList";
 import PrivacyAndPolicy from "../pages/PrivacyAndPolicy";
@@ -43,8 +44,8 @@ import Verify from "../pages/Verify";
 import ChatLayout from "./ChatLayout";
 import AdminRoute from "./private-route/AdminRoute";
 import PrivateRoute from "./private-route/PrivateRoute";
-import UnAuthenticatedRoute from "./private-route/UnAuthenticatedRoute";
 import SuperAdminRoute from "./private-route/SuperAdminRoute";
+import UnAuthenticatedRoute from "./private-route/UnAuthenticatedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -196,6 +197,14 @@ export const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <ProjectRequirements />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/order",
+        element: (
+          <PrivateRoute>
+            <Order />
           </PrivateRoute>
         ),
       },
