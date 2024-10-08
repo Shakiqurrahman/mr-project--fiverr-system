@@ -3,6 +3,8 @@ import { Controller, useForm } from "react-hook-form";
 import { CiSettings } from "react-icons/ci";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useFetchOfferProjectQuery } from "../Redux/api/offerProjectApiSlice";
+import { setOfferProject } from "../Redux/features/offerProjectSlice";
 import bigDealIcon from "../assets/images/Big Deal.svg";
 import starBlue from "../assets/images/icons/banner-star-blue.svg";
 import starOrange from "../assets/images/icons/banner-star-orange.svg";
@@ -13,8 +15,6 @@ import circleOrange from "../assets/images/icons/circle-orange.svg";
 import heroBanner from "../assets/images/icons/heroBanner.jpg";
 import cornerShape from "../assets/images/icons/left-bottom-circle-line.svg";
 import triangleOrange from "../assets/images/icons/triangle-orange.svg";
-import { useFetchOfferProjectQuery } from "../Redux/api/offerProjectApiSlice";
-import { setOfferProject } from "../Redux/features/offerProjectSlice";
 
 const Hero = () => {
   const dispatch = useDispatch();
@@ -178,9 +178,9 @@ const Hero = () => {
                       name={item?.designName}
                       control={control}
                       render={({ field }) => (
-                        <label className="flex cursor-pointer items-center gap-2">
+                        <label className="flex cursor-pointer items-start gap-2">
                           <input
-                            className="size-4 shrink-0"
+                            className="mt-[5px] size-4 shrink-0"
                             type="checkbox"
                             id={item.designName}
                             {...field}
