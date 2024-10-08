@@ -6,6 +6,7 @@ import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
 import ProjectCard from "./categories/ProjectCard";
 
 function RelatedDesigns({
+  isFolder,
   bgColor,
   color,
   items,
@@ -14,11 +15,11 @@ function RelatedDesigns({
 }) {
   const settings = {
     dots: false,
-    infinite: false,
+    infinite: items?.length > 4 ? true : false,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
-    arrows: true,
+    arrows: items?.length > 4 ? true : false,
     autoplay: true,
     autoplaySpeed: 2000,
     nextArrow: <NextArrow />,
@@ -43,7 +44,7 @@ function RelatedDesigns({
         breakpoint: 576,
         settings: {
           arrows: false,
-          slidesToShow: 1,
+          slidesToShow: 2,
           slidesToScroll: 1,
         },
       },
@@ -72,6 +73,7 @@ function RelatedDesigns({
                   const thumbnail = design?.images?.find((d) => d.thumbnail);
                   return (
                     <ProjectCard
+                      folder={isFolder}
                       key={i}
                       thumbnail={thumbnail?.url}
                       thumbnailName={thumbnail?.name}
@@ -95,6 +97,7 @@ function RelatedDesigns({
                   )[0];
                   return (
                     <ProjectCard
+                      folder={isFolder}
                       key={idx}
                       thumbnail={thumbnail?.url}
                       title={design?.title}
