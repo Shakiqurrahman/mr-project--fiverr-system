@@ -42,7 +42,7 @@ function ProjectCard({
       {folder && (
         <Link
           to={slug}
-          className="absolute right-4 top-2.5 z-10 flex size-8 items-center justify-center rounded-md border bg-white text-xl"
+          className="absolute right-4 top-2.5 z-10 flex size-6 items-center justify-center rounded-md border bg-white text-sm sm:size-8 sm:text-xl"
         >
           <FaFolderOpen className="text-black/50" />
         </Link>
