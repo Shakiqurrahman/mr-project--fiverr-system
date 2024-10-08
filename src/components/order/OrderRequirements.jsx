@@ -2,7 +2,7 @@ import OrderRequirementsDetails from "./requirement-components/OrderRequirements
 import OrderRequirementsForm from "./requirement-components/OrderRequirementsForm";
 
 const OrderRequirements = () => {
-  const isRequirementsDone = false;
+  const isRequirementsDone = true;
   return (
     <div>
       {isRequirementsDone ? (

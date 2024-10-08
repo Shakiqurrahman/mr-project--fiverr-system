@@ -2,12 +2,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { FaSpinner } from "react-icons/fa6";
 import { IoMdAttach } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import formatFileSize from "../../../libs/formatFileSize";
 import Divider from "../../Divider";
 import EmojiPicker from "../../chat/EmojiPicker";
 
 const OrderRequirementsForm = () => {
+  const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const textareasRef = useRef([]);
@@ -257,22 +259,40 @@ const OrderRequirementsForm = () => {
             </button>
           </div>
           <div className="mt-5 flex justify-center gap-5">
-            <button
-              type="submit"
-              disabled={submitLoading}
-              className="mt-5 flex h-[45px] w-1/2 items-center justify-center bg-primary text-base font-semibold text-white disabled:cursor-not-allowed sm:text-lg"
-            >
-              {submitLoading ? (
-                <span className="animate-spin text-xl">
-                  <FaSpinner />
-                </span>
-              ) : (
-                "Start Now"
-              )}
-            </button>
+            {user?.role === "USER" ? (
+              <button
+                type="submit"
+                disabled={submitLoading}
+                className="mt-5 flex h-[45px] w-1/2 items-center justify-center bg-primary text-base font-semibold text-white disabled:cursor-not-allowed sm:text-lg"
+              >
+                {submitLoading ? (
+                  <span className="animate-spin text-xl">
+                    <FaSpinner />
+                  </span>
+                ) : (
+                  "Start Now"
+                )}
+              </button>
+            ) : (
+              <button
+                type="button"
+                disabled={submitLoading}
+                className="mt-5 flex h-[45px] w-1/2 items-center justify-center bg-primary text-base font-semibold text-white disabled:cursor-not-allowed sm:text-lg"
+              >
+                {submitLoading ? (
+                  <span className="animate-spin text-xl">
+                    <FaSpinner />
+                  </span>
+                ) : (
+                  "Start The Project"
+                )}
+              </button>
+            )}
           </div>
           <p className="py-6 text-center text-sm sm:text-base">
-            Start your project now by clicking &quot;Start Now&quot;
+            {user?.role === "USER"
+              ? `Start your project now by clicking "Start Now"`
+              : `Start your project now by clicking "Start The Project"`}
           </p>
         </div>
       </form>
