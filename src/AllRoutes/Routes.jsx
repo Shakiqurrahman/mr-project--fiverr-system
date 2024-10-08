@@ -200,14 +200,6 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-      {
-        path: "/order",
-        element: (
-          <PrivateRoute>
-            <Order />
-          </PrivateRoute>
-        ),
-      },
       // Mahdi's created routes start
       {
         path: "/tips",
@@ -285,6 +277,20 @@ export const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <InboxPage />
+          </PrivateRoute>
+        ),
+      },
+    ],
+  },
+  {
+    path: "/order",
+    element: <ChatLayout />,
+    children: [
+      {
+        path: "/order",
+        element: (
+          <PrivateRoute>
+            <Order />
           </PrivateRoute>
         ),
       },

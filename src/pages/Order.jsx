@@ -24,7 +24,7 @@ const Order = () => {
   };
 
   return (
-    <div className="max-width mt-10">
+    <div className="max-width my-10">
       <div className="flex flex-wrap items-start gap-5 sm:flex-nowrap">
         <div className="w-full grow sm:w-auto">
           <div className="hidden items-center gap-10 sm:flex">
