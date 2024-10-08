@@ -9,28 +9,28 @@ const OrderSidePanel = () => {
   return (
     <div>
       {/* Delivery Timer */}
-      <div className="mb-5">
+      <div className="mb-5 shadow-btn-shadow">
         <DeliveryTimer deliveryTime={deliveryDate} />
       </div>
 
       {/* Project Details */}
-      <div className="mb-5">
+      <div className="mb-5 shadow-btn-shadow">
         <OrderProjectDetails />
       </div>
 
       {/* Track Project */}
-      <div className="mb-5">
+      <div className="mb-5 shadow-btn-shadow">
         <TrackProject />
       </div>
 
       {/* Private Note */}
-      <div className="mb-5">
+      <div className="mb-5 shadow-btn-shadow">
         <PrivateNote />
       </div>
 
       {/* cancel project button  */}
       <div>
-        <button className="w-full bg-revision py-3 text-center font-semibold text-white duration-300 hover:bg-revision/70">
+        <button className="w-full bg-revision py-3 text-center font-semibold text-white shadow-btn-shadow duration-300 hover:bg-revision/70">
           Cancel Project
         </button>
       </div>
