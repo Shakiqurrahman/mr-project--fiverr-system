@@ -1,9 +1,9 @@
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
+import logo from "../assets/images/MR Logo White.png";
 import LeftArrowIcon from "../assets/images/icons/Left Arrow.svg";
 import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
-import logo from "../assets/images/MR Logo White.png";
 import thumbnail from "../assets/images/project-thumbnail.jpg";
 import CategoryLayout from "./categories/CategoryLayout";
 import ProjectCard from "./categories/ProjectCard";
