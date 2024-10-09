@@ -221,7 +221,7 @@ const OrderChatBox = () => {
   };
 
   return (
-    <div className="max-h-[1000px] min-h-screen w-full rounded-lg shadow-btn-shadow">
+    <div className="h-full w-full rounded-lg shadow-btn-shadow">
       {/* Conversation Field */}
       <div
         className={`${quickResponse && selectedImages?.length > 0 ? "h-[calc(100%_-_423px)]" : quickResponse ? "h-[calc(100%_-_280px)]" : selectedImages?.length > 0 ? "h-[calc(100%_-_321px)]" : "h-[calc(100%_-_180px)]"} overflow-y-auto p-2 sm:p-5`}
