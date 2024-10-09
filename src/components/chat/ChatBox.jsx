@@ -67,6 +67,9 @@ const ChatBox = ({ openToggle }) => {
 
   // messages state
   const [messages, setMessages] = useState([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [typingTimeout, setTypingTimeout] = useState(null);
+  const [typingStatus, setTypingStatus] = useState("");
 
   // recipient User
   const { data: usersData } = useFetchAllUsersQuery();
@@ -108,11 +111,21 @@ const ChatBox = ({ openToggle }) => {
       }
     });
 
+     // Listen for typing status from the server
+     socket.on('displayTyping', (data) => {
+      setTypingStatus(`${data.username} is typing...`);
+    });
+
+    // Listen for stop typing
+    socket.on('hideTyping', () => {
+      setTypingStatus('');
+    });
+
     // Cleanup on component unmount
     return () => {
       socket?.off("message");
     };
-  }, [conversationUser, isAdmin, socket, messages, dispatch]);
+  }, [conversationUser, isAdmin, socket, messages, dispatch]);  
 
   useEffect(() => {
     // Inital Scroll to last message
@@ -203,9 +216,9 @@ const ChatBox = ({ openToggle }) => {
     }, 0);
   };
 
-  const handleTextChange = (e) => {
-    setTextValue(e.target.value);
-  };
+  // const handleTextChange = (e) => {
+  //   setTextValue(e.target.value);
+  // };
 
   // Image Preview Controllers
 
@@ -336,6 +349,28 @@ const ChatBox = ({ openToggle }) => {
     });
   };
 
+  // Handle user typing
+  const handleTyping = (e) => {
+    setTextValue(e.target.value);
+    if (!isTyping) {
+      setIsTyping(true);
+      socket.emit("typing", { username: user?.userName }); // Send typing event
+    }
+
+    // Clear previous timeout
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+    }
+
+    // Stop typing after 3 seconds of inactivity
+    setTypingTimeout(
+      setTimeout(() => {
+        setIsTyping(false);
+        socket.emit("stopTyping", { username: user?.userName }); // Send stop typing event
+      }, 3000),
+    );
+  };
+
   const totalOrderHasDone =
     availableUsers.find((user) => user.id === conversationUser)?.totalOrder ||
     0;
@@ -370,7 +405,7 @@ const ChatBox = ({ openToggle }) => {
             {isAdmin ? recipientUserName : "Mahfujurrahm535"}
           </h1>
           <div className="flex flex-col items-start text-xs sm:flex-row sm:items-center sm:gap-3 lg:text-sm">
-            <p>Last seen: 18 hours ago</p>
+            {typingStatus ? typingStatus :<p>Last seen: 18 hours ago</p>}
             <Divider
               className={"hidden h-[15px] w-[2px] !bg-black/50 sm:block"}
             />
@@ -832,7 +867,7 @@ const ChatBox = ({ openToggle }) => {
             placeholder="Type a message..."
             ref={textareaRef}
             value={textValue}
-            onChange={handleTextChange}
+            onChange={handleTyping}
           ></textarea>
           <div className="flex h-[50px] items-center justify-between border-t border-slate-300">
             <div className="flex items-center gap-[2px] pl-1 sm:gap-3 sm:pl-3">
