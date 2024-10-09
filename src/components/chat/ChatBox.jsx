@@ -6,6 +6,7 @@ import { IoIosArrowDown, IoIosArrowUp, IoIosAttach } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import adminLogo from "../../assets/images/MR Logo Icon.png";
 import DownArrow from "../../assets/images/icons/Down Arrow.svg";
 import UpArrow from "../../assets/images/icons/Upper Arrow.svg";
 import { useLocalStorageObject } from "../../hooks/useLocalStorageObject";
@@ -29,6 +30,7 @@ import {
   useSendAMessageMutation,
 } from "../../Redux/api/inboxApiSlice";
 import { setChatData } from "../../Redux/features/chatSlice";
+import { setTypingStatus } from "../../Redux/features/userSlice";
 import { configApi } from "../../libs/configApi";
 
 const ChatBox = ({ openToggle }) => {
@@ -49,7 +51,9 @@ const ChatBox = ({ openToggle }) => {
   const [{ quickResponse }, updateItem] = useLocalStorageObject("utils", {
     quickResponse: false,
   });
-  const { user, token, onlineUsers } = useSelector((state) => state.user);
+  const { user, token, onlineUsers, typingStatus } = useSelector(
+    (state) => state.user,
+  );
   const socket = connectSocket(`${configApi.socket}`, token);
   const { data: quickMsgs } = useFetchQuickResMsgQuery();
   const [deleteQuickResMsg] = useDeleteQuickResMsgMutation();
@@ -66,6 +70,9 @@ const ChatBox = ({ openToggle }) => {
 
   // messages state
   const [messages, setMessages] = useState([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [typingTimeout, setTypingTimeout] = useState(null);
+  // const [typingStatus, setTypingStatus] = useState("");
 
   // recipient User
   const { data: usersData } = useFetchAllUsersQuery();
@@ -107,11 +114,31 @@ const ChatBox = ({ openToggle }) => {
       }
     });
 
+    // Listen for typing status from the server
+    socket.on("displayTyping", (data) => {
+      if (isAdmin && data.userId === conversationUser) {
+        dispatch(setTypingStatus(`Typing...`));
+      }
+      if (!isAdmin && data.userId === user?.id) {
+        console.log('i am typinh');
+        
+        dispatch(setTypingStatus(`Typing...`));
+      }
+      console.log(data);
+    });
+
+    // Listen for stop typing
+    socket.on("hideTyping", () => {
+      dispatch(setTypingStatus(""));
+    });
+
     // Cleanup on component unmount
     return () => {
       socket?.off("message");
     };
   }, [conversationUser, isAdmin, socket, messages, dispatch]);
+
+  console.log(typingStatus);
 
   useEffect(() => {
     // Inital Scroll to last message
@@ -202,9 +229,9 @@ const ChatBox = ({ openToggle }) => {
     }, 0);
   };
 
-  const handleTextChange = (e) => {
-    setTextValue(e.target.value);
-  };
+  // const handleTextChange = (e) => {
+  //   setTextValue(e.target.value);
+  // };
 
   // Image Preview Controllers
 
@@ -265,7 +292,6 @@ const ChatBox = ({ openToggle }) => {
 
   const dates = new Date();
   const timeAndDate = dates.getTime();
-  console.log("time and date", timeAndDate);
 
   // handler for Submitting/Send a Message
   const handleSubmitMessage = async (e) => {
@@ -335,6 +361,30 @@ const ChatBox = ({ openToggle }) => {
     });
   };
 
+  // Handle user typing
+  const handleTyping = (e) => {
+    setTextValue(e.target.value);
+    if (!isTyping) {
+      setIsTyping(true);
+      socket.emit("typing", { userId: user?.id }); // Send typing event
+    }
+
+    // Clear previous timeout
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+    }
+
+    // Stop typing after 3 seconds of inactivity
+    setTypingTimeout(
+      setTimeout(() => {
+        setIsTyping(false);
+        socket.emit("stopTyping", {
+          userId: user?.id,
+        }); // Send stop typing event
+      }, 3000),
+    );
+  };
+
   const totalOrderHasDone =
     availableUsers.find((user) => user.id === conversationUser)?.totalOrder ||
     0;
@@ -369,7 +419,7 @@ const ChatBox = ({ openToggle }) => {
             {isAdmin ? recipientUserName : "Mahfujurrahm535"}
           </h1>
           <div className="flex flex-col items-start text-xs sm:flex-row sm:items-center sm:gap-3 lg:text-sm">
-            <p>Last seen: 18 hours ago</p>
+            {typingStatus ? typingStatus : <p>Last seen: 18 hours ago</p>}
             <Divider
               className={"hidden h-[15px] w-[2px] !bg-black/50 sm:block"}
             />
@@ -448,12 +498,13 @@ const ChatBox = ({ openToggle }) => {
         <div>
           {messages?.map((msg, i) => {
             const letterLogo = msg?.senderUserName?.charAt(0).toUpperCase();
+            const sameUser = user?.userName === msg?.senderUserName;
             return (
               <div key={i} className="group mt-3 flex items-start gap-3 px-3">
                 <div className="flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[#ffefef]">
                   {msg?.userImage ? (
                     <img
-                      src={msg?.userImage}
+                      src={isAdmin ? msg?.userImage : adminLogo}
                       alt=""
                       className="size-full rounded-full object-cover"
                     />
@@ -467,9 +518,13 @@ const ChatBox = ({ openToggle }) => {
                   <div className="mt-1 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <h1 className="text-sm font-semibold sm:text-base">
-                        {user?.userName === msg?.senderUserName
-                          ? "Me"
-                          : msg?.senderUserName}
+                        {isAdmin
+                          ? sameUser
+                            ? "Me"
+                            : msg?.senderUserName
+                          : sameUser
+                            ? "Me"
+                            : "mahfujurrahm535"}
                       </h1>
                       <p className="text-[10px] text-black/50 sm:text-xs">
                         {/* {renderMessageDate(msg?.timestamp)}, {msgTime?.toUpperCase()} */}
@@ -826,7 +881,7 @@ const ChatBox = ({ openToggle }) => {
             placeholder="Type a message..."
             ref={textareaRef}
             value={textValue}
-            onChange={handleTextChange}
+            onChange={handleTyping}
           ></textarea>
           <div className="flex h-[50px] items-center justify-between border-t border-slate-300">
             <div className="flex items-center gap-[2px] pl-1 sm:gap-3 sm:pl-3">
