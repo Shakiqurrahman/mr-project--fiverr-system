@@ -145,7 +145,7 @@ const AllConversation = ({ closeToggle }) => {
                 className={`flex cursor-pointer items-center justify-between border-b p-4 hover:bg-lightcream/50 ${chat?.id === conversationUser && 'bg-lightcream/50'}`}
                 onClick={() => handleChatOpen(chat?.id)}
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4  flex-shrink-0">
                   <div className="relative">
                     <img
                       className="size-8 rounded-full object-cover"

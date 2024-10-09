@@ -30,6 +30,7 @@ import {
   useSendAMessageMutation,
 } from "../../Redux/api/inboxApiSlice";
 import { setChatData } from "../../Redux/features/chatSlice";
+import { setTypingStatus } from "../../Redux/features/userSlice";
 import { configApi } from "../../libs/configApi";
 
 const ChatBox = ({ openToggle }) => {
@@ -50,7 +51,9 @@ const ChatBox = ({ openToggle }) => {
   const [{ quickResponse }, updateItem] = useLocalStorageObject("utils", {
     quickResponse: false,
   });
-  const { user, token, onlineUsers } = useSelector((state) => state.user);
+  const { user, token, onlineUsers, typingStatus } = useSelector(
+    (state) => state.user,
+  );
   const socket = connectSocket(`${configApi.socket}`, token);
   const { data: quickMsgs } = useFetchQuickResMsgQuery();
   const [deleteQuickResMsg] = useDeleteQuickResMsgMutation();
@@ -69,7 +72,7 @@ const ChatBox = ({ openToggle }) => {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState(null);
-  const [typingStatus, setTypingStatus] = useState("");
+  // const [typingStatus, setTypingStatus] = useState("");
 
   // recipient User
   const { data: usersData } = useFetchAllUsersQuery();
@@ -111,21 +114,31 @@ const ChatBox = ({ openToggle }) => {
       }
     });
 
-     // Listen for typing status from the server
-     socket.on('displayTyping', (data) => {
-      setTypingStatus(`${data.username} is typing...`);
+    // Listen for typing status from the server
+    socket.on("displayTyping", (data) => {
+      if (isAdmin && data.userId === conversationUser) {
+        dispatch(setTypingStatus(`Typing...`));
+      }
+      if (!isAdmin && data.userId === user?.id) {
+        console.log('i am typinh');
+        
+        dispatch(setTypingStatus(`Typing...`));
+      }
+      console.log(data);
     });
 
     // Listen for stop typing
-    socket.on('hideTyping', () => {
-      setTypingStatus('');
+    socket.on("hideTyping", () => {
+      dispatch(setTypingStatus(""));
     });
 
     // Cleanup on component unmount
     return () => {
       socket?.off("message");
     };
-  }, [conversationUser, isAdmin, socket, messages, dispatch]);  
+  }, [conversationUser, isAdmin, socket, messages, dispatch]);
+
+  console.log(typingStatus);
 
   useEffect(() => {
     // Inital Scroll to last message
@@ -279,7 +292,6 @@ const ChatBox = ({ openToggle }) => {
 
   const dates = new Date();
   const timeAndDate = dates.getTime();
-  console.log("time and date", timeAndDate);
 
   // handler for Submitting/Send a Message
   const handleSubmitMessage = async (e) => {
@@ -354,7 +366,7 @@ const ChatBox = ({ openToggle }) => {
     setTextValue(e.target.value);
     if (!isTyping) {
       setIsTyping(true);
-      socket.emit("typing", { username: user?.userName }); // Send typing event
+      socket.emit("typing", { userId: user?.id }); // Send typing event
     }
 
     // Clear previous timeout
@@ -366,7 +378,9 @@ const ChatBox = ({ openToggle }) => {
     setTypingTimeout(
       setTimeout(() => {
         setIsTyping(false);
-        socket.emit("stopTyping", { username: user?.userName }); // Send stop typing event
+        socket.emit("stopTyping", {
+          userId: user?.id,
+        }); // Send stop typing event
       }, 3000),
     );
   };
@@ -405,7 +419,7 @@ const ChatBox = ({ openToggle }) => {
             {isAdmin ? recipientUserName : "Mahfujurrahm535"}
           </h1>
           <div className="flex flex-col items-start text-xs sm:flex-row sm:items-center sm:gap-3 lg:text-sm">
-            {typingStatus ? typingStatus :<p>Last seen: 18 hours ago</p>}
+            {typingStatus ? typingStatus : <p>Last seen: 18 hours ago</p>}
             <Divider
               className={"hidden h-[15px] w-[2px] !bg-black/50 sm:block"}
             />
