@@ -9,6 +9,7 @@ const userSlice = createSlice({
     loading: false,
     token: null,
     onlineUsers: [],
+    typingStatus: "",
   },
   reducers: {
     setToken: (state, action) => {
@@ -20,9 +21,15 @@ const userSlice = createSlice({
       state.token = action.payload.token;
       state.loading = false;
     },
+
     setOnlineUsers: (state, action) => {
       state.onlineUsers = action.payload;
     },
+
+    setTypingStatus: (state, action) => {
+      state.typingStatus = action.payload;
+    },
+
     logout: (state) => {
       state.user = null;
       state.token = null;
@@ -33,5 +40,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUser, setOnlineUsers, logout } = userSlice.actions;
+export const { setUser, setOnlineUsers, setTypingStatus, logout } =
+  userSlice.actions;
 export default userSlice.reducer;

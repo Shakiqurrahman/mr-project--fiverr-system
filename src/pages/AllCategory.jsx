@@ -47,7 +47,7 @@ function AllCategory() {
             Customise
           </button>
         </div>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {currentPageData?.map((subFolder, idx) => {
             const design = subFolder?.designs[0];
             const thumbnail = design.images.filter(
@@ -55,6 +55,7 @@ function AllCategory() {
             )[0];
             return (
               <ProjectCard
+                folder={true}
                 key={idx}
                 thumbnail={thumbnail?.url}
                 title={design?.title}
@@ -82,7 +83,7 @@ function AllCategory() {
           </div>
         )}
       </div>
-      <RelatedDesigns relatedFolders={relatedFolders} />
+      <RelatedDesigns isFolder={true} relatedFolders={relatedFolders} />
     </>
   );
 }

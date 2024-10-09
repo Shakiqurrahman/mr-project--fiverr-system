@@ -12,8 +12,8 @@ import Dreamstime from "../assets/images/Stock Logos/06 Dreamstime_Logo.png";
 import Vectezzy from "../assets/images/Stock Logos/07 Vectezzy logo.png";
 import alamy from "../assets/images/Stock Logos/alamy logo.png";
 import depositPhotos from "../assets/images/Stock Logos/depositphotos.png";
-import EmojiPicker from "../components/chat/EmojiPicker";
 import Divider from "../components/Divider";
+import EmojiPicker from "../components/chat/EmojiPicker";
 import formatFileSize from "../libs/formatFileSize";
 
 const ProjectRequirements = () => {
@@ -307,6 +307,11 @@ const ProjectRequirements = () => {
                   )}
                 </div>
               ))}
+              <div className="flex justify-end">
+                <button type="button" className="mt-5 font-semibold">
+                  Save Requirements
+                </button>
+              </div>
               <div className="mt-5 flex justify-center gap-5">
                 <button
                   type="button"

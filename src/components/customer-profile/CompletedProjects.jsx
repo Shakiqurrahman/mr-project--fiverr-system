@@ -5,25 +5,25 @@ import { getStatusText } from "./StatusText";
 const CompletedProjects = () => {
   const [completedProjects] = useState([
     {
-        id: 1,
-        title: "Flyer Design",
-        img: designImg,
-        price: 30,
-        time: "May 15, 2024",
-        status: "Completed",
-      },
-      {
-        id: 2,
-        title: "Door Hanger Design",
-        img: designImg,
-        price: 40,
-        time: "May 9, 2024",
-        status: "Completed",
-      }
+      id: 1,
+      title: "Flyer Design",
+      img: designImg,
+      price: 30,
+      time: "May 15, 2024",
+      status: "Completed",
+    },
+    {
+      id: 2,
+      title: "Door Hanger Design",
+      img: designImg,
+      price: 40,
+      time: "May 9, 2024",
+      status: "Completed",
+    },
   ]);
 
   return (
-    <div className="mt-8 grid gap-4 min-[850px]:grid-cols-2">
+    <div className="mt-8 grid grid-cols-2 gap-4">
       {completedProjects.length > 0 ? (
         completedProjects.map((project) => {
           return (
@@ -52,8 +52,8 @@ const CompletedProjects = () => {
           );
         })
       ) : (
-        <h2 className="text-center text-nowrap text-lg min-[850px]:translate-x-1/2">
-          You haven't completed any projects yet!
+        <h2 className="text-nowrap text-center text-lg min-[850px]:translate-x-1/2">
+          You haven&apos;t completed any projects yet!
         </h2>
       )}
     </div>
