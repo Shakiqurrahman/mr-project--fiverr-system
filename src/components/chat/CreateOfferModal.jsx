@@ -11,7 +11,9 @@ const CreateOfferModal = ({ handleClose, onOfferSubmit, values }) => {
   const { conversationUser } = useSelector((state) => state.chat);
   const [sendAMessage] = useSendAMessageMutation();
   const { user } = useSelector((state) => state.user);
-  const isAdmin = user?.role === "ADMIN";
+  const isAuthorized = ["SUB_ADMIN", "ADMIN", "SUPER_ADMIN"].includes(
+    user?.role,
+  );
   const [collapse, setCollapse] = useState(false);
   const [form, setForm] = useState({
     thumbnail: null,
@@ -52,6 +54,24 @@ const CreateOfferModal = ({ handleClose, onOfferSubmit, values }) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  // time & date stamps
+  const date = new Date();
+  const msgDate = date.toLocaleDateString([], {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+  const msgTime = date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+
+  const dates = new Date();
+const timeAndDate = dates.getTime();
+console.log('time and date',timeAndDate);
+
+
   const handleSubmit = async (e) => {
     const { title, thumbnail, price, deliveryCount, desc } = form;
     e.preventDefault();
@@ -64,9 +84,12 @@ const CreateOfferModal = ({ handleClose, onOfferSubmit, values }) => {
         messageText: "",
         attachment: [],
         customOffer: formData,
-        contactForm: null,
+        msgDate,
+        msgTime,
+        timeAndDate,
+        // contactForm: null,
       };
-      if (isAdmin) {
+      if (isAuthorized) {
         onOfferSubmit?.emit("admin-message", {
           userId: conversationUser,
           ...offerMessage,

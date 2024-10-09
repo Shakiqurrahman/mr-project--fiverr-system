@@ -55,7 +55,7 @@ const ChatBox = ({ openToggle }) => {
   const [deleteQuickResMsg] = useDeleteQuickResMsgMutation();
 
   const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
-  
+
   const menuRef = useRef(null);
   const fileInputRef = useRef(null);
   const [selectedImages, setSelectedImages] = useState([]);
@@ -263,6 +263,10 @@ const ChatBox = ({ openToggle }) => {
     hour12: true,
   });
 
+  const dates = new Date();
+  const timeAndDate = dates.getTime();
+  console.log("time and date", timeAndDate);
+
   // handler for Submitting/Send a Message
   const handleSubmitMessage = async (e) => {
     e.preventDefault();
@@ -282,6 +286,7 @@ const ChatBox = ({ openToggle }) => {
           customOffer: null,
           msgDate,
           msgTime,
+          timeAndDate,
         };
         if (isAdmin) {
           socket?.emit("admin-message", {
@@ -336,6 +341,25 @@ const ChatBox = ({ openToggle }) => {
 
   const localTime = msgTime;
   const localDate = msgDate;
+
+  const renderMessageTime = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
+  const renderMessageDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString([], {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
   return (
     <div className="h-full">
       {/* Header Part */}
@@ -448,7 +472,9 @@ const ChatBox = ({ openToggle }) => {
                           : msg?.senderUserName}
                       </h1>
                       <p className="text-[10px] text-black/50 sm:text-xs">
-                        {msgDate}, {msgTime?.toUpperCase()}
+                        {/* {renderMessageDate(msg?.timestamp)}, {msgTime?.toUpperCase()} */}
+                        {renderMessageDate(msg?.timeAndDate)},{" "}
+                        {renderMessageTime(msg?.timeAndDate)}
                       </p>
                     </div>
                     <div className="flex items-center gap-3 text-black/50 opacity-0 group-hover:opacity-100">
