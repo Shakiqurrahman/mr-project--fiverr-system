@@ -26,7 +26,7 @@ const Order = () => {
   return (
     <div className="max-width my-10">
       <div className="flex flex-wrap gap-5 sm:flex-nowrap">
-        <div className="max-h-[1000px] min-h-screen w-full grow sm:w-auto">
+        <div className="max-h-[2000px] min-h-screen w-full grow sm:w-auto">
           <div className="hidden items-center gap-10 sm:flex">
             {tabButtons.map((btn, i) => (
               <button
