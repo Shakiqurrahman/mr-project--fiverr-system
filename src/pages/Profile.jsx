@@ -14,12 +14,11 @@ import {
   FaYoutube,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-// import nextDoorIcon from "../assets/images/nextdoor_icon.png";
 import { LiaEditSolid } from "react-icons/lia";
-import { PiNotionLogoBold } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { setOnlineUsers, setUser } from "../Redux/features/userSlice";
+import nextDoorIcon from "../assets/images/nextdoor_icon.png";
 import ActiveProjects from "../components/customer-profile/ActiveProjects";
 import AllReviews from "../components/customer-profile/AllReviews";
 import CompletedProjects from "../components/customer-profile/CompletedProjects";
@@ -29,7 +28,11 @@ import { connectSocket } from "../libs/socketService";
 
 function Profile({ user = {}, slug }) {
   const dispatch = useDispatch();
-  const { user: loggedUser, onlineUsers, token } = useSelector((state) => state.user);
+  const {
+    user: loggedUser,
+    onlineUsers,
+    token,
+  } = useSelector((state) => state.user);
   const [activeTab, setActiveTab] = useState("active"); // 'active' or 'completed'
   const [loading, setLoading] = useState(false);
   const [profileInfo, setProfileInfo] = useState(false);
@@ -100,7 +103,7 @@ function Profile({ user = {}, slug }) {
     google,
     linkedin,
     yelp,
-    thumblr,
+    tumblr,
     youtube,
     nextdoor,
     pinterest,
@@ -256,9 +259,9 @@ function Profile({ user = {}, slug }) {
                   <FaGoogle />
                 </Link>
               )}
-              {thumblr && (
+              {tumblr && (
                 <Link
-                  to={thumblr}
+                  to={tumblr}
                   target="_blank"
                   className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
                 >
@@ -298,12 +301,11 @@ function Profile({ user = {}, slug }) {
                   target="_blank"
                   className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
                 >
-                  {/* <img
+                  <img
                     src={nextDoorIcon}
                     alt="Nextdoor"
-                    className="size-5 flex-shrink- rounded-full"
-                  /> */}
-                  <PiNotionLogoBold />
+                    className="flex-shrink-0 size-4 object-cover rounded-full"
+                  />
                 </Link>
               )}
             </div>

@@ -6,6 +6,7 @@ import { IoIosArrowDown, IoIosArrowUp, IoIosAttach } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import adminLogo from "../../assets/images/MR Logo Icon.png";
 import DownArrow from "../../assets/images/icons/Down Arrow.svg";
 import UpArrow from "../../assets/images/icons/Upper Arrow.svg";
 import { useLocalStorageObject } from "../../hooks/useLocalStorageObject";
@@ -448,12 +449,13 @@ const ChatBox = ({ openToggle }) => {
         <div>
           {messages?.map((msg, i) => {
             const letterLogo = msg?.senderUserName?.charAt(0).toUpperCase();
+            const sameUser = user?.userName === msg?.senderUserName;
             return (
               <div key={i} className="group mt-3 flex items-start gap-3 px-3">
                 <div className="flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[#ffefef]">
                   {msg?.userImage ? (
                     <img
-                      src={msg?.userImage}
+                      src={isAdmin ? msg?.userImage : adminLogo}
                       alt=""
                       className="size-full rounded-full object-cover"
                     />
@@ -467,9 +469,13 @@ const ChatBox = ({ openToggle }) => {
                   <div className="mt-1 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <h1 className="text-sm font-semibold sm:text-base">
-                        {user?.userName === msg?.senderUserName
-                          ? "Me"
-                          : msg?.senderUserName}
+                        {isAdmin
+                          ? sameUser
+                            ? "Me"
+                            : msg?.senderUserName
+                          : sameUser
+                            ? "Me"
+                            : "mahfujurrahm535"}
                       </h1>
                       <p className="text-[10px] text-black/50 sm:text-xs">
                         {/* {renderMessageDate(msg?.timestamp)}, {msgTime?.toUpperCase()} */}
