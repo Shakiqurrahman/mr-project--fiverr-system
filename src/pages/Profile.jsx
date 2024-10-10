@@ -16,8 +16,7 @@ import {
 import { FaXTwitter } from "react-icons/fa6";
 import { LiaEditSolid } from "react-icons/lia";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { setOnlineUsers, setUser } from "../Redux/features/userSlice";
+import { Link, useNavigate } from "react-router-dom";
 import nextDoorIcon from "../assets/images/nextdoor_icon.png";
 import ActiveProjects from "../components/customer-profile/ActiveProjects";
 import AllReviews from "../components/customer-profile/AllReviews";
@@ -25,9 +24,13 @@ import CompletedProjects from "../components/customer-profile/CompletedProjects"
 import ProfileInfo from "../components/customer-profile/ProfileInfo";
 import { configApi } from "../libs/configApi";
 import { connectSocket } from "../libs/socketService";
+import { useLazyGetAllMessagesQuery } from "../Redux/api/inboxApiSlice";
+import { setChatData, setConversationUser } from "../Redux/features/chatSlice";
+import { setOnlineUsers, setUser } from "../Redux/features/userSlice";
 
 function Profile({ user = {}, slug }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     user: loggedUser,
     onlineUsers,
@@ -110,6 +113,24 @@ function Profile({ user = {}, slug }) {
     tiktok,
   } = user.SocialMediaLinks || {};
 
+  // after clicking on the message button
+  const [triggerGetAllMessages, { data: getAllMessages }] =
+    useLazyGetAllMessagesQuery();
+
+  useEffect(() => {
+    if (getAllMessages) {
+      dispatch(setChatData(getAllMessages));
+      navigate("/inbox");
+    }
+  }, [dispatch, getAllMessages, navigate]);
+
+  const handleMessageButton = (id) => {
+    dispatch(setConversationUser(id));
+    triggerGetAllMessages({
+      receiverId: id,
+    });
+  };
+
   return (
     <section className="max-width mt-10 flex flex-col gap-10 md:flex-row lg:gap-16">
       <div className="min-w-[260px] md:w-1/4">
@@ -149,11 +170,12 @@ function Profile({ user = {}, slug }) {
             {loggedUser?.role !== "USER" &&
               user?.id !== loggedUser?.id &&
               user?.role === "USER" && (
-                <Link>
-                  <button className="mx-auto mt-3 flex justify-center rounded-full border bg-primary px-4 py-1.5 text-sm font-medium text-white hover:bg-primary/85">
-                    Message Me
-                  </button>
-                </Link>
+                <button
+                  onClick={() => handleMessageButton(user?.id)}
+                  className="mx-auto mt-3 flex justify-center rounded-full border bg-primary px-4 py-1.5 text-sm font-medium text-white hover:bg-primary/85"
+                >
+                  Message Me
+                </button>
               )}
           </div>
 

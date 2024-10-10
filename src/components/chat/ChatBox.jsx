@@ -95,6 +95,7 @@ const ChatBox = ({ openToggle }) => {
       setMessages(chatData);
     }
   }, [dispatch, getAllMessagesForUser, user, chatData]);
+  
 
   const [visibility, setVisibility] = useState({});
 
