@@ -9,7 +9,7 @@ function CategoryLayout({ children, title, path }) {
           to={path}
           className="text-base font-medium text-primary sm:text-lg"
         >
-          All Designs
+          See More
         </Link>
       </div>
       {children}
