@@ -4,7 +4,6 @@ import { IoSearchOutline } from "react-icons/io5";
 import { LuClock3 } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
-import logo from "../../assets/images/MR Logo White.png";
 import repeatIcon from "../../assets/svg/Repeat icon.svg";
 import { formatTimeAgo } from "../../libs/timeFormatter";
 import {
@@ -142,16 +141,22 @@ const AllConversation = ({ closeToggle }) => {
             return (
               <div
                 key={chat?.id}
-                className={`flex cursor-pointer items-center justify-between border-b p-4 hover:bg-lightcream/50 ${chat?.id === conversationUser && 'bg-lightcream/50'}`}
+                className={`flex cursor-pointer items-center justify-between border-b p-4 hover:bg-lightcream/50 ${chat?.id === conversationUser && "bg-lightcream/50"}`}
                 onClick={() => handleChatOpen(chat?.id)}
               >
-                <div className="flex items-center gap-4  flex-shrink-0">
+                <div className="flex flex-shrink-0 items-center gap-4">
                   <div className="relative">
-                    <img
-                      className="size-8 rounded-full object-cover"
-                      src={chat?.image ? chat?.image : logo}
-                      alt="logo"
-                    />
+                    {chat?.image ? (
+                      <img
+                        className="size-8 rounded-full object-cover"
+                        src={chat?.image}
+                        alt="logo"
+                      />
+                    ) : (
+                      <div className="flex size-8 items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-xl font-bold text-[#3b3b3b]/50">
+                        {chat?.userName?.trim().charAt(0).toUpperCase()}
+                      </div>
+                    )}
                     {chat?.status === "Repeated Client" && (
                       <img
                         className={`absolute -top-1 left-1 size-3`}
@@ -167,7 +172,7 @@ const AllConversation = ({ closeToggle }) => {
                     <p className="flex items-center gap-2 font-semibold">
                       {chat?.userName}{" "}
                       <span className="text-secondary">
-                        {chat?.status === "New Client"  && <LuClock3 />}
+                        {chat?.status === "New Client" && <LuClock3 />}
                       </span>
                     </p>
                     <p

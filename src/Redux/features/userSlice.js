@@ -9,6 +9,7 @@ const userSlice = createSlice({
     loading: false,
     token: null,
     onlineUsers: [],
+    lastSeen: null,
     typingStatus: "",
   },
   reducers: {
@@ -25,6 +26,9 @@ const userSlice = createSlice({
     setOnlineUsers: (state, action) => {
       state.onlineUsers = action.payload;
     },
+    setLastSeen: (state, action) => {
+      state.lastSeen = action.payload;
+    },
 
     setTypingStatus: (state, action) => {
       state.typingStatus = action.payload;
@@ -40,6 +44,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUser, setOnlineUsers, setTypingStatus, logout } =
+export const { setUser, setOnlineUsers, setLastSeen, setTypingStatus, logout } =
   userSlice.actions;
 export default userSlice.reducer;

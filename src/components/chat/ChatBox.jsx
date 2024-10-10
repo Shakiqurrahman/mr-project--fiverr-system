@@ -32,6 +32,7 @@ import {
 import { setChatData } from "../../Redux/features/chatSlice";
 import { setTypingStatus } from "../../Redux/features/userSlice";
 import { configApi } from "../../libs/configApi";
+import { timeAgoTracker } from "../../libs/timeAgoTracker";
 
 const ChatBox = ({ openToggle }) => {
   const dispatch = useDispatch();
@@ -75,9 +76,14 @@ const ChatBox = ({ openToggle }) => {
   // const [typingStatus, setTypingStatus] = useState("");
 
   // recipient User
-  const { data: usersData } = useFetchAllUsersQuery();
-  const { userName: recipientUserName } =
-    usersData?.find((user) => user?.id === conversationUser) || "";
+  const { data: usersData } = useFetchAllUsersQuery(null, {
+    pollingInterval: 60000,
+  });
+  const {
+    userName: recipientUserName,
+    lastSeen,
+    id: recipientUserId,
+  } = usersData?.find((user) => user?.id === conversationUser) || "";
 
   useEffect(() => {
     if (user.role === "USER") {
@@ -110,7 +116,6 @@ const ChatBox = ({ openToggle }) => {
       let filter = msg.userId === conversationUser && msg;
       if (isAdmin && filter) {
         setMessages((prev) => [...prev, filter]);
-        // dispatch(inboxApiSlice?.util?.invalidateTags(['Messages']))
       }
     });
 
@@ -138,7 +143,7 @@ const ChatBox = ({ openToggle }) => {
     };
   }, [conversationUser, isAdmin, socket, messages, dispatch]);
 
-  console.log(typingStatus);
+  // console.log(typingStatus);
 
   useEffect(() => {
     // Inital Scroll to last message
@@ -323,6 +328,8 @@ const ChatBox = ({ openToggle }) => {
             recipientId: conversationUser,
             ...submitForm,
           }).unwrap();
+          ///////// i dunno it's optimized or not................................
+          setMessages((prev) => [...prev, res?.data]);
         } else {
           socket?.emit("user-message", {
             userId: user?.id,
@@ -410,6 +417,24 @@ const ChatBox = ({ openToggle }) => {
     });
   };
 
+  const [isAdminOnline, setIsAdminOnline] = useState(false);
+  useEffect(() => {
+    if (onlineUsers && onlineUsers.length > 0) {
+      const adminOnline = onlineUsers.some(
+        (onlineUser) => onlineUser?.role !== "USER",
+      );
+      setIsAdminOnline(adminOnline);
+    } else {
+      setIsAdminOnline(false);
+    }
+  }, [onlineUsers]);
+
+  const isUserOnline = (userId) => {
+    return onlineUsers.some((onlineUser) => onlineUser?.userId === userId);
+  };
+
+  console.log("2", isAdminOnline);
+
   return (
     <div className="h-full">
       {/* Header Part */}
@@ -419,7 +444,17 @@ const ChatBox = ({ openToggle }) => {
             {isAdmin ? recipientUserName : "Mahfujurrahm535"}
           </h1>
           <div className="flex flex-col items-start text-xs sm:flex-row sm:items-center sm:gap-3 lg:text-sm">
-            {typingStatus ? typingStatus : <p>Last seen: 18 hours ago</p>}
+            {typingStatus ? (
+              typingStatus
+            ) : (
+              <p>
+                {lastSeen
+                  ? `Last seen: ${timeAgoTracker(lastSeen)}`
+                  : isAdminOnline
+                    ? "Online"
+                    : "Offline"}
+              </p>
+            )}
             <Divider
               className={"hidden h-[15px] w-[2px] !bg-black/50 sm:block"}
             />
@@ -504,13 +539,13 @@ const ChatBox = ({ openToggle }) => {
                 <div className="flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[#ffefef]">
                   {msg?.userImage ? (
                     <img
-                      src={isAdmin ? msg?.userImage : adminLogo}
+                      src={isAdmin || sameUser ? msg?.userImage : adminLogo}
                       alt=""
                       className="size-full rounded-full object-cover"
                     />
                   ) : (
                     <div className="text-xl font-bold text-[#7c7c7c]/50">
-                      {letterLogo}
+                      {isAdmin ? letterLogo : "M"}
                     </div>
                   )}
                 </div>

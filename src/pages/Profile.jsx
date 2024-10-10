@@ -16,8 +16,7 @@ import {
 import { FaXTwitter } from "react-icons/fa6";
 import { LiaEditSolid } from "react-icons/lia";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { setOnlineUsers, setUser } from "../Redux/features/userSlice";
+import { Link, useNavigate } from "react-router-dom";
 import nextDoorIcon from "../assets/images/nextdoor_icon.png";
 import ActiveProjects from "../components/customer-profile/ActiveProjects";
 import AllReviews from "../components/customer-profile/AllReviews";
@@ -25,9 +24,14 @@ import CompletedProjects from "../components/customer-profile/CompletedProjects"
 import ProfileInfo from "../components/customer-profile/ProfileInfo";
 import { configApi } from "../libs/configApi";
 import { connectSocket } from "../libs/socketService";
+import { timeAgoTracker } from "../libs/timeAgoTracker";
+import { useLazyGetAllMessagesQuery } from "../Redux/api/inboxApiSlice";
+import { setChatData, setConversationUser } from "../Redux/features/chatSlice";
+import { setOnlineUsers, setUser } from "../Redux/features/userSlice";
 
 function Profile({ user = {}, slug }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     user: loggedUser,
     onlineUsers,
@@ -110,6 +114,28 @@ function Profile({ user = {}, slug }) {
     tiktok,
   } = user.SocialMediaLinks || {};
 
+  const lastSeen = timeAgoTracker(user?.lastSeen);
+
+  // after clicking on the message button
+  const [triggerGetAllMessages, { data: getAllMessages }] =
+    useLazyGetAllMessagesQuery({
+      // pollingInterval: 500,
+    });
+
+  useEffect(() => {
+    if (getAllMessages) {
+      dispatch(setChatData(getAllMessages));
+      navigate("/inbox");
+    }
+  }, [dispatch, getAllMessages, navigate]);
+
+  const handleMessageButton = (id) => {
+    dispatch(setConversationUser(id));
+    triggerGetAllMessages({
+      receiverId: id,
+    });
+  };
+
   return (
     <section className="max-width mt-10 flex flex-col gap-10 md:flex-row lg:gap-16">
       <div className="min-w-[260px] md:w-1/4">
@@ -146,6 +172,16 @@ function Profile({ user = {}, slug }) {
             <h2 className="mt-3 text-center text-lg font-semibold sm:text-xl">
               {user?.userName}
             </h2>
+            {loggedUser?.role !== "USER" &&
+              user?.id !== loggedUser?.id &&
+              user?.role === "USER" && (
+                <button
+                  onClick={() => handleMessageButton(user?.id)}
+                  className="mx-auto mt-3 flex justify-center rounded-full border bg-primary px-4 py-1.5 text-sm font-medium text-white hover:bg-primary/85"
+                >
+                  Message Me
+                </button>
+              )}
           </div>
 
           <div className="space-y-3 border-y border-gray-300 py-4">
@@ -163,9 +199,13 @@ function Profile({ user = {}, slug }) {
             </div>
             <div className="flex justify-between gap-1 text-sm">
               <span>Last Visited</span>
-              <p className="font-semibold">
-                {isUserOnline(user.id) ? "Online" : "Offline"}
-              </p>
+              {lastSeen ? (
+                <p className="font-semibold">{lastSeen}</p>
+              ) : (
+                <p className="font-semibold">
+                  {isUserOnline(user.id) ? "Online" : "Offline"}
+                </p>
+              )}
             </div>
           </div>
 
@@ -304,7 +344,7 @@ function Profile({ user = {}, slug }) {
                   <img
                     src={nextDoorIcon}
                     alt="Nextdoor"
-                    className="flex-shrink-0 size-4 object-cover rounded-full"
+                    className="size-4 flex-shrink-0 rounded-full object-cover"
                   />
                 </Link>
               )}

@@ -75,7 +75,7 @@ export const inboxApiSlice = createApi({
         body: newMessage,
       }),
       invalidatesTags: ["getAllMessages"],
-      
+   
     }),
 
     // Create start contact for Message
