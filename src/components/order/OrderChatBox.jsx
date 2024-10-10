@@ -20,6 +20,7 @@ import CreateOfferModal from "../chat/CreateOfferModal";
 import EditQuickMsgModal from "../chat/EditQuickMsgModal";
 import EmojiPicker from "../chat/EmojiPicker";
 
+import { Link } from "react-router-dom";
 import Logo from "../../assets/images/MR Logo White.png";
 import AdditionalOfferPreview from "./chatbox-components/AdditionalOfferPreview";
 import AttachmentsPreview from "./chatbox-components/AttachmentsPreview";
@@ -453,8 +454,10 @@ const OrderChatBox = () => {
       </div>
       <p className="my-5 text-center">
         View conversation with{" "}
-        <span className="font-semibold text-primary">clientusername</span> in
-        your inbox
+        <Link to={`/clientusername`} className="font-semibold text-primary">
+          clientusername
+        </Link>{" "}
+        in your inbox
       </p>
     </>
   );
