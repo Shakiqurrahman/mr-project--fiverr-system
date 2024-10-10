@@ -4,7 +4,6 @@ import { IoSearchOutline } from "react-icons/io5";
 import { LuClock3 } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
-import logo from "../../assets/images/MR Logo White.png";
 import repeatIcon from "../../assets/svg/Repeat icon.svg";
 import { formatTimeAgo } from "../../libs/timeFormatter";
 import {
@@ -147,11 +146,17 @@ const AllConversation = ({ closeToggle }) => {
               >
                 <div className="flex flex-shrink-0 items-center gap-4">
                   <div className="relative">
-                    <img
-                      className="size-8 rounded-full object-cover"
-                      src={chat?.image ? chat?.image : logo}
-                      alt="logo"
-                    />
+                    {chat?.image ? (
+                      <img
+                        className="size-8 rounded-full object-cover"
+                        src={chat?.image}
+                        alt="logo"
+                      />
+                    ) : (
+                      <div className="flex size-8 items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-xl font-bold text-[#3b3b3b]/50">
+                        {chat?.userName?.trim().charAt(0).toUpperCase()}
+                      </div>
+                    )}
                     {chat?.status === "Repeated Client" && (
                       <img
                         className={`absolute -top-1 left-1 size-3`}

@@ -323,7 +323,7 @@ const ChatBox = ({ openToggle }) => {
             ...submitForm,
           }).unwrap();
           ///////// i dunno it's optimized or not................................
-          setMessages(prev => [...prev, res?.data])          
+          setMessages((prev) => [...prev, res?.data]);
         } else {
           socket?.emit("user-message", {
             userId: user?.id,
@@ -505,13 +505,13 @@ const ChatBox = ({ openToggle }) => {
                 <div className="flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[#ffefef]">
                   {msg?.userImage ? (
                     <img
-                      src={isAdmin ? msg?.userImage : adminLogo}
+                      src={isAdmin || sameUser ? msg?.userImage : adminLogo}
                       alt=""
                       className="size-full rounded-full object-cover"
                     />
                   ) : (
                     <div className="text-xl font-bold text-[#7c7c7c]/50">
-                      {letterLogo}
+                      {isAdmin ? letterLogo : "M"}
                     </div>
                   )}
                 </div>
