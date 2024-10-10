@@ -51,7 +51,7 @@ const EditQuickMsgModal = ({ handleClose, value, controller }) => {
   useOutsideClick(editQuickMsgRef, () => handleClose(null));
 
   return (
-    <div className="fixed left-0 top-0 !z-[9999999] !flex h-screen w-full items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+    <div className="fixed left-0 top-0 !z-[99999999] !flex h-screen w-full items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
       <button
         className="absolute right-10 top-10"
         onClick={() => handleClose(null)}

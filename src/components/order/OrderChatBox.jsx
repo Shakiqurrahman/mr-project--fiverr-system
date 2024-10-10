@@ -295,7 +295,7 @@ const OrderChatBox = () => {
         >
           <div className="rounded-t-md border border-b border-slate-300">
             {selectedImages?.length > 0 && (
-              <div className="flex gap-2 overflow-x-auto border-b p-[10px]">
+              <div className="preview-scroll-overflow-x flex gap-2 border-b p-[10px]">
                 {selectedImages?.map((image, index) => (
                   <div key={index} className="w-[120px]">
                     <div className="group relative">

@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import OrderDeliveryForm from "../OrderDeliveryForm";
 
 const DeliveryTimer = ({ deliveryTime }) => {
   // All states defination here
   const [timeLeft, setTimeLeft] = useState(deliveryTime);
+  const [openDeliveryModal, setOpenDeliveryModal] = useState(false);
 
   //   All useEffect Defination starts here
   useEffect(() => {
@@ -32,42 +34,50 @@ const DeliveryTimer = ({ deliveryTime }) => {
   const { days, hours, minutes, seconds } = calculateTimeLeft(timeLeft);
 
   return (
-    <div className="bg-lightskyblue p-3">
-      <h1 className="text-xl font-semibold">Time left to deliver</h1>
-      <div className="my-3 flex flex-wrap border border-primary">
-        <div className="w-1/4 border-r border-primary py-3 text-center">
-          <h1 className="text-xl font-bold">{String(days).padStart(2, "0")}</h1>
-          <p className="text-sm font-medium text-black/80">Days</p>
+    <>
+      <div className="bg-lightskyblue p-3">
+        <h1 className="text-xl font-semibold">Time left to deliver</h1>
+        <div className="my-3 flex flex-wrap border border-primary">
+          <div className="w-1/4 border-r border-primary py-3 text-center">
+            <h1 className="text-xl font-bold">
+              {String(days).padStart(2, "0")}
+            </h1>
+            <p className="text-sm font-medium text-black/80">Days</p>
+          </div>
+          <div className="w-1/4 border-r border-primary py-3 text-center">
+            <h1 className="text-xl font-bold">
+              {String(hours).padStart(2, "0")}
+            </h1>
+            <p className="text-sm font-medium text-black/80">Hours</p>
+          </div>
+          <div className="w-1/4 border-r border-primary py-3 text-center">
+            <h1 className="text-xl font-bold">
+              {String(minutes).padStart(2, "0")}
+            </h1>
+            <p className="text-sm font-medium text-black/80">Minutes</p>
+          </div>
+          <div className="w-1/4 py-3 text-center">
+            <h1 className="text-xl font-bold">
+              {String(seconds).padStart(2, "0")}
+            </h1>
+            <p className="text-sm font-medium text-black/80">Second</p>
+          </div>
+          <button
+            type="button"
+            className="w-full bg-primary p-2 text-lg font-semibold text-white"
+            onClick={() => setOpenDeliveryModal(true)}
+          >
+            Deliver Now
+          </button>
         </div>
-        <div className="w-1/4 border-r border-primary py-3 text-center">
-          <h1 className="text-xl font-bold">
-            {String(hours).padStart(2, "0")}
-          </h1>
-          <p className="text-sm font-medium text-black/80">Hours</p>
-        </div>
-        <div className="w-1/4 border-r border-primary py-3 text-center">
-          <h1 className="text-xl font-bold">
-            {String(minutes).padStart(2, "0")}
-          </h1>
-          <p className="text-sm font-medium text-black/80">Minutes</p>
-        </div>
-        <div className="w-1/4 py-3 text-center">
-          <h1 className="text-xl font-bold">
-            {String(seconds).padStart(2, "0")}
-          </h1>
-          <p className="text-sm font-medium text-black/80">Second</p>
-        </div>
-        <button
-          type="button"
-          className="w-full bg-primary p-2 text-lg font-semibold text-white"
-        >
-          Deliver Now
+        <button type="button" className="w-full text-center text-lg">
+          Extend delivery date
         </button>
       </div>
-      <button type="button" className="w-full text-center text-lg">
-        Extend delivery date
-      </button>
-    </div>
+      {openDeliveryModal && (
+        <OrderDeliveryForm handleClose={setOpenDeliveryModal} />
+      )}
+    </>
   );
 };
 
