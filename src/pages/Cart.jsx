@@ -2,9 +2,9 @@ import React from "react";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { removeFromCart, setCart } from "../Redux/features/cartSlice";
 import Check from "../assets/svg/Check";
 import useSyncCart from "../hooks/useSyncCart";
-import { removeFromCart, setCart } from "../Redux/features/cartSlice";
 
 function Cart() {
   const dispatch = useDispatch();
@@ -36,7 +36,7 @@ function Cart() {
     <div className="mx-auto max-w-[800px] bg-slate-100 p-4 sm:mt-0 md:mt-10">
       <div className="flex justify-between border-b border-black/20 pb-4">
         <h1 className="text-xl font-bold text-primary">
-          Your Cart &#40; {cart.length} Item{cart.length > 1 && "s"} &#41;
+          Your Cart &#40;{cart.length} Item{cart.length > 1 && "s"}&#41;
         </h1>
         {/* <RiCloseLargeFill onClick={close} className="cursor-pointer text-2xl" /> */}
       </div>

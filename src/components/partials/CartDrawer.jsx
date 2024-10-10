@@ -3,9 +3,9 @@ import { RiCloseLargeFill } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { removeFromCart, setCart } from "../../Redux/features/cartSlice";
 import Check from "../../assets/svg/Check";
 import useSyncCart from "../../hooks/useSyncCart";
-import { removeFromCart, setCart } from "../../Redux/features/cartSlice";
 
 const CartDrawer = ({ close }) => {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const CartDrawer = ({ close }) => {
       <div className="sticky top-0 bg-slate-100 pt-8">
         <div className="flex justify-between border-b border-black/20 pb-4">
           <h1 className="text-xl font-bold text-primary">
-            Your Cart &#40; {cart.length} Item{cart.length > 1 && "s"} &#41;
+            Your Cart &#40;{cart.length} Item{cart.length > 1 && "s"}&#41;
           </h1>
           <RiCloseLargeFill
             onClick={close}
