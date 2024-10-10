@@ -120,8 +120,8 @@ const ChatBox = ({ openToggle }) => {
         dispatch(setTypingStatus(`Typing...`));
       }
       if (!isAdmin && data.userId === user?.id) {
-        console.log('i am typinh');
-        
+        console.log("i am typinh");
+
         dispatch(setTypingStatus(`Typing...`));
       }
       console.log(data);
@@ -528,8 +528,8 @@ const ChatBox = ({ openToggle }) => {
                       </h1>
                       <p className="text-[10px] text-black/50 sm:text-xs">
                         {/* {renderMessageDate(msg?.timestamp)}, {msgTime?.toUpperCase()} */}
-                        {renderMessageDate(msg?.timeAndDate)},{" "}
-                        {renderMessageTime(msg?.timeAndDate)}
+                        {renderMessageDate(parseInt(msg?.timeAndDate))},{" "}
+                        {renderMessageTime(parseInt(msg?.timeAndDate))}
                       </p>
                     </div>
                     <div className="flex items-center gap-3 text-black/50 opacity-0 group-hover:opacity-100">
