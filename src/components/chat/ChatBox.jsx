@@ -32,6 +32,7 @@ import {
 import { setChatData } from "../../Redux/features/chatSlice";
 import { setTypingStatus } from "../../Redux/features/userSlice";
 import { configApi } from "../../libs/configApi";
+import { timeAgoTracker } from "../../libs/timeAgoTracker";
 
 const ChatBox = ({ openToggle }) => {
   const dispatch = useDispatch();
@@ -75,9 +76,14 @@ const ChatBox = ({ openToggle }) => {
   // const [typingStatus, setTypingStatus] = useState("");
 
   // recipient User
-  const { data: usersData } = useFetchAllUsersQuery();
-  const { userName: recipientUserName } =
-    usersData?.find((user) => user?.id === conversationUser) || "";
+  const { data: usersData } = useFetchAllUsersQuery(null, {
+    pollingInterval: 60000,
+  });
+  const {
+    userName: recipientUserName,
+    lastSeen,
+    id: recipientUserId,
+  } = usersData?.find((user) => user?.id === conversationUser) || "";
 
   useEffect(() => {
     if (user.role === "USER") {
@@ -137,7 +143,7 @@ const ChatBox = ({ openToggle }) => {
     };
   }, [conversationUser, isAdmin, socket, messages, dispatch]);
 
-  console.log(typingStatus);
+  // console.log(typingStatus);
 
   useEffect(() => {
     // Inital Scroll to last message
@@ -411,6 +417,24 @@ const ChatBox = ({ openToggle }) => {
     });
   };
 
+  const [isAdminOnline, setIsAdminOnline] = useState(false);
+  useEffect(() => {
+    if (onlineUsers && onlineUsers.length > 0) {
+      const adminOnline = onlineUsers.some(
+        (onlineUser) => onlineUser?.role !== "USER",
+      );
+      setIsAdminOnline(adminOnline);
+    } else {
+      setIsAdminOnline(false);
+    }
+  }, [onlineUsers]);
+
+  const isUserOnline = (userId) => {
+    return onlineUsers.some((onlineUser) => onlineUser?.userId === userId);
+  };
+
+  console.log("2", isAdminOnline);
+
   return (
     <div className="h-full">
       {/* Header Part */}
@@ -420,7 +444,17 @@ const ChatBox = ({ openToggle }) => {
             {isAdmin ? recipientUserName : "Mahfujurrahm535"}
           </h1>
           <div className="flex flex-col items-start text-xs sm:flex-row sm:items-center sm:gap-3 lg:text-sm">
-            {typingStatus ? typingStatus : <p>Last seen: 18 hours ago</p>}
+            {typingStatus ? (
+              typingStatus
+            ) : (
+              <p>
+                {lastSeen
+                  ? `Last seen: ${timeAgoTracker(lastSeen)}`
+                  : isAdminOnline && !isAdmin
+                    ? "Online"
+                    : "Offline"}
+              </p>
+            )}
             <Divider
               className={"hidden h-[15px] w-[2px] !bg-black/50 sm:block"}
             />

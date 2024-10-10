@@ -24,6 +24,7 @@ import CompletedProjects from "../components/customer-profile/CompletedProjects"
 import ProfileInfo from "../components/customer-profile/ProfileInfo";
 import { configApi } from "../libs/configApi";
 import { connectSocket } from "../libs/socketService";
+import { timeAgoTracker } from "../libs/timeAgoTracker";
 import { useLazyGetAllMessagesQuery } from "../Redux/api/inboxApiSlice";
 import { setChatData, setConversationUser } from "../Redux/features/chatSlice";
 import { setOnlineUsers, setUser } from "../Redux/features/userSlice";
@@ -113,10 +114,12 @@ function Profile({ user = {}, slug }) {
     tiktok,
   } = user.SocialMediaLinks || {};
 
+  const lastSeen = timeAgoTracker(user?.lastSeen);
+
   // after clicking on the message button
   const [triggerGetAllMessages, { data: getAllMessages }] =
     useLazyGetAllMessagesQuery({
-      pollingInterval: 500,
+      // pollingInterval: 500,
     });
 
   useEffect(() => {
@@ -196,9 +199,13 @@ function Profile({ user = {}, slug }) {
             </div>
             <div className="flex justify-between gap-1 text-sm">
               <span>Last Visited</span>
-              <p className="font-semibold">
-                {isUserOnline(user.id) ? "Online" : "Offline"}
-              </p>
+              {lastSeen ? (
+                <p className="font-semibold">{lastSeen}</p>
+              ) : (
+                <p className="font-semibold">
+                  {isUserOnline(user.id) ? "Online" : "Offline"}
+                </p>
+              )}
             </div>
           </div>
 

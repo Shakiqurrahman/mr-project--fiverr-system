@@ -7,7 +7,9 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const ProfileLayout = () => {
   const { userName } = useParams();
-  const { data: usersData, refetch, isLoading } = useFetchAllUsersQuery();
+  const { data: usersData, refetch, isLoading } = useFetchAllUsersQuery(null,{
+    pollingInterval: 60000,
+  });
   const user = usersData?.find(
     (user) =>
       user.userName.toLowerCase().trim() === userName.toLowerCase().trim(),
