@@ -27,7 +27,7 @@ const Order = () => {
   return (
     <div className="max-width my-10">
       <h1 className="mb-10 flex items-center justify-center gap-3 text-[30px] font-semibold text-primary">
-        <Check className="size-10" /> Project Completed
+        <Check className="size-10" /> Project Completed{" "}
       </h1>
       <div className="flex flex-wrap gap-5 sm:flex-nowrap">
         <div className="max-h-[2000px] min-h-screen w-full grow sm:w-auto">
