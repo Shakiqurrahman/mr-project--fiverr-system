@@ -8,10 +8,28 @@ import formatFileSize from "../../../libs/formatFileSize";
 
 const AttachmentsPreview = () => {
   const [expand, setExpand] = useState(false);
+
+  // handle download all button
+  const handleDownloadAll = (files) => {
+    files.forEach((file) => {
+      const link = document.createElement("a");
+      link.href = file.url; // Ensure this points to the file's URL
+      link.setAttribute("download", file.name); // Set the filename
+      document.body.appendChild(link);
+      link.click(); // Simulate click to download
+      document.body.removeChild(link); // Clean up
+    });
+  };
+
   return (
     <div className="relative mt-3">
       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].length > 3 && (
-        <Link className="font-medium text-primary">Download All</Link>
+        <Link
+          className="font-medium text-primary"
+          onClick={() => handleDownloadAll()}
+        >
+          Download All
+        </Link>
       )}
       <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((att, index) => (

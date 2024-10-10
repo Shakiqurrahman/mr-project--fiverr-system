@@ -24,6 +24,7 @@ import Logo from "../../assets/images/MR Logo White.png";
 import AdditionalOfferModal from "./chatbox-components/AdditionalOfferModal";
 import AdditionalOfferPreview from "./chatbox-components/AdditionalOfferPreview";
 import AttachmentsPreview from "./chatbox-components/AttachmentsPreview";
+import OrderDeliveryPreview from "./chatbox-components/OrderDeliveryPreview";
 
 const OrderChatBox = () => {
   // Redux query imports here
@@ -236,6 +237,15 @@ const OrderChatBox = () => {
         >
           {/* All message Container */}
           <div>
+            <div className="mt-10 text-center">
+              <h1 className="text-xl font-semibold text-primary">
+                FINAL DELIVERY
+              </h1>
+              <p className="mx-auto mb-10 mt-2 w-3/4">
+                If you don&apos;t accept this delivery, this project will
+                automatically completed within the next 48 hours.
+              </p>
+            </div>
             <div className="group mt-3 flex items-start gap-3 px-3">
               <div className="flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[#ffefef]">
                 <img
@@ -272,6 +282,7 @@ const OrderChatBox = () => {
                 </div>
                 <AttachmentsPreview />
                 <AdditionalOfferPreview />
+                <OrderDeliveryPreview />
               </div>
             </div>
           </div>
