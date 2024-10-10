@@ -450,7 +450,7 @@ const ChatBox = ({ openToggle }) => {
               <p>
                 {lastSeen
                   ? `Last seen: ${timeAgoTracker(lastSeen)}`
-                  : isAdminOnline && !isAdmin
+                  : isAdminOnline
                     ? "Online"
                     : "Offline"}
               </p>
