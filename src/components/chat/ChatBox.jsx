@@ -33,6 +33,7 @@ import { setChatData } from "../../Redux/features/chatSlice";
 import { setTypingStatus } from "../../Redux/features/userSlice";
 import { configApi } from "../../libs/configApi";
 import { timeAgoTracker } from "../../libs/timeAgoTracker";
+import useLocalDateTime from "../../hooks/useLocalDateTime";
 
 const ChatBox = ({ openToggle }) => {
   const dispatch = useDispatch();
@@ -156,10 +157,10 @@ const ChatBox = ({ openToggle }) => {
       const currentTime = new Date();
 
       messages?.forEach((message) => {
-        const messageDate = new Date(`${message?.msgDate} ${message?.msgTime}`);
+        const messageDate = new Date(parseInt(message?.timeAndDate));
         const fiveMinutesLater = new Date(
           messageDate.getTime() + 5 * 60 * 1000,
-        );
+        );        
         newVisibility[message?.id] = currentTime < fiveMinutesLater;
       });
 
@@ -282,18 +283,6 @@ const ChatBox = ({ openToggle }) => {
   useOutsideClick(menuRef, () => setQucikMsgBtnController(null));
   useOutsideClick(dotMenuRef, () => setExpandDot(false));
 
-  // time & date stamps
-  const date = new Date();
-  const msgDate = date.toLocaleDateString([], {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-  const msgTime = date.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-  });
 
   const dates = new Date();
   const timeAndDate = dates.getTime();
@@ -315,8 +304,6 @@ const ChatBox = ({ openToggle }) => {
           userImage: user?.image,
           attachment: attachments || [],
           customOffer: null,
-          msgDate,
-          msgTime,
           timeAndDate,
         };
         if (isAdmin) {
@@ -396,8 +383,7 @@ const ChatBox = ({ openToggle }) => {
     availableUsers.find((user) => user.id === conversationUser)?.totalOrder ||
     0;
 
-  const localTime = msgTime;
-  const localDate = msgDate;
+    const { localDate, localTime } = useLocalDateTime();
 
   const renderMessageTime = (timestamp) => {
     const date = new Date(timestamp);
@@ -432,8 +418,6 @@ const ChatBox = ({ openToggle }) => {
   const isUserOnline = (userId) => {
     return onlineUsers.some((onlineUser) => onlineUser?.userId === userId);
   };
-
-  console.log("2", isAdminOnline);
 
   return (
     <div className="h-full">
@@ -562,7 +546,6 @@ const ChatBox = ({ openToggle }) => {
                             : "mahfujurrahm535"}
                       </h1>
                       <p className="text-[10px] text-black/50 sm:text-xs">
-                        {/* {renderMessageDate(msg?.timestamp)}, {msgTime?.toUpperCase()} */}
                         {renderMessageDate(parseInt(msg?.timeAndDate))},{" "}
                         {renderMessageTime(parseInt(msg?.timeAndDate))}
                       </p>

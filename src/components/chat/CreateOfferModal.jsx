@@ -54,18 +54,6 @@ const CreateOfferModal = ({ handleClose, onOfferSubmit, values }) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  // time & date stamps
-  const date = new Date();
-  const msgDate = date.toLocaleDateString([], {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-  const msgTime = date.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-  });
 
   const dates = new Date();
 const timeAndDate = dates.getTime();
@@ -84,8 +72,6 @@ console.log('time and date',timeAndDate);
         messageText: "",
         attachment: [],
         customOffer: formData,
-        msgDate,
-        msgTime,
         timeAndDate,
         // contactForm: null,
       };
