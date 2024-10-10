@@ -121,6 +121,7 @@ function RelatedDesigns({
                   )[0];
                   return (
                     <ProjectCard
+                      folder={isFolder}
                       key={idx}
                       thumbnail={thumbnail?.url}
                       title={design?.title}

@@ -104,6 +104,7 @@ function AllDesign() {
         )}
       </div>
       <RelatedDesigns
+        isFolder={true}
         bgColor={"bg-lightcream"}
         color={"text-[#f1592a]"}
         img={thumbnailAlt}

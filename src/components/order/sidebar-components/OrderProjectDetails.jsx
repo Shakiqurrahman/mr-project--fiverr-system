@@ -14,25 +14,25 @@ const OrderProjectDetails = () => {
         </div>
       </div>
       <ul>
-        <li className="my-2 flex items-center justify-between gap-3 text-lg">
+        <li className="my-2 flex items-center justify-between gap-3 text-base">
           Project by <b className="text-base">clientusername</b>
         </li>
-        <li className="my-2 flex items-center justify-between gap-3 text-lg">
+        <li className="my-2 flex items-center justify-between gap-3 text-base">
           Quantity <b className="text-base">1</b>
         </li>
-        <li className="my-2 flex items-center justify-between gap-3 text-lg">
+        <li className="my-2 flex items-center justify-between gap-3 text-base">
           Duration <b className="text-base">2 Days</b>
         </li>
-        <li className="my-2 flex items-center justify-between gap-3 text-lg">
+        <li className="my-2 flex items-center justify-between gap-3 text-base">
           Project started <b className="text-base">Jun 17, 8:19 AM</b>
         </li>
-        <li className="my-2 flex items-center justify-between gap-3 text-lg">
+        <li className="my-2 flex items-center justify-between gap-3 text-base">
           Project delivery <b className="text-base">Jun 19, 8:19 AM</b>
         </li>
-        <li className="my-2 flex items-center justify-between gap-3 text-lg">
+        <li className="my-2 flex items-center justify-between gap-3 text-base">
           Total price <b className="text-base">$40</b>
         </li>
-        <li className="my-2 flex items-center justify-between gap-3 text-lg">
+        <li className="my-2 flex items-center justify-between gap-3 text-base">
           Project number <b className="text-base">#MR1N5ZPN</b>
         </li>
       </ul>

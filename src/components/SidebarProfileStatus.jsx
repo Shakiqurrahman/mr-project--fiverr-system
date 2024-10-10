@@ -2,19 +2,19 @@ import Divider from "./Divider";
 
 function SidebarProfileStatus() {
   return (
-    <div className="p-2 bg-[#F2F9FF] border border-primary rounded-lg">
+    <div className="rounded-lg border border-primary bg-[#F2F9FF] p-2">
       <h1 className="font-semibold">Mahfujurrahm535</h1>
-      <Divider className="h-px w-full bg-[#1b8cdc!important] my-2" />
+      <Divider className="my-2 h-px w-full bg-[#1b8cdc!important]" />
       <p className="text-sm">Avg. Response Time</p>
-      <span className="font-semibold text-lg mb-3 block">1 Hour</span>
+      <span className="mb-3 block text-lg font-semibold">1 Hour</span>
       <p className="text-sm">Avg. Rating</p>
-      <span className="font-semibold text-lg mb-3 block">5 Stars.</span>
+      <span className="mb-3 block text-lg font-semibold">5 Stars</span>
       <p className="text-sm">On-Time Delivery</p>
-      <span className="font-semibold text-lg mb-3 block">100%</span>
+      <span className="mb-3 block text-lg font-semibold">100%</span>
       <p className="text-sm">Last Project Completed</p>
-      <span className="font-semibold text-lg mb-3 block">3 Hours Ago</span>
+      <span className="mb-3 block text-lg font-semibold">3 Hours Ago</span>
       <p className="text-sm">Active Projects</p>
-      <span className="font-semibold text-lg block">7</span>
+      <span className="block text-lg font-semibold">7</span>
     </div>
   );
 }

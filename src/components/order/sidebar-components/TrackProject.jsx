@@ -50,7 +50,7 @@ const TrackProject = () => {
                   )}
                 </span>
               )}
-              <p className="text-xl">{option?.name}</p>
+              <p className="text-base font-medium">{option?.name}</p>
             </div>
           );
         })}

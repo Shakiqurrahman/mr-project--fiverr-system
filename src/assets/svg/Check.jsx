@@ -7,14 +7,14 @@ function Check({ className }) {
       height="1185.000000pt"
       viewBox="0 0 1280.000000 1185.000000"
       preserveAspectRatio="xMidYMid meet"
-      className={className}
+      className={`${className} fill-primary`}
     >
       <metadata>
         Created by potrace 1.15, written by Peter Selinger 2001-2017
       </metadata>
       <g
         transform="translate(0.000000,1185.000000) scale(0.100000,-0.100000)"
-        fill="#1b8cdc"
+        // fill="#1b8cdc"
         stroke="none"
       >
         <path

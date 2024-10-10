@@ -70,7 +70,7 @@ const DeliveryTimer = ({ deliveryTime }) => {
             Deliver Now
           </button>
         </div>
-        <button type="button" className="w-full text-center text-lg">
+        <button type="button" className="w-full text-center text-base">
           Extend delivery date
         </button>
       </div>

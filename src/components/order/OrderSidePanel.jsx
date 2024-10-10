@@ -30,7 +30,7 @@ const OrderSidePanel = () => {
 
       {/* cancel project button  */}
       <div>
-        <button className="w-full bg-revision py-3 text-center font-semibold text-white shadow-btn-shadow duration-300 hover:bg-revision/70">
+        <button className="w-full bg-lightskyblue py-3 text-center font-semibold text-black shadow-btn-shadow duration-300 hover:bg-revision/70 hover:text-white">
           Cancel Project
         </button>
       </div>

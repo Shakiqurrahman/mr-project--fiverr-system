@@ -24,7 +24,7 @@ function Footer() {
       />
       <div className="mt-10 bg-black text-white sm:mt-20">
         <div className="max-width">
-          <div className="flex flex-wrap pt-10 sm:flex-nowrap">
+          <div className="flex flex-wrap items-center pt-10 sm:flex-nowrap">
             <div className="w-full pr-0 sm:w-1/3 sm:pr-16">
               <img
                 src={Logo}

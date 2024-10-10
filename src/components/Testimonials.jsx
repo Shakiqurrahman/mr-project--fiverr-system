@@ -6,10 +6,10 @@ import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
+import Logo from "../assets/images/MR Logo White.png";
 import Camera from "../assets/images/camera.jpg";
 import LeftArrowIcon from "../assets/images/icons/Left Arrow.svg";
 import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
-import Logo from "../assets/images/MR Logo White.png";
 import Divider from "./Divider";
 
 function Testimonials() {
@@ -113,12 +113,12 @@ function Testimonials() {
                   <IoStar />
                   <IoStar />
                 </div>
-                <span className="text-lg font-semibold sm:text-2xl">(00)</span>
+                <span className="text-lg sm:text-2xl">(00)</span>
               </div>
             </div>
             <div className="px-2 lg:pr-4">
               <div className="rounded-2xl bg-white p-5 text-center">
-                <h1 className="text-lg font-semibold sm:text-2xl">2 Star</h1>
+                <h1 className="text-lg font-semibold sm:text-2xl">2 Stars</h1>
                 <div className="my-2 flex justify-center gap-3 text-lg text-[#C8E3F6] sm:my-5 sm:text-3xl">
                   <IoStar className="text-primary" />
                   <IoStar className="text-primary" />
@@ -126,12 +126,12 @@ function Testimonials() {
                   <IoStar />
                   <IoStar />
                 </div>
-                <span className="text-lg font-semibold sm:text-2xl">(01)</span>
+                <span className="text-lg sm:text-2xl">(01)</span>
               </div>
             </div>
             <div className="px-2 lg:pr-4">
               <div className="rounded-2xl bg-white p-5 text-center">
-                <h1 className="text-lg font-semibold sm:text-2xl">3 Star</h1>
+                <h1 className="text-lg font-semibold sm:text-2xl">3 Stars</h1>
                 <div className="my-2 flex justify-center gap-3 text-lg text-[#C8E3F6] sm:my-5 sm:text-3xl">
                   <IoStar className="text-primary" />
                   <IoStar className="text-primary" />
@@ -139,12 +139,12 @@ function Testimonials() {
                   <IoStar />
                   <IoStar />
                 </div>
-                <span className="text-lg font-semibold sm:text-2xl">(04)</span>
+                <span className="text-lg sm:text-2xl">(04)</span>
               </div>
             </div>
             <div className="px-2 lg:pr-4">
               <div className="rounded-2xl bg-white p-5 text-center">
-                <h1 className="text-lg font-semibold sm:text-2xl">4 Star</h1>
+                <h1 className="text-lg font-semibold sm:text-2xl">4 Stars</h1>
                 <div className="my-2 flex justify-center gap-3 text-lg text-[#C8E3F6] sm:my-5 sm:text-3xl">
                   <IoStar className="text-primary" />
                   <IoStar className="text-primary" />
@@ -152,12 +152,12 @@ function Testimonials() {
                   <IoStar className="text-primary" />
                   <IoStar />
                 </div>
-                <span className="text-lg font-semibold sm:text-2xl">(02)</span>
+                <span className="text-lg sm:text-2xl">(02)</span>
               </div>
             </div>
             <div className="px-2 lg:pr-0">
               <div className="rounded-2xl bg-white p-5 text-center">
-                <h1 className="text-lg font-semibold sm:text-2xl">5 Star</h1>
+                <h1 className="text-lg font-semibold sm:text-2xl">5 Stars</h1>
                 <div className="my-2 flex justify-center gap-3 text-lg text-[#C8E3F6] sm:my-5 sm:text-3xl">
                   <IoStar className="text-primary" />
                   <IoStar className="text-primary" />
@@ -165,14 +165,14 @@ function Testimonials() {
                   <IoStar className="text-primary" />
                   <IoStar className="text-primary" />
                 </div>
-                <span className="text-lg font-semibold sm:text-2xl">(24)</span>
+                <span className="text-lg sm:text-2xl">(24)</span>
               </div>
             </div>
           </Slider>
         </div>
         <div className="mt-10 flex flex-wrap-reverse items-center gap-y-5 md:flex-nowrap md:gap-0">
           <div className="flex w-full flex-wrap items-center justify-start gap-x-3 gap-y-4 md:w-3/4">
-            <h1 className="text-sm font-semibold sm:text-base lg:order-none lg:text-2xl">
+            <h1 className="text-sm font-semibold sm:text-base lg:order-none lg:text-xl">
               Sort By
             </h1>
 
@@ -180,7 +180,7 @@ function Testimonials() {
               value="Most relevant"
               onClick={handleSortBtn}
               type="button"
-              className={`sortingBtn rounded border border-transparent p-1 text-xs font-medium sm:px-3 sm:py-2 lg:order-none lg:mx-0 lg:text-base ${sortBtn === "Most relevant" ? "active" : ""}`}
+              className={`sortingBtn rounded border border-transparent p-1 text-xs font-medium sm:px-3 sm:py-2 lg:order-none lg:mx-0 lg:text-lg ${sortBtn === "Most relevant" ? "active" : ""}`}
             >
               Most relevant
             </button>
@@ -189,7 +189,7 @@ function Testimonials() {
               value="Most recent"
               onClick={handleSortBtn}
               type="button"
-              className={`sortingBtn rounded border border-transparent p-1 text-xs font-medium sm:px-3 sm:py-2 lg:order-none lg:text-base ${sortBtn === "Most recent" ? "active" : ""}`}
+              className={`sortingBtn rounded border border-transparent p-1 text-xs font-medium sm:px-3 sm:py-2 lg:order-none lg:text-lg ${sortBtn === "Most recent" ? "active" : ""}`}
             >
               Most recent
             </button>
@@ -197,7 +197,7 @@ function Testimonials() {
               value="Delivery images"
               onClick={handleSortBtn}
               type="button"
-              className={`sortingBtn rounded border border-transparent p-1 text-xs font-medium sm:px-3 sm:py-2 lg:order-none lg:text-base ${sortBtn === "Delivery images" ? "active" : ""}`}
+              className={`sortingBtn rounded border border-transparent p-1 text-xs font-medium sm:px-3 sm:py-2 lg:order-none lg:text-lg ${sortBtn === "Delivery images" ? "active" : ""}`}
             >
               Delivery images (23)
             </button>
@@ -235,7 +235,7 @@ function Testimonials() {
                   <img
                     src={Camera}
                     alt=""
-                    className="h-[150px] w-[150px] rounded-xl object-[100%_100%]"
+                    className="w-[150px] rounded-xl object-cover"
                   />
                 )}
               </div>

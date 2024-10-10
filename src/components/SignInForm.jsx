@@ -8,13 +8,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { z } from "zod";
-import { configApi } from "../libs/configApi";
-import { connectSocket } from "../libs/socketService";
 import {
   clearPasswordVisibility,
   toggleShowPassword,
 } from "../Redux/features/passwordVisibilitySlice";
 import { setUser } from "../Redux/features/userSlice";
+import { configApi } from "../libs/configApi";
+import { connectSocket } from "../libs/socketService";
 
 // Define the validation schema using Zod
 const signInSchema = z.object({
@@ -98,7 +98,7 @@ function SignInForm({ handleClick }) {
           {...register("email")}
           className={`${
             errors.email ? "border-red-500" : "border-[#e7e7e7]"
-          } mt-3 block w-full border border-solid bg-white p-2 outline-none`}
+          } mt-1 block w-full border border-solid bg-white p-2 outline-none`}
         />
         {errors.email && (
           <p className="text-sm text-red-500">{errors.email.message}</p>
@@ -118,7 +118,7 @@ function SignInForm({ handleClick }) {
             {...register("password")}
             className={`${
               errors.password ? "border-red-500" : "border-[#e7e7e7]"
-            } z-0 mt-3 block w-full border border-solid bg-white p-2 outline-none`}
+            } z-0 mt-1 block w-full border border-solid bg-white p-2 outline-none`}
           />
         </div>
         {errors.password && (
