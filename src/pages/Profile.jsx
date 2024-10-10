@@ -115,7 +115,9 @@ function Profile({ user = {}, slug }) {
 
   // after clicking on the message button
   const [triggerGetAllMessages, { data: getAllMessages }] =
-    useLazyGetAllMessagesQuery();
+    useLazyGetAllMessagesQuery({
+      pollingInterval: 500,
+    });
 
   useEffect(() => {
     if (getAllMessages) {

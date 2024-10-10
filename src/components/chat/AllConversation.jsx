@@ -142,10 +142,10 @@ const AllConversation = ({ closeToggle }) => {
             return (
               <div
                 key={chat?.id}
-                className={`flex cursor-pointer items-center justify-between border-b p-4 hover:bg-lightcream/50 ${chat?.id === conversationUser && 'bg-lightcream/50'}`}
+                className={`flex cursor-pointer items-center justify-between border-b p-4 hover:bg-lightcream/50 ${chat?.id === conversationUser && "bg-lightcream/50"}`}
                 onClick={() => handleChatOpen(chat?.id)}
               >
-                <div className="flex items-center gap-4  flex-shrink-0">
+                <div className="flex flex-shrink-0 items-center gap-4">
                   <div className="relative">
                     <img
                       className="size-8 rounded-full object-cover"
@@ -167,7 +167,7 @@ const AllConversation = ({ closeToggle }) => {
                     <p className="flex items-center gap-2 font-semibold">
                       {chat?.userName}{" "}
                       <span className="text-secondary">
-                        {chat?.status === "New Client"  && <LuClock3 />}
+                        {chat?.status === "New Client" && <LuClock3 />}
                       </span>
                     </p>
                     <p

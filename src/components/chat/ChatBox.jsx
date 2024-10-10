@@ -95,7 +95,6 @@ const ChatBox = ({ openToggle }) => {
       setMessages(chatData);
     }
   }, [dispatch, getAllMessagesForUser, user, chatData]);
-  
 
   const [visibility, setVisibility] = useState({});
 
@@ -111,7 +110,6 @@ const ChatBox = ({ openToggle }) => {
       let filter = msg.userId === conversationUser && msg;
       if (isAdmin && filter) {
         setMessages((prev) => [...prev, filter]);
-        // dispatch(inboxApiSlice?.util?.invalidateTags(['Messages']))
       }
     });
 
@@ -324,6 +322,8 @@ const ChatBox = ({ openToggle }) => {
             recipientId: conversationUser,
             ...submitForm,
           }).unwrap();
+          ///////// i dunno it's optimized or not................................
+          setMessages(prev => [...prev, res?.data])          
         } else {
           socket?.emit("user-message", {
             userId: user?.id,
