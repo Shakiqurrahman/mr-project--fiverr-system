@@ -146,6 +146,15 @@ function Profile({ user = {}, slug }) {
             <h2 className="mt-3 text-center text-lg font-semibold sm:text-xl">
               {user?.userName}
             </h2>
+            {loggedUser?.role !== "USER" &&
+              user?.id !== loggedUser?.id &&
+              user?.role === "USER" && (
+                <Link>
+                  <button className="mx-auto mt-3 flex justify-center rounded-full border bg-primary px-4 py-1.5 text-sm font-medium text-white hover:bg-primary/85">
+                    Message Me
+                  </button>
+                </Link>
+              )}
           </div>
 
           <div className="space-y-3 border-y border-gray-300 py-4">
@@ -304,7 +313,7 @@ function Profile({ user = {}, slug }) {
                   <img
                     src={nextDoorIcon}
                     alt="Nextdoor"
-                    className="flex-shrink-0 size-4 object-cover rounded-full"
+                    className="size-4 flex-shrink-0 rounded-full object-cover"
                   />
                 </Link>
               )}
