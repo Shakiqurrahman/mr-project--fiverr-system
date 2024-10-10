@@ -16,12 +16,12 @@ import formatFileSize from "../../libs/formatFileSize";
 import { connectSocket } from "../../libs/socketService";
 import Divider from "../Divider";
 import AddQuickMsgModal from "../chat/AddQuickMsgModal";
-import CreateOfferModal from "../chat/CreateOfferModal";
 import EditQuickMsgModal from "../chat/EditQuickMsgModal";
 import EmojiPicker from "../chat/EmojiPicker";
 
 import { Link } from "react-router-dom";
 import Logo from "../../assets/images/MR Logo White.png";
+import AdditionalOfferModal from "./chatbox-components/AdditionalOfferModal";
 import AdditionalOfferPreview from "./chatbox-components/AdditionalOfferPreview";
 import AttachmentsPreview from "./chatbox-components/AttachmentsPreview";
 
@@ -445,7 +445,7 @@ const OrderChatBox = () => {
           <AddQuickMsgModal handleClose={setOpenAddMsgModal} />
         )}
         {openOfferModal && (
-          <CreateOfferModal
+          <AdditionalOfferModal
             handleClose={setOpenOfferModal}
             onOfferSubmit={socket}
             // values={messages}
