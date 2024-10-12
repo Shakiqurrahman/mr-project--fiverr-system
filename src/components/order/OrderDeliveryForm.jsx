@@ -190,7 +190,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
 
   return (
     <>
-      <div className="fixed left-0 top-0 z-[99999999] flex h-screen w-full items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+      <div className="fixed left-0 top-0 z-[99999999] flex h-screen w-full items-center justify-center overflow-y-auto bg-black/50 p-4 backdrop-blur-sm">
         <form
           className="w-full max-w-[800px] rounded-md border bg-white p-4 shadow-btn-shadow"
           onSubmit={handleSubmit}
@@ -221,7 +221,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
                     )}
                   </button>
                 </div>
-                <div className="flex items-center gap-3 text-xs font-medium">
+                <div className="hidden items-center gap-3 text-xs font-medium sm:flex">
                   <p>Local time: 4:52 PM</p>
                   <Divider className="h-4 w-px !bg-black" />
                   <p>Last seen 23 hours ago</p>
@@ -327,8 +327,8 @@ const OrderDeliveryForm = ({ handleClose }) => {
             )}
           </div>
           <div className="p-4">
-            <div className="flex items-center gap-5">
-              <div>
+            <div className="flex flex-wrap items-center gap-5 sm:flex-nowrap">
+              <div className="w-full text-center sm:w-auto sm:text-start">
                 <input
                   type="file"
                   id="uploadThumbnail"
@@ -343,7 +343,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
                   <IoMdAttach className="inline-block text-xl" /> Thumbnail
                 </label>
               </div>
-              <div>
+              <div className="w-full text-center sm:w-auto sm:text-start">
                 <input
                   type="file"
                   id="uploadSource"
@@ -360,14 +360,14 @@ const OrderDeliveryForm = ({ handleClose }) => {
                 </label>
               </div>
               {selectedImages?.length > 0 && (
-                <p className="ms-auto text-xs font-semibold">
+                <p className="mx-auto text-xs font-semibold sm:me-0 sm:ms-auto">
                   {selectedImages?.length} Attachments
                 </p>
               )}
             </div>
-            <div className="mt-5 flex items-end gap-5">
+            <div className="mt-5 flex flex-wrap items-end justify-center gap-5 md:flex-nowrap md:justify-normal">
               {thumbnailImage && (
-                <div className="flex items-center gap-3">
+                <div className="flex w-full items-center gap-3 md:w-auto">
                   <div className="relative">
                     <img
                       src={thumbnailImage?.url}
@@ -383,7 +383,9 @@ const OrderDeliveryForm = ({ handleClose }) => {
                     </button>
                   </div>
                   <div className="text-sm">
-                    <h1 className="max-w-[200px]">{thumbnailImage?.name}</h1>
+                    <h1 className="break-words md:max-w-[200px]">
+                      {thumbnailImage?.name}
+                    </h1>
                     <span className="text-black/50">
                       ({formatFileSize(thumbnailImage?.size)})
                     </span>
@@ -392,7 +394,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
               )}
               <button
                 type="button"
-                className="ms-auto rounded-md bg-revision px-10 py-2 font-semibold text-white"
+                className="rounded-md bg-revision px-10 py-2 font-semibold text-white md:ms-auto"
                 onClick={handleSaveDraft}
               >
                 Save Draft
