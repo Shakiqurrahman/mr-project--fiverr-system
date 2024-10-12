@@ -36,7 +36,7 @@ const CancelProjectModal = ({ handleClose }) => {
     <div className="fixed left-0 top-0 z-[999] flex h-screen w-full items-center justify-center bg-black/20 p-4 backdrop-blur-sm">
       <div ref={modalRef} className="w-full max-w-[650px] rounded-md">
         <div className="flex items-center justify-between bg-lightskyblue px-6 py-4">
-          <h1 className="text-lg font-semibold">Extend delivery date</h1>
+          <h1 className="text-lg font-semibold">Cancel Project</h1>
           <IoCloseSharp
             onClick={() => handleClose(false)}
             className="cursor-pointer text-[27px] text-gray-500"
