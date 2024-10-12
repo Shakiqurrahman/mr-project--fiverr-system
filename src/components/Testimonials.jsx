@@ -220,17 +220,42 @@ function Testimonials() {
           <Slider {...testimonialSetting}>
             <div className="px-0 md:px-10">
               <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:items-start">
-                <p className="text-center text-base leading-[40px] sm:text-start md:text-lg">
-                  <span>
-                    <FaQuoteLeft className="mb-3 mr-1 inline text-xs text-red-500" />
-                  </span>
-                  Top class service, Very nice, and responds very fast. He had
-                  two days to finish but finished in one day. I 100% coming back
-                  to him in future. He is the real deal. HE IS AMAZING!!!
-                  <span>
-                    <FaQuoteRight className="mb-3 ml-1 inline text-xs text-red-500" />
-                  </span>
-                </p>
+                <div>
+                  <p className="text-center text-base leading-[40px] sm:text-start md:text-lg">
+                    <span>
+                      <FaQuoteLeft className="mb-3 mr-1 inline text-xs text-red-500" />
+                    </span>
+                    Top class service, Very nice, and responds very fast. He had
+                    two days to finish but finished in one day. I 100% coming
+                    back to him in future. He is the real deal. HE IS AMAZING!!!
+                    <span>
+                      <FaQuoteRight className="mb-3 ml-1 inline text-xs text-red-500" />
+                    </span>
+                  </p>
+                  <div className="mt-5 flex flex-col items-center gap-2 sm:gap-4 lg:flex-row">
+                    <img
+                      src={Logo}
+                      alt=""
+                      className="h-[30px] w-[30px] rounded-full sm:h-[40px] sm:w-[40px]"
+                    />
+                    <h1 className="text-base font-semibold md:text-xl">
+                      clientusername
+                    </h1>
+                    <div className="ml-0 flex justify-center gap-2 text-lg text-[#C8E3F6] md:text-2xl lg:ml-3">
+                      <IoStar className="text-primary" />
+                      <IoStar className="text-primary" />
+                      <IoStar className="text-primary" />
+                      <IoStar className="text-primary" />
+                      <IoStar className="text-primary" />
+                    </div>
+                    <p className="ml-0 text-base md:text-lg lg:ml-3">
+                      United States
+                    </p>
+                    <p className="mt-2 text-xs md:text-base lg:mt-0">
+                      5 days ago
+                    </p>
+                  </div>
+                </div>
                 {Camera && (
                   <img
                     src={Camera}
@@ -238,29 +263,6 @@ function Testimonials() {
                     className="w-[150px] rounded-xl object-cover"
                   />
                 )}
-              </div>
-              <div className="mt-10 flex flex-col items-center justify-between lg:flex-row">
-                <div className="flex flex-col items-center gap-2 sm:gap-4 lg:flex-row">
-                  <img
-                    src={Logo}
-                    alt=""
-                    className="h-[30px] w-[30px] rounded-full sm:h-[40px] sm:w-[40px]"
-                  />
-                  <h1 className="text-base font-semibold md:text-xl">
-                    clientusername
-                  </h1>
-                  <div className="ml-0 flex justify-center gap-2 text-lg text-[#C8E3F6] md:text-2xl lg:ml-3">
-                    <IoStar className="text-primary" />
-                    <IoStar className="text-primary" />
-                    <IoStar className="text-primary" />
-                    <IoStar className="text-primary" />
-                    <IoStar className="text-primary" />
-                  </div>
-                  <p className="ml-0 text-base md:text-lg lg:ml-3">
-                    United States
-                  </p>
-                </div>
-                <p className="mt-2 text-xs md:text-base lg:mt-0">5 days ago</p>
               </div>
             </div>
           </Slider>

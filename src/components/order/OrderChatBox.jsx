@@ -286,7 +286,6 @@ const OrderChatBox = () => {
               </div>
             </div>
           </div>
-
           <div ref={endOfMessagesRef} />
         </div>
         {/* Text Field Part */}
@@ -328,19 +327,26 @@ const OrderChatBox = () => {
             <div
               className={`${quickResponse ? "h-[140px]" : "h-[40px]"} border-b border-slate-300 p-2`}
             >
-              <div className="flex items-center gap-3 font-semibold">
-                Quick Response{" "}
-                <button
-                  type="button"
-                  className="bg-transparent"
-                  onClick={() => updateItem("quickResponse", !quickResponse)}
-                >
-                  {quickResponse ? (
-                    <IoIosArrowDown className="text-xl text-primary" />
-                  ) : (
-                    <IoIosArrowUp className="text-xl text-primary" />
-                  )}
-                </button>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 font-semibold">
+                  Quick Response{" "}
+                  <button
+                    type="button"
+                    className="bg-transparent"
+                    onClick={() => updateItem("quickResponse", !quickResponse)}
+                  >
+                    {quickResponse ? (
+                      <IoIosArrowDown className="text-xl text-primary" />
+                    ) : (
+                      <IoIosArrowUp className="text-xl text-primary" />
+                    )}
+                  </button>
+                </div>
+                <div className="flex items-center gap-3 text-xs font-medium">
+                  <p>Local time: 4:52 PM</p>
+                  <Divider className="h-4 w-px !bg-black" />
+                  <p>Last seen 23 hours ago</p>
+                </div>
               </div>
               <div
                 className={`${quickResponse ? "block" : "hidden"} flex h-[100px] flex-wrap items-start gap-3 overflow-y-auto py-2`}

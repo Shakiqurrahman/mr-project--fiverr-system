@@ -3,7 +3,7 @@ import { FaSpinner } from "react-icons/fa6";
 import { IoMdAttach } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import formatFileSize from "../../../libs/formatFileSize";
 import Divider from "../../Divider";
 import EmojiPicker from "../../chat/EmojiPicker";
@@ -159,7 +159,7 @@ const OrderRequirementsForm = () => {
     <>
       {user?.role === "USER" ? (
         <div className="w-full">
-          <h1 className="text-center text-xl font-bold leading-relaxed">
+          <h1 className="mb-5 text-center text-xl font-bold leading-relaxed">
             Please fill in the answers to the questions below and attach the
             necessary files, so that we can create your design with your own
             information.
@@ -214,7 +214,7 @@ const OrderRequirementsForm = () => {
                           }
                           multiple
                         />
-                        <label htmlFor={i}>
+                        <label htmlFor={i} className="cursor-pointer">
                           <IoMdAttach size={20} />
                         </label>
                       </div>
@@ -279,8 +279,22 @@ const OrderRequirementsForm = () => {
           </form>
         </div>
       ) : (
-        <div>
-          <p></p>
+        <div className="text-center">
+          <p className="mx-auto mb-5 px-3 font-medium md:w-3/4">
+            Your Client{" "}
+            <Link className="font-semibold text-primary">clientusername</Link>{" "}
+            Did not completed all the requirement questions that you have asked
+            him. Tell him to fill up all the questions or you can start the
+            project by clicking this{" "}
+            <span className="font-semibold">&quot;Start The Project&quot;</span>{" "}
+            button.
+          </p>
+          <button
+            type="button"
+            className="rounded-[30px] bg-primary px-10 py-2 text-lg font-semibold text-white"
+          >
+            Start The Project
+          </button>
         </div>
       )}
     </>
