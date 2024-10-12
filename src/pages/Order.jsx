@@ -1,13 +1,20 @@
 import { useState } from "react";
 import { PiWarningCircleFill } from "react-icons/pi";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import Check from "../assets/svg/Check";
 import Divider from "../components/Divider";
 import OrderChatBox from "../components/order/OrderChatBox";
 import OrderDetails from "../components/order/OrderDetails";
 import OrderRequirements from "../components/order/OrderRequirements";
+import OrderReview from "../components/order/OrderReview";
+import OrderReviewForm from "../components/order/OrderReviewForm";
 import OrderSidePanel from "../components/order/OrderSidePanel";
+import OrderTipsForm from "../components/order/OrderTipsForm";
 
 const Order = () => {
+  const { user } = useSelector((state) => state.user);
+
   const tabButtons = ["ACTIVITY", "REQUIREMENTS", "DETAILS"];
 
   const [selectedTabButton, setSelectedTabButton] = useState("ACTIVITY");
@@ -31,7 +38,7 @@ const Order = () => {
         <Check className="size-6 !fill-white md:size-10" /> Project Completed{" "}
       </h1>
       <div className="flex flex-wrap gap-5 sm:flex-nowrap">
-        <div className="max-h-[2000px] min-h-screen w-full grow sm:w-auto">
+        <div className="mb-5 max-h-[2000px] min-h-screen w-full grow sm:w-auto">
           <div className="hidden items-center gap-10 sm:flex">
             {tabButtons.map((btn, i) => (
               <button
@@ -67,6 +74,26 @@ const Order = () => {
         <div className="w-full shrink-0 sm:max-w-[350px]">
           <OrderSidePanel />
         </div>
+      </div>
+      <div className="w-[calc(100%_-_370px)]">
+        <OrderReview />
+        <OrderReviewForm />
+        <OrderTipsForm />
+        {user?.role === "USER" ? (
+          <p className="mt-5 text-center text-lg font-semibold">
+            Your project is complete. If you need to contact the seller,{" "}
+            <Link to={"/inbox"} className="text-primary underline">
+              Go to Inbox
+            </Link>
+          </p>
+        ) : (
+          <p className="mt-5 text-center text-lg font-semibold">
+            Your project is complete. If you need to contact the buyer,{" "}
+            <Link to={"/inbox"} className="text-primary underline">
+              Go to Inbox
+            </Link>
+          </p>
+        )}
       </div>
     </div>
   );
