@@ -16,7 +16,7 @@ function SetupProfile({ from_profile }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [uploading, setUploading] = useState(false);
-  const [loading, setLoading] = useState();
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     image: "",
     fullName: "",
@@ -38,16 +38,6 @@ function SetupProfile({ from_profile }) {
 
   const handleUpdateProfileData = async (e) => {
     e.preventDefault();
-     // Check if any of the fields have changed
-     
-    //  const hasChanges = Object.keys(form).some(
-    //   (key) => form[key] !== form[key],
-    // );
-    // if (!hasChanges) {
-    //   toast.error("Nothing to update!");
-    //   navigate(-1);
-    //   return;
-    // }
     try {
       setUploading(true);
       setLoading(true);
@@ -161,7 +151,7 @@ function SetupProfile({ from_profile }) {
             <label htmlFor="image" className="h-full w-full">
               {form.image ? (
                 uploading ? (
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Box sx={{ display: "flex", alignItems: "center", justifyContent : "center" , height: "100%"}}>
                     <CircularProgress />
                   </Box>
                 ) : (
