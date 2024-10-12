@@ -269,7 +269,7 @@ const ProjectRequirements = () => {
                           }
                           multiple
                         />
-                        <label htmlFor={i}>
+                        <label htmlFor={i} className="cursor-pointer">
                           <IoMdAttach size={20} />
                         </label>
                       </div>
