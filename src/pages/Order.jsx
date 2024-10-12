@@ -1,13 +1,18 @@
 import { useState } from "react";
 import { PiWarningCircleFill } from "react-icons/pi";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import Check from "../assets/svg/Check";
 import Divider from "../components/Divider";
 import OrderChatBox from "../components/order/OrderChatBox";
 import OrderDetails from "../components/order/OrderDetails";
 import OrderRequirements from "../components/order/OrderRequirements";
+import OrderReview from "../components/order/OrderReview";
 import OrderSidePanel from "../components/order/OrderSidePanel";
 
 const Order = () => {
+  const { user } = useSelector((state) => state.user);
+
   const tabButtons = ["ACTIVITY", "REQUIREMENTS", "DETAILS"];
 
   const [selectedTabButton, setSelectedTabButton] = useState("ACTIVITY");
@@ -67,6 +72,24 @@ const Order = () => {
         <div className="w-full shrink-0 sm:max-w-[350px]">
           <OrderSidePanel />
         </div>
+      </div>
+      <div className="w-[calc(100%_-_350px)]">
+        <OrderReview />
+        {user?.role === "USER" ? (
+          <p className="mt-5 text-center text-lg font-semibold">
+            Your project is complete. If you need to contact the seller,{" "}
+            <Link to={"/inbox"} className="text-primary underline">
+              Go to Inbox
+            </Link>
+          </p>
+        ) : (
+          <p className="mt-5 text-center text-lg font-semibold">
+            Your project is complete. If you need to contact the buyer,{" "}
+            <Link to={"/inbox"} className="text-primary underline">
+              Go to Inbox
+            </Link>
+          </p>
+        )}
       </div>
     </div>
   );
