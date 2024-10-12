@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PiWarningCircleFill } from "react-icons/pi";
 import Check from "../assets/svg/Check";
 import Divider from "../components/Divider";
 import OrderChatBox from "../components/order/OrderChatBox";
@@ -26,8 +27,8 @@ const Order = () => {
 
   return (
     <div className="max-width my-10">
-      <h1 className="mx-auto mb-10 flex w-1/2 items-center justify-center gap-3 rounded-[30px] bg-revision px-5 py-2 text-[30px] font-semibold text-white">
-        <Check className="size-10 !fill-white" /> Project Completed{" "}
+      <h1 className="mx-auto mb-10 flex w-full items-center justify-center gap-3 rounded-[30px] bg-revision px-5 py-2 text-xl font-semibold text-white sm:w-1/2 md:text-3xl">
+        <Check className="size-6 !fill-white md:size-10" /> Project Completed{" "}
       </h1>
       <div className="flex flex-wrap gap-5 sm:flex-nowrap">
         <div className="max-h-[2000px] min-h-screen w-full grow sm:w-auto">
@@ -36,11 +37,16 @@ const Order = () => {
               <button
                 key={i}
                 type="button"
-                className={`font-semibold ${selectedTabButton === btn ? "text-primary underline" : ""}`}
+                className={`relative font-semibold ${selectedTabButton === btn ? "text-primary underline" : ""}`}
                 value={btn}
                 onClick={() => setSelectedTabButton(btn)}
               >
                 {btn}
+                {btn === "REQUIREMENTS" && (
+                  <div className="absolute -right-3 -top-2">
+                    <PiWarningCircleFill className="text-primary" />
+                  </div>
+                )}
               </button>
             ))}
           </div>
@@ -51,7 +57,7 @@ const Order = () => {
           >
             {tabButtons.map((btn, i) => (
               <option key={i} value={btn}>
-                {btn}
+                {btn}{" "}
               </option>
             ))}
           </select>
