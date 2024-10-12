@@ -8,6 +8,7 @@ import OrderChatBox from "../components/order/OrderChatBox";
 import OrderDetails from "../components/order/OrderDetails";
 import OrderRequirements from "../components/order/OrderRequirements";
 import OrderReview from "../components/order/OrderReview";
+import OrderReviewForm from "../components/order/OrderReviewForm";
 import OrderSidePanel from "../components/order/OrderSidePanel";
 
 const Order = () => {
@@ -36,7 +37,7 @@ const Order = () => {
         <Check className="size-6 !fill-white md:size-10" /> Project Completed{" "}
       </h1>
       <div className="flex flex-wrap gap-5 sm:flex-nowrap">
-        <div className="max-h-[2000px] min-h-screen w-full grow sm:w-auto">
+        <div className="mb-5 max-h-[2000px] min-h-screen w-full grow sm:w-auto">
           <div className="hidden items-center gap-10 sm:flex">
             {tabButtons.map((btn, i) => (
               <button
@@ -73,8 +74,9 @@ const Order = () => {
           <OrderSidePanel />
         </div>
       </div>
-      <div className="w-[calc(100%_-_350px)]">
+      <div className="w-[calc(100%_-_370px)]">
         <OrderReview />
+        <OrderReviewForm />
         {user?.role === "USER" ? (
           <p className="mt-5 text-center text-lg font-semibold">
             Your project is complete. If you need to contact the seller,{" "}
