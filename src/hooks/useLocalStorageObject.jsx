@@ -1,11 +1,5 @@
 import { useState, useEffect } from 'react';
 
-/**
- * A custom hook to manage local storage as a single object.
- * @param {string} key - The key for local storage.
- * @param {object} initialValue - The initial value to use if the key doesn't exist.
- * @returns {[object, function]} - The current object and a function to update it.
- */
 export const useLocalStorageObject = (key, initialValue) => {
   const [storedValue, setStoredValue] = useState(() => {
     try {

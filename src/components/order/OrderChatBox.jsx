@@ -25,6 +25,8 @@ import AdditionalOfferModal from "./chatbox-components/AdditionalOfferModal";
 import AdditionalOfferPreview from "./chatbox-components/AdditionalOfferPreview";
 import AttachmentsPreview from "./chatbox-components/AttachmentsPreview";
 import OrderDeliveryPreview from "./chatbox-components/OrderDeliveryPreview";
+import ExtendingDeliveryPreview from "./chatbox-components/ExtendingDeliveryPreview";
+import CancellingProjectPreview from "./chatbox-components/CancellingProjectPreview";
 
 const OrderChatBox = () => {
   // Redux query imports here
@@ -283,6 +285,10 @@ const OrderChatBox = () => {
                 <AttachmentsPreview />
                 <AdditionalOfferPreview />
                 <OrderDeliveryPreview />
+                <ExtendingDeliveryPreview />
+                <div className="mt-8">
+                <CancellingProjectPreview />
+                </div>
               </div>
             </div>
           </div>
