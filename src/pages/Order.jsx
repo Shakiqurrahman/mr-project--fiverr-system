@@ -10,6 +10,7 @@ import OrderRequirements from "../components/order/OrderRequirements";
 import OrderReview from "../components/order/OrderReview";
 import OrderReviewForm from "../components/order/OrderReviewForm";
 import OrderSidePanel from "../components/order/OrderSidePanel";
+import OrderTipsForm from "../components/order/OrderTipsForm";
 
 const Order = () => {
   const { user } = useSelector((state) => state.user);
@@ -77,6 +78,7 @@ const Order = () => {
       <div className="w-[calc(100%_-_370px)]">
         <OrderReview />
         <OrderReviewForm />
+        <OrderTipsForm />
         {user?.role === "USER" ? (
           <p className="mt-5 text-center text-lg font-semibold">
             Your project is complete. If you need to contact the seller,{" "}
