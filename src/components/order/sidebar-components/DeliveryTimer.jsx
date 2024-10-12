@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import OrderDeliveryForm from "../OrderDeliveryForm";
+import ExtendDeliveryModal from "./ExtendDeliveryModal";
 
 const DeliveryTimer = ({ deliveryTime }) => {
   // All states defination here
   const [timeLeft, setTimeLeft] = useState(deliveryTime);
   const [openDeliveryModal, setOpenDeliveryModal] = useState(false);
+  const [openExtendDelivery, setOpenExtendDelivery] = useState(false);
 
   //   All useEffect Defination starts here
   useEffect(() => {
@@ -70,12 +72,19 @@ const DeliveryTimer = ({ deliveryTime }) => {
             Deliver Now
           </button>
         </div>
-        <button type="button" className="w-full text-center text-base">
+        <button
+          type="button"
+          onClick={() => setOpenExtendDelivery(true)}
+          className="w-full text-center text-base hover:underline"
+        >
           Extend delivery date
         </button>
       </div>
       {openDeliveryModal && (
         <OrderDeliveryForm handleClose={setOpenDeliveryModal} />
+      )}
+      {openExtendDelivery && (
+        <ExtendDeliveryModal handleClose={setOpenExtendDelivery} />
       )}
     </>
   );
