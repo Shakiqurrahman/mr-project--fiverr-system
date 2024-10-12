@@ -71,6 +71,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // To allow non-serializable values
+      immutableCheck: false,
     }).concat(
       apiSlice.middleware,
       allUserApiSlice.middleware,
