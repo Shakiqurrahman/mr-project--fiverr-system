@@ -286,7 +286,7 @@ const OrderChatBox = () => {
               </div>
             </div>
           </div>
-          <div ref={endOfMessagesRef} />
+          {/* <div ref={endOfMessagesRef} /> */}
         </div>
         {/* Text Field Part */}
         <div
