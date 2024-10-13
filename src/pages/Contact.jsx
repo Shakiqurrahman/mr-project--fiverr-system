@@ -8,7 +8,6 @@ import formatFileSize from "../libs/formatFileSize";
 import { useStartContactForChatMutation } from "../Redux/api/inboxApiSlice";
 
 function Contact() {
-  const [precentage, setPercentage] = useState(0);
   const navigate = useNavigate();
   const [createContract, { isLoading, error }] =
     useStartContactForChatMutation();
@@ -33,40 +32,54 @@ function Contact() {
   const fileInputRef = useRef(); // Add a ref for the file input
 
   const getImagesWithDimensions = (files) => {
-    const images = [];
+    const handleImageLoad = async (file, index) => {
+      const formData = new FormData();
+      formData.append("image", file);
 
-    const handleImageLoad = (file, img) => {
-      console.log(file);
-      // if (img.width === 2700 && img.height === 2000) {
-      images.push({
-        file: file,
-        url: img.src,
-      });
-      // }
-      if (images.length === files.length) {
-        setMatchingImages((prev) => [...prev, ...images]);
-        // setErrorImg(null);
-      }
-      // else {
-      //   setErrorImg("Resolution does not match. Expected 2700x2000");
-      // }
-    };
+      const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
+      const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
 
-    const processFile = (file) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const img = new Image();
-        img.onload = () => {
-          handleImageLoad(file, img);
-        };
-        img.src = event.target.result;
+      const uploadData = {
+        name: file.name,
+        size: file.size,
+        progress: 0,
+        url: null,
       };
-      reader.readAsDataURL(file);
+
+      setMatchingImages((prev) => [...prev, uploadData]); // Add the new upload
+
+      try {
+        const response = await axios.post(uploadUrl, formData, {
+          onUploadProgress: (data) => {
+            const percentage = Math.round((data.loaded / data.total) * 100);
+            setMatchingImages((prev) => {
+              const newImages = [...prev];
+              newImages[index].progress = percentage; // Update progress
+              return newImages;
+            });
+          },
+        });
+
+        // Update image data upon successful upload
+        const imageUrl = response.data.data.url;
+        setMatchingImages((prev) => {
+          const newImages = [...prev];
+          newImages[index] = {
+            ...newImages[index],
+            url: imageUrl,
+            progress: 100,
+          }; // Set URL and progress to 100%
+          return newImages;
+        });
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
     };
 
-    for (let i = 0; i < files.length; i++) {
-      processFile(files[i]);
-    }
+    Array.from(files).forEach((file, i) => {
+      const index = matchingImages?.length + i;
+      handleImageLoad(file, index);
+    }); // Process each file
   };
 
   const handleFileChange = (event) => {
@@ -134,15 +147,6 @@ function Contact() {
   };
   return (
     <div className="max-width">
-      <CircleProgressBar precentage={precentage} circleWidth={50} />
-      <input
-        type="range"
-        min="1"
-        max="100"
-        step="1"
-        value={precentage}
-        onChange={(e) => setPercentage(e.target.value)}
-      />
       <h1 className="mx-auto mt-[40px] max-w-[700px] text-center text-2xl">
         If you have any questions or inquiries about our services, please feel
         free to contact us by filling out this form.
@@ -193,32 +197,38 @@ function Contact() {
           <CgAttachment className="text-gray-400" />
         </label>
 
-        <div className="mt-5 flex gap-2 overflow-x-auto">
+        <div className="preview-scroll-overflow-x mt-5 flex gap-2">
           {matchingImages.map((image, index) => (
             <div key={index} className="w-[120px]">
               <div className="group relative">
-                <img
-                  className={`h-[100px] w-full object-contain`}
-                  src={image.url}
-                  alt={`Selected ${index}`}
-                />
-                <button
-                  type="button"
-                  className="absolute right-2 top-2 rounded-full bg-black bg-opacity-50 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
-                  onClick={() => handleImageRemove(index)}
-                >
-                  <RiDeleteBin6Line size={20} />
-                </button>
+                {image.url ? (
+                  <img
+                    className={`h-[100px] w-full object-contain`}
+                    src={image.url}
+                    alt={image.name}
+                  />
+                ) : (
+                  <div className="flex h-[100px] items-center justify-center bg-lightcream">
+                    <CircleProgressBar
+                      precentage={image.progress}
+                      circleWidth={50}
+                    />
+                  </div>
+                )}
+                {image?.url && (
+                  <button
+                    type="button"
+                    className="absolute right-2 top-2 rounded-full bg-black bg-opacity-50 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                    onClick={() => handleImageRemove(index)}
+                  >
+                    <RiDeleteBin6Line size={20} />
+                  </button>
+                )}
               </div>
-              <h1
-                className="truncate text-xs font-medium"
-                title={image.file.name}
-              >
-                {image.file.name}
+              <h1 className="truncate text-xs font-medium" title={image.name}>
+                {image.name}
               </h1>
-              <span className="text-xs">
-                ({formatFileSize(image.file.size)})
-              </span>
+              <span className="text-xs">({formatFileSize(image.size)})</span>
             </div>
           ))}
         </div>
