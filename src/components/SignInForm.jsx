@@ -129,7 +129,7 @@ function SignInForm({ handleClick }) {
           <label className="select-none">
             <input type="checkbox" {...register("isRemember")} /> Remember me
           </label>
-          <Link className="text-primary">Forgot password?</Link>
+          <Link to='/forget-password' className="text-primary">Forgot password?</Link>
         </div>
         <button
           type="submit"
