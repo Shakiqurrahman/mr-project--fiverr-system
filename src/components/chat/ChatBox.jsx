@@ -23,6 +23,7 @@ import toast from "react-hot-toast";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useFetchAllUsersQuery } from "../../Redux/api/allUserApiSlice";
 import {
+  useDeleteAMessageMutation,
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
   useGetAvailableChatUsersQuery,
@@ -31,17 +32,20 @@ import {
 } from "../../Redux/api/inboxApiSlice";
 import { setChatData } from "../../Redux/features/chatSlice";
 import { setTypingStatus } from "../../Redux/features/userSlice";
+import useLocalDateTime from "../../hooks/useLocalDateTime";
 import { configApi } from "../../libs/configApi";
 import { timeAgoTracker } from "../../libs/timeAgoTracker";
-import useLocalDateTime from "../../hooks/useLocalDateTime";
 
 const ChatBox = ({ openToggle }) => {
   const dispatch = useDispatch();
   const [sendAMessage] = useSendAMessageMutation();
+  const [deleteAMessage] = useDeleteAMessageMutation();
 
   // getAllMessages
   const [triggerGetAllMessages, { data: getAllMessagesForUser }] =
     useLazyGetAllMessagesQuery();
+    console.log("getAllMessagesForUser", getAllMessagesForUser);
+    
   const { data: availableUsers } = useGetAvailableChatUsersQuery();
 
   //Set the conversation user id
@@ -91,6 +95,8 @@ const ChatBox = ({ openToggle }) => {
       triggerGetAllMessages({
         receiverId: "66fba5d5dca406c532a6b338",
       });
+
+
     }
   }, [user, triggerGetAllMessages]);
 
@@ -160,7 +166,7 @@ const ChatBox = ({ openToggle }) => {
         const messageDate = new Date(parseInt(message?.timeAndDate));
         const fiveMinutesLater = new Date(
           messageDate.getTime() + 5 * 60 * 1000,
-        );        
+        );
         newVisibility[message?.id] = currentTime < fiveMinutesLater;
       });
 
@@ -283,7 +289,6 @@ const ChatBox = ({ openToggle }) => {
   useOutsideClick(menuRef, () => setQucikMsgBtnController(null));
   useOutsideClick(dotMenuRef, () => setExpandDot(false));
 
-
   const dates = new Date();
   const timeAndDate = dates.getTime();
 
@@ -379,11 +384,21 @@ const ChatBox = ({ openToggle }) => {
     );
   };
 
+  // for deleting a single message 
+  const handleDeleteAMessage = async (messageId) => {    
+    try {
+      await deleteAMessage(messageId).unwrap();
+      toast.success("Message deleted successfully");
+    } catch (err) {
+      toast.error("Failed to delete message");
+    }
+  };
+
   const totalOrderHasDone =
     availableUsers.find((user) => user.id === conversationUser)?.totalOrder ||
     0;
 
-    const { localDate, localTime } = useLocalDateTime();
+  const { localDate, localTime } = useLocalDateTime();
 
   const renderMessageTime = (timestamp) => {
     const date = new Date(timestamp);
@@ -554,8 +569,11 @@ const ChatBox = ({ openToggle }) => {
                       <button type="button">
                         <BsFillReplyFill className="text-xl" />
                       </button>
-                      {visibility[msg?.id] && (
-                        <button type="button">
+                      {visibility[msg?.id] && msg.senderId === user?.id && (
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteAMessage(msg?.id)}
+                        >
                           <FaTrashAlt />
                         </button>
                       )}

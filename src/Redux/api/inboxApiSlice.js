@@ -16,6 +16,7 @@ export const inboxApiSlice = createApi({
   }),
   tagTypes: ["quickResponse, getAllMessages"],
   refetchOnMountOrArgChange: true,
+  refetchOnReconnect: true,
   endpoints: (builder) => ({
     // Get Quick Response Messages
     fetchQuickResMsg: builder.query({
@@ -87,6 +88,15 @@ export const inboxApiSlice = createApi({
       }),
       invalidatesTags: ["getAllMessages"],
     }),
+
+    // delete a message 
+    deleteAMessage : builder.mutation({
+      query : (messageId) => ({
+        url : `message/${messageId}`,
+        method : "DELETE",
+      }),
+      invalidatesTags: ["getAllMessages"],
+    })
   }),
 });
 
@@ -99,4 +109,5 @@ export const {
   useLazyGetAllMessagesQuery,
   useStartContactForChatMutation,
   useSendAMessageMutation,
+  useDeleteAMessageMutation
 } = inboxApiSlice;
