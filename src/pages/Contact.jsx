@@ -4,6 +4,8 @@ import { CgAttachment } from "react-icons/cg";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import CircleProgressBar from "../components/CircleProgressBar";
+import FilePreview from "../components/FilePreview";
+import { configApi } from "../libs/configApi";
 import formatFileSize from "../libs/formatFileSize";
 import { useStartContactForChatMutation } from "../Redux/api/inboxApiSlice";
 
@@ -33,17 +35,21 @@ function Contact() {
 
   const getImagesWithDimensions = (files) => {
     const handleImageLoad = async (file, index) => {
+      console.log(file);
       const formData = new FormData();
       formData.append("image", file);
 
-      const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
-      const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+      // const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
+      // const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+      const uploadUrl = `${configApi.api}upload-image`;
 
       const uploadData = {
         name: file.name,
         size: file.size,
         progress: 0,
         url: null,
+        type: file.type,
+        format: null,
       };
 
       setMatchingImages((prev) => [...prev, uploadData]); // Add the new upload
@@ -51,6 +57,7 @@ function Contact() {
       try {
         const response = await axios.post(uploadUrl, formData, {
           onUploadProgress: (data) => {
+            console.log(data);
             const percentage = Math.round((data.loaded / data.total) * 100);
             setMatchingImages((prev) => {
               const newImages = [...prev];
@@ -60,14 +67,18 @@ function Contact() {
           },
         });
 
+        console.log(response);
+
         // Update image data upon successful upload
-        const imageUrl = response.data.data.url;
+        const imageUrl = response.data.data[0].result.url;
+        const fileFormat = response.data.data[0].result.format;
         setMatchingImages((prev) => {
           const newImages = [...prev];
           newImages[index] = {
             ...newImages[index],
             url: imageUrl,
             progress: 100,
+            format: fileFormat,
           }; // Set URL and progress to 100%
           return newImages;
         });
@@ -105,15 +116,16 @@ function Contact() {
         const formData = new FormData();
         formData.append("image", file.file);
 
-        const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
-        const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+        // const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
+        // const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+        const uploadUrl = `${configApi.api}upload-image`;
         try {
           // setUploading(true);
           const response = await axios.post(uploadUrl, formData);
           console.log(response);
           const name = file.file.name;
-          const imageUrl = response.data.data.url;
-          const size = response.data.data.size;
+          const imageUrl = response.data.data[0].result.url;
+          const size = response.data.data[0].result.size;
 
           return {
             url: imageUrl,
@@ -202,11 +214,14 @@ function Contact() {
             <div key={index} className="w-[120px]">
               <div className="group relative">
                 {image.url ? (
-                  <img
-                    className={`h-[100px] w-full object-contain`}
-                    src={image.url}
-                    alt={image.name}
-                  />
+                  <>
+                    {/* <img
+                      className={`h-[100px] w-full object-contain`}
+                      src={image.url}
+                      alt={image.name}
+                    /> */}
+                    <FilePreview file={image} />
+                  </>
                 ) : (
                   <div className="flex h-[100px] items-center justify-center bg-lightcream">
                     <CircleProgressBar
@@ -215,7 +230,7 @@ function Contact() {
                     />
                   </div>
                 )}
-                {image?.url && (
+                {(image?.url || image?.progress === 100) && (
                   <button
                     type="button"
                     className="absolute right-2 top-2 rounded-full bg-black bg-opacity-50 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
