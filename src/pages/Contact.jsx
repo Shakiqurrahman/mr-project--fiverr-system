@@ -3,10 +3,12 @@ import { useRef, useState } from "react";
 import { CgAttachment } from "react-icons/cg";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
+import CircleProgressBar from "../components/CircleProgressBar";
 import formatFileSize from "../libs/formatFileSize";
 import { useStartContactForChatMutation } from "../Redux/api/inboxApiSlice";
 
 function Contact() {
+  const [precentage, setPercentage] = useState(0);
   const navigate = useNavigate();
   const [createContract, { isLoading, error }] =
     useStartContactForChatMutation();
@@ -34,6 +36,7 @@ function Contact() {
     const images = [];
 
     const handleImageLoad = (file, img) => {
+      console.log(file);
       // if (img.width === 2700 && img.height === 2000) {
       images.push({
         file: file,
@@ -131,6 +134,15 @@ function Contact() {
   };
   return (
     <div className="max-width">
+      <CircleProgressBar precentage={precentage} circleWidth={50} />
+      <input
+        type="range"
+        min="1"
+        max="100"
+        step="1"
+        value={precentage}
+        onChange={(e) => setPercentage(e.target.value)}
+      />
       <h1 className="mx-auto mt-[40px] max-w-[700px] text-center text-2xl">
         If you have any questions or inquiries about our services, please feel
         free to contact us by filling out this form.
