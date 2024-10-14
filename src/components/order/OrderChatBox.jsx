@@ -120,8 +120,6 @@ const OrderChatBox = () => {
       const formData = new FormData();
       formData.append("image", file);
 
-      // const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
-      // const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
       const uploadUrl = `${configApi.api}upload-image`;
 
       const uploadData = {
@@ -138,7 +136,6 @@ const OrderChatBox = () => {
       try {
         const response = await axios.post(uploadUrl, formData, {
           onUploadProgress: (data) => {
-            console.log(data);
             const percentage = Math.round((data.loaded / data.total) * 100);
             setSelectedImages((prev) => {
               const newImages = [...prev];
@@ -147,8 +144,6 @@ const OrderChatBox = () => {
             });
           },
         });
-
-        console.log(response);
 
         // Update image data upon successful upload
         const imageUrl = response.data.data[0].result.url;
@@ -345,14 +340,7 @@ const OrderChatBox = () => {
                   <div key={index} className="w-[120px]">
                     <div className="group relative">
                       {image.url ? (
-                        <>
-                          {/* <img
-                      className={`h-[100px] w-full object-contain`}
-                      src={image.url}
-                      alt={image.name}
-                    /> */}
-                          <FilePreview file={image} />
-                        </>
+                        <FilePreview file={image} />
                       ) : (
                         <div className="flex h-[80px] w-full items-center justify-center bg-lightcream">
                           <CircleProgressBar
@@ -370,18 +358,6 @@ const OrderChatBox = () => {
                           <RiDeleteBin6Line size={20} />
                         </button>
                       )}
-                      {/* <img
-                        className={`h-[80px] w-full object-contain`}
-                        src={image.url}
-                        alt={`Selected ${index}`}
-                      />
-                      <button
-                        type="button"
-                        className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
-                        onClick={() => handleImageRemove(index)}
-                      >
-                        <RiDeleteBin6Line size={15} />
-                      </button> */}
                     </div>
                     <h1
                       className="truncate text-xs font-medium"
