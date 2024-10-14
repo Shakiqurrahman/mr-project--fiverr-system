@@ -38,7 +38,7 @@ const Order = () => {
         <Check className="size-6 !fill-white md:size-10" /> Project Completed{" "}
       </h1>
       <div className="flex flex-wrap gap-5 sm:flex-nowrap">
-        <div className="mb-5 max-h-[2000px] min-h-screen w-full grow sm:w-auto">
+        <div className="mb-5 max-h-[2000px] min-h-screen w-[calc(100%_-_370px)] shrink">
           <div className="hidden items-center gap-10 sm:flex">
             {tabButtons.map((btn, i) => (
               <button
@@ -71,7 +71,7 @@ const Order = () => {
           <Divider className="my-5 h-px w-full !bg-black" />
           <RenderTabComponent />
         </div>
-        <div className="w-full shrink-0 sm:max-w-[350px]">
+        <div className="w-full shrink-0 sm:w-[350px]">
           <OrderSidePanel />
         </div>
       </div>

@@ -19,14 +19,17 @@ import AddQuickMsgModal from "../chat/AddQuickMsgModal";
 import EditQuickMsgModal from "../chat/EditQuickMsgModal";
 import EmojiPicker from "../chat/EmojiPicker";
 
+import axios from "axios";
 import { Link } from "react-router-dom";
 import Logo from "../../assets/images/MR Logo White.png";
+import CircleProgressBar from "../CircleProgressBar";
+import FilePreview from "../FilePreview";
 import AdditionalOfferModal from "./chatbox-components/AdditionalOfferModal";
 import AdditionalOfferPreview from "./chatbox-components/AdditionalOfferPreview";
 import AttachmentsPreview from "./chatbox-components/AttachmentsPreview";
-import OrderDeliveryPreview from "./chatbox-components/OrderDeliveryPreview";
-import ExtendingDeliveryPreview from "./chatbox-components/ExtendingDeliveryPreview";
 import CancellingProjectPreview from "./chatbox-components/CancellingProjectPreview";
+import ExtendingDeliveryPreview from "./chatbox-components/ExtendingDeliveryPreview";
+import OrderDeliveryPreview from "./chatbox-components/OrderDeliveryPreview";
 
 const OrderChatBox = () => {
   // Redux query imports here
@@ -112,26 +115,63 @@ const OrderChatBox = () => {
 
   // Image Preview Controllers
   const getImagesWithDimensions = (files) => {
-    const images = [];
+    const handleImageLoad = async (file, index) => {
+      console.log(file);
+      const formData = new FormData();
+      formData.append("image", file);
 
-    const handleImageLoad = (file) => {
-      images.push({
-        file: file,
-        url: URL.createObjectURL(file),
-      });
-      if (images.length === files.length) {
-        setSelectedImages((prevImages) => {
-          // Ensure prevImages is an array
-          return Array.isArray(prevImages)
-            ? [...prevImages, ...images]
-            : images;
+      // const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
+      // const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+      const uploadUrl = `${configApi.api}upload-image`;
+
+      const uploadData = {
+        name: file.name,
+        size: file.size,
+        progress: 0,
+        url: null,
+        type: file.type,
+        format: null,
+      };
+
+      setSelectedImages((prev) => [...prev, uploadData]); // Add the new upload
+
+      try {
+        const response = await axios.post(uploadUrl, formData, {
+          onUploadProgress: (data) => {
+            console.log(data);
+            const percentage = Math.round((data.loaded / data.total) * 100);
+            setSelectedImages((prev) => {
+              const newImages = [...prev];
+              newImages[index].progress = percentage; // Update progress
+              return newImages;
+            });
+          },
         });
+
+        console.log(response);
+
+        // Update image data upon successful upload
+        const imageUrl = response.data.data[0].result.url;
+        const fileFormat = response.data.data[0].result.format;
+        setSelectedImages((prev) => {
+          const newImages = [...prev];
+          newImages[index] = {
+            ...newImages[index],
+            url: imageUrl,
+            progress: 100,
+            format: fileFormat,
+          }; // Set URL and progress to 100%
+          return newImages;
+        });
+      } catch (error) {
+        console.error("Error uploading image:", error);
       }
     };
 
-    for (let i = 0; i < files.length; i++) {
-      handleImageLoad(files[i]);
-    }
+    Array.from(files).forEach((file, i) => {
+      const index = selectedImages?.length + i;
+      handleImageLoad(file, index);
+    }); // Process each file
   };
 
   const handleChangeSelectedImage = (event) => {
@@ -287,7 +327,7 @@ const OrderChatBox = () => {
                 <OrderDeliveryPreview />
                 <ExtendingDeliveryPreview />
                 <div className="mt-8">
-                <CancellingProjectPreview />
+                  <CancellingProjectPreview />
                 </div>
               </div>
             </div>
@@ -304,7 +344,33 @@ const OrderChatBox = () => {
                 {selectedImages?.map((image, index) => (
                   <div key={index} className="w-[120px]">
                     <div className="group relative">
-                      <img
+                      {image.url ? (
+                        <>
+                          {/* <img
+                      className={`h-[100px] w-full object-contain`}
+                      src={image.url}
+                      alt={image.name}
+                    /> */}
+                          <FilePreview file={image} />
+                        </>
+                      ) : (
+                        <div className="flex h-[80px] w-full items-center justify-center bg-lightcream">
+                          <CircleProgressBar
+                            precentage={image.progress}
+                            circleWidth={50}
+                          />
+                        </div>
+                      )}
+                      {(image?.url || image?.progress === 100) && (
+                        <button
+                          type="button"
+                          className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
+                          onClick={() => handleImageRemove(index)}
+                        >
+                          <RiDeleteBin6Line size={20} />
+                        </button>
+                      )}
+                      {/* <img
                         className={`h-[80px] w-full object-contain`}
                         src={image.url}
                         alt={`Selected ${index}`}
@@ -315,16 +381,16 @@ const OrderChatBox = () => {
                         onClick={() => handleImageRemove(index)}
                       >
                         <RiDeleteBin6Line size={15} />
-                      </button>
+                      </button> */}
                     </div>
                     <h1
                       className="truncate text-xs font-medium"
-                      title={image.file.name}
+                      title={image.name}
                     >
-                      {image.file.name}
+                      {image.name}
                     </h1>
                     <span className="text-xs">
-                      ({formatFileSize(image.file.size)})
+                      ({formatFileSize(image.size)})
                     </span>
                   </div>
                 ))}

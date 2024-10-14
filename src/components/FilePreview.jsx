@@ -12,7 +12,12 @@ const FilePreview = ({ file }) => {
         <img
           src={file.url}
           alt="preview"
-          style={{ maxWidth: "100%", maxHeight: "200px" }}
+          style={{
+            maxWidth: "100%",
+            maxHeight: "200px",
+            height: "100%",
+            objectFit: "contain",
+          }}
         />
       );
     } else if (isZip) {
