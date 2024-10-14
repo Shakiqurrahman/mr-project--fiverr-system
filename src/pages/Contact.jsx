@@ -39,8 +39,6 @@ function Contact() {
       const formData = new FormData();
       formData.append("image", file);
 
-      // const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
-      // const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
       const uploadUrl = `${configApi.api}upload-image`;
 
       const uploadData = {
@@ -57,7 +55,6 @@ function Contact() {
       try {
         const response = await axios.post(uploadUrl, formData, {
           onUploadProgress: (data) => {
-            console.log(data);
             const percentage = Math.round((data.loaded / data.total) * 100);
             setMatchingImages((prev) => {
               const newImages = [...prev];
@@ -66,8 +63,6 @@ function Contact() {
             });
           },
         });
-
-        console.log(response);
 
         // Update image data upon successful upload
         const imageUrl = response.data.data[0].result.url;
@@ -182,14 +177,7 @@ function Contact() {
             <div key={index} className="w-[120px]">
               <div className="group relative">
                 {image.url ? (
-                  <>
-                    {/* <img
-                      className={`h-[100px] w-full object-contain`}
-                      src={image.url}
-                      alt={image.name}
-                    /> */}
-                    <FilePreview file={image} />
-                  </>
+                  <FilePreview file={image} />
                 ) : (
                   <div className="flex h-[100px] items-center justify-center bg-lightcream">
                     <CircleProgressBar

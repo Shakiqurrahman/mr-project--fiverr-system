@@ -19,6 +19,7 @@ import CreateOfferModal from "./CreateOfferModal";
 import EditQuickMsgModal from "./EditQuickMsgModal";
 import EmojiPicker from "./EmojiPicker";
 
+import axios from "axios";
 import toast from "react-hot-toast";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useFetchAllUsersQuery } from "../../Redux/api/allUserApiSlice";
@@ -35,6 +36,8 @@ import { setTypingStatus } from "../../Redux/features/userSlice";
 import useLocalDateTime from "../../hooks/useLocalDateTime";
 import { configApi } from "../../libs/configApi";
 import { timeAgoTracker } from "../../libs/timeAgoTracker";
+import CircleProgressBar from "../CircleProgressBar";
+import FilePreview from "../FilePreview";
 
 const ChatBox = ({ openToggle }) => {
   const dispatch = useDispatch();
@@ -44,8 +47,8 @@ const ChatBox = ({ openToggle }) => {
   // getAllMessages
   const [triggerGetAllMessages, { data: getAllMessagesForUser }] =
     useLazyGetAllMessagesQuery();
-    console.log("getAllMessagesForUser", getAllMessagesForUser);
-    
+  console.log("getAllMessagesForUser", getAllMessagesForUser);
+
   const { data: availableUsers } = useGetAvailableChatUsersQuery();
 
   //Set the conversation user id
@@ -95,8 +98,6 @@ const ChatBox = ({ openToggle }) => {
       triggerGetAllMessages({
         receiverId: "66fba5d5dca406c532a6b338",
       });
-
-
     }
   }, [user, triggerGetAllMessages]);
 
@@ -248,26 +249,58 @@ const ChatBox = ({ openToggle }) => {
   // Image Preview Controllers
 
   const getImagesWithDimensions = (files) => {
-    const images = [];
+    const handleImageLoad = async (file, index) => {
+      console.log(file);
+      const formData = new FormData();
+      formData.append("image", file);
 
-    const handleImageLoad = (file) => {
-      images.push({
-        file: file,
-        url: URL.createObjectURL(file),
-      });
-      if (images.length === files.length) {
-        setSelectedImages((prevImages) => {
-          // Ensure prevImages is an array
-          return Array.isArray(prevImages)
-            ? [...prevImages, ...images]
-            : images;
+      const uploadUrl = `${configApi.api}upload-image`;
+
+      const uploadData = {
+        name: file.name,
+        size: file.size,
+        progress: 0,
+        url: null,
+        type: file.type,
+        format: null,
+      };
+
+      setSelectedImages((prev) => [...prev, uploadData]); // Add the new upload
+
+      try {
+        const response = await axios.post(uploadUrl, formData, {
+          onUploadProgress: (data) => {
+            const percentage = Math.round((data.loaded / data.total) * 100);
+            setSelectedImages((prev) => {
+              const newImages = [...prev];
+              newImages[index].progress = percentage; // Update progress
+              return newImages;
+            });
+          },
         });
+
+        // Update image data upon successful upload
+        const imageUrl = response.data.data[0].result.url;
+        const fileFormat = response.data.data[0].result.format;
+        setSelectedImages((prev) => {
+          const newImages = [...prev];
+          newImages[index] = {
+            ...newImages[index],
+            url: imageUrl,
+            progress: 100,
+            format: fileFormat,
+          }; // Set URL and progress to 100%
+          return newImages;
+        });
+      } catch (error) {
+        console.error("Error uploading image:", error);
       }
     };
 
-    for (let i = 0; i < files.length; i++) {
-      handleImageLoad(files[i]);
-    }
+    Array.from(files).forEach((file, i) => {
+      const index = selectedImages?.length + i;
+      handleImageLoad(file, index);
+    }); // Process each file
   };
 
   const handleChangeSelectedImage = (event) => {
@@ -299,8 +332,8 @@ const ChatBox = ({ openToggle }) => {
     if (textValue || selectedImages.length > 0) {
       const response = async () => {
         const attachments = selectedImages?.map((img) => ({
-          name: img.file.name,
-          size: img.file.size,
+          name: img.name,
+          size: img.size,
           url: img.url,
         }));
         const submitForm = {
@@ -384,8 +417,8 @@ const ChatBox = ({ openToggle }) => {
     );
   };
 
-  // for deleting a single message 
-  const handleDeleteAMessage = async (messageId) => {    
+  // for deleting a single message
+  const handleDeleteAMessage = async (messageId) => {
     try {
       await deleteAMessage(messageId).unwrap();
       toast.success("Message deleted successfully");
@@ -524,7 +557,7 @@ const ChatBox = ({ openToggle }) => {
       </div>
       {/* Conversation Field */}
       <div
-        className={`${quickResponse && selectedImages?.length > 0 ? "h-[calc(100%_-_491px)]" : quickResponse ? "h-[calc(100%_-_350px)]" : selectedImages?.length > 0 ? "h-[calc(100%_-_391px)]" : "h-[calc(100%_-_250px)]"} overflow-y-auto p-2 sm:p-5`}
+        className={`${quickResponse && selectedImages?.length > 0 ? "h-[calc(100%_-_505px)]" : quickResponse ? "h-[calc(100%_-_350px)]" : selectedImages?.length > 0 ? "h-[calc(100%_-_391px)]" : "h-[calc(100%_-_250px)]"} overflow-y-auto p-2 sm:p-5`}
       >
         {/* All message Container */}
         {/* Each message block */}
@@ -816,31 +849,38 @@ const ChatBox = ({ openToggle }) => {
       >
         <div className="rounded-t-md border border-b border-slate-300">
           {selectedImages?.length > 0 && (
-            <div className="flex gap-2 overflow-x-auto border-b p-[10px]">
+            <div className="preview-scroll-overflow-x flex gap-2 border-b p-[10px]">
               {selectedImages?.map((image, index) => (
                 <div key={index} className="w-[120px]">
                   <div className="group relative">
-                    <img
-                      className={`h-[80px] w-full object-contain`}
-                      src={image.url}
-                      alt={`Selected ${index}`}
-                    />
-                    <button
-                      type="button"
-                      className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
-                      onClick={() => handleImageRemove(index)}
-                    >
-                      <RiDeleteBin6Line size={15} />
-                    </button>
+                    {image.url ? (
+                      <FilePreview file={image} />
+                    ) : (
+                      <div className="flex h-[80px] items-center justify-center bg-lightcream">
+                        <CircleProgressBar
+                          precentage={image.progress}
+                          circleWidth={50}
+                        />
+                      </div>
+                    )}
+                    {(image?.url || image?.progress === 100) && (
+                      <button
+                        type="button"
+                        className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
+                        onClick={() => handleImageRemove(index)}
+                      >
+                        <RiDeleteBin6Line size={20} />
+                      </button>
+                    )}
                   </div>
                   <h1
                     className="truncate text-xs font-medium"
-                    title={image.file.name}
+                    title={image.name}
                   >
-                    {image.file.name}
+                    {image.name}
                   </h1>
                   <span className="text-xs">
-                    ({formatFileSize(image.file.size)})
+                    ({formatFileSize(image.size)})
                   </span>
                 </div>
               ))}
