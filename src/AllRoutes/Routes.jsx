@@ -46,6 +46,7 @@ import AdminRoute from "./private-route/AdminRoute";
 import PrivateRoute from "./private-route/PrivateRoute";
 import SuperAdminRoute from "./private-route/SuperAdminRoute";
 import UnAuthenticatedRoute from "./private-route/UnAuthenticatedRoute";
+import CommentPage from "../pages/CommentPage";
 
 export const router = createBrowserRouter([
   {
@@ -199,6 +200,10 @@ export const router = createBrowserRouter([
             <ProjectRequirements />
           </PrivateRoute>
         ),
+      },
+      {
+        path: "/comments",
+        element: <CommentPage />,
       },
       // Mahdi's created routes start
       {

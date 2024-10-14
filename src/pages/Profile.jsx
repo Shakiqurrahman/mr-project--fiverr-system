@@ -17,7 +17,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import { LiaEditSolid } from "react-icons/lia";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import nextDoorIcon from "../assets/images/nextdoor_icon.png";
+import Nextdoor from "../assets/svg/Nextdoor";
 import ActiveProjects from "../components/customer-profile/ActiveProjects";
 import AllReviews from "../components/customer-profile/AllReviews";
 import CompletedProjects from "../components/customer-profile/CompletedProjects";
@@ -339,13 +339,9 @@ function Profile({ user = {}, slug }) {
                 <Link
                   to={nextdoor}
                   target="_blank"
-                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                  className="group flex-shrink-0 rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
                 >
-                  <img
-                    src={nextDoorIcon}
-                    alt="Nextdoor"
-                    className="size-4 flex-shrink-0 rounded-full object-cover"
-                  />
+                  <Nextdoor className="!fill-primary group-hover:!fill-white" />
                 </Link>
               )}
             </div>
