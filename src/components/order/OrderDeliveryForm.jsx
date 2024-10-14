@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import {
@@ -9,6 +10,7 @@ import {
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useLocalStorageObject } from "../../hooks/useLocalStorageObject";
 import useOutsideClick from "../../hooks/useOutsideClick";
+import { configApi } from "../../libs/configApi";
 import formatFileSize from "../../libs/formatFileSize";
 import {
   useDeleteQuickResMsgMutation,
@@ -16,7 +18,9 @@ import {
 } from "../../Redux/api/inboxApiSlice";
 import AddQuickMsgModal from "../chat/AddQuickMsgModal";
 import EditQuickMsgModal from "../chat/EditQuickMsgModal";
+import CircleProgressBar from "../CircleProgressBar";
 import Divider from "../Divider";
+import FilePreview from "../FilePreview";
 
 const OrderDeliveryForm = ({ handleClose }) => {
   // All reference states here
@@ -99,27 +103,58 @@ const OrderDeliveryForm = ({ handleClose }) => {
 
   // Image Preview Controllers
   const getImagesWithDimensions = (files) => {
-    const images = [];
+    const handleImageLoad = async (file, index) => {
+      console.log(file);
+      const formData = new FormData();
+      formData.append("image", file);
 
-    const handleImageLoad = (file) => {
-      images.push({
+      const uploadUrl = `${configApi.api}upload-image`;
+
+      const uploadData = {
         name: file.name,
         size: file.size,
-        url: URL.createObjectURL(file),
-      });
-      if (images.length === files.length) {
-        setSelectedImages((prevImages) => {
-          // Ensure prevImages is an array
-          return Array.isArray(prevImages)
-            ? [...prevImages, ...images]
-            : images;
+        progress: 0,
+        url: null,
+        type: file.type,
+        format: null,
+      };
+
+      setSelectedImages((prev) => [...prev, uploadData]); // Add the new upload
+
+      try {
+        const response = await axios.post(uploadUrl, formData, {
+          onUploadProgress: (data) => {
+            const percentage = Math.round((data.loaded / data.total) * 100);
+            setSelectedImages((prev) => {
+              const newImages = [...prev];
+              newImages[index].progress = percentage; // Update progress
+              return newImages;
+            });
+          },
         });
+
+        // Update image data upon successful upload
+        const imageUrl = response.data.data[0].result.url;
+        const fileFormat = response.data.data[0].result.format;
+        setSelectedImages((prev) => {
+          const newImages = [...prev];
+          newImages[index] = {
+            ...newImages[index],
+            url: imageUrl,
+            progress: 100,
+            format: fileFormat,
+          }; // Set URL and progress to 100%
+          return newImages;
+        });
+      } catch (error) {
+        console.error("Error uploading image:", error);
       }
     };
 
-    for (let i = 0; i < files.length; i++) {
-      handleImageLoad(files[i]);
-    }
+    Array.from(files).forEach((file, i) => {
+      const index = selectedImages?.length + i;
+      handleImageLoad(file, index);
+    }); // Process each file
   };
 
   const handleChangeSelectedImage = (event) => {
@@ -130,14 +165,55 @@ const OrderDeliveryForm = ({ handleClose }) => {
     sourceInputRef.current.value = null;
   };
 
-  const handleThumbnailChange = (e) => {
+  const handleThumbnailChange = async (e) => {
     const file = Array.from(e.target.files)[0];
-    const fileUrl = URL.createObjectURL(file);
-    setThumbnailImage({
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const uploadUrl = `${configApi.api}upload-image`;
+
+    const uploadData = {
       name: file.name,
-      url: fileUrl,
       size: file.size,
-    });
+      progress: 0,
+      url: null,
+      type: file.type,
+      format: null,
+    };
+
+    setThumbnailImage(uploadData); // Add the new upload
+
+    try {
+      const response = await axios.post(uploadUrl, formData, {
+        onUploadProgress: (data) => {
+          const percentage = Math.round((data.loaded / data.total) * 100);
+          setThumbnailImage((prev) => ({
+            ...prev,
+            progress: percentage, // Update progress
+          }));
+        },
+      });
+
+      // Update image data upon successful upload
+      const imageUrl = response.data.data[0].result.url;
+      const fileFormat = response.data.data[0].result.format;
+      setThumbnailImage((prev) => ({
+        ...prev,
+        url: imageUrl,
+        progress: 100,
+        format: fileFormat,
+      }));
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+
+    // const fileUrl = URL.createObjectURL(file);
+    // setThumbnailImage({
+    //   name: file.name,
+    //   url: fileUrl,
+    //   size: file.size,
+    // });
 
     thumbnailInputRef.current.value = "";
   };
@@ -299,18 +375,25 @@ const OrderDeliveryForm = ({ handleClose }) => {
                 {selectedImages?.map((image, index) => (
                   <div key={index} className="w-[120px]">
                     <div className="group relative">
-                      <img
-                        className={`h-[80px] w-full object-contain`}
-                        src={image?.url}
-                        alt={`Selected ${index}`}
-                      />
-                      <button
-                        type="button"
-                        className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
-                        onClick={() => handleImageRemove(index)}
-                      >
-                        <RiDeleteBin6Line size={15} />
-                      </button>
+                      {image.url ? (
+                        <FilePreview file={image} />
+                      ) : (
+                        <div className="flex h-[80px] items-center justify-center bg-lightcream">
+                          <CircleProgressBar
+                            precentage={image.progress}
+                            circleWidth={50}
+                          />
+                        </div>
+                      )}
+                      {(image?.url || image?.progress === 100) && (
+                        <button
+                          type="button"
+                          className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
+                          onClick={() => handleImageRemove(index)}
+                        >
+                          <RiDeleteBin6Line size={20} />
+                        </button>
+                      )}
                     </div>
                     <h1
                       className="truncate text-xs font-medium"
@@ -369,18 +452,28 @@ const OrderDeliveryForm = ({ handleClose }) => {
               {thumbnailImage && (
                 <div className="flex w-full items-center gap-3 md:w-auto">
                   <div className="relative">
-                    <img
-                      src={thumbnailImage?.url}
-                      alt=""
-                      className="w-[100px] object-cover"
-                    />
-                    <button
-                      type="button"
-                      className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
-                      onClick={() => handleThumbnailRemove()}
-                    >
-                      <RiDeleteBin6Line size={15} />
-                    </button>
+                    {thumbnailImage.url ? (
+                      <div className="w-[100px]">
+                        <FilePreview file={thumbnailImage} />
+                      </div>
+                    ) : (
+                      <div className="flex h-[80px] w-[100px] items-center justify-center bg-lightcream">
+                        <CircleProgressBar
+                          precentage={thumbnailImage.progress}
+                          circleWidth={50}
+                        />
+                      </div>
+                    )}
+                    {(thumbnailImage?.url ||
+                      thumbnailImage?.progress === 100) && (
+                      <button
+                        type="button"
+                        className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
+                        onClick={() => handleThumbnailRemove()}
+                      >
+                        <RiDeleteBin6Line size={20} />
+                      </button>
+                    )}
                   </div>
                   <div className="text-sm">
                     <h1 className="break-words md:max-w-[200px]">
