@@ -55,7 +55,7 @@ const CommentImagePreview = () => {
           className="max-h-full max-w-full object-contain"
         />
       </div>
-      <div className="flex h-[100px] w-full items-center gap-3 p-5">
+      <div className="preview-scroll-overflow-x flex h-[100px] w-full items-center gap-3 p-5">
         <button type="button" className="h-full">
           <img
             src={user?.image}
