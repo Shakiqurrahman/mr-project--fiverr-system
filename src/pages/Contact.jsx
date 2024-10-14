@@ -111,44 +111,12 @@ function Contact() {
   // Form Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const imagesPromise = matchingImages?.map(async (file) => {
-      if (file.file) {
-        const formData = new FormData();
-        formData.append("image", file.file);
-
-        // const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
-        // const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
-        const uploadUrl = `${configApi.api}upload-image`;
-        try {
-          // setUploading(true);
-          const response = await axios.post(uploadUrl, formData);
-          console.log(response);
-          const name = file.file.name;
-          const imageUrl = response.data.data[0].result.url;
-          const size = response.data.data[0].result.size;
-
-          return {
-            url: imageUrl,
-            name,
-            size,
-          };
-        } catch (error) {
-          console.error("Error uploading image:", error);
-          // You can use a library like react-toastify to display error messages
-          // toast.error("Failed to upload image");
-        } finally {
-          // setUploading(false);
-        }
-      }
-    });
-    const images = await Promise.all(imagesPromise);
-    console.log(value, images);
     const res = await createContract({
       name: value.name,
       email: value.email,
       websiteOrFacebook: value.link,
       message: value.Message,
-      exampleDesign: images,
+      exampleDesign: matchingImages,
     }).unwrap();
     console.log(res, value.Message);
     navigate("/inbox");
