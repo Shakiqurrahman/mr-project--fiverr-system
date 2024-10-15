@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { GrFormUp } from "react-icons/gr";
-import { MdReply } from "react-icons/md";
+import { MdEdit, MdReply } from "react-icons/md";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import { TfiShiftRight } from "react-icons/tfi";
 import logo from "../../assets/images/MR Logo Icon.png";
+import CommentInputBox from "./CommentInputBox";
+import EditCommentBox from "./EditCommentBox";
 
 const CommentSideDrawer = () => {
   const [showWriteComment, setShowWriteComment] = useState(false);
-  const [commentText, setCommentText] = useState("");
+  const [showCommentEdit, setShowCommentEdit] = useState(null);
+  const [showCommentReply, setShowCommentReply] = useState(false);
   const [comments, setComments] = useState([
     {
       id: 1,
@@ -20,29 +24,9 @@ const CommentSideDrawer = () => {
       senderUserName: "John Doe",
       senderImage: logo,
     },
-    {
-      id: 3,
-      comment: "Image Change",
-      senderUserName: "John Doe",
-      senderImage: logo,
-      isSubmitted: true,
-    },
-    {
-      id: 4,
-      comment: "Image Change",
-      senderUserName: "John Doe",
-      senderImage: logo,
-      isSubmitted: true,
-    },
   ]);
 
-  const handleCommentTextChange = (e) => {
-    setCommentText(e.target.value);
-  };
-
-  const handleCommentAdd = (e) => {
-    e.preventDefault();
-    // console.log('comment', commentText);
+  const handleCommentAdd = (commentText) => {
     setComments([
       ...comments,
       {
@@ -53,8 +37,26 @@ const CommentSideDrawer = () => {
         isSubmitted: false,
       },
     ]);
-    setCommentText("");
     setShowWriteComment(false);
+  };
+
+  const handleEditComment = (comment) => {
+    setShowWriteComment(true);
+    setShowCommentEdit(comment);
+  };
+
+  const handleCommentDelete = (commentId) => {
+    setComments(comments.filter((c) => c.id !== commentId));
+  };
+
+  const handleUpdateComment = (commentObj) => {
+    setComments(
+      comments.map((c) =>
+        c.id === commentObj.id ? { ...c, comment: commentObj.comment } : c,
+      ),
+    );
+    setShowWriteComment(false);
+    setShowCommentEdit(null);
   };
 
   return (
@@ -79,14 +81,14 @@ const CommentSideDrawer = () => {
         {/* comments  */}
         <div>
           {comments.map((comment) => (
-            <div key={comment.id} className="border-b p-4">
+            <div key={comment.id} className="group border-b p-4">
               <div className="flex items-start gap-2">
                 <img
                   src={comment?.senderImage}
                   alt={comment?.senderUserName}
                   className="h-6 w-6 rounded-full"
                 />
-                <div className="space-y-2">
+                <div className="w-full space-y-2 overflow-hidden">
                   <div className="flex flex-wrap items-center gap-2">
                     <p
                       title={comment?.senderUserName}
@@ -103,10 +105,28 @@ const CommentSideDrawer = () => {
                   <p className="text-sm font-medium text-gray-500">
                     {comment?.comment}
                   </p>
-                  <button className="flex items-center gap-1 text-sm font-semibold text-gray-400">
-                    <MdReply className="text-lg" />
-                    Reply
-                  </button>
+                  <div className="flex w-full items-center justify-between gap-1">
+                    <button className="flex items-center gap-1 text-sm font-semibold text-gray-400">
+                      <MdReply className="text-lg" />
+                      Reply
+                    </button>
+                    <div className="hidden items-center gap-2 duration-300 group-hover:flex">
+                      <button
+                        onClick={() => handleEditComment(comment)}
+                        type="button"
+                        className="text-lg text-gray-400 duration-300 hover:text-black"
+                      >
+                        <MdEdit />
+                      </button>
+                      <button
+                        onClick={() => handleCommentDelete(comment?.id)}
+                        type="button"
+                        className="text-lg text-gray-400 duration-300 hover:text-black"
+                      >
+                        <RiDeleteBin6Line />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -115,42 +135,17 @@ const CommentSideDrawer = () => {
 
         {/* write a comment  */}
         {!showWriteComment && (
-          <div className="border-b p-4">
-            <div className="rounded-md border border-primary p-4">
-              <form onSubmit={handleCommentAdd} className="w-full space-y-2">
-                <div className="flex items-start gap-2 border-b">
-                  <img
-                    src={comments[0]?.senderImage}
-                    alt={comments[0]?.senderUserName}
-                    className="h-6 w-6 rounded-full"
-                  />
-                  <textarea
-                    placeholder="Leave a comment..."
-                    className="mb-2 w-full text-base outline-none"
-                    rows={4}
-                    onChange={handleCommentTextChange}
-                    value={commentText}
-                    name="comment"
-                    id="comment"
-                  ></textarea>
-                </div>
-                <div className="flex justify-end gap-4">
-                  <button
-                    type="button"
-                    className="flex items-center gap-1 text-sm font-semibold text-gray-500"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="flex items-center gap-1 text-sm font-semibold text-primary"
-                  >
-                    Add
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
+          <CommentInputBox
+            comments={comments}
+            handleCommentAdd={handleCommentAdd}
+          />
+        )}
+        {/* edit a comment  */}
+        {showCommentEdit && (
+          <EditCommentBox
+            comment={showCommentEdit}
+            handleUpdateComment={handleUpdateComment}
+          />
         )}
       </div>
 
