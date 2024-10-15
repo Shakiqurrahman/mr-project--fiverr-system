@@ -10,16 +10,18 @@ const EditCommentBox = ({
   const [commentObj, setCommentObj] = useState(comment || null);
 
   const handleCommentTextChange = (e) => {
-    setCommentObj({ ...commentObj, comment: e.target.value });
+    setCommentObj({
+      ...commentObj,
+      comment: e.target.value,
+      isSubmitted: false,
+    });
   };
 
   const handleComment = (e) => {
     e.preventDefault();
-    console.log(commentObj);
-    if (commentObj?.comment) {
-      handleUpdateComment(commentObj);
-      setCommentObj(null);
-    }
+    handleUpdateComment(commentObj);
+    handleUpdateComment(comment);
+    setCommentObj(null);
   };
 
   const handleCancel = () => {
@@ -60,7 +62,10 @@ const EditCommentBox = ({
               </button>
               <button
                 type="submit"
-                disabled={!commentObj?.comment}
+                disabled={
+                  !commentObj?.comment ||
+                  commentObj.comment === comment?.comment
+                }
                 className="flex items-center gap-1 text-sm font-semibold text-primary disabled:text-primary/50"
               >
                 Update

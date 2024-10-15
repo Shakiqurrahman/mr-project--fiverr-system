@@ -58,7 +58,9 @@ const CommentSideDrawer = () => {
   const handleUpdateComment = (commentObj) => {
     setComments(
       comments.map((c) =>
-        c.id === commentObj.id ? { ...c, comment: commentObj.comment } : c,
+        c.id === commentObj.id
+          ? { ...c, comment: commentObj.comment, isSubmitted: false }
+          : c,
       ),
     );
     setFocusWriteComment(false);
