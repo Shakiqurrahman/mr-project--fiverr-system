@@ -75,26 +75,28 @@ const Order = () => {
           <OrderSidePanel />
         </div>
       </div>
-      <div className="w-[calc(100%_-_370px)]">
-        <OrderReview />
-        <OrderReviewForm />
-        <OrderTipsForm />
-        {user?.role === "USER" ? (
-          <p className="mt-5 text-center text-lg font-semibold">
-            Your project is complete. If you need to contact the seller,{" "}
-            <Link to={"/inbox"} className="text-primary underline">
-              Go to Inbox
-            </Link>
-          </p>
-        ) : (
-          <p className="mt-5 text-center text-lg font-semibold">
-            Your project is complete. If you need to contact the buyer,{" "}
-            <Link to={"/inbox"} className="text-primary underline">
-              Go to Inbox
-            </Link>
-          </p>
-        )}
-      </div>
+      {selectedTabButton === "ACTIVITY" && (
+        <div className="w-[calc(100%_-_370px)]">
+          <OrderReview />
+          <OrderReviewForm />
+          <OrderTipsForm />
+          {user?.role === "USER" ? (
+            <p className="mt-5 text-center text-lg font-semibold">
+              Your project is complete. If you need to contact the seller,{" "}
+              <Link to={"/inbox"} className="text-primary underline">
+                Go to Inbox
+              </Link>
+            </p>
+          ) : (
+            <p className="mt-5 text-center text-lg font-semibold">
+              Your project is complete. If you need to contact the buyer,{" "}
+              <Link to={"/inbox"} className="text-primary underline">
+                Go to Inbox
+              </Link>
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 };
