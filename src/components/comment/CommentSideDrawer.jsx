@@ -65,6 +65,20 @@ const CommentSideDrawer = () => {
     setShowCommentEdit(null);
   };
 
+  // Check for unsubmitted comments
+  const unsubmittedComments = comments?.filter((c) => !c?.isSubmitted)?.length;
+
+  const handleCommentSubmit = (e) => {
+    e.preventDefault();
+
+    const updatedComments = comments.map((comment) => ({
+      ...comment,
+      isSubmitted: true,
+    }));
+    setComments(updatedComments);
+    console.log("submitted total comments : ", updatedComments);
+  };
+
   return (
     <div className="flex h-full w-full flex-col bg-white">
       <div className="flex items-center justify-between p-4">
@@ -175,10 +189,12 @@ const CommentSideDrawer = () => {
       {/* submit button  */}
       <div className="sticky bottom-0 border-t bg-white p-4">
         <button
-          type="submit"
-          className="w-full rounded-md bg-primary px-5 py-4 text-sm font-semibold text-white"
+          onClick={handleCommentSubmit}
+          disabled={unsubmittedComments === 0}
+          type="button"
+          className="w-full rounded-md bg-primary px-5 py-4 text-sm font-semibold text-white disabled:bg-primary/50"
         >
-          Submit 2 Comments
+          Submit {unsubmittedComments > 0 && unsubmittedComments} Comments
         </button>
       </div>
     </div>

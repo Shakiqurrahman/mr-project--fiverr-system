@@ -19,7 +19,6 @@ const CommentInputBox = ({
   const handleComment = (e) => {
     e.preventDefault();
     if (commentText) {
-      console.log(commentText);
       handleCommentAdd(commentText);
       setCommentText("");
     }
