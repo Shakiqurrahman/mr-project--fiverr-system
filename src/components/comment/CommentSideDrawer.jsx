@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import logo from "../../assets/images/MR Logo Icon.png";
 import CommentInputBox from "./CommentInputBox";
 import EditCommentBox from "./EditCommentBox";
+import EditReplyBox from "./EditReplyBox";
 import ReplyCommentBox from "./ReplyCommentBox";
 
 const CommentSideDrawer = () => {
@@ -15,6 +16,7 @@ const CommentSideDrawer = () => {
   const [commentCollapse, setCommentCollapse] = useState(false);
   const [focusWriteComment, setFocusWriteComment] = useState(false);
   const [showCommentEdit, setShowCommentEdit] = useState(null);
+  const [showReplyEdit, setShowReplyEdit] = useState(null);
   const [showCommentReply, setShowCommentReply] = useState(null);
   const [comments, setComments] = useState([
     {
@@ -63,7 +65,7 @@ const CommentSideDrawer = () => {
     setFocusWriteComment(true);
 
     if (reply) {
-      setShowCommentEdit({ ...comment, reply });
+      setShowReplyEdit({ ...comment, reply });
     } else {
       setShowCommentEdit(comment);
     }
@@ -283,7 +285,9 @@ const CommentSideDrawer = () => {
                                 </button>
                                 <div className="hidden items-center gap-2 duration-300 group-hover:flex">
                                   <button
-                                    onClick={() => handleEditComment(reply)}
+                                    onClick={() =>
+                                      handleEditComment(null, reply)
+                                    }
                                     type="button"
                                     className="text-lg text-gray-400 duration-300 hover:text-black"
                                   >
@@ -342,6 +346,16 @@ const CommentSideDrawer = () => {
                 focusWriteComment={focusWriteComment}
                 setFocusWriteComment={setFocusWriteComment}
                 setShowCommentEdit={setShowCommentEdit}
+                handleUpdateComment={handleUpdateComment}
+              />
+            )}
+            {/* edit a reply comment  */}
+            {showReplyEdit && (
+              <EditReplyBox
+                reply={showReplyEdit}
+                focusWriteComment={focusWriteComment}
+                setFocusWriteComment={setFocusWriteComment}
+                setShowReplyEdit={setShowReplyEdit}
                 handleUpdateComment={handleUpdateComment}
               />
             )}
