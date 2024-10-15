@@ -21,7 +21,7 @@ const Hero = () => {
   const navigate = useNavigate();
 
   const { user } = useSelector((state) => state.user);
-  const adminRole = user?.role === "ADMIN";
+  const adminRole = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);  
 
   const offerProjects = useSelector((state) => state.offerProject.offerProject);
   const { data, isLoading, error } = useFetchOfferProjectQuery();
@@ -119,7 +119,7 @@ const Hero = () => {
         <div className="max-width flex flex-col items-center gap-16 pr-0 lg:flex-row lg:gap-10 lg:pr-24 2xl:pr-0">
           <div className="w-full">
             <h2 className="mb-4 text-center text-2xl font-bold uppercase leading-snug text-primary sm:text-[36px] lg:text-left">
-              WE specialize in creating advertisement designs.
+              We specialize in creating advertisement designs.
             </h2>
             <p className="text-center text-lg sm:text-2xl lg:text-left">
               You can create any advertising design for your business through

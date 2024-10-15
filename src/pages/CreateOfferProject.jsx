@@ -288,7 +288,7 @@ function CreateOfferProject() {
             className="file-input"
             onChange={handleFileChange}
             hidden
-            // disabled={uploading}g
+            // disabled={uploading}
           />
           <div className="flex items-stretch">
             <label
@@ -330,16 +330,6 @@ function CreateOfferProject() {
                   />
                 </small>
               ))}
-              <input
-                type="text"
-                placeholder="Type Here"
-                value={newVariant[form.freeBannerName] || ""}
-                onChange={(e) => handleNewVariantChange(e, form.freeBannerName)}
-                onKeyDown={(e) =>
-                  createFreeVariantEventHandler(e, form.freeBannerName)
-                }
-                className="bg-transparent focus:outline-none"
-              />
             </div>
           </div>
         </div>
