@@ -4,7 +4,6 @@ import useOutsideClick from "../../hooks/useOutsideClick";
 
 const CommentInputBox = ({
   handleCommentAdd,
-  comments,
   focusWriteComment,
   setFocusWriteComment,
 }) => {
