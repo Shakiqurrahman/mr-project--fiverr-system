@@ -149,7 +149,7 @@ const ChatBox = ({ openToggle }) => {
     return () => {
       socket?.off("message");
     };
-  }, [conversationUser, isAdmin, socket, messages, dispatch]);
+  }, [conversationUser, isAdmin, socket, messages, dispatch, user]);
 
   // console.log(typingStatus);
 
