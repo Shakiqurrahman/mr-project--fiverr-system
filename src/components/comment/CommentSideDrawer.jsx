@@ -38,13 +38,24 @@ const CommentSideDrawer = () => {
 
   const handleCommentTextChange = (e) => {
     setCommentText(e.target.value);
-  }
+  };
 
   const handleCommentAdd = (e) => {
     e.preventDefault();
-    console.log('comment', commentText);
-    
-  }
+    // console.log('comment', commentText);
+    setComments([
+      ...comments,
+      {
+        id: comments.length + 1,
+        comment: commentText,
+        senderUserName: "John Doe",
+        senderImage: logo,
+        isSubmitted: false,
+      },
+    ]);
+    setCommentText("");
+    setShowWriteComment(false);
+  };
 
   return (
     <div className="flex h-full w-full flex-col bg-white">
@@ -106,7 +117,7 @@ const CommentSideDrawer = () => {
         {!showWriteComment && (
           <div className="border-b p-4">
             <div className="rounded-md border border-primary p-4">
-              <form  onSubmit={handleCommentAdd} className="w-full space-y-2">
+              <form onSubmit={handleCommentAdd} className="w-full space-y-2">
                 <div className="flex items-start gap-2 border-b">
                   <img
                     src={comments[0]?.senderImage}
@@ -124,10 +135,16 @@ const CommentSideDrawer = () => {
                   ></textarea>
                 </div>
                 <div className="flex justify-end gap-4">
-                  <button type="button" className="flex items-center gap-1 text-sm font-semibold text-gray-500">
+                  <button
+                    type="button"
+                    className="flex items-center gap-1 text-sm font-semibold text-gray-500"
+                  >
                     Cancel
                   </button>
-                  <button type="submit" className="flex items-center gap-1 text-sm font-semibold text-primary">
+                  <button
+                    type="submit"
+                    className="flex items-center gap-1 text-sm font-semibold text-primary"
+                  >
                     Add
                   </button>
                 </div>
