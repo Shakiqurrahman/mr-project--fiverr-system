@@ -18,7 +18,7 @@ const OrderReview = () => {
             />
           ) : (
             <div className="flex size-10 items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-3xl font-bold text-[#3b3b3b]/50">
-              {user?.userName}
+              {user?.userName?.charAt(0)}
             </div>
           )}
           <h1 className="text-lg font-semibold">{user?.userName}</h1>
