@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../AllRoutes/Layout";
 import SocialMediasForm from "../components/SocialMediasForm";
+import CommentImageMarker from "../components/image-marker/CommentImageMarker";
 import About from "../pages/About";
 import AdminPanel from "../pages/AdminPanel";
 import Affiliate from "../pages/Affiliate";
@@ -11,6 +12,7 @@ import AllReviews from "../pages/AllReviews";
 import Analytics from "../pages/Analytics";
 import Cart from "../pages/Cart";
 import ChangePassword from "../pages/ChangePassword";
+import CommentPage from "../pages/CommentPage";
 import Contact from "../pages/Contact";
 import CreateCategory from "../pages/CreateCategory";
 import CreateOfferProject from "../pages/CreateOfferProject";
@@ -46,7 +48,6 @@ import AdminRoute from "./private-route/AdminRoute";
 import PrivateRoute from "./private-route/PrivateRoute";
 import SuperAdminRoute from "./private-route/SuperAdminRoute";
 import UnAuthenticatedRoute from "./private-route/UnAuthenticatedRoute";
-import CommentPage from "../pages/CommentPage";
 
 export const router = createBrowserRouter([
   {
@@ -270,6 +271,10 @@ export const router = createBrowserRouter([
       {
         path: "/all-reviews",
         element: <AllReviews />,
+      },
+      {
+        path: "/image-marker",
+        element: <CommentImageMarker />,
       },
     ],
   },
