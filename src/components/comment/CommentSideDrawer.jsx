@@ -141,6 +141,10 @@ const CommentSideDrawer = () => {
     const updatedComments = comments.map((comment) => ({
       ...comment,
       isSubmitted: true,
+      replies: comment?.replies?.map((reply) => ({
+        ...reply,
+        isSubmitted: true,
+      })),
     }));
     setComments(updatedComments);
     console.log("submitted total comments : ", updatedComments);
@@ -194,7 +198,7 @@ const CommentSideDrawer = () => {
             {/* comments  */}
             <div>
               {comments.map((comment) => (
-                <div key={comment.id} className="group border-b p-4 pb-2">
+                <div key={comment.id} className="border-b p-4 pb-2">
                   <div className="flex items-start gap-2">
                     <img
                       src={comment?.senderImage}
@@ -202,46 +206,48 @@ const CommentSideDrawer = () => {
                       className="h-6 w-6 rounded-full"
                     />
                     <div className="w-full space-y-2 overflow-hidden">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <p
-                          title={comment?.senderUserName}
-                          className={`${!comment?.isSubmitted && "max-w-[110px]"} truncate text-sm font-bold`}
-                        >
-                          {comment?.senderUserName}
-                        </p>
-                        {!comment?.isSubmitted && (
-                          <p className="rounded-full border px-2 py-1 text-xs font-medium text-gray-500">
-                            Not yet submitted
+                      <div className="group space-y-2 w-full  overflow-hidden">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p
+                            title={comment?.senderUserName}
+                            className={`${!comment?.isSubmitted && "max-w-[110px]"} truncate text-sm font-bold`}
+                          >
+                            {comment?.senderUserName}
                           </p>
-                        )}
-                      </div>
-                      <p className="text-sm font-medium text-gray-500">
-                        {comment?.comment}
-                      </p>
-                      <div className="flex w-full items-center justify-between gap-1 pb-2">
-                        <button
-                          onClick={() => setShowCommentReply(comment.id)}
-                          type="button"
-                          className="flex items-center gap-1 text-sm font-semibold text-gray-400"
-                        >
-                          <MdReply className="text-lg" />
-                          Reply
-                        </button>
-                        <div className="hidden items-center gap-2 duration-300 group-hover:flex">
+                          {!comment?.isSubmitted && (
+                            <p className="rounded-full border px-2 py-1 text-xs font-medium text-gray-500">
+                              Not yet submitted
+                            </p>
+                          )}
+                        </div>
+                        <p className="text-sm font-medium text-gray-500">
+                          {comment?.comment}
+                        </p>
+                        <div className="flex w-full items-center justify-between gap-1 pb-2">
                           <button
-                            onClick={() => handleEditComment(comment)}
+                            onClick={() => setShowCommentReply(comment.id)}
                             type="button"
-                            className="text-lg text-gray-400 duration-300 hover:text-black"
+                            className="flex items-center gap-1 text-sm font-semibold text-gray-400"
                           >
-                            <MdEdit />
+                            <MdReply className="text-lg" />
+                            Reply
                           </button>
-                          <button
-                            onClick={() => handleCommentDelete(comment?.id)}
-                            type="button"
-                            className="text-lg text-gray-400 duration-300 hover:text-black"
-                          >
-                            <RiDeleteBin6Line />
-                          </button>
+                          <div className="hidden items-center gap-2 duration-300 group-hover:flex">
+                            <button
+                              onClick={() => handleEditComment(comment)}
+                              type="button"
+                              className="text-lg text-gray-400 duration-300 hover:text-black"
+                            >
+                              <MdEdit />
+                            </button>
+                            <button
+                              onClick={() => handleCommentDelete(comment?.id)}
+                              type="button"
+                              className="text-lg text-gray-400 duration-300 hover:text-black"
+                            >
+                              <RiDeleteBin6Line />
+                            </button>
+                          </div>
                         </div>
                       </div>
 
