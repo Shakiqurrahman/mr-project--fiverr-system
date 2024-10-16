@@ -30,7 +30,7 @@ const CommentImagePreview = () => {
             />
           ) : (
             <div className="flex size-8 items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-3xl font-bold text-[#3b3b3b]/50">
-              {user?.userName}
+              {user?.userName?.charAt(0)}
             </div>
           )}
           {user?.image ? (
@@ -41,7 +41,7 @@ const CommentImagePreview = () => {
             />
           ) : (
             <div className="flex size-8 items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-3xl font-bold text-[#3b3b3b]/50">
-              {user?.userName}
+              {user?.userName?.charAt(0)}
             </div>
           )}
         </div>
