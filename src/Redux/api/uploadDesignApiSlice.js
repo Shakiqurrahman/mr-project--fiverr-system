@@ -27,7 +27,6 @@ export const uploadDesignApiSlice = createApi({
     fetchSubFolders: builder.query({
       query: () => "folder/get",
       transformResponse: (response, meta, arg) => {
-        console.log(arg);
         const subFolders =
           response?.data?.find((v) => v.name === arg)?.subFolders || [];
         return [...new Set(subFolders)];

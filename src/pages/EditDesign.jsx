@@ -5,9 +5,6 @@ import { FaSpinner } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import Check from "../assets/svg/Check";
-import Datalist from "../components/Datalist";
-import { configApi } from "../libs/configApi";
 import {
   useFetchDesignsQuery,
   useFetchFoldersQuery,
@@ -16,6 +13,9 @@ import {
   useFetchSubFoldersQuery,
 } from "../Redux/api/uploadDesignApiSlice";
 import { fetchCategory } from "../Redux/features/category/categoryApi";
+import Check from "../assets/svg/Check";
+import Datalist from "../components/Datalist";
+import { configApi } from "../libs/configApi";
 
 function EditDesign() {
   const { state } = useLocation();
@@ -276,6 +276,7 @@ function EditDesign() {
   };
 
   // Folder Operations
+  const [selectedFolder, setSelectedFolder] = useState(state.folder);
   const [newFolder, setNewFolder] = useState(state.folder);
   const { data: folder } = useFetchFoldersQuery();
 
@@ -283,14 +284,22 @@ function EditDesign() {
 
   const addNewFolder = (e) => {
     e.preventDefault();
+    setSelectedFolder(e.target.value);
+    setNewFolder(e.target.value);
+  };
+
+  const handleChangeFolder = (e) => {
+    setSelectedFolder(e.target.value);
     setNewFolder(e.target.value);
   };
 
   // SubFolder Operations
   const [newSubFolder, setNewSubFolder] = useState(state.subFolder);
-  const { data: subFolder } = useFetchSubFoldersQuery();
+  const { data: subFolder } = useFetchSubFoldersQuery(selectedFolder, {
+    skip: selectedFolder === null,
+  });
 
-  const subFolders = useMemo(() => subFolder, [subFolder]);
+  const subFolders = useMemo(() => subFolder?.map((v) => v.name), [subFolder]);
 
   const addNewSubFolder = (e) => {
     e.preventDefault();
@@ -712,7 +721,7 @@ function EditDesign() {
                 name="folder"
                 list="folder"
                 value={newFolder}
-                onChange={(e) => setNewFolder(e.target.value)}
+                onChange={handleChangeFolder}
                 className="mt-3 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
               />
               <Datalist
@@ -750,18 +759,20 @@ function EditDesign() {
                 maxCount={10}
                 value={newSubFolder}
               />
-              <div className="mt-3 flex flex-wrap gap-2">
-                {subFolders?.map((v, i) => (
-                  <button
-                    key={i}
-                    className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
-                    value={v}
-                    onClick={addNewSubFolder}
-                  >
-                    {v}
-                  </button>
-                ))}
-              </div>
+              {subFolders?.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {subFolders?.map((v, i) => (
+                    <button
+                      key={i}
+                      className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
+                      value={v}
+                      onClick={addNewSubFolder}
+                    >
+                      {v}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
           <div className="flex flex-wrap gap-2 sm:flex-nowrap">
