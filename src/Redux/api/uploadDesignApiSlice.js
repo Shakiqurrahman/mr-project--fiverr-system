@@ -18,9 +18,9 @@ export const uploadDesignApiSlice = createApi({
       transformResponse: (response) => response?.data?.map((v) => v.designId),
     }),
     fetchFolders: builder.query({
-      query: () => "upload/get",
+      query: () => "folder/get",
       transformResponse: (response) => {
-        const folders = response?.data?.map((v) => v.folder);
+        const folders = response?.data?.map((v) => v.name);
         return [...new Set(folders)];
       },
     }),

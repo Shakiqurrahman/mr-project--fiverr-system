@@ -599,7 +599,7 @@ function UploadDesign() {
             </div>
             {/* {errorImg && <p className="text-sm text-red-400">{errorImg}</p>} */}
           </div>
-          <div className=" flex flex-col">
+          <div className="flex flex-col">
             <label className="block px-2">Tags</label>
             <div className="mt-1 flex w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none">
               {tags.map((item, index) => (
