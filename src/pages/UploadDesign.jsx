@@ -252,6 +252,7 @@ function UploadDesign() {
   };
 
   // Folder Operations
+  const [selectedFolder, setSelectedFolder] = useState(null);
   const [newFolder, setNewFolder] = useState("");
   const { data: folder } = useFetchFoldersQuery();
 
@@ -259,14 +260,21 @@ function UploadDesign() {
 
   const addNewFolder = (e) => {
     e.preventDefault();
+    setSelectedFolder(e.target.value);
+    setNewFolder(e.target.value);
+  };
+  const handleChangeFolder = (e) => {
+    setSelectedFolder(e.target.value);
     setNewFolder(e.target.value);
   };
 
   // SubFolder Operations
   const [newSubFolder, setNewSubFolder] = useState("");
-  const { data: subFolder } = useFetchSubFoldersQuery();
+  const { data: subFolder } = useFetchSubFoldersQuery(selectedFolder, {
+    skip: selectedFolder === null,
+  });
 
-  const subFolders = useMemo(() => subFolder, [subFolder]);
+  const subFolders = useMemo(() => subFolder?.map((v) => v.name), [subFolder]);
 
   const addNewSubFolder = (e) => {
     e.preventDefault();
@@ -681,7 +689,7 @@ function UploadDesign() {
                 name="folder"
                 list="folder"
                 value={newFolder}
-                onChange={(e) => setNewFolder(e.target.value)}
+                onChange={handleChangeFolder}
                 className="mt-1 flex min-h-[46px] w-full flex-wrap gap-2 border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
               />
               <Datalist
@@ -719,18 +727,20 @@ function UploadDesign() {
                 maxCount={10}
                 value={newSubFolder}
               />
-              <div className="mt-3 flex flex-wrap gap-2">
-                {subFolders?.map((v, i) => (
-                  <button
-                    key={i}
-                    className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
-                    value={v}
-                    onClick={addNewSubFolder}
-                  >
-                    {v}
-                  </button>
-                ))}
-              </div>
+              {subFolders?.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {subFolders?.map((v, i) => (
+                    <button
+                      key={i}
+                      className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
+                      value={v}
+                      onClick={addNewSubFolder}
+                    >
+                      {v}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
           <div className="flex flex-wrap gap-2 sm:flex-nowrap">
