@@ -20,7 +20,6 @@ const EditCommentBox = ({
   const handleComment = (e) => {
     e.preventDefault();
     handleUpdateComment(commentObj);
-    handleUpdateComment(comment);
     setCommentObj(null);
   };
 
