@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const EditReplyBox = ({
-    reply,
+  reply,
   handleUpdateComment,
   focusWriteComment,
   setFocusWriteComment,
@@ -12,21 +12,26 @@ const EditReplyBox = ({
   const handleCommentTextChange = (e) => {
     setCommentObj({
       ...commentObj,
-      replyText: e.target.value,
-      isSubmitted: false,
+      replies: {
+        ...commentObj.replies,
+        replyText: e.target.value,
+        isSubmitted: false,
+      },
     });
   };
+
 
   const handleComment = (e) => {
     e.preventDefault();
     handleUpdateComment(commentObj);
-    handleUpdateComment(reply);
     setCommentObj(null);
+
+    setShowReplyEdit(null);
   };
 
   const handleCancel = () => {
     setFocusWriteComment(false);
-    setShowReplyEdit(false);
+    setShowReplyEdit(null);
     setCommentObj(null);
   };
   return (
@@ -46,7 +51,7 @@ const EditReplyBox = ({
               className="mb-2 w-full resize-none text-base outline-none"
               rows={4}
               onChange={handleCommentTextChange}
-              value={commentObj?.comment}
+              value={commentObj?.replies?.replyText}
               name="comment"
               id="comment"
             ></textarea>
