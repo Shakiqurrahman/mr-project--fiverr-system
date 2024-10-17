@@ -60,12 +60,12 @@ const CommentSideDrawer = () => {
     setFocusWriteComment(false);
   };
 
-  const handleEditComment = (comment, reply = null) => {
+  const handleEditComment = (comment, reply) => {
     setShowCommentReply(null);
     setFocusWriteComment(true);
 
     if (reply) {
-      setShowReplyEdit({ ...comment, reply });
+      setShowReplyEdit({ ...comment, replies: reply });
     } else {
       setShowCommentEdit(comment);
     }
@@ -91,11 +91,25 @@ const CommentSideDrawer = () => {
 
   // handle update comment
   const handleUpdateComment = (commentObj) => {
-    setComments(
-      comments.map((c) =>
-        c.id === commentObj.id
-          ? { ...c, comment: commentObj.comment, isSubmitted: false }
-          : c,
+    setComments((prevComments) =>
+      prevComments.map(
+        (c) =>
+          c.id === commentObj.id
+            ? {
+                ...c,
+                comment: commentObj.comment,
+                isSubmitted: commentObj.isSubmitted,
+                replies: c.replies.map((reply) =>
+                  reply.id === commentObj.replies.id
+                    ? {
+                        ...reply,
+                        replyText: commentObj.replies.replyText,
+                        isSubmitted: false, 
+                      }
+                    : reply,
+                ),
+              }
+            : c,
       ),
     );
     setFocusWriteComment(false);
@@ -206,7 +220,7 @@ const CommentSideDrawer = () => {
                       className="h-6 w-6 rounded-full"
                     />
                     <div className="w-full space-y-2 overflow-hidden">
-                      <div className="group space-y-2 w-full  overflow-hidden">
+                      <div className="group w-full space-y-2 overflow-hidden">
                         <div className="flex flex-wrap items-center gap-2">
                           <p
                             title={comment?.senderUserName}
@@ -282,7 +296,9 @@ const CommentSideDrawer = () => {
                               </p>
                               <div className="flex w-full items-center justify-between gap-1">
                                 <button
-                                  onClick={() => setShowCommentReply(reply.id)}
+                                  onClick={() =>
+                                    setShowCommentReply(comment.id)
+                                  }
                                   type="button"
                                   className="flex items-center gap-1 text-sm font-semibold text-gray-400"
                                 >
@@ -292,7 +308,7 @@ const CommentSideDrawer = () => {
                                 <div className="hidden items-center gap-2 duration-300 group-hover:flex">
                                   <button
                                     onClick={() =>
-                                      handleEditComment(null, reply)
+                                      handleEditComment(comment, reply)
                                     }
                                     type="button"
                                     className="text-lg text-gray-400 duration-300 hover:text-black"
@@ -337,7 +353,7 @@ const CommentSideDrawer = () => {
             </div>
 
             {/* write a comment  */}
-            {!showCommentEdit && !showCommentReply && (
+            {!showCommentEdit && !showCommentReply && !showReplyEdit && (
               <CommentInputBox
                 comments={comments}
                 focusWriteComment={focusWriteComment}
