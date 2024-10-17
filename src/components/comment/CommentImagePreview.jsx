@@ -58,7 +58,7 @@ const CommentImagePreview = () => {
         >
           <IoMdArrowBack className="text-xl" />
         </button>
-        <p>
+        <p className="text-sm sm:text-base">
           {selectedImage?.name}{" "}
           <span className="text-white/50">
             ({formatFileSize(selectedImage?.size)})

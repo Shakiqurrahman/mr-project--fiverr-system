@@ -3,11 +3,11 @@ import CommentSideDrawer from "../components/comment/CommentSideDrawer";
 
 const CommentPage = () => {
   return (
-    <div className="fixed left-0 top-0 z-[999] flex h-screen w-full bg-black/70">
-      <div className="h-full flex-1">
+    <div className="fixed left-0 top-0 z-[999] flex h-screen w-full flex-wrap overflow-y-auto bg-black/70 md:flex-nowrap">
+      <div className="h-1/2 flex-1 md:h-full">
         <CommentImagePreview />
       </div>
-      <div className="w-[320px]">
+      <div className="w-full md:w-[320px]">
         <CommentSideDrawer />
       </div>
     </div>
