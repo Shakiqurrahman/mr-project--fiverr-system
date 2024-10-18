@@ -328,58 +328,70 @@ const ChatBox = ({ openToggle }) => {
   // handler for Submitting/Send a Message
   const handleSubmitMessage = async (e) => {
     e.preventDefault();
-
+  
     if (textValue || selectedImages.length > 0) {
-      const response = async () => {
-        const attachments = selectedImages?.map((img) => ({
-          name: img.name,
-          size: img.size,
-          url: img.url,
-        }));
-        const submitForm = {
-          messageText: textValue,
-          senderUserName: user?.userName,
-          userImage: user?.image,
-          attachment: attachments || [],
-          customOffer: null,
-          timeAndDate,
-        };
-        if (isAdmin) {
-          socket?.emit("admin-message", {
-            userId: conversationUser,
-            ...submitForm,
-          });
-          const res = await sendAMessage({
-            recipientId: conversationUser,
-            ...submitForm,
-          }).unwrap();
-          ///////// i dunno it's optimized or not................................
-          setMessages((prev) => [...prev, res?.data]);
-        } else {
-          socket?.emit("user-message", {
-            userId: user?.id,
-            ...submitForm,
-          });
-          const res = await sendAMessage({
-            recipientId: "66fba5d5dca406c532a6b338",
-            ...submitForm,
-          }).unwrap();
-        }
-        return { result: "Success" };
+      const attachments = selectedImages?.map((img) => ({
+        name: img.name,
+        size: img.size,
+        url: img.url,
+      }));
+  
+      const submitForm = {
+        messageText: textValue,
+        senderUserName: user?.userName,
+        userImage: user?.image,
+        attachment: attachments || [],
+        customOffer: null,
+        timeAndDate,
       };
-      const result = await response();
-      if (result.result === "Success") {
-        setTextValue("");
-        // Clear the state
-        setSelectedImages(null);
+  
+      if (isAdmin) {
+        socket?.emit("admin-message", {
+          userId: conversationUser,
+          ...submitForm,
+        });
+      } else {
+        socket?.emit("user-message", {
+          userId: user?.id,
+          ...submitForm,
+        });
+      }
+  
+      // Optimistically add the message to local state (before API response)
+      setMessages((prev) => [
+        ...prev,
+        { ...submitForm, recipientId: isAdmin ? conversationUser : "671260ee65cf0a4990af2dc1" },
+      ]);
 
+      // Clear input fields and images on success
+      setTextValue("");
+      setSelectedImages(null);
+  
+      try {
+        const res = await sendAMessage({
+          recipientId: isAdmin ? conversationUser : "671260ee65cf0a4990af2dc1",
+          ...submitForm,
+        }).unwrap();
+  
+        // setMessages((prev) => prev.map((msg) =>
+        //   msg?.messageText === submitForm?.messageText ? res?.data : msg
+        // ));
+  
+  
         // Reset the file input value
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
+      } catch (error) {
+        // Rollback the optimistic update on failure
+        setMessages((prev) => prev.filter((msg) =>
+          msg?.messageText !== submitForm?.messageText
+        ));
+        console.error("Failed to send message:", error);
       }
     }
   };
+  
 
   // handle download all button
   const handleDownloadAll = (files) => {
@@ -609,7 +621,7 @@ const ChatBox = ({ openToggle }) => {
                       <button type="button">
                         <BsFillReplyFill className="text-xl" />
                       </button>
-                      {visibility[msg?.id] && msg.senderId === user?.id && (
+                      {visibility[msg?.id] && msg?.senderId === user?.id && (
                         <button
                           type="button"
                           onClick={() => handleDeleteAMessage(msg?.id)}
