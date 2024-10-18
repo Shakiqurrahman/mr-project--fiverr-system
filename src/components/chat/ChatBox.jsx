@@ -96,7 +96,7 @@ const ChatBox = ({ openToggle }) => {
   useEffect(() => {
     if (user.role === "USER") {
       triggerGetAllMessages({
-        receiverId: "66fba5d5dca406c532a6b338",
+        receiverId: "671260ee65cf0a4990af2dc1",
       });
     }
   }, [user, triggerGetAllMessages]);
@@ -457,6 +457,8 @@ const ChatBox = ({ openToggle }) => {
       const adminOnline = onlineUsers.some(
         (onlineUser) => onlineUser?.role !== "USER",
       );
+      console.log("adminOnline", adminOnline, onlineUsers);
+
       setIsAdminOnline(adminOnline);
     } else {
       setIsAdminOnline(false);
@@ -476,17 +478,22 @@ const ChatBox = ({ openToggle }) => {
             {isAdmin ? recipientUserName : "Mahfujurrahm535"}
           </h1>
           <div className="flex flex-col items-start text-xs sm:flex-row sm:items-center sm:gap-3 lg:text-sm">
-            {typingStatus ? (
-              typingStatus
-            ) : (
-              <p>
-                {lastSeen
-                  ? `Last seen: ${timeAgoTracker(lastSeen)}`
-                  : isAdminOnline
-                    ? "Online"
-                    : "Offline"}
-              </p>
-            )}
+            {user.role === "USER" &&
+              (typingStatus ? (
+                typingStatus
+              ) : (
+                <p>{!isAdminOnline ? "Offline" : "Online"}</p>
+              ))}
+            {isAdmin &&
+              (typingStatus ? (
+                typingStatus
+              ) : (
+                <p>
+                  {lastSeen
+                    ? `Last seen: ${timeAgoTracker(lastSeen)}`
+                    : "Online"}
+                </p>
+              ))}
             <Divider
               className={"hidden h-[15px] w-[2px] !bg-black/50 sm:block"}
             />

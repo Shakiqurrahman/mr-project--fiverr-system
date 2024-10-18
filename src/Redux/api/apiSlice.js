@@ -15,6 +15,9 @@ export const apiSlice = createApi({
     },
   }),
   tagTypes: ["socialMedia", "user"],
+  refetchOnMountOrArgChange : true,
+  refetchOnReconnect: true,
+  refetchOnFocus: true,
   endpoints: (builder) => ({
     fetchUserData: builder.query({
       query: () => "get-singel-user",
