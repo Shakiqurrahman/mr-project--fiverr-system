@@ -1,16 +1,28 @@
-import React, { useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import useOutsideClick from "../../hooks/useOutsideClick";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import shortid from "shortid";
+import {
+  deleteComment,
+  setCommentsData,
+} from "../../Redux/features/commentsSlice";
 
-const CommentInputBox = ({
-  handleCommentAdd,
-  focusWriteComment,
-  setFocusWriteComment,
-}) => {
+const CommentInputBox = ({ focusWriteComment, setFocusWriteComment }) => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
+  const { commentObj } = useSelector((state) => state.comment);
+
+  console.log(commentObj);
 
   const commentBox = useRef(null);
+  const textAreaRef = useRef(null);
   const [commentText, setCommentText] = useState("");
+
+  useEffect(() => {
+    if (focusWriteComment && textAreaRef.current) {
+      textAreaRef.current.focus();
+    }
+  }, [focusWriteComment]);
+
   const handleCommentTextChange = (e) => {
     setCommentText(e.target.value);
   };
@@ -18,12 +30,36 @@ const CommentInputBox = ({
   const handleComment = (e) => {
     e.preventDefault();
     if (commentText) {
-      handleCommentAdd(commentText);
+      if (commentObj?.markerId) {
+        const { isFocus, ...restComment } = commentObj;
+        console.log("if");
+        dispatch(
+          setCommentsData({
+            ...restComment,
+            commentId: shortid.generate(),
+            commentText,
+          }),
+        );
+      } else {
+        console.log("else");
+        dispatch(
+          setCommentsData({
+            commentId: shortid.generate(),
+            commentText,
+          }),
+        );
+      }
       setCommentText("");
     }
   };
 
-  useOutsideClick(commentBox, () => setFocusWriteComment(false));
+  const handleCancel = () => {
+    dispatch(deleteComment(commentObj?.markerId));
+    setFocusWriteComment(false);
+    setCommentText("");
+  };
+
+  // useOutsideClick(commentBox, () => setFocusWriteComment(false));
   return (
     <div ref={commentBox} className="border-b p-4">
       <div
@@ -47,12 +83,13 @@ const CommentInputBox = ({
               value={commentText}
               name="comment"
               id="comment"
+              ref={textAreaRef}
             ></textarea>
           </div>
           {focusWriteComment && (
             <div className="flex justify-end gap-4">
               <button
-                onClick={() => setFocusWriteComment(false)}
+                onClick={handleCancel}
                 type="button"
                 className="flex items-center gap-1 text-sm font-semibold text-gray-500"
               >

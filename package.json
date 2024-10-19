@@ -45,6 +45,7 @@
     "react-slick": "^0.30.2",
     "react-svg-worldmap": "^2.0.0-alpha.16",
     "redux-persist": "^6.0.0",
+    "shortid": "^2.2.16",
     "slick-carousel": "^1.8.1",
     "socket.io-client": "^4.7.5",
     "sweetalert2": "^11.12.4",

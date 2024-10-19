@@ -1,14 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoMdArrowBack } from "react-icons/io";
 import { LiaDownloadSolid } from "react-icons/lia";
 import ImageMarker from "react-image-marker";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import shortid from "shortid";
 import thumbnail2 from "../../assets/images/project-thumbnail-alt.jpg";
 import thumbnail from "../../assets/images/project-thumbnail.jpg";
 import formatFileSize from "../../libs/formatFileSize";
+import {
+  setCommentObj,
+  setMarkersData,
+} from "../../Redux/features/commentsSlice";
 
 const CommentImagePreview = () => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
+  const { comments, commentObj } = useSelector((state) => state.comment);
+  const filteredComments = comments?.filter((c) => c.top);
   const images = [
     {
       id: 1,
@@ -24,23 +32,43 @@ const CommentImagePreview = () => {
     },
   ];
 
-  const [markers, setMarkers] = useState([]);
   const [selectedImage, setSelectedImage] = useState(images[0]);
+  const [currentMarkerId, setCurrentMarkerId] = useState(null);
 
-  const CustomMarker = () => {
+  const CustomMarker = ({ itemNumber }) => {
     return (
       <p
-        className="size-5 rounded-full bg-primary"
+        className="size-3 rounded-full border border-white bg-primary"
         onClick={() => console.log("clicked")}
       ></p>
     );
   };
 
   const handleMarkerAdd = (marker) => {
-    const id = markers.length + 1;
-    const newMarker = { id, ...marker };
-    setMarkers([...markers, newMarker]);
+    // if (currentMarkerId) {
+    //   if (!commentObj?.commentId) {
+    //     dispatch(removeEmptyComment(currentMarkerId));
+    //   }
+    // }
+
+    const id = shortid.generate();
+    const newMarker = { markerId: id, ...marker, isFocus: true };
+    dispatch(setCommentObj(newMarker));
+    dispatch(setMarkersData(newMarker));
+    setCurrentMarkerId(id); // Set the current marker ID
   };
+
+  useEffect(() => {
+    if (commentObj?.commentId) {
+      setCurrentMarkerId(null); // Clear the marker ID if a comment has been added
+    }
+  }, [commentObj]);
+
+  // useEffect(() => {
+  //   dispatch(removeEmptyComment(commentObj?.markerId));
+  // }, [dispatch, commentObj]);
+
+  console.log(comments);
 
   // const handleMarkerDelete = (id) => {
   //   const newMarkers = markers.filter((m) => m.id !== id);
@@ -97,7 +125,7 @@ const CommentImagePreview = () => {
       >
         <ImageMarker
           src={selectedImage?.url} // Replace with your image URL
-          markers={markers}
+          markers={filteredComments || []}
           onAddMarker={handleMarkerAdd}
           markerComponent={CustomMarker}
           extraClass="max-h-full max-w-full object-contain"

@@ -4,7 +4,6 @@ import { MdEdit, MdReply } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TfiShiftRight } from "react-icons/tfi";
 import { useSelector } from "react-redux";
-import logo from "../../assets/images/MR Logo Icon.png";
 import CommentInputBox from "./CommentInputBox";
 import EditCommentBox from "./EditCommentBox";
 import EditReplyBox from "./EditReplyBox";
@@ -12,53 +11,63 @@ import ReplyCommentBox from "./ReplyCommentBox";
 
 const CommentSideDrawer = () => {
   const { user } = useSelector((state) => state.user);
+  const { commentObj, comments } = useSelector((state) => state.comment);
+
+  console.log(commentObj);
 
   const [commentCollapse, setCommentCollapse] = useState(false);
   const [focusWriteComment, setFocusWriteComment] = useState(false);
   const [showCommentEdit, setShowCommentEdit] = useState(null);
   const [showReplyEdit, setShowReplyEdit] = useState(null);
   const [showCommentReply, setShowCommentReply] = useState(null);
-  const [comments, setComments] = useState([
-    {
-      id: 1,
-      comment: "Logo Change",
-      senderUserName: "mahfujurrahm535",
-      senderImage: logo,
-      isSubmitted: true,
-      replies: [
-        {
-          id: 1,
-          replyText: "Okay brother!",
-          senderUserName: "mahfujurrahm535",
-          senderImage: logo,
-          isSubmitted: true,
-        },
-      ],
-    },
-    {
-      id: 2,
-      comment: "Image Change",
-      senderUserName: "mahfujurrahm535",
-      senderImage: logo,
-      isSubmitted: true,
-      replies: [],
-    },
-  ]);
 
-  const handleCommentAdd = (commentText) => {
-    setComments([
-      ...comments,
-      {
-        id: `${comments.length + 1}${commentText}`,
-        comment: commentText,
-        senderUserName: user?.userName,
-        senderImage: user?.image,
-        isSubmitted: false,
-        replies: [],
-      },
-    ]);
-    setFocusWriteComment(false);
-  };
+  // const [comments, setComments] = useState([
+  //   {
+  //     commentId: 1,
+  //     markerId: null,
+  //     comment: "Logo Change",
+  //     senderUserName: "mahfujurrahm535",
+  //     senderImage: logo,
+  //     isSubmitted: true,
+  //     replies: [
+  //       {
+  //         id: 1,
+  //         replyText: "Okay brother!",
+  //         senderUserName: "mahfujurrahm535",
+  //         senderImage: logo,
+  //         isSubmitted: true,
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     commentId: 2,
+  //     comment: "Image Change",
+  //     senderUserName: "mahfujurrahm535",
+  //     senderImage: logo,
+  //     isSubmitted: true,
+  //     replies: [],
+  //   },
+  // ]);
+
+  // initially changing state for focusing commentbox
+  useEffect(() => {
+    commentObj && setFocusWriteComment(commentObj.isFocus);
+  }, [commentObj]);
+
+  // const handleCommentAdd = (commentText) => {
+  //   setComments([
+  //     ...comments,
+  //     {
+  //       commentId: `${comments.length + 1}${commentText}`,
+  //       comment: commentText,
+  //       senderUserName: user?.userName,
+  //       senderImage: user?.image,
+  //       isSubmitted: false,
+  //       replies: [],
+  //     },
+  //   ]);
+  //   setFocusWriteComment(false);
+  // };
 
   const handleEditComment = (comment, reply) => {
     setShowCommentReply(null);
@@ -71,77 +80,78 @@ const CommentSideDrawer = () => {
     }
   };
 
-  const handleCommentDelete = (commentId, replyId) => {
-    if (replyId) {
-      setComments((prevComments) =>
-        prevComments.map((comment) => {
-          if (comment.id === commentId) {
-            return {
-              ...comment,
-              replies: comment.replies.filter((reply) => reply.id !== replyId),
-            };
-          }
-          return comment;
-        }),
-      );
-    } else {
-      setComments(comments.filter((c) => c.id !== commentId));
-    }
-  };
+  // const handleCommentDelete = (commentId, replyId) => {
+  //   if (replyId) {
+  //     setComments((prevComments) =>
+  //       prevComments.map((comment) => {
+  //         if (comment.commentId === commentId) {
+  //           return {
+  //             ...comment,
+  //             replies: comment.replies.filter((reply) => reply.id !== replyId),
+  //           };
+  //         }
+  //         return comment;
+  //       }),
+  //     );
+  //   } else {
+  //     setComments(comments.filter((c) => c.commentId !== commentId));
+  //   }
+  // };
 
   // handle update comment
-  const handleUpdateComment = (commentObj) => {
-    setComments((prevComments) =>
-      prevComments.map(
-        (c) =>
-          c.id === commentObj.id
-            ? {
-                ...c,
-                comment: commentObj.comment,
-                isSubmitted: commentObj.isSubmitted,
-                replies: c.replies.map((reply) =>
-                  reply.id === commentObj.replies.id
-                    ? {
-                        ...reply,
-                        replyText: commentObj.replies.replyText,
-                        isSubmitted: false, 
-                      }
-                    : reply,
-                ),
-              }
-            : c,
-      ),
-    );
-    setFocusWriteComment(false);
-    setShowCommentEdit(null);
-  };
+  // const handleUpdateComment = (commentObj) => {
+  //   setComments((prevComments) =>
+  //     prevComments.map((c) =>
+  //       c.commentId === commentObj.id
+  //         ? {
+  //             ...c,
+  //             comment: commentObj.comment,
+  //             isSubmitted: commentObj.isSubmitted,
+  //             replies: c.replies.map((reply) =>
+  //               reply.id === commentObj.replies.id
+  //                 ? {
+  //                     ...reply,
+  //                     replyText: commentObj.replies.replyText,
+  //                     isSubmitted: false,
+  //                   }
+  //                 : reply,
+  //             ),
+  //           }
+  //         : c,
+  //     ),
+  //   );
+  //   setFocusWriteComment(false);
+  //   setShowCommentEdit(null);
+  // };
 
   // Add a reply in comment
-  const handleReplyAdd = (commentId, replyText) => {
-    setComments(
-      comments.map((comment) =>
-        comment.id === commentId
-          ? {
-              ...comment,
-              replies: [
-                ...comment.replies,
-                {
-                  id: `${comment.replies.length + 1}${replyText}`,
-                  replyText: replyText,
-                  senderUserName: user?.userName,
-                  senderImage: user?.image,
-                  isSubmitted: false,
-                },
-              ],
-            }
-          : comment,
-      ),
-    );
-    setShowCommentReply(null);
-  };
+  // const handleReplyAdd = (commentId, replyText) => {
+  //   setComments(
+  //     comments.map((comment) =>
+  //       comment.commentId === commentId
+  //         ? {
+  //             ...comment,
+  //             replies: [
+  //               ...comment.replies,
+  //               {
+  //                 commentId: `${comment.replies.length + 1}${replyText}`,
+  //                 replyText: replyText,
+  //                 senderUserName: user?.userName,
+  //                 senderImage: user?.image,
+  //                 isSubmitted: false,
+  //               },
+  //             ],
+  //           }
+  //         : comment,
+  //     ),
+  //   );
+  //   setShowCommentReply(null);
+  // };
 
   // Check for unsubmitted comments and unsubmitted replies
-  const unsubmittedComments = comments?.filter((c) => !c?.isSubmitted)?.length;
+  const unsubmittedComments = comments?.filter(
+    (c) => !c?.isSubmitted && c.commentId,
+  )?.length;
 
   const unsubmittedRepliedComments = comments
     ?.flatMap((c) => c.replies || [])
@@ -160,7 +170,7 @@ const CommentSideDrawer = () => {
         isSubmitted: true,
       })),
     }));
-    setComments(updatedComments);
+    // setComments(updatedComments);
     console.log("submitted total comments : ", updatedComments);
   };
 
@@ -179,6 +189,8 @@ const CommentSideDrawer = () => {
       });
     }
   }, [showCommentEdit, focusWriteComment]);
+
+  console.log("comments", comments);
 
   return (
     <div className="flex h-full w-full flex-col bg-white">
@@ -199,7 +211,7 @@ const CommentSideDrawer = () => {
           onClick={() => setCommentCollapse(!commentCollapse)}
           className="flex items-center gap-1 text-xs text-gray-500"
         >
-          {comments?.length} COMMENTS{" "}
+          {comments?.filter((c) => c.commentId)?.length} COMMENTS{" "}
           <GrFormUp
             className={`text-base ${commentCollapse && "rotate-180"} duration-300`}
           />
@@ -211,145 +223,151 @@ const CommentSideDrawer = () => {
           <div className="overflow-y-auto">
             {/* comments  */}
             <div>
-              {comments.map((comment) => (
-                <div key={comment.id} className="border-b p-4 pb-2">
-                  <div className="flex items-start gap-2">
-                    <img
-                      src={comment?.senderImage}
-                      alt={comment?.senderUserName}
-                      className="h-6 w-6 rounded-full"
-                    />
-                    <div className="w-full space-y-2 overflow-hidden">
-                      <div className="group w-full space-y-2 overflow-hidden">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <p
-                            title={comment?.senderUserName}
-                            className={`${!comment?.isSubmitted && "max-w-[110px]"} truncate text-sm font-bold`}
-                          >
-                            {comment?.senderUserName}
-                          </p>
-                          {!comment?.isSubmitted && (
-                            <p className="rounded-full border px-2 py-1 text-xs font-medium text-gray-500">
-                              Not yet submitted
+              {comments
+                .filter((c) => c.commentId)
+                .map((comment) => (
+                  <div key={comment.commentId} className="border-b p-4 pb-2">
+                    <div className="flex items-start gap-2">
+                      <img
+                        src={comment?.senderImage}
+                        alt={comment?.senderUserName}
+                        className="h-6 w-6 rounded-full"
+                      />
+                      <div className="w-full space-y-2 overflow-hidden">
+                        <div className="group w-full space-y-2 overflow-hidden">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p
+                              title={comment?.senderUserName}
+                              className={`${!comment?.isSubmitted && "max-w-[110px]"} truncate text-sm font-bold`}
+                            >
+                              {comment?.senderUserName}
                             </p>
-                          )}
-                        </div>
-                        <p className="text-sm font-medium text-gray-500">
-                          {comment?.comment}
-                        </p>
-                        <div className="flex w-full items-center justify-between gap-1 pb-2">
-                          <button
-                            onClick={() => setShowCommentReply(comment.id)}
-                            type="button"
-                            className="flex items-center gap-1 text-sm font-semibold text-gray-400"
-                          >
-                            <MdReply className="text-lg" />
-                            Reply
-                          </button>
-                          <div className="hidden items-center gap-2 duration-300 group-hover:flex">
+                            {!comment?.isSubmitted && (
+                              <p className="rounded-full border px-2 py-1 text-xs font-medium text-gray-500">
+                                Not yet submitted
+                              </p>
+                            )}
+                          </div>
+                          <p className="text-sm font-medium text-gray-500">
+                            {comment?.commentText}
+                          </p>
+                          <div className="flex w-full items-center justify-between gap-1 pb-2">
                             <button
-                              onClick={() => handleEditComment(comment)}
+                              onClick={() =>
+                                setShowCommentReply(comment.commentId)
+                              }
                               type="button"
-                              className="text-lg text-gray-400 duration-300 hover:text-black"
+                              className="flex items-center gap-1 text-sm font-semibold text-gray-400"
                             >
-                              <MdEdit />
+                              <MdReply className="text-lg" />
+                              Reply
                             </button>
-                            <button
-                              onClick={() => handleCommentDelete(comment?.id)}
-                              type="button"
-                              className="text-lg text-gray-400 duration-300 hover:text-black"
-                            >
-                              <RiDeleteBin6Line />
-                            </button>
+                            <div className="hidden items-center gap-2 duration-300 group-hover:flex">
+                              <button
+                                onClick={() => handleEditComment(comment)}
+                                type="button"
+                                className="text-lg text-gray-400 duration-300 hover:text-black"
+                              >
+                                <MdEdit />
+                              </button>
+                              <button
+                                // onClick={() =>
+                                //   handleCommentDelete(comment?.commentId)
+                                // }
+                                type="button"
+                                className="text-lg text-gray-400 duration-300 hover:text-black"
+                              >
+                                <RiDeleteBin6Line />
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Replies */}
-                      {comment?.replies?.map((reply) => (
-                        <div
-                          key={reply.id}
-                          className="group border-t pb-2 pt-4"
-                        >
-                          <div className="flex items-start gap-2">
-                            <img
-                              src={reply?.senderImage}
-                              alt={reply?.senderUserName}
-                              className="h-6 w-6 rounded-full"
-                            />
-                            <div className="w-full space-y-2 overflow-hidden">
-                              <div className="flex flex-wrap items-center gap-2">
-                                <p
-                                  title={reply?.senderUserName}
-                                  className={`${!reply?.isSubmitted && "max-w-[110px]"} truncate text-sm font-bold`}
-                                >
-                                  {reply?.senderUserName}
-                                </p>
-                                {!reply?.isSubmitted && (
-                                  <p className="rounded-full border px-2 py-1 text-xs font-medium text-gray-500">
-                                    Not yet submitted
+                        {/* Replies */}
+                        {comment?.replies?.map((reply) => (
+                          <div
+                            key={reply.id}
+                            className="group border-t pb-2 pt-4"
+                          >
+                            <div className="flex items-start gap-2">
+                              <img
+                                src={reply?.senderImage}
+                                alt={reply?.senderUserName}
+                                className="h-6 w-6 rounded-full"
+                              />
+                              <div className="w-full space-y-2 overflow-hidden">
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <p
+                                    title={reply?.senderUserName}
+                                    className={`${!reply?.isSubmitted && "max-w-[110px]"} truncate text-sm font-bold`}
+                                  >
+                                    {reply?.senderUserName}
                                   </p>
-                                )}
-                              </div>
-                              <p className="text-sm font-medium text-gray-500">
-                                {reply?.replyText}
-                              </p>
-                              <div className="flex w-full items-center justify-between gap-1">
-                                <button
-                                  onClick={() =>
-                                    setShowCommentReply(comment.id)
-                                  }
-                                  type="button"
-                                  className="flex items-center gap-1 text-sm font-semibold text-gray-400"
-                                >
-                                  <MdReply className="text-lg" />
-                                  Reply
-                                </button>
-                                <div className="hidden items-center gap-2 duration-300 group-hover:flex">
+                                  {!reply?.isSubmitted && (
+                                    <p className="rounded-full border px-2 py-1 text-xs font-medium text-gray-500">
+                                      Not yet submitted
+                                    </p>
+                                  )}
+                                </div>
+                                <p className="text-sm font-medium text-gray-500">
+                                  {reply?.replyText}
+                                </p>
+                                <div className="flex w-full items-center justify-between gap-1">
                                   <button
                                     onClick={() =>
-                                      handleEditComment(comment, reply)
+                                      setShowCommentReply(comment.commentId)
                                     }
                                     type="button"
-                                    className="text-lg text-gray-400 duration-300 hover:text-black"
+                                    className="flex items-center gap-1 text-sm font-semibold text-gray-400"
                                   >
-                                    <MdEdit />
+                                    <MdReply className="text-lg" />
+                                    Reply
                                   </button>
-                                  <button
-                                    onClick={() =>
-                                      handleCommentDelete(
-                                        comment?.id,
-                                        reply?.id,
-                                      )
-                                    }
-                                    type="button"
-                                    className="text-lg text-gray-400 duration-300 hover:text-black"
-                                  >
-                                    <RiDeleteBin6Line />
-                                  </button>
+                                  <div className="hidden items-center gap-2 duration-300 group-hover:flex">
+                                    <button
+                                      onClick={() =>
+                                        handleEditComment(comment, reply)
+                                      }
+                                      type="button"
+                                      className="text-lg text-gray-400 duration-300 hover:text-black"
+                                    >
+                                      <MdEdit />
+                                    </button>
+                                    <button
+                                      // onClick={() =>
+                                      //   handleCommentDelete(
+                                      //     comment?.commentId,
+                                      //     reply?.id,
+                                      //   )
+                                      // }
+                                      type="button"
+                                      className="text-lg text-gray-400 duration-300 hover:text-black"
+                                    >
+                                      <RiDeleteBin6Line />
+                                    </button>
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
+                    {/* Reply input box */}
+                    {showCommentReply === comment.commentId && (
+                      <div>
+                        <ReplyCommentBox
+                          comments={comments}
+                          setShowCommentReply={setShowCommentReply}
+                          autoFocus={true}
+                          // handleCommentAdd={(replyText) =>
+                          //   handleReplyAdd(comment.commentId, replyText)
+                          // }
+                        />
+                      </div>
+                    )}
                   </div>
-                  {/* Reply input box */}
-                  {showCommentReply === comment.id && (
-                    <div>
-                      <ReplyCommentBox
-                        comments={comments}
-                        setShowCommentReply={setShowCommentReply}
-                        autoFocus={true}
-                        handleCommentAdd={(replyText) =>
-                          handleReplyAdd(comment.id, replyText)
-                        }
-                      />
-                    </div>
-                  )}
-                </div>
-              ))}
+                ))}
             </div>
 
             {/* write a comment  */}
@@ -358,7 +376,7 @@ const CommentSideDrawer = () => {
                 comments={comments}
                 focusWriteComment={focusWriteComment}
                 setFocusWriteComment={setFocusWriteComment}
-                handleCommentAdd={handleCommentAdd}
+                // handleCommentAdd={handleCommentAdd}
               />
             )}
             {/* edit a comment  */}
@@ -368,7 +386,7 @@ const CommentSideDrawer = () => {
                 focusWriteComment={focusWriteComment}
                 setFocusWriteComment={setFocusWriteComment}
                 setShowCommentEdit={setShowCommentEdit}
-                handleUpdateComment={handleUpdateComment}
+                // handleUpdateComment={handleUpdateComment}
               />
             )}
             {/* edit a reply comment  */}
@@ -378,7 +396,7 @@ const CommentSideDrawer = () => {
                 focusWriteComment={focusWriteComment}
                 setFocusWriteComment={setFocusWriteComment}
                 setShowReplyEdit={setShowReplyEdit}
-                handleUpdateComment={handleUpdateComment}
+                // handleUpdateComment={handleUpdateComment}
               />
             )}
           </div>
