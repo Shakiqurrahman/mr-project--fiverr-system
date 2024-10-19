@@ -11,6 +11,7 @@ import { uploadDesignApiSlice } from "./api/uploadDesignApiSlice";
 import cartSlice from "./features/cartSlice";
 import categorySlice from "./features/category/categorySlice";
 import chatSlice from "./features/chatSlice";
+import commentSlice from "./features/commentsSlice";
 import offerProjectSlice from "./features/offerProjectSlice";
 import passwordVisibilitySlice from "./features/passwordVisibilitySlice";
 import userSlice from "./features/userSlice";
@@ -67,6 +68,7 @@ const store = configureStore({
     [inboxApiSlice.reducerPath]: inboxApiSlice.reducer,
     // [inboxApiSlice.reducerPath]: persistedInboxApiReducer,
     chat: chatSlice,
+    comment: commentSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
