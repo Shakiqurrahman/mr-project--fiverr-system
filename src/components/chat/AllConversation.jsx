@@ -4,6 +4,7 @@ import { IoSearchOutline } from "react-icons/io5";
 import { LuClock3 } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import repeatIcon from "../../assets/svg/Repeat icon.svg";
 import { formatTimeAgo } from "../../libs/timeFormatter";
 import {
@@ -16,7 +17,9 @@ import {
 } from "../../Redux/features/chatSlice";
 
 const AllConversation = ({ closeToggle }) => {
+  const slug = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { onlineUsers } = useSelector((state) => state.user);
 
@@ -82,7 +85,8 @@ const AllConversation = ({ closeToggle }) => {
   };
   const filteredChatList = getFilteredChatList();
 
-  const handleChatOpen = (id) => {
+  const handleChatOpen = (id, userName) => {
+    if (!slug?.userName) navigate(`${userName}`);
     dispatch(setConversationUser(id));
     triggerGetAllMessages({
       receiverId: id,
@@ -142,7 +146,7 @@ const AllConversation = ({ closeToggle }) => {
               <div
                 key={chat?.id}
                 className={`flex cursor-pointer items-center justify-between border-b p-4 hover:bg-lightcream/50 ${chat?.id === conversationUser && "bg-lightcream/50"}`}
-                onClick={() => handleChatOpen(chat?.id)}
+                onClick={() => handleChatOpen(chat?.id, chat?.userName)}
               >
                 <div className="flex flex-shrink-0 items-center gap-4">
                   <div className="relative">

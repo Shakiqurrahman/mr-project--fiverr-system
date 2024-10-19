@@ -290,6 +290,14 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      {
+        path: "/inbox/:userName",
+        element: (
+          <PrivateRoute>
+            <InboxPage />
+          </PrivateRoute>
+        ),
+      },
     ],
   },
   {
