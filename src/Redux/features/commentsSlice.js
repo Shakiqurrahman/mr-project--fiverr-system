@@ -4,6 +4,7 @@ const commentSlice = createSlice({
   name: "comment",
   initialState: {
     commentObj: null,
+    imageDetails: null,
     comments: [],
   },
   reducers: {
@@ -14,6 +15,9 @@ const commentSlice = createSlice({
       const filteredComments = state.comments.filter((c) => c.commentId);
 
       state.comments = [...filteredComments, action.payload];
+    },
+    setImageDetails: (state, action) => {
+      state.imageDetails = action.payload;
     },
     deleteComment: (state, action) => {
       if (action.payload) {
@@ -51,6 +55,7 @@ export const {
   setCommentObj,
   setMarkersData,
   setCommentsData,
+  setImageDetails,
   deleteComment,
   removeEmptyComment,
 } = commentSlice.actions;

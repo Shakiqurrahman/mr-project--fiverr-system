@@ -9,13 +9,16 @@ import thumbnail from "../../assets/images/project-thumbnail.jpg";
 import formatFileSize from "../../libs/formatFileSize";
 import {
   setCommentObj,
+  setImageDetails,
   setMarkersData,
 } from "../../Redux/features/commentsSlice";
 
 const CommentImagePreview = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const { comments, commentObj } = useSelector((state) => state.comment);
+  const { comments, commentObj, imageDetails } = useSelector(
+    (state) => state.comment,
+  );
   const filteredComments = comments?.filter((c) => c.top);
   const images = [
     {
@@ -45,35 +48,26 @@ const CommentImagePreview = () => {
   };
 
   const handleMarkerAdd = (marker) => {
-    // if (currentMarkerId) {
-    //   if (!commentObj?.commentId) {
-    //     dispatch(removeEmptyComment(currentMarkerId));
-    //   }
-    // }
-
     const id = shortid.generate();
     const newMarker = { markerId: id, ...marker, isFocus: true };
     dispatch(setCommentObj(newMarker));
     dispatch(setMarkersData(newMarker));
-    setCurrentMarkerId(id); // Set the current marker ID
+    setCurrentMarkerId(id);
   };
 
   useEffect(() => {
     if (commentObj?.commentId) {
-      setCurrentMarkerId(null); // Clear the marker ID if a comment has been added
+      setCurrentMarkerId(null);
     }
   }, [commentObj]);
 
-  // useEffect(() => {
-  //   dispatch(removeEmptyComment(commentObj?.markerId));
-  // }, [dispatch, commentObj]);
+  useEffect(() => {
+    if (selectedImage) {
+      dispatch(setImageDetails(selectedImage));
+    }
+  }, [selectedImage, dispatch]);
 
   console.log(comments);
-
-  // const handleMarkerDelete = (id) => {
-  //   const newMarkers = markers.filter((m) => m.id !== id);
-  //   setMarkers(newMarkers);
-  // };
 
   const multiple = images.length > 1;
 

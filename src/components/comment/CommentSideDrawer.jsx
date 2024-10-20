@@ -11,7 +11,9 @@ import ReplyCommentBox from "./ReplyCommentBox";
 
 const CommentSideDrawer = () => {
   const { user } = useSelector((state) => state.user);
-  const { commentObj, comments } = useSelector((state) => state.comment);
+  const { commentObj, comments, imageDetails } = useSelector(
+    (state) => state.comment,
+  );
 
   console.log(commentObj);
 
@@ -204,7 +206,7 @@ const CommentSideDrawer = () => {
           title="Cleaning services flyer design and so on"
           className="mb-1 line-clamp-1 text-sm font-semibold"
         >
-          Cleaning services flyer design...
+          {imageDetails?.name}
         </h3>
         <button
           type="button"
