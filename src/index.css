@@ -226,6 +226,29 @@ textarea:placeholder-shown {
     bottom: -5px;
   }
 }
+/* Hide password reveal icon across various browsers */
+
+/* For Microsoft Edge */
+input[type="password"]::-ms-reveal {
+  display: none;
+}
+
+/* For Chrome, Edge (WebKit-based browsers) */
+input[type="password"]::-webkit-reveal,
+input[type="password"]::-webkit-clear-button {
+  display: none;
+}
+
+/* For Firefox */
+input[type="password"]::-moz-reveal {
+  display: none;
+}
+
+/* General rule: hide any sibling div or icon used to reveal password */
+input[type="password"] + div {
+  display: none;
+}
+
 
 .file-input::file-selector-button {
   padding: 0 16px;
