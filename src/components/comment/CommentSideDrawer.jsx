@@ -240,15 +240,26 @@ const CommentSideDrawer = () => {
                   <div
                     key={comment.commentId}
                     ref={commentRef}
-                    onClick={() => dispatch(setHighlight(comment.markerId))}
-                    className={`border-b ${comment.markerId === highlight ? "bg-lightcream" : ""} p-4 pb-2`}
+                    className={`border-b`}
                   >
-                    <div className="flex items-start gap-2">
-                      <img
-                        src={comment?.senderImage}
-                        alt={comment?.senderUserName}
-                        className="h-6 w-6 rounded-full"
-                      />
+                    <div
+                      onClick={() => dispatch(setHighlight(comment.markerId))}
+                      className={`flex items-start gap-2 p-4 ${highlight && comment.markerId === highlight ? "bg-lightcream" : ""} `}
+                    >
+                      {comment?.senderImage ? (
+                        <img
+                          src={comment?.senderImage}
+                          alt={comment?.senderUserName}
+                          className="h-6 w-6 rounded-full"
+                        />
+                      ) : (
+                        <div className="flex size-8 flex-shrink-0 items-center justify-center rounded-full bg-[#ffefef]/80 text-xl font-bold text-[#3b3b3b]/50">
+                          {comment?.senderUserName
+                            ?.trim()
+                            ?.charAt(0)
+                            ?.toUpperCase()}
+                        </div>
+                      )}
                       <div className="w-full space-y-2 overflow-hidden">
                         <div className="group w-full space-y-2 overflow-hidden">
                           <div className="flex flex-wrap items-center gap-2">
@@ -374,7 +385,7 @@ const CommentSideDrawer = () => {
                     </div>
                     {/* Reply input box */}
                     {showCommentReply === comment.commentId && (
-                      <div>
+                      <div className="p-4 pt-2">
                         <ReplyCommentBox
                           comments={comments}
                           setShowCommentReply={setShowCommentReply}

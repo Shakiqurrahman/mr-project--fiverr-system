@@ -38,6 +38,9 @@ const CommentInputBox = ({ focusWriteComment, setFocusWriteComment }) => {
             ...restComment,
             commentId: shortid.generate(),
             commentText,
+            userId: user?.id,
+            senderImage: user?.image,
+            senderUserName: user?.userName,
           }),
         );
       } else {
@@ -46,6 +49,9 @@ const CommentInputBox = ({ focusWriteComment, setFocusWriteComment }) => {
           setCommentsData({
             commentId: shortid.generate(),
             commentText,
+            userId: user?.id,
+            senderImage: user?.image,
+            senderUserName: user?.userName,
           }),
         );
       }

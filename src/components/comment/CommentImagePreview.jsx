@@ -91,8 +91,8 @@ const CommentImagePreview = () => {
               alt="user"
             />
           ) : (
-            <div className="flex size-8 items-center justify-center rounded-full bg-[#ffefef]/80 text-3xl font-bold text-[#3b3b3b]/50">
-              {user?.userName?.charAt(0)}
+            <div className="flex size-8 items-center justify-center rounded-full bg-[#ffefef]/80 text-2xl font-bold text-[#3b3b3b]/50">
+              {user?.userName?.charAt(0)?.toUpperCase()}
             </div>
           )}
           {user?.image ? (
@@ -102,8 +102,8 @@ const CommentImagePreview = () => {
               alt="user"
             />
           ) : (
-            <div className="flex size-8 items-center justify-center rounded-full bg-[#ffefef]/80 text-3xl font-bold text-[#3b3b3b]/50">
-              {user?.userName?.charAt(0)}
+            <div className="flex size-8 items-center justify-center rounded-full bg-[#ffefef]/80 text-2xl font-bold text-[#3b3b3b]/50">
+              {user?.userName?.charAt(0)?.toUpperCase()}
             </div>
           )}
         </div>

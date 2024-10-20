@@ -32,7 +32,7 @@ const ReplyCommentBox = ({
 
   // useOutsideClick(commentBox, () => setShowCommentReply(null));
   return (
-    <div ref={commentBox} className="my-2">
+    <div ref={commentBox} className="my-2 bg-white">
       <div className={`rounded-md border border-primary p-4 duration-300`}>
         <form onSubmit={handleComment} className="w-full space-y-2">
           <div className={`flex items-start gap-2 border-b`}>

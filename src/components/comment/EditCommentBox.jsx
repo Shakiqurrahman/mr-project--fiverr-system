@@ -67,11 +67,17 @@ const EditCommentBox = ({
       >
         <form onSubmit={handleComment} className="w-full space-y-2">
           <div className="flex items-start gap-2 border-b">
-            <img
-              src={commentObj?.senderImage}
-              alt={commentObj?.senderUserName}
-              className="h-6 w-6 rounded-full"
-            />
+            {commentObj?.senderImage ? (
+              <img
+                src={commentObj?.senderImage}
+                alt={commentObj?.senderUserName}
+                className="h-6 w-6 rounded-full"
+              />
+            ) : (
+              <div className="flex size-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-lg font-bold text-[#3b3b3b]/50">
+                {commentObj?.senderUserName?.trim()?.charAt(0)?.toUpperCase()}
+              </div>
+            )}
             <textarea
               placeholder="Updated comment..."
               className="mb-2 w-full resize-none text-base outline-none"
