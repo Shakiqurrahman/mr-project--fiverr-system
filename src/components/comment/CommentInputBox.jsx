@@ -60,6 +60,8 @@ const CommentInputBox = ({ focusWriteComment, setFocusWriteComment }) => {
     setCommentText("");
   };
 
+  const letterLogo = user?.userName?.trim().charAt(0).toUpperCase();
+
   // useOutsideClick(commentBox, () => setFocusWriteComment(false));
   return (
     <div ref={commentBox} className="sticky bottom-0 border-b bg-white p-4">
@@ -70,11 +72,17 @@ const CommentInputBox = ({ focusWriteComment, setFocusWriteComment }) => {
           <div
             className={`flex items-start gap-2 ${focusWriteComment && "border-b"}`}
           >
-            <img
-              src={user?.image}
-              alt={user?.image}
-              className="h-6 w-6 rounded-full"
-            />
+            {user?.image ? (
+              <img
+                src={user?.image}
+                alt={user?.image}
+                className="h-6 w-6 flex-shrink-0 rounded-full"
+              />
+            ) : (
+              <div className="flex size-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-lg font-bold text-[#3b3b3b]/50">
+                {letterLogo}
+              </div>
+            )}
             <textarea
               onFocus={() => setFocusWriteComment(true)}
               placeholder="Leave a comment..."
