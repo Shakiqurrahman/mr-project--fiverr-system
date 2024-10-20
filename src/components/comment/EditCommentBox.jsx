@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { updateAComment } from "../../Redux/features/commentsSlice";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 const EditCommentBox = ({
   comment,
@@ -7,20 +10,41 @@ const EditCommentBox = ({
   setFocusWriteComment,
   setShowCommentEdit,
 }) => {
+  const dispatch = useDispatch();
+
+  const textAreaRef = useRef(null);
+  const editComment = useRef(null);
+
   const [commentObj, setCommentObj] = useState(comment || null);
+
+  console.log(commentObj);
+
+  useEffect(() => {
+    if (commentObj) {
+      textAreaRef.current.focus();
+
+      // Set the selection to the end of the current value
+      const textArea = textAreaRef.current;
+      const valueLength = textArea.value.length;
+      textArea.setSelectionRange(valueLength, valueLength);
+    }
+  }, [commentObj]);
 
   const handleCommentTextChange = (e) => {
     setCommentObj({
       ...commentObj,
-      comment: e.target.value,
+      commentText: e.target.value,
       isSubmitted: false,
     });
   };
 
   const handleComment = (e) => {
     e.preventDefault();
-    handleUpdateComment(commentObj);
+    // handleUpdateComment(commentObj);
+    dispatch(updateAComment(commentObj));
     setCommentObj(null);
+    setFocusWriteComment(false);
+    setShowCommentEdit(false);
   };
 
   const handleCancel = () => {
@@ -28,8 +52,16 @@ const EditCommentBox = ({
     setShowCommentEdit(false);
     setCommentObj(null);
   };
+
+  const handleOff = () => {
+    setShowCommentEdit(null);
+    setFocusWriteComment(false);
+  };
+
+  useOutsideClick(editComment, handleOff);
+
   return (
-    <div className="border-b p-4">
+    <div className="sticky bottom-0 border-b bg-white p-4" ref={editComment}>
       <div
         className={`rounded-md border ${focusWriteComment && "border-primary"} p-4 duration-300`}
       >
@@ -45,9 +77,10 @@ const EditCommentBox = ({
               className="mb-2 w-full resize-none text-base outline-none"
               rows={4}
               onChange={handleCommentTextChange}
-              value={commentObj?.comment}
+              value={commentObj?.commentText}
               name="comment"
               id="comment"
+              ref={textAreaRef}
             ></textarea>
           </div>
           {focusWriteComment && (
@@ -62,8 +95,8 @@ const EditCommentBox = ({
               <button
                 type="submit"
                 disabled={
-                  !commentObj?.comment ||
-                  commentObj.comment === comment?.comment
+                  !commentObj?.commentText ||
+                  commentObj.commentText === comment?.commentText
                 }
                 className="flex items-center gap-1 text-sm font-semibold text-primary disabled:text-primary/50"
               >

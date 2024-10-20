@@ -6,6 +6,7 @@ const commentSlice = createSlice({
     commentObj: null,
     imageDetails: null,
     comments: [],
+    highlight: null,
   },
   reducers: {
     setCommentObj: (state, action) => {
@@ -19,10 +20,18 @@ const commentSlice = createSlice({
     setImageDetails: (state, action) => {
       state.imageDetails = action.payload;
     },
-    deleteComment: (state, action) => {
+    cancelComment: (state, action) => {
       if (action.payload) {
         state.comments = state.comments.filter(
           (c) => c.markerId !== action.payload,
+        );
+      }
+      state.commentObj = null;
+    },
+    deleteComment: (state, action) => {
+      if (action.payload) {
+        state.comments = state.comments.filter(
+          (c) => c.commentId !== action.payload,
         );
       }
       state.commentObj = null;
@@ -48,6 +57,20 @@ const commentSlice = createSlice({
       }
       state.commentObj = null;
     },
+
+    updateAComment: (state, action) => {
+      state.comments = state.comments.map((c) => {
+        if (c.commentId === action.payload.commentId) {
+          return action.payload;
+        } else {
+          return c;
+        }
+      });
+    },
+
+    setHighlight: (state, action) => {
+      state.highlight = action.payload;
+    },
   },
 });
 
@@ -56,8 +79,11 @@ export const {
   setMarkersData,
   setCommentsData,
   setImageDetails,
+  cancelComment,
   deleteComment,
   removeEmptyComment,
+  updateAComment,
+  setHighlight,
 } = commentSlice.actions;
 
 export default commentSlice.reducer;

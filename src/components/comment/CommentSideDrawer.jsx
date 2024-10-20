@@ -3,19 +3,25 @@ import { GrFormUp } from "react-icons/gr";
 import { MdEdit, MdReply } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TfiShiftRight } from "react-icons/tfi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import useOutsideClick from "../../hooks/useOutsideClick";
+import {
+  deleteComment,
+  setHighlight,
+} from "../../Redux/features/commentsSlice";
 import CommentInputBox from "./CommentInputBox";
 import EditCommentBox from "./EditCommentBox";
 import EditReplyBox from "./EditReplyBox";
 import ReplyCommentBox from "./ReplyCommentBox";
 
 const CommentSideDrawer = () => {
+  const dispatch = useDispatch();
+  const commentRef = useRef(null);
+
   const { user } = useSelector((state) => state.user);
-  const { commentObj, comments, imageDetails } = useSelector(
+  const { commentObj, comments, imageDetails, highlight } = useSelector(
     (state) => state.comment,
   );
-
-  console.log(commentObj);
 
   const [commentCollapse, setCommentCollapse] = useState(false);
   const [focusWriteComment, setFocusWriteComment] = useState(false);
@@ -82,23 +88,24 @@ const CommentSideDrawer = () => {
     }
   };
 
-  // const handleCommentDelete = (commentId, replyId) => {
-  //   if (replyId) {
-  //     setComments((prevComments) =>
-  //       prevComments.map((comment) => {
-  //         if (comment.commentId === commentId) {
-  //           return {
-  //             ...comment,
-  //             replies: comment.replies.filter((reply) => reply.id !== replyId),
-  //           };
-  //         }
-  //         return comment;
-  //       }),
-  //     );
-  //   } else {
-  //     setComments(comments.filter((c) => c.commentId !== commentId));
-  //   }
-  // };
+  const handleCommentDelete = (commentId, replyId) => {
+    if (replyId) {
+      // setComments((prevComments) =>
+      //   prevComments.map((comment) => {
+      //     if (comment.commentId === commentId) {
+      //       return {
+      //         ...comment,
+      //         replies: comment.replies.filter((reply) => reply.id !== replyId),
+      //       };
+      //     }
+      //     return comment;
+      //   }),
+      // );
+    } else {
+      // setComments(comments.filter((c) => c.commentId !== commentId));
+      dispatch(deleteComment(commentId));
+    }
+  };
 
   // handle update comment
   // const handleUpdateComment = (commentObj) => {
@@ -194,6 +201,8 @@ const CommentSideDrawer = () => {
 
   console.log("comments", comments);
 
+  useOutsideClick(commentRef, () => dispatch(setHighlight(null)));
+
   return (
     <div className="flex h-full w-full flex-col bg-white">
       <div className="flex items-center justify-between p-4">
@@ -228,7 +237,12 @@ const CommentSideDrawer = () => {
               {comments
                 .filter((c) => c.commentId)
                 .map((comment) => (
-                  <div key={comment.commentId} className="border-b p-4 pb-2">
+                  <div
+                    key={comment.commentId}
+                    ref={commentRef}
+                    onClick={() => dispatch(setHighlight(comment.markerId))}
+                    className={`border-b ${comment.markerId === highlight ? "bg-lightcream" : ""} p-4 pb-2`}
+                  >
                     <div className="flex items-start gap-2">
                       <img
                         src={comment?.senderImage}
@@ -248,6 +262,9 @@ const CommentSideDrawer = () => {
                               <p className="rounded-full border px-2 py-1 text-xs font-medium text-gray-500">
                                 Not yet submitted
                               </p>
+                            )}
+                            {comment?.markerId && (
+                              <p className="ms-auto size-2 rounded-full bg-primary"></p>
                             )}
                           </div>
                           <p className="text-sm font-medium text-gray-500">
@@ -273,9 +290,9 @@ const CommentSideDrawer = () => {
                                 <MdEdit />
                               </button>
                               <button
-                                // onClick={() =>
-                                //   handleCommentDelete(comment?.commentId)
-                                // }
+                                onClick={() =>
+                                  handleCommentDelete(comment?.commentId)
+                                }
                                 type="button"
                                 className="text-lg text-gray-400 duration-300 hover:text-black"
                               >
@@ -371,37 +388,36 @@ const CommentSideDrawer = () => {
                   </div>
                 ))}
             </div>
-
-            {/* write a comment  */}
-            {!showCommentEdit && !showCommentReply && !showReplyEdit && (
-              <CommentInputBox
-                comments={comments}
-                focusWriteComment={focusWriteComment}
-                setFocusWriteComment={setFocusWriteComment}
-                // handleCommentAdd={handleCommentAdd}
-              />
-            )}
-            {/* edit a comment  */}
-            {showCommentEdit && (
-              <EditCommentBox
-                comment={showCommentEdit}
-                focusWriteComment={focusWriteComment}
-                setFocusWriteComment={setFocusWriteComment}
-                setShowCommentEdit={setShowCommentEdit}
-                // handleUpdateComment={handleUpdateComment}
-              />
-            )}
-            {/* edit a reply comment  */}
-            {showReplyEdit && (
-              <EditReplyBox
-                reply={showReplyEdit}
-                focusWriteComment={focusWriteComment}
-                setFocusWriteComment={setFocusWriteComment}
-                setShowReplyEdit={setShowReplyEdit}
-                // handleUpdateComment={handleUpdateComment}
-              />
-            )}
           </div>
+        )}
+        {/* write a comment  */}
+        {!showCommentEdit && !showCommentReply && !showReplyEdit && (
+          <CommentInputBox
+            comments={comments}
+            focusWriteComment={focusWriteComment}
+            setFocusWriteComment={setFocusWriteComment}
+            // handleCommentAdd={handleCommentAdd}
+          />
+        )}
+        {/* edit a comment  */}
+        {showCommentEdit && (
+          <EditCommentBox
+            comment={showCommentEdit}
+            focusWriteComment={focusWriteComment}
+            setFocusWriteComment={setFocusWriteComment}
+            setShowCommentEdit={setShowCommentEdit}
+            // handleUpdateComment={handleUpdateComment}
+          />
+        )}
+        {/* edit a reply comment  */}
+        {showReplyEdit && (
+          <EditReplyBox
+            reply={showReplyEdit}
+            focusWriteComment={focusWriteComment}
+            setFocusWriteComment={setFocusWriteComment}
+            setShowReplyEdit={setShowReplyEdit}
+            // handleUpdateComment={handleUpdateComment}
+          />
         )}
       </div>
 

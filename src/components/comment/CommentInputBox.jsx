@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import shortid from "shortid";
 import {
-  deleteComment,
+  cancelComment,
   setCommentsData,
 } from "../../Redux/features/commentsSlice";
 
@@ -18,10 +18,10 @@ const CommentInputBox = ({ focusWriteComment, setFocusWriteComment }) => {
   const [commentText, setCommentText] = useState("");
 
   useEffect(() => {
-    if (focusWriteComment && textAreaRef.current) {
+    if (commentObj) {
       textAreaRef.current.focus();
     }
-  }, [focusWriteComment]);
+  }, [commentObj]);
 
   const handleCommentTextChange = (e) => {
     setCommentText(e.target.value);
@@ -50,18 +50,19 @@ const CommentInputBox = ({ focusWriteComment, setFocusWriteComment }) => {
         );
       }
       setCommentText("");
+      setFocusWriteComment(false);
     }
   };
 
   const handleCancel = () => {
-    dispatch(deleteComment(commentObj?.markerId));
+    dispatch(cancelComment(commentObj?.markerId));
     setFocusWriteComment(false);
     setCommentText("");
   };
 
   // useOutsideClick(commentBox, () => setFocusWriteComment(false));
   return (
-    <div ref={commentBox} className="border-b p-4">
+    <div ref={commentBox} className="sticky bottom-0 border-b bg-white p-4">
       <div
         className={`rounded-md border ${focusWriteComment && "border-primary"} p-4 duration-300`}
       >

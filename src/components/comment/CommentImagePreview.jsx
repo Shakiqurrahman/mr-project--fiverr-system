@@ -9,6 +9,7 @@ import thumbnail from "../../assets/images/project-thumbnail.jpg";
 import formatFileSize from "../../libs/formatFileSize";
 import {
   setCommentObj,
+  setHighlight,
   setImageDetails,
   setMarkersData,
 } from "../../Redux/features/commentsSlice";
@@ -16,7 +17,7 @@ import {
 const CommentImagePreview = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const { comments, commentObj, imageDetails } = useSelector(
+  const { comments, commentObj, highlight } = useSelector(
     (state) => state.comment,
   );
   const filteredComments = comments?.filter((c) => c.top);
@@ -36,13 +37,12 @@ const CommentImagePreview = () => {
   ];
 
   const [selectedImage, setSelectedImage] = useState(images[0]);
-  const [currentMarkerId, setCurrentMarkerId] = useState(null);
 
-  const CustomMarker = ({ itemNumber }) => {
+  const CustomMarker = ({ markerId }) => {
     return (
       <p
-        className="size-3 rounded-full border border-white bg-primary"
-        onClick={() => console.log("clicked")}
+        className={`size-3 cursor-pointer rounded-full border border-white bg-primary ${highlight && highlight === markerId ? "animate-popup opacity-100" : highlight && highlight !== markerId ? "opacity-60" : "opacity-100"}`}
+        onClick={() => dispatch(setHighlight(markerId))}
       ></p>
     );
   };
@@ -51,15 +51,9 @@ const CommentImagePreview = () => {
     const id = shortid.generate();
     const newMarker = { markerId: id, ...marker, isFocus: true };
     dispatch(setCommentObj(newMarker));
+    dispatch(setHighlight(id));
     dispatch(setMarkersData(newMarker));
-    setCurrentMarkerId(id);
   };
-
-  useEffect(() => {
-    if (commentObj?.commentId) {
-      setCurrentMarkerId(null);
-    }
-  }, [commentObj]);
 
   useEffect(() => {
     if (selectedImage) {
@@ -97,7 +91,7 @@ const CommentImagePreview = () => {
               alt="user"
             />
           ) : (
-            <div className="flex size-8 items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-3xl font-bold text-[#3b3b3b]/50">
+            <div className="flex size-8 items-center justify-center rounded-full bg-[#ffefef]/80 text-3xl font-bold text-[#3b3b3b]/50">
               {user?.userName?.charAt(0)}
             </div>
           )}
@@ -108,7 +102,7 @@ const CommentImagePreview = () => {
               alt="user"
             />
           ) : (
-            <div className="flex size-8 items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-3xl font-bold text-[#3b3b3b]/50">
+            <div className="flex size-8 items-center justify-center rounded-full bg-[#ffefef]/80 text-3xl font-bold text-[#3b3b3b]/50">
               {user?.userName?.charAt(0)}
             </div>
           )}

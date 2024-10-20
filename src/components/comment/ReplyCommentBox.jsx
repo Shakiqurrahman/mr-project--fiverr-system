@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import useOutsideClick from "../../hooks/useOutsideClick";
 
 const ReplyCommentBox = ({
   handleCommentAdd,
@@ -31,7 +30,7 @@ const ReplyCommentBox = ({
     }
   }, [autoFocus]);
 
-  useOutsideClick(commentBox, () => setShowCommentReply(null));
+  // useOutsideClick(commentBox, () => setShowCommentReply(null));
   return (
     <div ref={commentBox} className="my-2">
       <div className={`rounded-md border border-primary p-4 duration-300`}>
