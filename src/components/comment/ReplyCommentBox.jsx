@@ -1,12 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import shortid from "shortid";
+import { updateAComment } from "../../Redux/features/commentsSlice";
 
 const ReplyCommentBox = ({
+  comment,
   handleCommentAdd,
   autoFocus,
   setShowCommentReply,
 }) => {
   const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const textAreaRef = useRef(null);
   const commentBox = useRef(null);
@@ -19,7 +23,22 @@ const ReplyCommentBox = ({
   const handleComment = (e) => {
     e.preventDefault();
     if (commentText) {
-      handleCommentAdd(commentText);
+      const data = {
+        ...comment,
+        replies: [
+          ...comment.replies,
+          {
+            replyId: shortid.generate(),
+            userId: user?.id,
+            senderUserName: user?.userName,
+            senderImage: user?.userImage,
+            replyText: commentText,
+            isSubmitted: false,
+          },
+        ],
+      };
+      dispatch(updateAComment(data));
+      setShowCommentReply(null);
       setCommentText("");
     }
   };
@@ -30,17 +49,25 @@ const ReplyCommentBox = ({
     }
   }, [autoFocus]);
 
+  const letterLogo = user?.userName?.trim().charAt(0).toUpperCase();
+
   // useOutsideClick(commentBox, () => setShowCommentReply(null));
   return (
     <div ref={commentBox} className="my-2 bg-white">
       <div className={`rounded-md border border-primary p-4 duration-300`}>
         <form onSubmit={handleComment} className="w-full space-y-2">
           <div className={`flex items-start gap-2 border-b`}>
-            <img
-              src={user?.image}
-              alt={user?.image}
-              className="h-6 w-6 rounded-full"
-            />
+            {user?.image ? (
+              <img
+                src={user?.image}
+                alt={user?.image}
+                className="h-6 w-6 flex-shrink-0 rounded-full"
+              />
+            ) : (
+              <div className="flex size-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-lg font-bold text-[#3b3b3b]/50">
+                {letterLogo}
+              </div>
+            )}
             <textarea
               ref={textAreaRef}
               placeholder="Leave a comment..."

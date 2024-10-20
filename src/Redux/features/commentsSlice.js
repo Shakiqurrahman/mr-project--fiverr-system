@@ -12,14 +12,17 @@ const commentSlice = createSlice({
     setCommentObj: (state, action) => {
       state.commentObj = action.payload;
     },
+
     setMarkersData: (state, action) => {
       const filteredComments = state.comments.filter((c) => c.commentId);
 
       state.comments = [...filteredComments, action.payload];
     },
+
     setImageDetails: (state, action) => {
       state.imageDetails = action.payload;
     },
+
     cancelComment: (state, action) => {
       if (action.payload) {
         state.comments = state.comments.filter(
@@ -27,7 +30,9 @@ const commentSlice = createSlice({
         );
       }
       state.commentObj = null;
+      state.highlight = null;
     },
+
     deleteComment: (state, action) => {
       if (action.payload) {
         state.comments = state.comments.filter(
@@ -36,11 +41,13 @@ const commentSlice = createSlice({
       }
       state.commentObj = null;
     },
+
     removeEmptyComment: (state, action) => {
       state.comments = state.comments.filter(
         (c) => c.commentId || c.markerId !== action.payload,
       );
     },
+
     setCommentsData: (state, action) => {
       console.log(action.payload);
 
@@ -83,6 +90,7 @@ export const {
   deleteComment,
   removeEmptyComment,
   updateAComment,
+  setReplyData,
   setHighlight,
 } = commentSlice.actions;
 

@@ -4,10 +4,10 @@ import { MdEdit, MdReply } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TfiShiftRight } from "react-icons/tfi";
 import { useDispatch, useSelector } from "react-redux";
-import useOutsideClick from "../../hooks/useOutsideClick";
 import {
   deleteComment,
   setHighlight,
+  updateAComment,
 } from "../../Redux/features/commentsSlice";
 import CommentInputBox from "./CommentInputBox";
 import EditCommentBox from "./EditCommentBox";
@@ -88,22 +88,16 @@ const CommentSideDrawer = () => {
     }
   };
 
-  const handleCommentDelete = (commentId, replyId) => {
+  const handleCommentDelete = (comment, replyId) => {
     if (replyId) {
-      // setComments((prevComments) =>
-      //   prevComments.map((comment) => {
-      //     if (comment.commentId === commentId) {
-      //       return {
-      //         ...comment,
-      //         replies: comment.replies.filter((reply) => reply.id !== replyId),
-      //       };
-      //     }
-      //     return comment;
-      //   }),
-      // );
+      const data = {
+        ...comment,
+        replies: comment?.replies?.filter((r) => r.replyId !== replyId),
+      };
+      dispatch(updateAComment(data));
     } else {
       // setComments(comments.filter((c) => c.commentId !== commentId));
-      dispatch(deleteComment(commentId));
+      dispatch(deleteComment(comment?.commentId));
     }
   };
 
@@ -131,30 +125,6 @@ const CommentSideDrawer = () => {
   //   );
   //   setFocusWriteComment(false);
   //   setShowCommentEdit(null);
-  // };
-
-  // Add a reply in comment
-  // const handleReplyAdd = (commentId, replyText) => {
-  //   setComments(
-  //     comments.map((comment) =>
-  //       comment.commentId === commentId
-  //         ? {
-  //             ...comment,
-  //             replies: [
-  //               ...comment.replies,
-  //               {
-  //                 commentId: `${comment.replies.length + 1}${replyText}`,
-  //                 replyText: replyText,
-  //                 senderUserName: user?.userName,
-  //                 senderImage: user?.image,
-  //                 isSubmitted: false,
-  //               },
-  //             ],
-  //           }
-  //         : comment,
-  //     ),
-  //   );
-  //   setShowCommentReply(null);
   // };
 
   // Check for unsubmitted comments and unsubmitted replies
@@ -201,7 +171,7 @@ const CommentSideDrawer = () => {
 
   console.log("comments", comments);
 
-  useOutsideClick(commentRef, () => dispatch(setHighlight(null)));
+  // useOutsideClick(commentRef, () => dispatch(setHighlight(null)));
 
   return (
     <div className="flex h-full w-full flex-col bg-white">
@@ -243,7 +213,15 @@ const CommentSideDrawer = () => {
                     className={`border-b`}
                   >
                     <div
-                      onClick={() => dispatch(setHighlight(comment.markerId))}
+                      onClick={() =>
+                        dispatch(
+                          setHighlight(
+                            highlight && highlight === comment.markerId
+                              ? null
+                              : comment.markerId,
+                          ),
+                        )
+                      }
                       className={`flex items-start gap-2 p-4 ${highlight && comment.markerId === highlight ? "bg-lightcream" : ""} `}
                     >
                       {comment?.senderImage ? (
@@ -301,9 +279,7 @@ const CommentSideDrawer = () => {
                                 <MdEdit />
                               </button>
                               <button
-                                onClick={() =>
-                                  handleCommentDelete(comment?.commentId)
-                                }
+                                onClick={() => handleCommentDelete(comment)}
                                 type="button"
                                 className="text-lg text-gray-400 duration-300 hover:text-black"
                               >
@@ -316,15 +292,24 @@ const CommentSideDrawer = () => {
                         {/* Replies */}
                         {comment?.replies?.map((reply) => (
                           <div
-                            key={reply.id}
+                            key={reply.replyId}
                             className="group border-t pb-2 pt-4"
                           >
                             <div className="flex items-start gap-2">
-                              <img
-                                src={reply?.senderImage}
-                                alt={reply?.senderUserName}
-                                className="h-6 w-6 rounded-full"
-                              />
+                              {reply?.senderImage ? (
+                                <img
+                                  src={reply?.senderImage}
+                                  alt={reply?.senderUserName}
+                                  className="h-6 w-6 rounded-full"
+                                />
+                              ) : (
+                                <div className="flex size-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ffefef]/80 text-lg font-bold text-[#3b3b3b]/50">
+                                  {reply?.senderUserName
+                                    ?.trim()
+                                    ?.charAt(0)
+                                    ?.toUpperCase()}
+                                </div>
+                              )}
                               <div className="w-full space-y-2 overflow-hidden">
                                 <div className="flex flex-wrap items-center gap-2">
                                   <p
@@ -364,12 +349,12 @@ const CommentSideDrawer = () => {
                                       <MdEdit />
                                     </button>
                                     <button
-                                      // onClick={() =>
-                                      //   handleCommentDelete(
-                                      //     comment?.commentId,
-                                      //     reply?.id,
-                                      //   )
-                                      // }
+                                      onClick={() =>
+                                        handleCommentDelete(
+                                          comment,
+                                          reply?.replyId,
+                                        )
+                                      }
                                       type="button"
                                       className="text-lg text-gray-400 duration-300 hover:text-black"
                                     >
@@ -384,11 +369,12 @@ const CommentSideDrawer = () => {
                       </div>
                     </div>
                     {/* Reply input box */}
-                    {showCommentReply === comment.commentId && (
+                    {showCommentReply === comment?.commentId && (
                       <div className="p-4 pt-2">
                         <ReplyCommentBox
-                          comments={comments}
+                          // comments={comments}
                           setShowCommentReply={setShowCommentReply}
+                          comment={comment}
                           autoFocus={true}
                           // handleCommentAdd={(replyText) =>
                           //   handleReplyAdd(comment.commentId, replyText)

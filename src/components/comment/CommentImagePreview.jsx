@@ -42,7 +42,11 @@ const CommentImagePreview = () => {
     return (
       <p
         className={`size-3 cursor-pointer rounded-full border border-white bg-primary ${highlight && highlight === markerId ? "animate-popup opacity-100" : highlight && highlight !== markerId ? "opacity-60" : "opacity-100"}`}
-        onClick={() => dispatch(setHighlight(markerId))}
+        onClick={() =>
+          dispatch(
+            setHighlight(highlight && highlight === markerId ? null : markerId),
+          )
+        }
       ></p>
     );
   };
