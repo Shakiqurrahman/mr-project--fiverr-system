@@ -4,6 +4,7 @@ import { MdEdit, MdReply } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TfiShiftRight } from "react-icons/tfi";
 import { useDispatch, useSelector } from "react-redux";
+import useOutsideClick from "../../hooks/useOutsideClick";
 import {
   deleteComment,
   setHighlight,
@@ -17,6 +18,7 @@ import ReplyCommentBox from "./ReplyCommentBox";
 const CommentSideDrawer = () => {
   const dispatch = useDispatch();
   const commentRef = useRef(null);
+  const commentBoxRef = useRef(null);
 
   const { user } = useSelector((state) => state.user);
   const { commentObj, comments, imageDetails, highlight } = useSelector(
@@ -29,53 +31,30 @@ const CommentSideDrawer = () => {
   const [showReplyEdit, setShowReplyEdit] = useState(null);
   const [showCommentReply, setShowCommentReply] = useState(null);
 
-  // const [comments, setComments] = useState([
-  //   {
-  //     commentId: 1,
-  //     markerId: null,
-  //     comment: "Logo Change",
-  //     senderUserName: "mahfujurrahm535",
-  //     senderImage: logo,
-  //     isSubmitted: true,
-  //     replies: [
-  //       {
-  //         id: 1,
-  //         replyText: "Okay brother!",
-  //         senderUserName: "mahfujurrahm535",
-  //         senderImage: logo,
-  //         isSubmitted: true,
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     commentId: 2,
-  //     comment: "Image Change",
-  //     senderUserName: "mahfujurrahm535",
-  //     senderImage: logo,
-  //     isSubmitted: true,
-  //     replies: [],
-  //   },
-  // ]);
+  /* @TODO: api schema
+    {
+      commentId: 1,
+      markerId: null,
+      commentText: "Logo Change",
+      senderUserName: "mahfujurrahm535",
+      senderImage: logo,
+      isSubmitted: true,
+      replies: [
+        {
+          id: 1,
+          replyText: "Okay brother!",
+          senderUserName: "mahfujurrahm535",
+          senderImage: logo,
+          isSubmitted: true,
+        },
+      ],
+    }
+    */
 
   // initially changing state for focusing commentbox
   useEffect(() => {
     commentObj && setFocusWriteComment(commentObj.isFocus);
   }, [commentObj]);
-
-  // const handleCommentAdd = (commentText) => {
-  //   setComments([
-  //     ...comments,
-  //     {
-  //       commentId: `${comments.length + 1}${commentText}`,
-  //       comment: commentText,
-  //       senderUserName: user?.userName,
-  //       senderImage: user?.image,
-  //       isSubmitted: false,
-  //       replies: [],
-  //     },
-  //   ]);
-  //   setFocusWriteComment(false);
-  // };
 
   const handleEditComment = (comment, reply) => {
     setShowCommentReply(null);
@@ -100,32 +79,6 @@ const CommentSideDrawer = () => {
       dispatch(deleteComment(comment?.commentId));
     }
   };
-
-  // handle update comment
-  // const handleUpdateComment = (commentObj) => {
-  //   setComments((prevComments) =>
-  //     prevComments.map((c) =>
-  //       c.commentId === commentObj.id
-  //         ? {
-  //             ...c,
-  //             comment: commentObj.comment,
-  //             isSubmitted: commentObj.isSubmitted,
-  //             replies: c.replies.map((reply) =>
-  //               reply.id === commentObj.replies.id
-  //                 ? {
-  //                     ...reply,
-  //                     replyText: commentObj.replies.replyText,
-  //                     isSubmitted: false,
-  //                   }
-  //                 : reply,
-  //             ),
-  //           }
-  //         : c,
-  //     ),
-  //   );
-  //   setFocusWriteComment(false);
-  //   setShowCommentEdit(null);
-  // };
 
   // Check for unsubmitted comments and unsubmitted replies
   const unsubmittedComments = comments?.filter(
@@ -171,10 +124,15 @@ const CommentSideDrawer = () => {
 
   console.log("comments", comments);
 
-  // useOutsideClick(commentRef, () => dispatch(setHighlight(null)));
+  const handleOff = () => {
+    setShowCommentEdit(null);
+    setFocusWriteComment(false);
+    setShowCommentReply(false);
+  };
+  useOutsideClick(commentBoxRef, handleOff);
 
   return (
-    <div className="flex h-full w-full flex-col bg-white">
+    <div className="flex h-full w-full flex-col bg-white" ref={commentBoxRef}>
       <div className="flex items-center justify-between p-4">
         <h2 className="text-base font-semibold">Comments</h2>
         <TfiShiftRight className="text-xl text-gray-500" />
@@ -372,13 +330,9 @@ const CommentSideDrawer = () => {
                     {showCommentReply === comment?.commentId && (
                       <div className="p-4 pt-2">
                         <ReplyCommentBox
-                          // comments={comments}
                           setShowCommentReply={setShowCommentReply}
                           comment={comment}
                           autoFocus={true}
-                          // handleCommentAdd={(replyText) =>
-                          //   handleReplyAdd(comment.commentId, replyText)
-                          // }
                         />
                       </div>
                     )}
@@ -393,7 +347,6 @@ const CommentSideDrawer = () => {
             comments={comments}
             focusWriteComment={focusWriteComment}
             setFocusWriteComment={setFocusWriteComment}
-            // handleCommentAdd={handleCommentAdd}
           />
         )}
         {/* edit a comment  */}
@@ -403,7 +356,6 @@ const CommentSideDrawer = () => {
             focusWriteComment={focusWriteComment}
             setFocusWriteComment={setFocusWriteComment}
             setShowCommentEdit={setShowCommentEdit}
-            // handleUpdateComment={handleUpdateComment}
           />
         )}
         {/* edit a reply comment  */}
@@ -413,7 +365,6 @@ const CommentSideDrawer = () => {
             focusWriteComment={focusWriteComment}
             setFocusWriteComment={setFocusWriteComment}
             setShowReplyEdit={setShowReplyEdit}
-            // handleUpdateComment={handleUpdateComment}
           />
         )}
       </div>

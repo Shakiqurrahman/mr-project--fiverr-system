@@ -22,8 +22,6 @@ const EditReplyBox = ({
     });
   };
 
-  console.log("reply", replyObj);
-
   const handleComment = (e) => {
     e.preventDefault();
     // handleUpdateComment(replyObj);
