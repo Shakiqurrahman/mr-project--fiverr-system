@@ -134,7 +134,7 @@ const CommentSideDrawer = () => {
     <div className="flex h-full w-full flex-col bg-white" ref={commentBoxRef}>
       <div className="flex items-center justify-between p-4">
         <h2 className="text-base font-semibold">Comments</h2>
-        <TfiShiftRight className="text-xl text-gray-500" />
+        {/* <TfiShiftRight className="text-xl text-gray-500" /> */}
       </div>
       {/* file name  */}
       <div className="border-y bg-lightskyblue px-4 py-2">

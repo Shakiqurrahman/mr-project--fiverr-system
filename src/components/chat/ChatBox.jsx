@@ -95,9 +95,7 @@ const ChatBox = ({ openToggle }) => {
 
   useEffect(() => {
     if (user.role === "USER") {
-      triggerGetAllMessages({
-        receiverId: "671260ee65cf0a4990af2dc1",
-      });
+      triggerGetAllMessages();
     }
   }, [user, triggerGetAllMessages]);
 
@@ -328,14 +326,14 @@ const ChatBox = ({ openToggle }) => {
   // handler for Submitting/Send a Message
   const handleSubmitMessage = async (e) => {
     e.preventDefault();
-  
+
     if (textValue || selectedImages.length > 0) {
       const attachments = selectedImages?.map((img) => ({
         name: img.name,
         size: img.size,
         url: img.url,
       }));
-  
+
       const submitForm = {
         messageText: textValue,
         senderUserName: user?.userName,
@@ -344,7 +342,7 @@ const ChatBox = ({ openToggle }) => {
         customOffer: null,
         timeAndDate,
       };
-  
+
       if (isAdmin) {
         socket?.emit("admin-message", {
           userId: conversationUser,
@@ -356,42 +354,43 @@ const ChatBox = ({ openToggle }) => {
           ...submitForm,
         });
       }
-  
+
       // Optimistically add the message to local state (before API response)
       setMessages((prev) => [
         ...prev,
-        { ...submitForm, recipientId: isAdmin ? conversationUser : "671260ee65cf0a4990af2dc1" },
+        {
+          ...submitForm,
+          recipientId: isAdmin ? conversationUser : "671260ee65cf0a4990af2dc1",
+        },
       ]);
 
       // Clear input fields and images on success
       setTextValue("");
       setSelectedImages(null);
-  
+
       try {
         const res = await sendAMessage({
           recipientId: isAdmin ? conversationUser : "671260ee65cf0a4990af2dc1",
           ...submitForm,
         }).unwrap();
-  
+
         // setMessages((prev) => prev.map((msg) =>
         //   msg?.messageText === submitForm?.messageText ? res?.data : msg
         // ));
-  
-  
+
         // Reset the file input value
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
       } catch (error) {
         // Rollback the optimistic update on failure
-        setMessages((prev) => prev.filter((msg) =>
-          msg?.messageText !== submitForm?.messageText
-        ));
+        setMessages((prev) =>
+          prev.filter((msg) => msg?.messageText !== submitForm?.messageText),
+        );
         console.error("Failed to send message:", error);
       }
     }
   };
-  
 
   // handle download all button
   const handleDownloadAll = (files) => {

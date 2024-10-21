@@ -63,7 +63,7 @@ export const inboxApiSlice = createApi({
 
     // Get All Conversational Messages for admin
     getAllMessages: builder.query({
-      query: ({ receiverId }) => `message/${receiverId}`,
+      query: ({ receiverId }) => receiverId ? `message/get?userId=${receiverId}` : 'message/get',
       transformResponse: (response) => response?.data,
       providesTags: ["getAllMessages"],
     }),
@@ -76,8 +76,9 @@ export const inboxApiSlice = createApi({
         body: newMessage,
       }),
       invalidatesTags: ["getAllMessages"],
-   
     }),
+
+    //reply message
 
     // Create start contact for Message
     startContactForChat: builder.mutation({
@@ -89,14 +90,14 @@ export const inboxApiSlice = createApi({
       invalidatesTags: ["getAllMessages"],
     }),
 
-    // delete a message 
-    deleteAMessage : builder.mutation({
-      query : (messageId) => ({
-        url : `message/${messageId}`,
-        method : "DELETE",
+    // delete a message
+    deleteAMessage: builder.mutation({
+      query: (messageId) => ({
+        url: `message/${messageId}`,
+        method: "DELETE",
       }),
       invalidatesTags: ["getAllMessages"],
-    })
+    }),
   }),
 });
 
@@ -106,8 +107,9 @@ export const {
   useUpdateQuickResMsgMutation,
   useDeleteQuickResMsgMutation,
   useGetAvailableChatUsersQuery,
+  useGetAllMessagesQuery,
   useLazyGetAllMessagesQuery,
   useStartContactForChatMutation,
   useSendAMessageMutation,
-  useDeleteAMessageMutation
+  useDeleteAMessageMutation,
 } = inboxApiSlice;

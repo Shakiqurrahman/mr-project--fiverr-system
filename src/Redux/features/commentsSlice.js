@@ -5,7 +5,6 @@ const commentSlice = createSlice({
   initialState: {
     commentObj: null,
     imageDetails: null,
-    comments: [],
     highlight: null,
   },
   reducers: {
