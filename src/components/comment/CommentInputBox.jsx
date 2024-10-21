@@ -11,8 +11,6 @@ const CommentInputBox = ({ focusWriteComment, setFocusWriteComment }) => {
   const { user } = useSelector((state) => state.user);
   const { commentObj } = useSelector((state) => state.comment);
 
-  console.log(commentObj);
-
   const commentBox = useRef(null);
   const textAreaRef = useRef(null);
   const [commentText, setCommentText] = useState("");

@@ -25,6 +25,8 @@ const CommentSideDrawer = () => {
     (state) => state.comment,
   );
 
+  console.log(imageDetails);
+
   const [commentCollapse, setCommentCollapse] = useState(false);
   const [focusWriteComment, setFocusWriteComment] = useState(false);
   const [showCommentEdit, setShowCommentEdit] = useState(null);
@@ -121,8 +123,6 @@ const CommentSideDrawer = () => {
       });
     }
   }, [showCommentEdit, focusWriteComment]);
-
-  console.log("comments", comments);
 
   const handleOff = () => {
     setShowCommentEdit(null);

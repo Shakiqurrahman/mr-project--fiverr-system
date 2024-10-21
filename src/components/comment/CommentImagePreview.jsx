@@ -27,12 +27,14 @@ const CommentImagePreview = () => {
       url: thumbnail,
       name: "Image 1.jpg",
       size: 215463,
+      comments: [],
     },
     {
       id: 2,
       url: thumbnail2,
       name: "Image 2.jpg",
       size: 2154631,
+      comments: [],
     },
   ];
 
@@ -64,8 +66,6 @@ const CommentImagePreview = () => {
       dispatch(setImageDetails(selectedImage));
     }
   }, [selectedImage, dispatch]);
-
-  console.log(comments);
 
   const multiple = images.length > 1;
 
