@@ -63,7 +63,16 @@ export const inboxApiSlice = createApi({
 
     // Get All Conversational Messages for admin
     getAllMessages: builder.query({
-      query: ({ receiverId }) => receiverId ? `message/get?userId=${receiverId}` : 'message/get',
+      query: ({ receiverId = null }) => {
+        return receiverId ? `message/get?userId=${receiverId}` : "message/get";
+      },
+      transformResponse: (response) => response?.data,
+      providesTags: ["getAllMessages"],
+    }),
+
+    // Get All Conversational Messages for user
+    getAdminAllMessages: builder.query({
+      query: () => `message/get`,
       transformResponse: (response) => response?.data,
       providesTags: ["getAllMessages"],
     }),
@@ -107,6 +116,7 @@ export const {
   useUpdateQuickResMsgMutation,
   useDeleteQuickResMsgMutation,
   useGetAvailableChatUsersQuery,
+  useGetAdminAllMessagesQuery,
   useGetAllMessagesQuery,
   useLazyGetAllMessagesQuery,
   useStartContactForChatMutation,

@@ -27,8 +27,8 @@ import {
   useDeleteAMessageMutation,
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
+  useGetAdminAllMessagesQuery,
   useGetAvailableChatUsersQuery,
-  useLazyGetAllMessagesQuery,
   useSendAMessageMutation,
 } from "../../Redux/api/inboxApiSlice";
 import { setChatData } from "../../Redux/features/chatSlice";
@@ -44,11 +44,8 @@ const ChatBox = ({ openToggle }) => {
   const [sendAMessage] = useSendAMessageMutation();
   const [deleteAMessage] = useDeleteAMessageMutation();
 
-  // getAllMessages
-  const [triggerGetAllMessages, { data: getAllMessagesForUser }] =
-    useLazyGetAllMessagesQuery();
-  console.log("getAllMessagesForUser", getAllMessagesForUser);
-
+  // getAllMessages for users
+  const { data: getAllMessagesForUser } = useGetAdminAllMessagesQuery();
   const { data: availableUsers } = useGetAvailableChatUsersQuery();
 
   //Set the conversation user id
@@ -94,12 +91,6 @@ const ChatBox = ({ openToggle }) => {
   } = usersData?.find((user) => user?.id === conversationUser) || "";
 
   useEffect(() => {
-    if (user.role === "USER") {
-      triggerGetAllMessages();
-    }
-  }, [user, triggerGetAllMessages]);
-
-  useEffect(() => {
     if (getAllMessagesForUser && user.role === "USER") {
       dispatch(setChatData(getAllMessagesForUser));
       setMessages(getAllMessagesForUser);
@@ -117,8 +108,6 @@ const ChatBox = ({ openToggle }) => {
       if (!isAdmin) {
         setMessages((prevMessages) => [...prevMessages, msg]);
       }
-
-      console.log("message", msg, conversationUser);
       let filter = msg.userId === conversationUser && msg;
       if (isAdmin && filter) {
         setMessages((prev) => [...prev, filter]);
@@ -360,7 +349,7 @@ const ChatBox = ({ openToggle }) => {
         ...prev,
         {
           ...submitForm,
-          recipientId: isAdmin ? conversationUser : "671260ee65cf0a4990af2dc1",
+          recipientId: isAdmin ? conversationUser : "",
         },
       ]);
 
@@ -370,7 +359,7 @@ const ChatBox = ({ openToggle }) => {
 
       try {
         const res = await sendAMessage({
-          recipientId: isAdmin ? conversationUser : "671260ee65cf0a4990af2dc1",
+          recipientId: isAdmin ? conversationUser : null,
           ...submitForm,
         }).unwrap();
 
@@ -468,8 +457,6 @@ const ChatBox = ({ openToggle }) => {
       const adminOnline = onlineUsers.some(
         (onlineUser) => onlineUser?.role !== "USER",
       );
-      console.log("adminOnline", adminOnline, onlineUsers);
-
       setIsAdminOnline(adminOnline);
     } else {
       setIsAdminOnline(false);
