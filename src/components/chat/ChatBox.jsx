@@ -328,14 +328,14 @@ const ChatBox = ({ openToggle }) => {
   // handler for Submitting/Send a Message
   const handleSubmitMessage = async (e) => {
     e.preventDefault();
-  
+
     if (textValue || selectedImages.length > 0) {
       const attachments = selectedImages?.map((img) => ({
         name: img.name,
         size: img.size,
         url: img.url,
       }));
-  
+
       const submitForm = {
         messageText: textValue,
         senderUserName: user?.userName,
@@ -344,7 +344,7 @@ const ChatBox = ({ openToggle }) => {
         customOffer: null,
         timeAndDate,
       };
-  
+
       if (isAdmin) {
         socket?.emit("admin-message", {
           userId: conversationUser,
@@ -356,42 +356,43 @@ const ChatBox = ({ openToggle }) => {
           ...submitForm,
         });
       }
-  
+
       // Optimistically add the message to local state (before API response)
       setMessages((prev) => [
         ...prev,
-        { ...submitForm, recipientId: isAdmin ? conversationUser : "671260ee65cf0a4990af2dc1" },
+        {
+          ...submitForm,
+          recipientId: isAdmin ? conversationUser : "671260ee65cf0a4990af2dc1",
+        },
       ]);
 
       // Clear input fields and images on success
       setTextValue("");
       setSelectedImages(null);
-  
+
       try {
         const res = await sendAMessage({
           recipientId: isAdmin ? conversationUser : "671260ee65cf0a4990af2dc1",
           ...submitForm,
         }).unwrap();
-  
+
         // setMessages((prev) => prev.map((msg) =>
         //   msg?.messageText === submitForm?.messageText ? res?.data : msg
         // ));
-  
-  
+
         // Reset the file input value
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
       } catch (error) {
         // Rollback the optimistic update on failure
-        setMessages((prev) => prev.filter((msg) =>
-          msg?.messageText !== submitForm?.messageText
-        ));
+        setMessages((prev) =>
+          prev.filter((msg) => msg?.messageText !== submitForm?.messageText),
+        );
         console.error("Failed to send message:", error);
       }
     }
   };
-  
 
   // handle download all button
   const handleDownloadAll = (files) => {
@@ -867,6 +868,11 @@ const ChatBox = ({ openToggle }) => {
         className={`${quickResponse && selectedImages?.length > 0 ? "h-[423px]" : quickResponse ? "h-[280px]" : "h-[180px]"} px-3`}
       >
         <div className="rounded-t-md border border-b border-slate-300">
+          {[1].length !== 1 && (
+            <p className="line-clamp-1 flex h-[30px] w-full items-center justify-between rounded-t-md border-b px-3">
+              this is reply text ...
+            </p>
+          )}
           {selectedImages?.length > 0 && (
             <div className="preview-scroll-overflow-x flex gap-2 border-b p-[10px]">
               {selectedImages?.map((image, index) => (
