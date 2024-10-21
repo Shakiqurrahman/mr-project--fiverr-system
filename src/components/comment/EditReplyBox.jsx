@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateAComment } from "../../Redux/features/commentsSlice";
 
 const EditReplyBox = ({
   reply,
@@ -7,32 +9,45 @@ const EditReplyBox = ({
   setFocusWriteComment,
   setShowReplyEdit,
 }) => {
-  const [commentObj, setCommentObj] = useState(reply || null);
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
+
+  const [replyObj, setReplyObj] = useState(reply.reply || null);
 
   const handleCommentTextChange = (e) => {
-    setCommentObj({
-      ...commentObj,
-      replies: {
-        ...commentObj.replies,
-        replyText: e.target.value,
-        isSubmitted: false,
-      },
+    setReplyObj({
+      ...replyObj,
+      replyText: e.target.value,
+      isSubmitted: false,
     });
   };
 
+  console.log("reply", replyObj);
 
   const handleComment = (e) => {
     e.preventDefault();
-    handleUpdateComment(commentObj);
-    setCommentObj(null);
-
+    // handleUpdateComment(replyObj);
+    const comment = reply.comment;
+    const replies = comment.replies.map((r) => {
+      if (r.replyId === replyObj.replyId) {
+        return replyObj;
+      } else {
+        return r;
+      }
+    });
+    const data = {
+      ...comment,
+      replies,
+    };
+    dispatch(updateAComment(data));
+    setReplyObj(null);
     setShowReplyEdit(null);
   };
 
   const handleCancel = () => {
     setFocusWriteComment(false);
     setShowReplyEdit(null);
-    setCommentObj(null);
+    setReplyObj(null);
   };
   return (
     <div className="border-b p-4">
@@ -41,17 +56,23 @@ const EditReplyBox = ({
       >
         <form onSubmit={handleComment} className="w-full space-y-2">
           <div className="flex items-start gap-2 border-b">
-            <img
-              src={commentObj?.senderImage}
-              alt={commentObj?.senderUserName}
-              className="h-6 w-6 rounded-full"
-            />
+            {user?.image ? (
+              <img
+                src={user?.image}
+                alt={user?.image}
+                className="h-6 w-6 flex-shrink-0 rounded-full"
+              />
+            ) : (
+              <div className="flex size-6 flex-shrink-0 items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-lg font-bold text-[#3b3b3b]/50">
+                {user?.userName?.trim()?.charAt(0)?.toUpperCase()}
+              </div>
+            )}
             <textarea
               placeholder="Updated comment..."
               className="mb-2 w-full resize-none text-base outline-none"
               rows={4}
               onChange={handleCommentTextChange}
-              value={commentObj?.replies?.replyText}
+              value={replyObj?.replyText}
               name="comment"
               id="comment"
             ></textarea>
@@ -67,10 +88,7 @@ const EditReplyBox = ({
               </button>
               <button
                 type="submit"
-                disabled={
-                  !commentObj?.comment ||
-                  commentObj.comment === reply?.replyText
-                }
+                disabled={replyObj?.replyText === reply.reply.replyText}
                 className="flex items-center gap-1 text-sm font-semibold text-primary disabled:text-primary/50"
               >
                 Update

@@ -82,7 +82,7 @@ const CommentSideDrawer = () => {
     setFocusWriteComment(true);
 
     if (reply) {
-      setShowReplyEdit({ ...comment, replies: reply });
+      setShowReplyEdit({ comment, reply });
     } else {
       setShowCommentEdit(comment);
     }
