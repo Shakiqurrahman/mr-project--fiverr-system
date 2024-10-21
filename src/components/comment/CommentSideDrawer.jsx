@@ -21,11 +21,10 @@ const CommentSideDrawer = () => {
   const commentBoxRef = useRef(null);
 
   const { user } = useSelector((state) => state.user);
-  const { commentObj, comments, imageDetails, highlight } = useSelector(
+  const { commentObj, imageDetails, highlight } = useSelector(
     (state) => state.comment,
   );
-
-  console.log(imageDetails);
+  const comments = imageDetails?.comments;
 
   const [commentCollapse, setCommentCollapse] = useState(false);
   const [focusWriteComment, setFocusWriteComment] = useState(false);
@@ -163,8 +162,8 @@ const CommentSideDrawer = () => {
             {/* comments  */}
             <div>
               {comments
-                .filter((c) => c.commentId)
-                .map((comment) => (
+                ?.filter((c) => c.commentId)
+                ?.map((comment) => (
                   <div
                     key={comment.commentId}
                     ref={commentRef}

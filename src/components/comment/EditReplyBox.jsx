@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateAComment } from "../../Redux/features/commentsSlice";
 
@@ -12,7 +12,20 @@ const EditReplyBox = ({
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
 
+  const textAreaRef = useRef(null);
+
   const [replyObj, setReplyObj] = useState(reply.reply || null);
+
+  useEffect(() => {
+    if (replyObj) {
+      textAreaRef.current.focus();
+
+      // Set the selection to the end of the current value
+      const textArea = textAreaRef.current;
+      const valueLength = textArea.value.length;
+      textArea.setSelectionRange(valueLength, valueLength);
+    }
+  }, [replyObj]);
 
   const handleCommentTextChange = (e) => {
     setReplyObj({
@@ -40,6 +53,7 @@ const EditReplyBox = ({
     dispatch(updateAComment(data));
     setReplyObj(null);
     setShowReplyEdit(null);
+    setFocusWriteComment(false);
   };
 
   const handleCancel = () => {
@@ -73,6 +87,7 @@ const EditReplyBox = ({
               value={replyObj?.replyText}
               name="comment"
               id="comment"
+              ref={textAreaRef}
             ></textarea>
           </div>
           {focusWriteComment && (

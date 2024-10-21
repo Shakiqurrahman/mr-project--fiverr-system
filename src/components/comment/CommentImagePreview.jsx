@@ -4,8 +4,8 @@ import { LiaDownloadSolid } from "react-icons/lia";
 import ImageMarker from "react-image-marker";
 import { useDispatch, useSelector } from "react-redux";
 import shortid from "shortid";
+import thumbnail from "../../assets/images/MR Logo Icon.png";
 import thumbnail2 from "../../assets/images/project-thumbnail-alt.jpg";
-import thumbnail from "../../assets/images/project-thumbnail.jpg";
 import formatFileSize from "../../libs/formatFileSize";
 import {
   setCommentObj,
@@ -17,11 +17,10 @@ import {
 const CommentImagePreview = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const { comments, commentObj, highlight } = useSelector(
-    (state) => state.comment,
-  );
+  const { imageDetails, highlight } = useSelector((state) => state.comment);
+  const comments = imageDetails?.comments;
   const filteredComments = comments?.filter((c) => c.top);
-  const images = [
+  const [images, setImages] = useState([
     {
       id: 1,
       url: thumbnail,
@@ -36,7 +35,7 @@ const CommentImagePreview = () => {
       size: 2154631,
       comments: [],
     },
-  ];
+  ]);
 
   const [selectedImage, setSelectedImage] = useState(images[0]);
 
@@ -66,6 +65,20 @@ const CommentImagePreview = () => {
       dispatch(setImageDetails(selectedImage));
     }
   }, [selectedImage, dispatch]);
+
+  useEffect(() => {
+    if (imageDetails) {
+      setImages((prev) =>
+        prev.map((img) => {
+          if (img.id === imageDetails.id) {
+            return imageDetails;
+          } else {
+            return img;
+          }
+        }),
+      );
+    }
+  }, [imageDetails]);
 
   const multiple = images.length > 1;
 
@@ -120,7 +133,7 @@ const CommentImagePreview = () => {
           markers={filteredComments || []}
           onAddMarker={handleMarkerAdd}
           markerComponent={CustomMarker}
-          extraClass="max-h-full max-w-full object-contain"
+          extraClass={`${multiple ? "max-h-[calc(100vh_-_240px)]" : "max-h-[calc(100vh_-_140px)]"} max-w-full object-contain`}
         />
       </div>
       {multiple && (
@@ -135,7 +148,7 @@ const CommentImagePreview = () => {
               <img
                 src={img?.url}
                 alt={img?.name}
-                className="max-h-full w-full object-contain"
+                className={`max-h-full w-full object-contain ${img.id === selectedImage.id && "scale-105"}`}
               />
             </button>
           ))}

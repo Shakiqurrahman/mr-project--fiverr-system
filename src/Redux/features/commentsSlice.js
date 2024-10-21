@@ -14,9 +14,11 @@ const commentSlice = createSlice({
     },
 
     setMarkersData: (state, action) => {
-      const filteredComments = state.comments.filter((c) => c.commentId);
+      const filteredComments = state.imageDetails.comments.filter(
+        (c) => c.commentId,
+      );
 
-      state.comments = [...filteredComments, action.payload];
+      state.imageDetails.comments = [...filteredComments, action.payload];
     },
 
     setImageDetails: (state, action) => {
@@ -25,7 +27,7 @@ const commentSlice = createSlice({
 
     cancelComment: (state, action) => {
       if (action.payload) {
-        state.comments = state.comments.filter(
+        state.imageDetails.comments = state.imageDetails.comments.filter(
           (c) => c.markerId !== action.payload,
         );
       }
@@ -35,7 +37,7 @@ const commentSlice = createSlice({
 
     deleteComment: (state, action) => {
       if (action.payload) {
-        state.comments = state.comments.filter(
+        state.imageDetails.comments = state.imageDetails.comments.filter(
           (c) => c.commentId !== action.payload,
         );
       }
@@ -43,7 +45,7 @@ const commentSlice = createSlice({
     },
 
     removeEmptyComment: (state, action) => {
-      state.comments = state.comments.filter(
+      state.imageDetails.comments = state.imageDetails.comments.filter(
         (c) => c.commentId || c.markerId !== action.payload,
       );
     },
@@ -52,7 +54,7 @@ const commentSlice = createSlice({
       console.log(action.payload);
 
       if (action.payload.markerId) {
-        state.comments = state.comments.map((c) => {
+        state.imageDetails.comments = state.imageDetails.comments.map((c) => {
           if (c.markerId === action.payload.markerId) {
             return action.payload;
           } else {
@@ -60,13 +62,16 @@ const commentSlice = createSlice({
           }
         });
       } else {
-        state.comments = [...state.comments, action.payload];
+        state.imageDetails.comments = [
+          ...state.imageDetails.comments,
+          action.payload,
+        ];
       }
       state.commentObj = null;
     },
 
     updateAComment: (state, action) => {
-      state.comments = state.comments.map((c) => {
+      state.imageDetails.comments = state.imageDetails.comments.map((c) => {
         if (c.commentId === action.payload.commentId) {
           return action.payload;
         } else {
