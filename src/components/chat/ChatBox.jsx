@@ -95,9 +95,7 @@ const ChatBox = ({ openToggle }) => {
 
   useEffect(() => {
     if (user.role === "USER") {
-      triggerGetAllMessages({
-        receiverId: "671260ee65cf0a4990af2dc1",
-      });
+      triggerGetAllMessages();
     }
   }, [user, triggerGetAllMessages]);
 

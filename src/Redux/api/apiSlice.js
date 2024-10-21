@@ -15,19 +15,22 @@ export const apiSlice = createApi({
     },
   }),
   tagTypes: ["socialMedia", "user"],
-  refetchOnMountOrArgChange : true,
+  refetchOnMountOrArgChange: true,
   refetchOnReconnect: true,
   refetchOnFocus: true,
+
   endpoints: (builder) => ({
     fetchUserData: builder.query({
       query: () => "get-singel-user",
       providesTags: ["user"],
     }),
+
     fetchSocialMedias: builder.query({
       query: () => "social-media-link",
       transformResponse: (response) => response?.data,
       providesTags: ["socialMedia"],
     }),
+
     updateSocialMedias: builder.mutation({
       query: (socialMediaLinks) => ({
         url: "social-media-link",
