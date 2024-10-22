@@ -77,7 +77,7 @@ const ChatBox = ({ openToggle }) => {
 
   // messages state
   const [messages, setMessages] = useState([]);
-  const [replyTo, setReplyTo] = useState("");
+  const [replyTo, setReplyTo] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState(null);
   // const [typingStatus, setTypingStatus] = useState("");
@@ -174,19 +174,45 @@ const ChatBox = ({ openToggle }) => {
   }, [messages]);
 
   // replyText handler
-  // const addReplyText = (msg) => {
-  //   msg?.messageText
-  //     ? setReplyTo({
-  //       replyMessageId:
-  //     })
-  //     : msg?.contactForm
-  //       ? setReplyTo(msg?.contactForm?.messageText)
-  //       : msg?.attachments.length > 0
-  //         ? setReplyTo("Attachments...")
-  //         : msg?.customOffer
-  //           ? setReplyTo("Custom Offer...")
-  //           : setReplyTo("");
-  // };
+  const addReplyText = (msg) => {
+    msg?.messageText
+      ? setReplyTo({
+          replyMessageId: msg.id,
+          replyUserName:
+            msg.senderUserName === user?.userName
+              ? "yourself"
+              : msg.senderUserName,
+          replyText: msg.messageText,
+        })
+      : msg?.contactForm
+        ? setReplyTo({
+            replyMessageId: msg.id,
+            replyUserName:
+              msg.senderUserName === user?.userName
+                ? "yourself"
+                : msg.senderUserName,
+            replyText: msg?.contactForm?.messageText,
+          })
+        : msg?.attachments.length > 0
+          ? setReplyTo({
+              replyMessageId: msg.id,
+              replyUserName:
+                msg.senderUserName === user?.userName
+                  ? "yourself"
+                  : msg.senderUserName,
+              replyText: "Attachments...",
+            })
+          : msg?.customOffer
+            ? setReplyTo({
+                replyMessageId: msg.id,
+                replyUserName:
+                  msg.senderUserName === user?.userName
+                    ? "yourself"
+                    : msg.senderUserName,
+                replyText: "Custom Offer...",
+              })
+            : setReplyTo("");
+  };
 
   // Quick Messages Handlers
   const handleQuickMsgs = (id) => {
@@ -373,11 +399,6 @@ const ChatBox = ({ openToggle }) => {
         },
       ]);
 
-      // Clear input fields
-      setTextValue("");
-      setSelectedImages([]);
-      fileInputRef.current.value = null;
-
       try {
         const res = await sendAMessage({
           recipientId: isAdmin ? conversationUser : null,
@@ -400,9 +421,10 @@ const ChatBox = ({ openToggle }) => {
         console.error("Failed to send message:", error);
       }
 
-      // clear images on success
-      // setSelectedImages([]);
-      // fileInputRef.current.value = null;
+      // Clear input fields and images on success
+      setTextValue("");
+      setSelectedImages([]);
+      fileInputRef.current.value = null;
     }
   };
 
@@ -985,12 +1007,14 @@ const ChatBox = ({ openToggle }) => {
             <div className="flex h-[50px] w-full items-center gap-2 border-b bg-gray-100 px-3 text-xs">
               <TiArrowForward size={20} />
               <div>
-                <h1 className="font-semibold">Replying to </h1>
-                <p className="line-clamp-1">{replyTo}</p>
+                <h1 className="font-semibold">
+                  Replying to {replyTo.replyUserName}
+                </h1>
+                <p className="line-clamp-1">{replyTo.replyText}</p>
               </div>
               <button
                 type="button"
-                onClick={() => setReplyTo("")}
+                onClick={() => setReplyTo(null)}
                 className="ms-auto"
               >
                 <RiDeleteBin6Line size={15} />
