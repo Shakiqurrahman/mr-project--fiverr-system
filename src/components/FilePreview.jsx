@@ -14,7 +14,7 @@ const FilePreview = ({ file }) => {
           alt="preview"
           style={{
             maxWidth: "100%",
-            maxHeight: "200px",
+            maxHeight: "80px",
             height: "100%",
             objectFit: "contain",
           }}

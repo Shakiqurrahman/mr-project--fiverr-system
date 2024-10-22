@@ -337,6 +337,7 @@ const ChatBox = ({ openToggle }) => {
         name: img.name,
         size: img.size,
         url: img.url,
+        format: img.format,
       }));
 
       const submitForm = {
@@ -369,10 +370,6 @@ const ChatBox = ({ openToggle }) => {
         },
       ]);
 
-      // Clear input fields and images on success
-      setTextValue("");
-      setSelectedImages(null);
-
       try {
         const res = await sendAMessage({
           recipientId: isAdmin ? conversationUser : null,
@@ -394,6 +391,11 @@ const ChatBox = ({ openToggle }) => {
         );
         console.error("Failed to send message:", error);
       }
+
+      // Clear input fields and images on success
+      setTextValue("");
+      setSelectedImages([]);
+      fileInputRef.current.value = null;
     }
   };
 
