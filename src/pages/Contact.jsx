@@ -2,6 +2,7 @@ import axios from "axios";
 import { useRef, useState } from "react";
 import { CgAttachment } from "react-icons/cg";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import CircleProgressBar from "../components/CircleProgressBar";
 import FilePreview from "../components/FilePreview";
@@ -11,6 +12,7 @@ import { useStartContactForChatMutation } from "../Redux/api/inboxApiSlice";
 
 function Contact() {
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.user);
   const [createContract, { isLoading, error }] =
     useStartContactForChatMutation();
   const [value, setValue] = useState({
@@ -103,6 +105,8 @@ function Contact() {
     fileInputRef.current.value = null;
   };
 
+  const dates = new Date();
+  const timeAndDate = dates.getTime();
   // Form Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -112,6 +116,9 @@ function Contact() {
       websiteOrFacebook: value.link,
       message: value.Message,
       exampleDesign: matchingImages,
+      senderUserName: user.username,
+      userImage: user?.image,
+      timeAndDate,
     }).unwrap();
     console.log(res, value.Message);
     navigate("/inbox");

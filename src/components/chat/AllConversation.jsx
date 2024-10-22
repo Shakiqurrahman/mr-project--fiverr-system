@@ -86,7 +86,7 @@ const AllConversation = ({ closeToggle }) => {
   const filteredChatList = getFilteredChatList();
 
   const handleChatOpen = (id, userName) => {
-    if (!slug?.userName) navigate(`${userName}`);
+    // if (!slug?.userName) navigate(`${userName}`);
     dispatch(setConversationUser(id));
     triggerGetAllMessages({
       receiverId: id,
