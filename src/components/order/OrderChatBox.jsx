@@ -62,8 +62,52 @@ const OrderChatBox = () => {
   const [openEditMsgModal, setOpenEditMsgModal] = useState(null);
   const [openAddMsgModal, setOpenAddMsgModal] = useState(false);
   const [openOfferModal, setOpenOfferModal] = useState(false);
+  const [messages, setMessages] = useState([]);
+
+  console.log(messages);
 
   // all side effect calls here
+  // Socket connection reader
+  useEffect(() => {
+    // Listen for incoming messages
+    console.log("effected");
+
+    socket?.on("order:message", (msg) => {
+      console.log(msg);
+      // if (!isAdmin) {
+      setMessages((prevMessages) => [...prevMessages, msg]);
+      // }
+      // let filter = msg.userId === conversationUser && msg;
+      // if (isAdmin && filter) {
+      //   setMessages((prev) => [...prev, filter]);
+      // }
+    });
+
+    // Listen for typing status from the server
+    // socket.on("displayTyping", (data) => {
+    //   if (isAdmin && data.userId === conversationUser) {
+    //     dispatch(setTypingStatus(`Typing...`));
+    //   }
+    //   if (!isAdmin && data.userId === user?.id) {
+    //     console.log("i am typinh");
+
+    //     dispatch(setTypingStatus(`Typing...`));
+    //   }
+    //   console.log(data);
+    // });
+
+    // Listen for stop typing
+    // socket.on("hideTyping", () => {
+    //   dispatch(setTypingStatus(""));
+    // });
+
+    // Cleanup on component unmount
+    return () => {
+      socket?.off("order:message");
+    };
+  }, [socket, messages, user]);
+  // }, [conversationUser, isAdmin, socket, messages, dispatch, user]);
+
   useEffect(
     () => {
       // Inital Scroll to last message
@@ -213,6 +257,14 @@ const OrderChatBox = () => {
   // handler for Submitting/Send a Message
   const handleSubmitMessage = async (e) => {
     e.preventDefault();
+
+    const submitForm = {
+      text: "hello",
+    };
+    socket?.emit("order:admin-message", {
+      userId: "67111b454ea3ed4f767b2a3f",
+      ...submitForm,
+    });
 
     // if (textValue || selectedImages.length > 0) {
     //   const response = async () => {
