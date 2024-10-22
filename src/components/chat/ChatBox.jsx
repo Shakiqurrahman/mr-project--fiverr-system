@@ -4,6 +4,7 @@ import { BsFillReplyFill, BsThreeDotsVertical } from "react-icons/bs";
 import { FaCheckCircle, FaTrashAlt } from "react-icons/fa";
 import { IoIosArrowDown, IoIosArrowUp, IoIosAttach } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { TiArrowForward } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import adminLogo from "../../assets/images/MR Logo Icon.png";
@@ -875,14 +876,6 @@ const ChatBox = ({ openToggle }) => {
         className={`${replyTo && quickResponse && selectedImages?.length > 0 ? "h-[453px]" : quickResponse && selectedImages?.length > 0 ? "h-[423px]" : replyTo && quickResponse ? "h-[310px]" : quickResponse ? "h-[280px]" : replyTo ? "h-[210px]" : "h-[180px]"} px-3`}
       >
         <div className="rounded-t-md border border-b border-slate-300">
-          {replyTo && (
-            <p className="line-clamp-1 flex h-[30px] w-full items-center justify-between rounded-t-md border-b px-3">
-              {replyTo}{" "}
-              <button type="button" onClick={() => setReplyTo("")}>
-                <RiDeleteBin6Line size={20} />
-              </button>
-            </p>
-          )}
           {selectedImages?.length > 0 && (
             <div className="preview-scroll-overflow-x flex gap-2 border-b p-[10px]">
               {selectedImages?.map((image, index) => (
@@ -986,6 +979,19 @@ const ChatBox = ({ openToggle }) => {
               </div>
             </div>
           </div>
+          {replyTo && (
+            <p className="line-clamp-1 flex h-[30px] w-full items-center gap-2 border-b bg-gray-100 px-3 text-sm">
+              <TiArrowForward size={20} />
+              {replyTo}{" "}
+              <button
+                type="button"
+                onClick={() => setReplyTo("")}
+                className="ms-auto"
+              >
+                <RiDeleteBin6Line size={15} />
+              </button>
+            </p>
+          )}
           <textarea
             name=""
             className="block h-[90px] w-full resize-none p-3 outline-none"
