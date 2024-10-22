@@ -333,8 +333,6 @@ const ChatBox = ({ openToggle }) => {
     }); // Process each file
   };
 
-  console.log(selectedImages);
-
   const handleChangeSelectedImage = (event) => {
     const files = Array.from(event.target.files);
     getImagesWithDimensions(files);
@@ -399,6 +397,11 @@ const ChatBox = ({ openToggle }) => {
         },
       ]);
 
+      // Clear input fields and images on success
+      setTextValue("");
+      setSelectedImages([]);
+      fileInputRef.current.value = null;
+
       try {
         const res = await sendAMessage({
           recipientId: isAdmin ? conversationUser : null,
@@ -420,11 +423,6 @@ const ChatBox = ({ openToggle }) => {
         );
         console.error("Failed to send message:", error);
       }
-
-      // Clear input fields and images on success
-      setTextValue("");
-      setSelectedImages([]);
-      fileInputRef.current.value = null;
     }
   };
 
