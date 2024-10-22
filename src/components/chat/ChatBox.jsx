@@ -76,6 +76,7 @@ const ChatBox = ({ openToggle }) => {
 
   // messages state
   const [messages, setMessages] = useState([]);
+  const [replyTo, setReplyTo] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState(null);
   // const [typingStatus, setTypingStatus] = useState("");
@@ -170,6 +171,19 @@ const ChatBox = ({ openToggle }) => {
     // Clean up the interval on component unmount
     return () => clearInterval(intervalId);
   }, [messages]);
+
+  // replyText handler
+  const addReplyText = (msg) => {
+    msg?.messageText
+      ? setReplyTo(msg?.messageText)
+      : msg?.contactForm
+        ? setReplyTo(msg?.contactForm?.messageText)
+        : msg?.attachments.length > 0
+          ? setReplyTo("Attachments...")
+          : msg?.customOffer
+            ? setReplyTo("Custom Offer...")
+            : setReplyTo("");
+  };
 
   // Quick Messages Handlers
   const handleQuickMsgs = (id) => {
@@ -289,6 +303,8 @@ const ChatBox = ({ openToggle }) => {
       handleImageLoad(file, index);
     }); // Process each file
   };
+
+  console.log(selectedImages);
 
   const handleChangeSelectedImage = (event) => {
     const files = Array.from(event.target.files);
@@ -562,7 +578,7 @@ const ChatBox = ({ openToggle }) => {
       </div>
       {/* Conversation Field */}
       <div
-        className={`${quickResponse && selectedImages?.length > 0 ? "h-[calc(100%_-_505px)]" : quickResponse ? "h-[calc(100%_-_350px)]" : selectedImages?.length > 0 ? "h-[calc(100%_-_391px)]" : "h-[calc(100%_-_250px)]"} overflow-y-auto p-2 sm:p-5`}
+        className={`${replyTo && quickResponse && selectedImages?.length > 0 ? "h-[calc(100%_-_535px)]" : quickResponse && selectedImages?.length > 0 ? "h-[calc(100%_-_505px)]" : replyTo && quickResponse ? "h-[calc(100%_-_380px)]" : quickResponse ? "h-[calc(100%_-_350px)]" : replyTo && selectedImages?.length > 0 ? "h-[calc(100%_-_435px)]" : selectedImages?.length > 0 ? "h-[calc(100%_-_405px)]" : replyTo ? "h-[calc(100%_-_280px)]" : "h-[calc(100%_-_250px)]"} overflow-y-auto p-2 sm:p-5`}
       >
         {/* All message Container */}
         {/* Each message block */}
@@ -604,7 +620,7 @@ const ChatBox = ({ openToggle }) => {
                       </p>
                     </div>
                     <div className="flex items-center gap-3 text-black/50 opacity-0 group-hover:opacity-100">
-                      <button type="button">
+                      <button type="button" onClick={() => addReplyText(msg)}>
                         <BsFillReplyFill className="text-xl" />
                       </button>
                       {visibility[msg?.id] && msg?.senderId === user?.id && (
@@ -850,12 +866,15 @@ const ChatBox = ({ openToggle }) => {
       </div>
       {/* Text Field Part */}
       <div
-        className={`${quickResponse && selectedImages?.length > 0 ? "h-[423px]" : quickResponse ? "h-[280px]" : "h-[180px]"} px-3`}
+        className={`${replyTo && quickResponse && selectedImages?.length > 0 ? "h-[453px]" : quickResponse && selectedImages?.length > 0 ? "h-[423px]" : replyTo && quickResponse ? "h-[310px]" : quickResponse ? "h-[280px]" : replyTo ? "h-[210px]" : "h-[180px]"} px-3`}
       >
         <div className="rounded-t-md border border-b border-slate-300">
-          {[1].length !== 1 && (
+          {replyTo && (
             <p className="line-clamp-1 flex h-[30px] w-full items-center justify-between rounded-t-md border-b px-3">
-              this is reply text ...
+              {replyTo}{" "}
+              <button type="button" onClick={() => setReplyTo("")}>
+                <RiDeleteBin6Line size={20} />
+              </button>
             </p>
           )}
           {selectedImages?.length > 0 && (
