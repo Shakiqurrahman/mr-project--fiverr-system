@@ -173,7 +173,6 @@ const ChatBox = ({ openToggle }) => {
     return () => clearInterval(intervalId);
   }, [messages]);
 
-  console.log("replyto", replyTo);
   // replyText handler
   const addReplyText = (msg) => {
     msg?.messageText
@@ -225,7 +224,6 @@ const ChatBox = ({ openToggle }) => {
 
   // generate replied to function
   const generateRepliedTo = (msg) => {
-    console.log(msg);
     const replyObj = msg?.replyTo;
     return `${user?.userName === replyObj.replySenderUserName ? "You" : replyObj.replyUserName === "yourself" ? replyObj.replySenderUserName : "mahfujurrahm535"}`;
   };
