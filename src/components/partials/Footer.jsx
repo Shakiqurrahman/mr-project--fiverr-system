@@ -40,12 +40,20 @@ function Footer() {
                       Home
                     </Link>
                   </li>
-                  <li>
+                  <li className="mb-2">
                     <Link
                       to={"/about"}
                       className="duration-300 hover:text-primary"
                     >
                       About
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to={"/sitemap"}
+                      className="duration-300 hover:text-primary"
+                    >
+                      Sitemap
                     </Link>
                   </li>
                 </ul>
