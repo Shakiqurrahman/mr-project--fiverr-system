@@ -25,6 +25,7 @@ import toast from "react-hot-toast";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useFetchAllUsersQuery } from "../../Redux/api/allUserApiSlice";
 import {
+  useDeleteAConversationMutation,
   useDeleteAMessageMutation,
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
@@ -64,6 +65,7 @@ const ChatBox = ({ openToggle }) => {
   const socket = connectSocket(`${configApi.socket}`, token);
   const { data: quickMsgs } = useFetchQuickResMsgQuery();
   const [deleteQuickResMsg] = useDeleteQuickResMsgMutation();
+  const [deleteAConversation] = useDeleteAConversationMutation();
 
   const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
 
@@ -483,8 +485,18 @@ const ChatBox = ({ openToggle }) => {
     try {
       await deleteAMessage(messageId).unwrap();
       toast.success("Message deleted successfully");
-    } catch (err) {
+    } catch {
       toast.error("Failed to delete message");
+    }
+  };
+
+  // for deleting a conversation
+  const deleteConversation = async () => {
+    try {
+      await deleteAConversation(conversationUser).unwrap();
+      toast.success("Conversation deleted successfully");
+    } catch {
+      toast.error("Failed to delete conversation");
     }
   };
 
@@ -603,7 +615,7 @@ const ChatBox = ({ openToggle }) => {
                   </button>
                   <button
                     type="button"
-                    // onClick={() => console.log("deleted")}
+                    onClick={deleteConversation}
                     className="w-full text-xs hover:bg-gray-200"
                   >
                     Delete

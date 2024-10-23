@@ -107,6 +107,15 @@ export const inboxApiSlice = createApi({
       }),
       invalidatesTags: ["getAllMessages"],
     }),
+
+    // delete a conversation
+    deleteAConversation: builder.mutation({
+      query: (userId) => ({
+        url: `message/delete-conversation/${userId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["getAllMessages"],
+    }),
   }),
 });
 
@@ -122,4 +131,5 @@ export const {
   useStartContactForChatMutation,
   useSendAMessageMutation,
   useDeleteAMessageMutation,
+  useDeleteAConversationMutation,
 } = inboxApiSlice;
