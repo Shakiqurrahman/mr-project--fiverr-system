@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../AllRoutes/Layout";
 import SocialMediasForm from "../components/SocialMediasForm";
-import CommentImageMarker from "../components/image-marker/CommentImageMarker";
 import About from "../pages/About";
 import AdminPanel from "../pages/AdminPanel";
 import Affiliate from "../pages/Affiliate";
@@ -38,6 +37,7 @@ import Project from "../pages/Project";
 import ProjectRequirements from "../pages/ProjectRequirements";
 import SetupProfile from "../pages/SetupProfile";
 import SingleProductPage from "../pages/SingleProductPage";
+import Sitemap from "../pages/Sitemap";
 import TermsAndConditions from "../pages/TermsAndConditions";
 import Tips from "../pages/Tips";
 import UpdatePassword from "../pages/UpdatePassword";
@@ -273,8 +273,8 @@ export const router = createBrowserRouter([
         element: <AllReviews />,
       },
       {
-        path: "/image-marker",
-        element: <CommentImageMarker />,
+        path: "/sitemap",
+        element: <Sitemap />,
       },
     ],
   },
