@@ -116,6 +116,15 @@ export const inboxApiSlice = createApi({
       }),
       invalidatesTags: ["getAllMessages"],
     }),
+
+    // block a user conversation
+    blockAUserConversation: builder.mutation({
+      query: (userId) => ({
+        url: `block-chat/${userId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["getAllMessages"],
+    }),
   }),
 });
 
@@ -132,4 +141,5 @@ export const {
   useSendAMessageMutation,
   useDeleteAMessageMutation,
   useDeleteAConversationMutation,
+  useBlockAUserConversationMutation,
 } = inboxApiSlice;

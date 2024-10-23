@@ -25,6 +25,7 @@ import toast from "react-hot-toast";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useFetchAllUsersQuery } from "../../Redux/api/allUserApiSlice";
 import {
+  useBlockAUserConversationMutation,
   useDeleteAConversationMutation,
   useDeleteAMessageMutation,
   useDeleteQuickResMsgMutation,
@@ -66,6 +67,7 @@ const ChatBox = ({ openToggle }) => {
   const { data: quickMsgs } = useFetchQuickResMsgQuery();
   const [deleteQuickResMsg] = useDeleteQuickResMsgMutation();
   const [deleteAConversation] = useDeleteAConversationMutation();
+  const [blockingAUserConversation] = useBlockAUserConversationMutation();
 
   const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
 
@@ -92,6 +94,9 @@ const ChatBox = ({ openToggle }) => {
     userName: recipientUserName,
     lastSeen,
     id: recipientUserId,
+    block_for_chat,
+    book_mark,
+    archive,
   } = usersData?.find((user) => user?.id === conversationUser) || "";
 
   useEffect(() => {
@@ -500,6 +505,16 @@ const ChatBox = ({ openToggle }) => {
     }
   };
 
+  // for blocking a user conversation
+  const blockAUserConversation = async () => {
+    try {
+      await blockingAUserConversation(conversationUser).unwrap();
+      toast.success("Conversation user blocked successfully");
+    } catch {
+      toast.error("Failed to block conversation user");
+    }
+  };
+
   const totalOrderHasDone =
     availableUsers.find((user) => user.id === conversationUser)?.totalOrder ||
     0;
@@ -597,21 +612,21 @@ const ChatBox = ({ openToggle }) => {
                     // onClick={() => handleDeleteQuickMsg(msg.id)}
                     className="w-full text-xs hover:bg-gray-200"
                   >
-                    Star/Starred
+                    {book_mark ? "Starred" : "Star"}
                   </button>
                   <button
                     type="button"
                     className="w-full text-xs hover:bg-gray-200"
-                    // onClick={() => setOpenEditMsgModal(msg)}
+                    onClick={blockAUserConversation}
                   >
-                    Block/Unblock
+                    {block_for_chat ? "Unblock" : "Block"}
                   </button>
                   <button
                     type="button"
-                    // onClick={() => handleDeleteQuickMsg(msg.id)}
+                    // onClick={blockAUserConversation}
                     className="w-full text-xs hover:bg-gray-200"
                   >
-                    Archive/Archived
+                    {archive ? "Archived" : "Archive"}
                   </button>
                   <button
                     type="button"

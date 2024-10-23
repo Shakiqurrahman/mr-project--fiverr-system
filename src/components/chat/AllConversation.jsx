@@ -48,6 +48,8 @@ const AllConversation = ({ closeToggle }) => {
   const getFilteredChatList = () => {
     let filteredChats = availableUsers;
 
+    console.log(filteredChats);
+
     switch (selectedOption) {
       case "unread":
         filteredChats = filteredChats.filter((chat) => chat.unreadMessages > 0);
@@ -56,7 +58,7 @@ const AllConversation = ({ closeToggle }) => {
         filteredChats = filteredChats.filter((chat) => chat.starred);
         break;
       case "blockList":
-        filteredChats = filteredChats.filter((chat) => chat.archived);
+        filteredChats = filteredChats.filter((chat) => chat.isBlocked);
         break;
       case "archived":
         filteredChats = filteredChats.filter((chat) => chat.archived);
