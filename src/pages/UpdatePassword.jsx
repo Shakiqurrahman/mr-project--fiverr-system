@@ -42,7 +42,6 @@ function UpdatePassword() {
         console.log(response);
         setLoading(false);
         if (response?.data?.success) {
-          navigate("/");
           toast.success("Password updated successfully!");
         }
       } catch (error) {
