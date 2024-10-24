@@ -26,13 +26,14 @@ export const allUserApiSlice = createApi({
     //update users role
     updateUserRoles: builder.mutation({
       query: (data) => ({
-        url: 'role/manage-role',
-        method: 'POST',
+        url: "role/manage-role",
+        method: "POST",
         body: data,
       }),
-      invalidatesTags: ['usersRole'],
+      invalidatesTags: ["usersRole"],
     }),
   }),
 });
 
-export const { useFetchAllUsersQuery, useUpdateUserRolesMutation } = allUserApiSlice;
+export const { useFetchAllUsersQuery, useUpdateUserRolesMutation } =
+  allUserApiSlice;
