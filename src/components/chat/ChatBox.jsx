@@ -136,10 +136,9 @@ const ChatBox = ({ openToggle }) => {
       }
       if (!isAdmin && data.userId === user?.id) {
         console.log("i am typinh");
-
-        dispatch(setTypingStatus(`Typing...`));
+        // dispatch(setTypingStatus(`Typing...`));
       }
-      console.log(data);
+      // console.log(data);
     });
 
     // Listen for stop typing
@@ -697,16 +696,24 @@ const ChatBox = ({ openToggle }) => {
                 )}
                 <div className="group mt-3 flex items-start gap-3 px-3">
                   <div className="flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[#ffefef]">
-                    {msg?.userImage ? (
+                    {isAdmin &&
+                      (msg?.userImage ? (
+                        <img
+                          src={isAdmin || sameUser ? msg?.userImage : adminLogo}
+                          alt=""
+                          className="size-full rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="text-xl font-bold text-[#7c7c7c]/50">
+                          {isAdmin ? letterLogo : "M"}
+                        </div>
+                      ))}
+                    {!isAdmin && (
                       <img
-                        src={isAdmin || sameUser ? msg?.userImage : adminLogo}
+                        src={sameUser ? msg?.userImage : adminLogo}
                         alt=""
                         className="size-full rounded-full object-cover"
                       />
-                    ) : (
-                      <div className="text-xl font-bold text-[#7c7c7c]/50">
-                        {isAdmin ? letterLogo : "M"}
-                      </div>
                     )}
                   </div>
                   <div className="grow">
