@@ -25,7 +25,7 @@ const Sitemap = () => {
   };
   return (
     <div className="max-width my-10">
-      <div className="relative mb-10 border-b border-black pb-2">
+      <div className="relative mx-auto mb-10 max-w-[800px] border-b border-black pb-2">
         <div className="flex gap-x-5 sm:gap-x-20">
           {btns.map((btn, i) => (
             <button
@@ -38,7 +38,9 @@ const Sitemap = () => {
           ))}
         </div>
       </div>
-      <RenderComponent />
+      <div className="mx-auto max-w-[800px]">
+        <RenderComponent />
+      </div>
     </div>
   );
 };
