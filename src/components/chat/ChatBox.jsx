@@ -129,6 +129,13 @@ const ChatBox = ({ openToggle }) => {
       }
     });
 
+    socket.on("admin-notification", (msg) => {
+      console.log("admin-notification", msg);
+      if (isAdmin && msg?.userId !== user.id) {
+        setMessages((prevMessages) => [...prevMessages, msg]);
+      }
+    });
+
     // Listen for typing status from the server
     socket.on("displayTyping", (data) => {
       if (isAdmin && data.userId === conversationUser) {
@@ -149,8 +156,11 @@ const ChatBox = ({ openToggle }) => {
     // Cleanup on component unmount
     return () => {
       socket?.off("message");
+      socket?.off("displayTyping");
+      socket?.off("hideTyping");
+      socket?.off("admin-notification");
     };
-  }, [conversationUser, isAdmin, socket, messages, dispatch, user]);
+  }, [conversationUser, isAdmin, socket, messages, user]);
 
   // console.log(typingStatus);
 

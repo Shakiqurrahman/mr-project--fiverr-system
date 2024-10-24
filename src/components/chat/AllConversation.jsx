@@ -69,7 +69,14 @@ const AllConversation = ({ closeToggle }) => {
         filteredChats = filteredChats?.filter((chat) => chat.customOffer);
         break;
       case "AllConversations":
+        filteredChats = filteredChats?.filter(
+          (chat) => !chat.isArchived && !chat.isBookMarked,
+        );
+        break;
       default:
+        filteredChats = filteredChats?.filter(
+          (chat) => !chat.isArchived && !chat.isBookMarked,
+        );
         break;
     }
 
@@ -201,7 +208,7 @@ const AllConversation = ({ closeToggle }) => {
                       </span>
                     )}
                   </div>
-                  {chat?.starred && (
+                  {chat?.isBookMarked && (
                     <IoIosStar className="text-lg text-primary" />
                   )}
                 </div>
