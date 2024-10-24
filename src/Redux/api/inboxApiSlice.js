@@ -125,6 +125,24 @@ export const inboxApiSlice = createApi({
       }),
       invalidatesTags: ["getAllMessages"],
     }),
+
+    // block a user conversation
+    archiveAUserConversation: builder.mutation({
+      query: (userId) => ({
+        url: `archive/archive-user/${userId}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["getAllMessages"],
+    }),
+
+    // bookmark a user conversation
+    bookmarkAUserConversation: builder.mutation({
+      query: (userId) => ({
+        url: `bookMark/update/${userId}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["getAllMessages"],
+    }),
   }),
 });
 
@@ -142,4 +160,6 @@ export const {
   useDeleteAMessageMutation,
   useDeleteAConversationMutation,
   useBlockAUserConversationMutation,
+  useArchiveAUserConversationMutation,
+  useBookmarkAUserConversationMutation,
 } = inboxApiSlice;

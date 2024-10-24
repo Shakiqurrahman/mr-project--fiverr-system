@@ -25,7 +25,9 @@ import toast from "react-hot-toast";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useFetchAllUsersQuery } from "../../Redux/api/allUserApiSlice";
 import {
+  useArchiveAUserConversationMutation,
   useBlockAUserConversationMutation,
+  useBookmarkAUserConversationMutation,
   useDeleteAConversationMutation,
   useDeleteAMessageMutation,
   useDeleteQuickResMsgMutation,
@@ -68,6 +70,8 @@ const ChatBox = ({ openToggle }) => {
   const [deleteQuickResMsg] = useDeleteQuickResMsgMutation();
   const [deleteAConversation] = useDeleteAConversationMutation();
   const [blockingAUserConversation] = useBlockAUserConversationMutation();
+  const [archiveUserConversation] = useArchiveAUserConversationMutation();
+  const [bookmarkUserConversation] = useBookmarkAUserConversationMutation();
 
   const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
 
@@ -98,6 +102,8 @@ const ChatBox = ({ openToggle }) => {
     book_mark,
     archive,
   } = usersData?.find((user) => user?.id === conversationUser) || "";
+
+  console.log("archive", archive);
 
   useEffect(() => {
     if (getAllMessagesForUser && user.role === "USER") {
@@ -515,8 +521,28 @@ const ChatBox = ({ openToggle }) => {
     }
   };
 
+  // for add a user conversation into archive
+  const archiveAUserConversation = async () => {
+    try {
+      await archiveUserConversation(conversationUser).unwrap();
+      toast.success("Conversation user added into archive successfully");
+    } catch {
+      toast.error("Failed to add conversation user into archive");
+    }
+  };
+
+  // for bookmark a user conversation
+  const bookmarkAUserConversation = async () => {
+    try {
+      await bookmarkUserConversation(conversationUser).unwrap();
+      toast.success("Conversation user bookmarked successfully");
+    } catch {
+      toast.error("Failed to bookmark conversation user");
+    }
+  };
+
   const totalOrderHasDone =
-    availableUsers.find((user) => user.id === conversationUser)?.totalOrder ||
+    availableUsers?.find((user) => user.id === conversationUser)?.totalOrder ||
     0;
 
   const { localDate, localTime } = useLocalDateTime();
@@ -594,7 +620,7 @@ const ChatBox = ({ openToggle }) => {
               {totalOrderHasDone}
             </div>
             <div className="relative" onClick={() => setExpandDot(!expandDot)}>
-              <BsThreeDotsVertical className="text-2xl" />
+              <BsThreeDotsVertical className="cursor-pointer text-2xl" />
               {expandDot && (
                 <div
                   className="absolute right-0 top-full z-10 rounded-lg border border-solid bg-white py-2 text-center *:block *:p-[5px_15px]"
@@ -609,7 +635,7 @@ const ChatBox = ({ openToggle }) => {
                   </button>
                   <button
                     type="button"
-                    // onClick={() => handleDeleteQuickMsg(msg.id)}
+                    onClick={bookmarkAUserConversation}
                     className="w-full text-xs hover:bg-gray-200"
                   >
                     {book_mark ? "Starred" : "Star"}
@@ -623,7 +649,7 @@ const ChatBox = ({ openToggle }) => {
                   </button>
                   <button
                     type="button"
-                    // onClick={blockAUserConversation}
+                    onClick={archiveAUserConversation}
                     className="w-full text-xs hover:bg-gray-200"
                   >
                     {archive ? "Archived" : "Archive"}

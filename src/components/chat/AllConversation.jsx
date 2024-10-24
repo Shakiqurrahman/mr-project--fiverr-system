@@ -48,23 +48,25 @@ const AllConversation = ({ closeToggle }) => {
   const getFilteredChatList = () => {
     let filteredChats = availableUsers;
 
-    console.log(filteredChats);
+    console.log(availableUsers);
 
     switch (selectedOption) {
       case "unread":
-        filteredChats = filteredChats.filter((chat) => chat.unreadMessages > 0);
+        filteredChats = filteredChats?.filter(
+          (chat) => chat.unreadMessages > 0,
+        );
         break;
       case "starred":
-        filteredChats = filteredChats.filter((chat) => chat.starred);
+        filteredChats = filteredChats?.filter((chat) => chat.isBookMarked);
         break;
       case "blockList":
-        filteredChats = filteredChats.filter((chat) => chat.isBlocked);
+        filteredChats = filteredChats?.filter((chat) => chat.isBlocked);
         break;
       case "archived":
-        filteredChats = filteredChats.filter((chat) => chat.archived);
+        filteredChats = filteredChats?.filter((chat) => chat.isArchived);
         break;
       case "customOffers":
-        filteredChats = filteredChats.filter((chat) => chat.customOffer);
+        filteredChats = filteredChats?.filter((chat) => chat.customOffer);
         break;
       case "AllConversations":
       default:
