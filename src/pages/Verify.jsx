@@ -11,6 +11,7 @@ function Verify() {
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingRequest, setLoadingRequest] = useState(false);
 
   const handleChange = (e) => {
     setOtp(e.target.value);
@@ -40,6 +41,31 @@ function Verify() {
     }
     setLoading(false);
   };
+
+  const requestAgainHandler = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoadingRequest(true);
+    try {
+      const response = await axios.get(
+        `${configApi.api}forgot-pass/${state?.email}`,
+      );
+      setLoadingRequest(false);
+      if (response?.data?.success) {
+        navigate("/otp-verification", {
+          state: { email: response?.data?.data.email },
+        });
+      }
+    } catch (error) {
+      setError(
+        error.response
+          ? error?.response?.data?.message
+          : "Something went wrong!",
+      );
+      setLoadingRequest(false);
+    }
+    setLoadingRequest(false);
+  };
   return (
     <div className="max-width mt-10 sm:mt-20">
       <form
@@ -49,8 +75,10 @@ function Verify() {
         <h1 className="mb-5 text-2xl font-medium text-primary sm:text-3xl">
           Verify OTP
         </h1>
-        <p className="text-sm sm:text-base">
-          Your code was sent to you via email
+        <p className="text-sm sm:text-base mb-6">
+          We’ve sent the code to your email.
+          If it’s not in your inbox, please
+          check your spam folder.
         </p>
         <input
           type="number"
@@ -64,6 +92,7 @@ function Verify() {
           {error}
         </p>
         <button
+          disabled={loadingRequest || loading}
           type="submit"
           className="my-5 flex h-[45px] w-full items-center justify-center bg-primary text-lg font-medium text-white disabled:cursor-not-allowed"
         >
@@ -75,10 +104,18 @@ function Verify() {
             "Verify"
           )}
         </button>
-        <p className="text-sm sm:text-base">
-          Didn&apos;t recieve code?{" "}
-          <Link className="text-primary">Request again</Link>
-        </p>
+        {loadingRequest ? (
+          <span>Please wait...</span>
+        ) : (
+          <button
+            disabled={loading}
+            onClick={requestAgainHandler}
+            className="text-sm sm:text-base"
+          >
+            Didn&apos;t recieve code?{" "}
+            <Link className="text-primary">Request again</Link>
+          </button>
+        )}
       </form>
     </div>
   );
