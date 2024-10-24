@@ -26,9 +26,12 @@ function Verify() {
         const response = await axios.get(
           `${configApi.api}verify-otp/${state?.email}?code=${otp}`,
         );
+        console.log(response);
         setLoading(false);
         if (response?.data?.success) {
-          navigate("/update-password");
+          navigate("/update-password", {
+            state: { data: { ...response?.data?.data, email: state?.email } },
+          });
         }
       } catch (error) {
         setError(
@@ -50,12 +53,9 @@ function Verify() {
       const response = await axios.get(
         `${configApi.api}forgot-pass/${state?.email}`,
       );
+      console.log(response);
+
       setLoadingRequest(false);
-      if (response?.data?.success) {
-        navigate("/otp-verification", {
-          state: { email: response?.data?.data.email },
-        });
-      }
     } catch (error) {
       setError(
         error.response
@@ -75,9 +75,8 @@ function Verify() {
         <h1 className="mb-5 text-2xl font-medium text-primary sm:text-3xl">
           Verify OTP
         </h1>
-        <p className="text-sm sm:text-base mb-6">
-          We’ve sent the code to your email.
-          If it’s not in your inbox, please
+        <p className="mb-6 text-sm sm:text-base">
+          We’ve sent the code to your email. If it’s not in your inbox, please
           check your spam folder.
         </p>
         <input
