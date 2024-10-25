@@ -5,8 +5,6 @@ import { LuClock3 } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import repeatIcon from "../../assets/svg/Repeat icon.svg";
-import { formatTimeAgo } from "../../libs/timeFormatter";
 import {
   useGetAvailableChatUsersQuery,
   useLazyGetAllMessagesQuery,
@@ -15,6 +13,8 @@ import {
   setChatData,
   setConversationUser,
 } from "../../Redux/features/chatSlice";
+import repeatIcon from "../../assets/svg/Repeat icon.svg";
+import { formatTimeAgo } from "../../libs/timeFormatter";
 
 const AllConversation = ({ closeToggle }) => {
   const slug = useParams();
@@ -70,12 +70,12 @@ const AllConversation = ({ closeToggle }) => {
         break;
       case "AllConversations":
         filteredChats = filteredChats?.filter(
-          (chat) => !chat.isArchived && !chat.isBookMarked,
+          (chat) => !chat.isArchived && !chat.isBlocked,
         );
         break;
       default:
         filteredChats = filteredChats?.filter(
-          (chat) => !chat.isArchived && !chat.isBookMarked,
+          (chat) => !chat.isArchived && !chat.isBlocked,
         );
         break;
     }
