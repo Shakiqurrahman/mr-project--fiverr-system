@@ -5,7 +5,7 @@ import { BiX } from "react-icons/bi";
 import { BsCart4 } from "react-icons/bs";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { GoSearch } from "react-icons/go";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import logo from "../../assets/images/MR Logo White.png";
 import CartDrawer from "./CartDrawer";
@@ -16,18 +16,23 @@ import Drawer from "react-modern-drawer";
 //react-drawer css
 import "react-modern-drawer/dist/index.css";
 
+import {
+  setOpenNotificationDrawer,
+  setOpenNotifications,
+} from "../../Redux/features/userSlice";
 import useSyncCart from "../../hooks/useSyncCart";
 import NotificationModal from "../Notifications/NotificationModal";
 import InboxDrawerModal from "../chat/InboxDrawerModal";
 
 function Header() {
-  const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const { user, openNotifications, openNotificationDrawer } = useSelector(
+    (state) => state.user,
+  );
   const { items: cartItems } = useSelector((state) => state.cart);
   const [activeMenu, setActiveMenu] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [openInboxDrawer, setOpenInboxDrawer] = useState(false);
-  const [openNotifications, setOpenNotifications] = useState(false);
-  const [openNotificationDrawer, setOpenNotificationDrawer] = useState(false);
 
   const isAuthorized = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(
     user?.role,
@@ -39,11 +44,12 @@ function Header() {
 
   const handleNotificationClick = () => {
     setActiveMenu(false);
-    setOpenNotifications(!openNotifications);
+    dispatch(setOpenNotifications(true));
   };
+
   const handleNotificationDrawerClick = () => {
     setActiveMenu(false);
-    setOpenNotificationDrawer(!openNotificationDrawer);
+    dispatch(setOpenNotificationDrawer(true));
   };
   useSyncCart();
   return (
@@ -155,7 +161,6 @@ function Header() {
                     >
                       Notifications
                     </button>
-                    {/* <NavLink to="/notifications">Notifications</NavLink> */}
                     {/* Notification Modal */}
                     {openNotifications && (
                       <NotificationModal close={setOpenNotifications} />

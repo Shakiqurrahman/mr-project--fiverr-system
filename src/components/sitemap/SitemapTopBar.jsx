@@ -1,6 +1,12 @@
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import {
+  setOpenNotificationDrawer,
+  setOpenNotifications,
+} from "../../Redux/features/userSlice";
 
 const SitemapTopBar = () => {
+  const dispatch = useDispatch();
   return (
     <div className="my-10 ml-5">
       <ul className="list-disc marker:text-xl marker:text-revision">
@@ -32,10 +38,28 @@ const SitemapTopBar = () => {
         </li>
       </ul>
       <ul className="list-disc marker:text-xl marker:text-revision">
-        <li>
+        <li
+          className="hidden md:block"
+          onClick={() => dispatch(setOpenNotifications(true))}
+        >
           <Link
             className="text-lg font-semibold text-primary hover:underline"
-            to={"/"}
+            // to={"/"}
+          >
+            Notifications
+          </Link>
+          <p className="mb-10 mt-3">
+            If you start a project, you&apos;ll see all the updates and
+            conversations we have from start to finish in notifications.
+          </p>
+        </li>
+        <li
+          className="block md:hidden"
+          onClick={() => dispatch(setOpenNotificationDrawer(true))}
+        >
+          <Link
+            className="text-lg font-semibold text-primary hover:underline"
+            // to={"/"}
           >
             Notifications
           </Link>

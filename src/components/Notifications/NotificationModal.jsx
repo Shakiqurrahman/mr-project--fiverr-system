@@ -1,10 +1,12 @@
 import React, { useRef } from "react";
 import { IoClose } from "react-icons/io5";
 import { MdOutlineNotifications } from "react-icons/md";
+import { useDispatch } from "react-redux";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import GetNotificationTitle from "./GetNotificationTitle";
 
 const NotificationModal = ({ close }) => {
+  const dispatch = useDispatch();
   const notificalModal = useRef(null);
   const unReadNotifications = 15;
 
@@ -54,7 +56,7 @@ const NotificationModal = ({ close }) => {
     },
   ];
 
-  useOutsideClick(notificalModal, () => close(false));
+  useOutsideClick(notificalModal, () => dispatch(close(false)));
   return (
     <div
       className="static max-w-[400px] rounded-md bg-white shadow-lg sm:absolute sm:right-0 sm:top-10 md:w-[450px]"
@@ -67,7 +69,7 @@ const NotificationModal = ({ close }) => {
           <button
             className="block sm:hidden"
             type="button"
-            onClick={() => close(false)}
+            onClick={() => dispatch(close(false))}
           >
             <IoClose className="text-2xl" />
           </button>
