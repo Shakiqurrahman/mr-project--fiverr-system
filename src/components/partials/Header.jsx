@@ -16,6 +16,7 @@ import Drawer from "react-modern-drawer";
 //react-drawer css
 import "react-modern-drawer/dist/index.css";
 
+import { IoSearch } from "react-icons/io5";
 import {
   setOpenNotificationDrawer,
   setOpenNotifications,
@@ -23,6 +24,7 @@ import {
 import useSyncCart from "../../hooks/useSyncCart";
 import NotificationModal from "../Notifications/NotificationModal";
 import InboxDrawerModal from "../chat/InboxDrawerModal";
+import SearchBox from "./SearchBox";
 
 function Header() {
   const dispatch = useDispatch();
@@ -33,6 +35,7 @@ function Header() {
   const [activeMenu, setActiveMenu] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [openInboxDrawer, setOpenInboxDrawer] = useState(false);
+  const [openSearchBox, setOpenSearchBox] = useState(false);
 
   const isAuthorized = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(
     user?.role,
@@ -250,6 +253,11 @@ function Header() {
                   </Drawer>
                   {/* </NavLink> */}
                 </li>
+                <li className="flex items-center lg:hidden">
+                  <button onClick={() => setOpenSearchBox(true)}>
+                    <IoSearch className="text-2xl text-white" />
+                  </button>
+                </li>
               </ul>
               <div>
                 <button
@@ -275,6 +283,8 @@ function Header() {
           <NotificationModal close={setOpenNotificationDrawer} />
         </div>
       )}
+      {/* SearchBox */}
+      {openSearchBox && <SearchBox handleClose={setOpenSearchBox} />}
     </>
   );
 }
