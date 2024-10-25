@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Check from "../../assets/svg/Check";
 import { useFetchMultiProjectQuery } from "../../Redux/api/multiProjectApiSlice";
 import { fetchCategory } from "../../Redux/features/category/categoryApi";
+import Check from "../../assets/svg/Check";
 
 const StartMultipleProject = ({ items }) => {
   const navigate = useNavigate();
@@ -343,10 +343,7 @@ const StartMultipleProject = ({ items }) => {
                   </div>
                   <div className="mt-5 border bg-white p-3 text-center text-lg text-primary sm:text-2xl">
                     Subtotal -{" "}
-                    <span className="font-semibold">
-                      ${item?.subTotal}
-                      USD
-                    </span>
+                    <span className="font-semibold">${item?.subTotal} USD</span>
                   </div>
                 </div>
               </div>

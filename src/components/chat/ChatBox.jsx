@@ -197,6 +197,7 @@ const ChatBox = ({ openToggle }) => {
 
   // replyText handler
   const addReplyText = (msg) => {
+    console.log(msg);
     msg?.messageText
       ? setReplyTo({
           replyMessageId: msg.id,
@@ -219,7 +220,7 @@ const ChatBox = ({ openToggle }) => {
                 : msg.senderUserName,
             replyText: msg?.contactForm?.messageText,
           })
-        : msg?.attachments.length > 0
+        : msg?.attachment.length > 0
           ? setReplyTo({
               replyMessageId: msg.id,
               replyUserRole: user?.role,
@@ -618,8 +619,9 @@ const ChatBox = ({ openToggle }) => {
             <Divider
               className={"hidden h-[15px] w-[2px] !bg-black/50 sm:block"}
             />
-            <p className="hidden sm:block">
-              Local time: {localTime}, {localDate}
+            <p className="sm:block">
+              Local time: {localTime}
+              <span className="hidden sm:inline">, {localDate}</span>
             </p>
           </div>
         </div>

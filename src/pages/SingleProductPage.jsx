@@ -4,15 +4,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Slider from "react-slick";
 import Swal from "sweetalert2";
-import LeftArrowIcon from "../assets/images/icons/Left Arrow.svg";
-import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
-import Divider from "../components/Divider";
-import RelatedDesigns from "../components/RelatedDesigns";
 import {
   useDeleteDesignByIdMutation,
   useFetchGetUploadQuery,
 } from "../Redux/api/uploadDesignApiSlice";
 import { addToCart, removeFromCart } from "../Redux/features/cartSlice";
+import LeftArrowIcon from "../assets/images/icons/Left Arrow.svg";
+import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
+import Divider from "../components/Divider";
+import RelatedDesigns from "../components/RelatedDesigns";
 
 function SingleProductPage() {
   const { slug } = useParams();
@@ -212,7 +212,7 @@ function SingleProductPage() {
               className="mt-5 w-full rounded-[30px] bg-primary p-2 font-medium text-white sm:p-3"
               onClick={handleStartProject}
             >
-              START PROJECT
+              PROJECT START
             </button>
           </div>
         </div>
