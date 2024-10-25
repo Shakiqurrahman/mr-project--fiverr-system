@@ -28,6 +28,7 @@ import AdditionalOfferModal from "./chatbox-components/AdditionalOfferModal";
 import AdditionalOfferPreview from "./chatbox-components/AdditionalOfferPreview";
 import AttachmentsPreview from "./chatbox-components/AttachmentsPreview";
 import CancellingProjectPreview from "./chatbox-components/CancellingProjectPreview";
+import CommentsPreview from "./chatbox-components/CommentsPreview";
 import ExtendingDeliveryPreview from "./chatbox-components/ExtendingDeliveryPreview";
 import OrderDeliveryPreview from "./chatbox-components/OrderDeliveryPreview";
 
@@ -369,6 +370,7 @@ const OrderChatBox = () => {
                     company. i like the black and gold one you have listed
                   </p>
                 </div>
+                <CommentsPreview />
                 <AttachmentsPreview />
                 <AdditionalOfferPreview />
                 <OrderDeliveryPreview />
