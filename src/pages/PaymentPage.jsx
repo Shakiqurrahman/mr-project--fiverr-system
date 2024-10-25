@@ -69,6 +69,8 @@ const PaymentPage = () => {
         `${configApi.api}api/checkout-session`,
         { data },
       );
+      console.log(response);
+      
       const sessionId = response.data.id;
 
       // Redirect to Stripe Checkout
@@ -164,27 +166,27 @@ const PaymentPage = () => {
                     <span className="font-bold">${designs?.subTotal}</span>
                   </li>
                 )}
-                {state.from === "offerProject" && (
+                {state?.from === "offerProject" && (
                   <li className="flex justify-between gap-2 px-2">
                     <p>{designs?.freeDesign?.designName}</p>
                     <span className="font-bold">Free</span>
                   </li>
                 )}
-                {state.from === "offerProject" &&
+                {state?.from === "offerProject" &&
                   designs.designs.map((design, idx) => (
                     <li key={idx} className="flex justify-between gap-2 px-2">
                       <p>{design.categoryLabel}</p>
                       <span className="font-bold">x 1</span>
                     </li>
                   ))}
-                {state.from === "multipleProject" &&
+                {state?.from === "multipleProject" &&
                   designs.designs.map((design, idx) => (
                     <div
                       className="border-b py-2 last-of-type:border-none last-of-type:py-0"
                       key={idx}
                     >
                       <li key={idx} className="flex justify-between gap-2 px-2">
-                        <p>{design.title}</p>
+                        <p>{design?.title}</p>
                         <div className="flex items-center gap-2 font-bold">
                           <span className="text-sm font-normal">
                             {design?.quantity} x
