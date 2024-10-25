@@ -229,10 +229,7 @@ const StartSingleProject = ({ item }) => {
                   </div>
                   <div className="mt-5 border bg-white p-3 text-center text-lg text-primary sm:text-2xl">
                     Subtotal -{" "}
-                    <span className="font-semibold">
-                      ${totalAmount}
-                      USD
-                    </span>
+                    <span className="font-semibold">${totalAmount} USD</span>
                   </div>
                 </div>
               </div>

@@ -27,12 +27,7 @@ const SitemapDesign = () => {
           </ul>
           <ul className="ml-10 list-disc marker:text-xl marker:text-revision">
             <li>
-              <Link
-                className="text-lg font-semibold text-primary hover:underline"
-                to={"/"}
-              >
-                Folders
-              </Link>
+              <div className="text-lg font-semibold text-primary">Folders</div>
               <p className="mb-10 mt-3">
                 There are different folders in each design box, and each folder
                 is for different industry designs, you can find the folder you
@@ -44,12 +39,9 @@ const SitemapDesign = () => {
           </ul>
           <ul className="ml-20 list-disc marker:text-xl marker:text-revision">
             <li>
-              <Link
-                className="text-lg font-semibold text-primary hover:underline"
-                to={"/"}
-              >
+              <div className="text-lg font-semibold text-primary">
                 Industries
-              </Link>
+              </div>
               <div className="mb-10 mt-3">
                 Find your specific industry or similar industry by checking the
                 title below each design and click on the selected industry to
@@ -63,12 +55,7 @@ const SitemapDesign = () => {
           </ul>
           <ul className="ml-[120px] list-disc marker:text-xl marker:text-revision">
             <li>
-              <Link
-                className="text-lg font-semibold text-primary hover:underline"
-                to={"/"}
-              >
-                Designs
-              </Link>
+              <div className="text-lg font-semibold text-primary">Designs</div>
               <p className="mb-10 mt-3">
                 Click on the design to view the design of your choice better and
                 view the design information.

@@ -58,7 +58,7 @@ function TermsAndConditions() {
               </p>
               <p>
                 <span className="font-bold">2.</span> You can start by clicking
-                &quot;Start Project&quot; from the Price List page, or Design
+                &quot;Project Start&quot; from the Price List page, or Design
                 Description page.
               </p>
               <p>
