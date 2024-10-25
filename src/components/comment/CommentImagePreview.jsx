@@ -4,15 +4,15 @@ import { LiaDownloadSolid } from "react-icons/lia";
 import ImageMarker from "react-image-marker";
 import { useDispatch, useSelector } from "react-redux";
 import shortid from "shortid";
-import thumbnail from "../../assets/images/MR Logo Icon.png";
-import thumbnail2 from "../../assets/images/project-thumbnail-alt.jpg";
-import formatFileSize from "../../libs/formatFileSize";
 import {
   setCommentObj,
   setHighlight,
   setImageDetails,
   setMarkersData,
 } from "../../Redux/features/commentsSlice";
+import thumbnail from "../../assets/images/MR Logo Icon.png";
+import thumbnail2 from "../../assets/images/project-thumbnail-alt.jpg";
+import formatFileSize from "../../libs/formatFileSize";
 
 const CommentImagePreview = () => {
   const dispatch = useDispatch();
@@ -142,14 +142,15 @@ const CommentImagePreview = () => {
             <button
               key={index}
               type="button"
-              className="h-full"
+              className="flex h-full flex-col items-center gap-1"
               onClick={() => setSelectedImage(img)}
             >
               <img
                 src={img?.url}
                 alt={img?.name}
-                className={`max-h-full w-full object-contain ${img.id === selectedImage.id && "scale-105"}`}
+                className={`h-2/3 object-contain ${img.id === selectedImage.id && "scale-105"}`}
               />
+              <h1 className="line-clamp-1 text-xs text-white">{img?.name}</h1>
             </button>
           ))}
         </div>
