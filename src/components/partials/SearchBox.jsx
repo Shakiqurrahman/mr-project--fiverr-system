@@ -15,7 +15,7 @@ const SearchBox = ({ handleClose }) => {
   };
 
   return (
-    <div className="fixed left-0 top-0 z-[99999] flex h-screen w-full items-center justify-center bg-black/80 p-5 backdrop-blur-sm">
+    <div className="fixed left-0 top-0 z-[99999] flex h-screen w-full items-start justify-center overflow-y-auto bg-black/80 px-5 py-10 backdrop-blur-sm">
       <div className="w-full rounded-lg bg-white p-3">
         <div className="flex items-center gap-2 rounded-lg border-2 border-primary p-3">
           <IoSearch className="shrink-0 text-2xl text-gray-400" />
