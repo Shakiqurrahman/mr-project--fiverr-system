@@ -88,6 +88,9 @@ const ChatBox = ({ openToggle }) => {
   const [replyTo, setReplyTo] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState(null);
+  const [isBlocked, setIsBlocked] = useState(false);
+  const [isBookMarked, setIsBookMarked] = useState(false);
+  const [isArchived, setIsArchived] = useState(false);
   // const [typingStatus, setTypingStatus] = useState("");
 
   // recipient User
@@ -103,7 +106,11 @@ const ChatBox = ({ openToggle }) => {
     archive,
   } = usersData?.find((user) => user?.id === conversationUser) || "";
 
-  console.log("archive", archive);
+  useEffect(() => {
+    setIsBlocked(block_for_chat);
+    setIsBookMarked(book_mark);
+    setIsArchived(archive);
+  }, [book_mark, block_for_chat, archive]);
 
   useEffect(() => {
     if (getAllMessagesForUser && user.role === "USER") {
@@ -525,7 +532,9 @@ const ChatBox = ({ openToggle }) => {
   const blockAUserConversation = async () => {
     try {
       await blockingAUserConversation(conversationUser).unwrap();
-      toast.success("Conversation user blocked successfully");
+      block_for_chat
+        ? toast.success("Conversation user unblocked successfully")
+        : toast.success("Conversation user blocked successfully");
     } catch {
       toast.error("Failed to block conversation user");
     }
@@ -535,7 +544,9 @@ const ChatBox = ({ openToggle }) => {
   const archiveAUserConversation = async () => {
     try {
       await archiveUserConversation(conversationUser).unwrap();
-      toast.success("Conversation user added into archive successfully");
+      archive
+        ? toast.success("Conversation user removed from archive successfully")
+        : toast.success("Conversation user added into archive successfully");
     } catch {
       toast.error("Failed to add conversation user into archive");
     }
@@ -545,7 +556,9 @@ const ChatBox = ({ openToggle }) => {
   const bookmarkAUserConversation = async () => {
     try {
       await bookmarkUserConversation(conversationUser).unwrap();
-      toast.success("Conversation user bookmarked successfully");
+      book_mark
+        ? toast.success("Conversation user removed from bookmark successfully")
+        : toast.success("Conversation user bookmarked successfully");
     } catch {
       toast.error("Failed to bookmark conversation user");
     }
@@ -649,21 +662,21 @@ const ChatBox = ({ openToggle }) => {
                     onClick={bookmarkAUserConversation}
                     className="w-full text-xs hover:bg-gray-200"
                   >
-                    {book_mark ? "Starred" : "Star"}
+                    {isBookMarked ? "Starred" : "Star"}
                   </button>
                   <button
                     type="button"
                     className="w-full text-xs hover:bg-gray-200"
                     onClick={blockAUserConversation}
                   >
-                    {block_for_chat ? "Unblock" : "Block"}
+                    {isBlocked ? "Unblock" : "Block"}
                   </button>
                   <button
                     type="button"
                     onClick={archiveAUserConversation}
                     className="w-full text-xs hover:bg-gray-200"
                   >
-                    {archive ? "Archived" : "Archive"}
+                    {isArchived ? "Archived" : "Archive"}
                   </button>
                   <button
                     type="button"
