@@ -1189,6 +1189,8 @@ const ChatBox = ({ openToggle }) => {
           handleClose={setOpenOfferModal}
           onOfferSubmit={socket}
           values={messages}
+          reply={replyTo}
+          setReplyTo={setReplyTo}
         />
       )}
     </div>

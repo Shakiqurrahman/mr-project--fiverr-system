@@ -7,7 +7,13 @@ import thumbnailDemo from "../../assets/images/project-thumbnail.jpg";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useSendAMessageMutation } from "../../Redux/api/inboxApiSlice";
 
-const CreateOfferModal = ({ handleClose, onOfferSubmit, values }) => {
+const CreateOfferModal = ({
+  handleClose,
+  onOfferSubmit,
+  values,
+  reply,
+  setReplyTo,
+}) => {
   const { conversationUser } = useSelector((state) => state.chat);
   const [sendAMessage] = useSendAMessageMutation();
   const { user } = useSelector((state) => state.user);
@@ -54,11 +60,9 @@ const CreateOfferModal = ({ handleClose, onOfferSubmit, values }) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-
   const dates = new Date();
-const timeAndDate = dates.getTime();
-console.log('time and date',timeAndDate);
-
+  const timeAndDate = dates.getTime();
+  console.log("time and date", timeAndDate);
 
   const handleSubmit = async (e) => {
     const { title, thumbnail, price, deliveryCount, desc } = form;
@@ -73,6 +77,7 @@ console.log('time and date',timeAndDate);
         attachment: [],
         customOffer: formData,
         timeAndDate,
+        replyTo: reply || null,
         // contactForm: null,
       };
       if (isAuthorized) {
@@ -93,6 +98,7 @@ console.log('time and date',timeAndDate);
           price: "",
           desc: "",
         });
+        setReplyTo(null);
       }
 
       handleClose(false);
