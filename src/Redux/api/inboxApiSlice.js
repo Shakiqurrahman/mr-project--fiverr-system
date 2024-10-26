@@ -58,7 +58,7 @@ export const inboxApiSlice = createApi({
     getAvailableChatUsers: builder.query({
       query: () => "avaiableforchat",
       transformResponse: (response) => response?.data,
-      providesTags: ["getAllMessages"],
+      providesTags: ["availablechatusers"],
     }),
 
     // Get All Conversational Messages for admin
@@ -123,7 +123,7 @@ export const inboxApiSlice = createApi({
         url: `block-chat/${userId}`,
         method: "PATCH",
       }),
-      invalidatesTags: ["getAllMessages"],
+      invalidatesTags: ["getAllMessages", "availablechatusers"],
     }),
 
     // block a user conversation
@@ -132,7 +132,7 @@ export const inboxApiSlice = createApi({
         url: `archive/archive-user/${userId}`,
         method: "POST",
       }),
-      invalidatesTags: ["getAllMessages"],
+      invalidatesTags: ["getAllMessages", "availablechatusers"],
     }),
 
     // bookmark a user conversation
@@ -141,7 +141,7 @@ export const inboxApiSlice = createApi({
         url: `bookMark/update/${userId}`,
         method: "POST",
       }),
-      invalidatesTags: ["getAllMessages"],
+      invalidatesTags: ["availablechatusers"],
     }),
   }),
 });

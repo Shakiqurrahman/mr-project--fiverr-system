@@ -88,9 +88,6 @@ const ChatBox = ({ openToggle }) => {
   const [replyTo, setReplyTo] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState(null);
-  const [isBlocked, setIsBlocked] = useState(false);
-  const [isBookMarked, setIsBookMarked] = useState(false);
-  const [isArchived, setIsArchived] = useState(false);
   // const [typingStatus, setTypingStatus] = useState("");
 
   // recipient User
@@ -101,16 +98,10 @@ const ChatBox = ({ openToggle }) => {
     userName: recipientUserName,
     lastSeen,
     id: recipientUserId,
-    block_for_chat,
-    book_mark,
-    archive,
   } = usersData?.find((user) => user?.id === conversationUser) || "";
 
-  useEffect(() => {
-    setIsBlocked(block_for_chat);
-    setIsBookMarked(book_mark);
-    setIsArchived(archive);
-  }, [book_mark, block_for_chat, archive]);
+  const { isBookMarked, isBlocked, isArchived } =
+    availableUsers?.find((user) => user?.id === conversationUser) || "";
 
   useEffect(() => {
     if (getAllMessagesForUser && user.role === "USER") {
@@ -532,11 +523,11 @@ const ChatBox = ({ openToggle }) => {
   const blockAUserConversation = async () => {
     try {
       await blockingAUserConversation(conversationUser).unwrap();
-      block_for_chat
-        ? toast.success("Conversation user unblocked successfully")
-        : toast.success("Conversation user blocked successfully");
+      isBlocked
+        ? toast.success("User unblocked successfully")
+        : toast.success("User blocked successfully");
     } catch {
-      toast.error("Failed to block conversation user");
+      toast.error("Failed to block User");
     }
   };
 
@@ -544,11 +535,11 @@ const ChatBox = ({ openToggle }) => {
   const archiveAUserConversation = async () => {
     try {
       await archiveUserConversation(conversationUser).unwrap();
-      archive
-        ? toast.success("Conversation user removed from archive successfully")
-        : toast.success("Conversation user added into archive successfully");
+      isArchived
+        ? toast.success("User removed from archive successfully")
+        : toast.success("User added into archive successfully");
     } catch {
-      toast.error("Failed to add conversation user into archive");
+      toast.error("Failed to add User into archive");
     }
   };
 
@@ -556,11 +547,11 @@ const ChatBox = ({ openToggle }) => {
   const bookmarkAUserConversation = async () => {
     try {
       await bookmarkUserConversation(conversationUser).unwrap();
-      book_mark
-        ? toast.success("Conversation user removed from bookmark successfully")
-        : toast.success("Conversation user bookmarked successfully");
+      isBookMarked
+        ? toast.success("User removed from bookmark successfully")
+        : toast.success("User bookmarked successfully");
     } catch {
-      toast.error("Failed to bookmark conversation user");
+      toast.error("Failed to bookmark User");
     }
   };
 
