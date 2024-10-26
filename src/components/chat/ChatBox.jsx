@@ -127,6 +127,19 @@ const ChatBox = ({ openToggle }) => {
       }
     });
 
+    socket?.on("delete-message", (msg) => {
+      if (!isAdmin) {
+        console.log("deltedMsg", msg);
+
+        // setMessages((prevMessages) => [...prevMessages, msg]);
+      }
+      let filter = msg.userId === conversationUser && msg;
+      if (isAdmin && filter) {
+        // setMessages((prev) => [...prev, filter]);
+        console.log("deltedMsg", msg);
+      }
+    });
+
     socket.on("admin-notification", (msg) => {
       console.log("admin-notification", msg);
       if (isAdmin && msg?.userId !== user.id) {
@@ -724,13 +737,26 @@ const ChatBox = ({ openToggle }) => {
                           {isAdmin ? letterLogo : "M"}
                         </div>
                       ))}
-                    {!isAdmin && (
+                    {!isAdmin && !sameUser && (
                       <img
                         src={sameUser ? msg?.userImage : adminLogo}
                         alt=""
                         className="size-full rounded-full object-cover"
                       />
                     )}
+                    {!isAdmin &&
+                      sameUser &&
+                      (msg?.userImage ? (
+                        <img
+                          src={isAdmin || sameUser ? msg?.userImage : adminLogo}
+                          alt=""
+                          className="size-full rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="text-xl font-bold text-[#7c7c7c]/50">
+                          {isAdmin ? letterLogo : "M"}
+                        </div>
+                      ))}
                   </div>
                   <div className="grow">
                     <div className="mt-1 flex items-center justify-between">
