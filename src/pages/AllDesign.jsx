@@ -62,7 +62,7 @@ function AllDesign() {
       <div className="max-width">
         <div className="my-10 flex items-center justify-between">
           <h1 className="text-base font-semibold sm:text-lg">
-            Click on the design you need to see more designs.
+            Click on the design of your choice to view the design description.
           </h1>
           <button className="rounded-[30px] border border-solid border-primary px-4 py-1 text-sm font-semibold duration-300 hover:bg-primary hover:text-white">
             Customise
