@@ -6,9 +6,11 @@ import Check from "../assets/svg/Check";
 import PaymentTabs from "../components/PaymentTabs";
 import { configApi, STRIPE_PUBLIC_KEY } from "../libs/configApi";
 import { ToggleSwitch } from "../libs/ToggleSwitch";
+import { useSelector } from "react-redux";
 
 const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 const PaymentPage = () => {
+  const { user } = useSelector((state) => state.user);
   const { state } = useLocation();
   const [activeTab, setActiveTab] = useState(null);
   const [isAcceptingCondition, SetIsAcceptingCondition] = useState(false);
@@ -61,17 +63,18 @@ const PaymentPage = () => {
         parseInt(item.fastDeliveryAmount) || parseInt(item.fastDeliveryPrice),
     }));
     const data = {
+      userId: user?.id,
       items: itemsData,
       totalAmount: designs?.totalAmount || totalAmount,
-    };
+    };    
     try {
       const response = await axios.post(
         `${configApi.api}api/checkout-session`,
         { data },
       );
       console.log(response);
-      
-      const sessionId = response.data.id;
+
+      const sessionId = response.data.id;      
 
       // Redirect to Stripe Checkout
       const stripe = await stripePromise;
