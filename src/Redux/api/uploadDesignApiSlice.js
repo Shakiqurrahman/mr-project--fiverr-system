@@ -92,7 +92,6 @@ export const {
   useFetchSubFoldersQuery,
   useFetchIndustriesQuery,
   useFetchDesignsQuery,
-  useFetchSortedUploadsQuery,
   useFetchProductByIdQuery,
   useFetchAllDesignKeywordsQuery,
   useFetchAllIndustryKeywordsQuery,

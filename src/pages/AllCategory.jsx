@@ -9,8 +9,10 @@ import PageHeader from "../components/PageHeader";
 import RelatedDesigns from "../components/RelatedDesigns";
 import ProjectCard from "../components/categories/ProjectCard";
 import useGetCategory from "../hooks/useGetCategory";
+import useGetSubFolders from "../hooks/useGetSubFolders";
 
 function AllCategory() {
+  const { categories: dddd } = useGetSubFolders();
   const { slug } = useParams();
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
