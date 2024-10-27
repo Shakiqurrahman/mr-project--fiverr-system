@@ -1,17 +1,19 @@
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import Check from "../assets/svg/Check";
 import PaymentTabs from "../components/PaymentTabs";
 import { configApi, STRIPE_PUBLIC_KEY } from "../libs/configApi";
 import { ToggleSwitch } from "../libs/ToggleSwitch";
-import { useSelector } from "react-redux";
 
 const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 const PaymentPage = () => {
   const { user } = useSelector((state) => state.user);
   const { state } = useLocation();
+  console.log(state);
+
   const [activeTab, setActiveTab] = useState(null);
   const [isAcceptingCondition, SetIsAcceptingCondition] = useState(false);
   const [fastDelivery, setFastDelivery] = useState(
@@ -40,6 +42,8 @@ const PaymentPage = () => {
 
   const [items, setItems] = useState([]);
 
+  console.log("items", items);
+
   useEffect(() => {
     if (Array.isArray(designs?.designs) && !designs?.freeDesign) {
       console.log(designs);
@@ -66,7 +70,11 @@ const PaymentPage = () => {
       userId: user?.id,
       items: itemsData,
       totalAmount: designs?.totalAmount || totalAmount,
-    };    
+      requirements: state?.requirements,
+      bulletPoint: state?.bulletPoint,
+      deliveryDuration: state?.deliveryDuration || state?.duration,
+      title: state?.title,
+    };
     try {
       const response = await axios.post(
         `${configApi.api}api/checkout-session`,
@@ -74,7 +82,7 @@ const PaymentPage = () => {
       );
       console.log(response);
 
-      const sessionId = response.data.id;      
+      const sessionId = response.data.id;
 
       // Redirect to Stripe Checkout
       const stripe = await stripePromise;
