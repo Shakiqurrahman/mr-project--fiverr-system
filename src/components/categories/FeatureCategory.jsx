@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { IoMdClose } from "react-icons/io";
 import { useSelector } from "react-redux";
-import FeatureCategorySkeleton from "../../CustomSkeleton/FeatureCategorySkeleton";
 import DownArrow from "../../assets/images/icons/Down Arrow.svg";
 import UpArrow from "../../assets/images/icons/Upper Arrow.svg";
 import Check from "../../assets/svg/Check";
@@ -79,7 +78,7 @@ function FeatureCategory() {
   };
   return (
     <div className="max-width">
-      {user?.role === "ADMIN" && (
+      {user?.role !== "USER" && (
         <div className="mt-10 flex items-center justify-between">
           <button
             className="rounded-[30px] border-2 border-solid border-primary bg-[#EEF7FE] p-[6px_15px]"
@@ -107,41 +106,18 @@ function FeatureCategory() {
       )}
       <div className="flex flex-wrap items-start gap-3 sm:flex-nowrap">
         <div className="relative w-full sm:w-2/3 md:w-3/4 lg:w-4/5">
-            <div>
-              {tempProducts.map((category, idx) => {
-                if (!expand) {
-                  if (idx <= 4) {
-                    return (
-                      <div
-                        key={idx}
-                        draggable={isCustomizing}
-                        onDragStart={() => handleDragStart(idx)}
-                        onDragEnter={() => handleDragEnter(idx)}
-                        onDragEnd={handleDragEnd}
-                        className={`${
-                          draggedIndex === idx
-                            ? "bg-gray-200"
-                            : "hover:bg-gray-50"
-                        }`}
-                      >
-                        <CategoryCards
-                          title={category.folder}
-                          path={`categories/${category.slug}`}
-                          titleSlug={category.slug}
-                          subCategory={category.subFolders}
-                        />
-                      </div>
-                    );
-                  }
-                } else {
+          <div>
+            {tempProducts.map((category, idx) => {
+              if (!expand) {
+                if (idx <= 4) {
                   return (
                     <div
                       key={idx}
-                      draggable={isCustomizing} // Only draggable when customizing is enabled
+                      draggable={isCustomizing}
                       onDragStart={() => handleDragStart(idx)}
                       onDragEnter={() => handleDragEnter(idx)}
                       onDragEnd={handleDragEnd}
-                      className={`cursor-move rounded-md border bg-white p-4 shadow-md ${
+                      className={`${
                         draggedIndex === idx
                           ? "bg-gray-200"
                           : "hover:bg-gray-50"
@@ -156,8 +132,29 @@ function FeatureCategory() {
                     </div>
                   );
                 }
-              })}
-            </div>
+              } else {
+                return (
+                  <div
+                    key={idx}
+                    draggable={isCustomizing} // Only draggable when customizing is enabled
+                    onDragStart={() => handleDragStart(idx)}
+                    onDragEnter={() => handleDragEnter(idx)}
+                    onDragEnd={handleDragEnd}
+                    className={`cursor-move rounded-md border bg-white p-4 shadow-md ${
+                      draggedIndex === idx ? "bg-gray-200" : "hover:bg-gray-50"
+                    }`}
+                  >
+                    <CategoryCards
+                      title={category.folder}
+                      path={`categories/${category.slug}`}
+                      titleSlug={category.slug}
+                      subCategory={category.subFolders}
+                    />
+                  </div>
+                );
+              }
+            })}
+          </div>
 
           {categories?.length > 5 &&
             (!expand ? (
