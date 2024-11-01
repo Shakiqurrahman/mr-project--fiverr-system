@@ -4,11 +4,11 @@ import { CgAttachment } from "react-icons/cg";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useStartContactForChatMutation } from "../Redux/api/inboxApiSlice";
 import CircleProgressBar from "../components/CircleProgressBar";
 import FilePreview from "../components/FilePreview";
 import { configApi } from "../libs/configApi";
 import formatFileSize from "../libs/formatFileSize";
-import { useStartContactForChatMutation } from "../Redux/api/inboxApiSlice";
 
 function Contact() {
   const navigate = useNavigate();
@@ -39,9 +39,11 @@ function Contact() {
     const handleImageLoad = async (file, index) => {
       console.log(file);
       const formData = new FormData();
-      formData.append("image", file);
+      // formData.append("image", file);
+      formData.append("files", file);
 
-      const uploadUrl = `${configApi.api}upload-image`;
+      // const uploadUrl = `${configApi.api}upload-image`;
+      const uploadUrl = `${configApi.api}upload-attachment`;
 
       const uploadData = {
         name: file.name,
@@ -65,6 +67,7 @@ function Contact() {
             });
           },
         });
+        console.log(response);
 
         // Update image data upon successful upload
         const imageUrl = response.data.data[0].result.url;
