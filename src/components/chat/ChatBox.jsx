@@ -516,6 +516,7 @@ const ChatBox = ({ openToggle }) => {
   const handleDeleteAMessage = async (messageId) => {
     try {
       await deleteAMessage(messageId).unwrap();
+      socket.emit("delete-message", { messageId, userId: user?.id });
       toast.success("Message deleted successfully");
     } catch {
       toast.error("Failed to delete message");
