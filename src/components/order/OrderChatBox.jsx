@@ -74,7 +74,7 @@ const OrderChatBox = () => {
     console.log("effected");
 
     socket?.on("order:message", (msg) => {
-      console.log(msg);
+      console.log(msg, 'checking messages');
       // if (!isAdmin) {
       setMessages((prevMessages) => [...prevMessages, msg]);
       // }
@@ -106,7 +106,7 @@ const OrderChatBox = () => {
     return () => {
       socket?.off("order:message");
     };
-  }, [socket, messages, user]);
+  }, [socket, messages]);
   // }, [conversationUser, isAdmin, socket, messages, dispatch, user]);
 
   useEffect(
@@ -262,10 +262,18 @@ const OrderChatBox = () => {
     const submitForm = {
       text: "hello",
     };
-    socket?.emit("order:admin-message", {
-      userId: "67111b454ea3ed4f767b2a3f",
-      ...submitForm,
-    });
+
+
+    if (isAdmin) {
+      socket?.emit("order:admin-message", {
+        userId: "671ba677ed05eed5d29efb35",
+        ...submitForm,
+      })
+    } else {
+      socket?.emit("order:user-message", {
+        ...submitForm,
+      })
+    }
 
     // if (textValue || selectedImages.length > 0) {
     //   const response = async () => {
@@ -567,7 +575,7 @@ const OrderChatBox = () => {
           <AdditionalOfferModal
             handleClose={setOpenOfferModal}
             onOfferSubmit={socket}
-            // values={messages}
+          // values={messages}
           />
         )}
       </div>
