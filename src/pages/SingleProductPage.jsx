@@ -130,7 +130,7 @@ function SingleProductPage() {
   return (
     <>
       <div className="max-width">
-        {user?.role === "ADMIN" && (
+        {user?.role !== "USER" && (
           <div className="relative mt-5 text-right">
             <button className="text-4xl" onClick={handleIsClicked}>
               <BsThreeDots />

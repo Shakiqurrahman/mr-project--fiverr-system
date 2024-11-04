@@ -413,16 +413,17 @@ function EditDesign() {
     const imagesPromise = withFiles?.map(async (file) => {
       if (file.file) {
         const formData = new FormData();
-        formData.append("image", file.file);
+        // formData.append("image", file.file);
+        formData.append("files", file.file);
 
-        const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
-        const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+        // const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
+        // const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+        const uploadUrl = `${configApi.api}upload-attachment`;
         try {
           // setUploading(true);
           const response = await axios.post(uploadUrl, formData);
-          console.log(response);
-          const name = response.data.data.title;
-          const imageUrl = response.data.data.url;
+          const name = response.data.data.file.originalName;
+          const imageUrl = response.data.data.file.url;
 
           return {
             url: imageUrl,

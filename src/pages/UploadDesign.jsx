@@ -384,16 +384,17 @@ function UploadDesign() {
     const imagesPromise = matchingImages?.map(async (file) => {
       if (file.file) {
         const formData = new FormData();
-        formData.append("fileName", file.file);
+        // formData.append("fileName", file.file);
+        formData.append("files", file.file);
 
         // const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
-        const uploadUrl = `${configApi.api}upload-image`;
+        // const uploadUrl = `${configApi.api}upload-image`;
+        const uploadUrl = `${configApi.api}upload-attachment`;
         try {
           // setUploading(true);
           const response = await axios.post(uploadUrl, formData);
-          console.log(response);
-          const name = response.data.data[0].result.original_filename;
-          const imageUrl = response.data.data[0].result.url;
+          const name = response.data.data.file.originalName;
+          const imageUrl = response.data.data.file.url;
 
           return {
             url: imageUrl,
