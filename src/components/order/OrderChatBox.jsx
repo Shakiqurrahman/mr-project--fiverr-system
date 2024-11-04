@@ -21,7 +21,6 @@ import EmojiPicker from "../chat/EmojiPicker";
 
 import axios from "axios";
 import { Link } from "react-router-dom";
-import Logo from "../../assets/images/MR Logo White.png";
 import CircleProgressBar from "../CircleProgressBar";
 import FilePreview from "../FilePreview";
 import AdditionalOfferModal from "./chatbox-components/AdditionalOfferModal";
@@ -64,6 +63,7 @@ const OrderChatBox = () => {
   const [openAddMsgModal, setOpenAddMsgModal] = useState(false);
   const [openOfferModal, setOpenOfferModal] = useState(false);
   const [messages, setMessages] = useState([]);
+  const [replyTo, setReplyTo] = useState(null);
 
   console.log(messages);
 
@@ -74,7 +74,7 @@ const OrderChatBox = () => {
     console.log("effected");
 
     socket?.on("order:message", (msg) => {
-      console.log(msg, 'checking messages');
+      console.log(msg, "checking messages");
       // if (!isAdmin) {
       setMessages((prevMessages) => [...prevMessages, msg]);
       // }
@@ -255,75 +255,117 @@ const OrderChatBox = () => {
     }, 0);
   };
 
+  // Setup sending message time and date
+  const dates = new Date();
+  const timeAndDate = dates.getTime();
+
+  const renderMessageTime = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
+  const renderMessageDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString([], {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
   // handler for Submitting/Send a Message
   const handleSubmitMessage = async (e) => {
     e.preventDefault();
 
-    const submitForm = {
-      text: "hello",
-    };
+    // const submitForm = {
+    //   text: "hello",
+    // };
 
-
-    if (isAdmin) {
-      socket?.emit("order:admin-message", {
-        userId: "671ba677ed05eed5d29efb35",
-        ...submitForm,
-      })
-    } else {
-      socket?.emit("order:user-message", {
-        ...submitForm,
-      })
-    }
-
-    // if (textValue || selectedImages.length > 0) {
-    //   const response = async () => {
-    //     const attachments = selectedImages?.map((img) => ({
-    //       name: img.file.name,
-    //       size: img.file.size,
-    //       url: img.url,
-    //     }));
-    //     const submitForm = {
-    //       messageText: textValue,
-    //       senderUserName: user?.userName,
-    //       userImage: user?.image,
-    //       attachment: attachments || [],
-    //       customOffer: null,
-    //       msgDate,
-    //       msgTime,
-    //     };
-    //     if (isAdmin) {
-    //       socket?.emit("admin-message", {
-    //         userId: conversationUser,
-    //         ...submitForm,
-    //       });
-    //       const res = await sendAMessage({
-    //         recipientId: conversationUser,
-    //         ...submitForm,
-    //       }).unwrap();
-    //     } else {
-    //       socket?.emit("user-message", {
-    //         userId: user?.id,
-    //         ...submitForm,
-    //       });
-    //       const res = await sendAMessage({
-    //         recipientId: "66fba5d5dca406c532a6b338",
-    //         ...submitForm,
-    //       }).unwrap();
-    //     }
-    //     return { result: "Success" };
-    //   };
-    //   const result = await response();
-    //   if (result.result === "Success") {
-    //     setTextValue("");
-    //     // Clear the state
-    //     setSelectedImages(null);
-
-    //     // Reset the file input value
-    //     if (fileInputRef.current) {
-    //       fileInputRef.current.value = "";
-    //     }
-    //   }
+    // if (isAdmin) {
+    //   socket?.emit("order:admin-message", {
+    //     userId: "671ba677ed05eed5d29efb35",
+    //     ...submitForm,
+    //   })
+    // } else {
+    //   socket?.emit("order:user-message", {
+    //     ...submitForm,
+    //   })
     // }
+
+    if (textValue || selectedImages.length > 0) {
+      const attachments = selectedImages?.map((img) => ({
+        name: img.name,
+        size: img.size,
+        url: img.url,
+        format: img.format,
+      }));
+
+      const submitForm = {
+        messageText: textValue,
+        senderUserName: user?.userName,
+        userImage: user?.image,
+        attachment: attachments || [],
+        additionalOffer: null,
+        extendDeliveryTime: null,
+        deliverProject: null,
+        cancelProject: null,
+        imageComments: [],
+        timeAndDate,
+        replyTo,
+      };
+
+      if (isAdmin) {
+        socket?.emit("order:admin-message", {
+          userId: "671ba677ed05eed5d29efb35",
+          ...submitForm,
+        });
+      } else {
+        socket?.emit("order:user-message", {
+          ...submitForm,
+        });
+      }
+
+      // Optimistically add the message to local state (before API response)
+      setMessages((prev) => [
+        ...prev,
+        {
+          ...submitForm,
+          recipientId: isAdmin ? "671ba677ed05eed5d29efb35" : "",
+        },
+      ]);
+
+      // Clear input fields and images on success
+      setTextValue("");
+      setSelectedImages([]);
+      setReplyTo(null);
+      fileInputRef.current.value = null;
+
+      // try {
+      //   const res = await sendAMessage({
+      //     recipientId: isAdmin ? conversationUser : null,
+      //     ...submitForm,
+      //   }).unwrap();
+
+      //   // setMessages((prev) => prev.map((msg) =>
+      //   //   msg?.messageText === submitForm?.messageText ? res?.data : msg
+      //   // ));
+
+      //   // Reset the file input value
+      //   if (fileInputRef.current) {
+      //     fileInputRef.current.value = "";
+      //   }
+      // } catch (error) {
+      //   // Rollback the optimistic update on failure
+      //   setMessages((prev) =>
+      //     prev.filter((msg) => msg?.messageText !== submitForm?.messageText),
+      //   );
+      //   console.error("Failed to send message:", error);
+      // }
+    }
   };
 
   return (
@@ -334,61 +376,75 @@ const OrderChatBox = () => {
           className={`${quickResponse && selectedImages?.length > 0 ? "h-[calc(100%_-_423px)]" : quickResponse ? "h-[calc(100%_-_280px)]" : selectedImages?.length > 0 ? "h-[calc(100%_-_321px)]" : "h-[calc(100%_-_180px)]"} overflow-y-auto p-2 sm:p-5`}
         >
           {/* All message Container */}
-          <div>
-            <div className="mt-10 text-center">
-              <h1 className="text-xl font-semibold text-primary">
-                FINAL DELIVERY
-              </h1>
-              <p className="mx-auto mb-10 mt-2 w-3/4">
-                If you don&apos;t accept this delivery, this project will
-                automatically completed within the next 48 hours.
-              </p>
-            </div>
-            <div className="group mt-3 flex items-start gap-3 px-3">
-              <div className="flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[#ffefef]">
-                <img
-                  src={Logo}
-                  alt=""
-                  className="size-full rounded-full object-cover"
-                />
-              </div>
-              <div className="grow">
-                <div className="mt-1 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <h1 className="text-sm font-semibold sm:text-base">
-                      Client Name
-                    </h1>
-                    <p className="text-[10px] text-black/50 sm:text-xs">
-                      Apr 22, 2023, 7:33 AM
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3 text-black/50 opacity-0 group-hover:opacity-100">
-                    <button type="button">
-                      <BsFillReplyFill className="text-xl" />
-                    </button>
-                    <button type="button">
-                      <FaTrashAlt />
-                    </button>
-                  </div>
-                </div>
-                {/* Here is the message text to preview */}
-                <div className="mt-1 w-11/12">
-                  <p className="text-sm sm:text-base">
-                    hello, looking for a flyer for my bathroom and kitchen
-                    company. i like the black and gold one you have listed
+          {messages?.map((msg, index) => (
+            <div key={index}>
+              {/* Final Delivery or First Delivery Attempt Text */}
+              {msg?.deliverProject && (
+                <div className="mt-10 text-center">
+                  <h1 className="text-xl font-semibold text-primary">
+                    FINAL DELIVERY
+                  </h1>
+                  <p className="mx-auto mb-10 mt-2 w-3/4">
+                    If you don&apos;t accept this delivery, this project will
+                    automatically completed within the next 48 hours.
                   </p>
                 </div>
-                <CommentsPreview />
-                <AttachmentsPreview />
-                <AdditionalOfferPreview />
-                <OrderDeliveryPreview />
-                <ExtendingDeliveryPreview />
-                <div className="mt-8">
-                  <CancellingProjectPreview />
+              )}
+              {/* A conversation message Ui */}
+              <div className="group mt-3 flex items-start gap-3 px-3">
+                <div className="flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[#ffefef]">
+                  {msg?.userImage ? (
+                    <img
+                      src={msg?.userImage}
+                      alt=""
+                      className="size-full rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="text-xl font-bold text-[#7c7c7c]/50">
+                      {msg?.senderUserName?.charAt(0)?.toUpperCase()}
+                    </div>
+                  )}
+                </div>
+                <div className="grow">
+                  <div className="mt-1 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <h1 className="text-sm font-semibold sm:text-base">
+                        {msg?.senderUserName}
+                      </h1>
+                      <p className="text-[10px] text-black/50 sm:text-xs">
+                        {renderMessageDate(parseInt(msg?.timeAndDate))},{" "}
+                        {renderMessageTime(parseInt(msg?.timeAndDate))}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3 text-black/50 opacity-0 group-hover:opacity-100">
+                      <button type="button">
+                        <BsFillReplyFill className="text-xl" />
+                      </button>
+                      <button type="button">
+                        <FaTrashAlt />
+                      </button>
+                    </div>
+                  </div>
+                  {/* Here is the message text to preview */}
+                  {msg?.messageText && (
+                    <div className="mt-1 w-11/12">
+                      <p className="text-sm sm:text-base">{msg?.messageText}</p>
+                    </div>
+                  )}
+                  {msg?.imageComments?.length > 0 && <CommentsPreview />}
+                  {msg?.attachment?.length > 0 && <AttachmentsPreview />}
+                  {msg?.additionalOffer && <AdditionalOfferPreview />}
+                  {msg?.deliverProject && <OrderDeliveryPreview />}
+                  {msg?.extendDeliveryTime && <ExtendingDeliveryPreview />}
+                  {msg?.cancelProject && (
+                    <div className="mt-8">
+                      <CancellingProjectPreview />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
-          </div>
+          ))}
           {/* <div ref={endOfMessagesRef} /> */}
         </div>
         {/* Text Field Part */}
@@ -575,7 +631,7 @@ const OrderChatBox = () => {
           <AdditionalOfferModal
             handleClose={setOpenOfferModal}
             onOfferSubmit={socket}
-          // values={messages}
+            // values={messages}
           />
         )}
       </div>
