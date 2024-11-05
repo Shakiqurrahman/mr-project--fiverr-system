@@ -7,6 +7,7 @@ import { apiSlice } from "./api/apiSlice";
 import { inboxApiSlice } from "./api/inboxApiSlice";
 import { multiProjectApiSlice } from "./api/multiProjectApiSlice";
 import { offerProjectApiSlice } from "./api/offerProjectApiSlice";
+import { orderApiSlice } from "./api/orderApiSlice";
 import { uploadDesignApiSlice } from "./api/uploadDesignApiSlice";
 import cartSlice from "./features/cartSlice";
 import categorySlice from "./features/category/categorySlice";
@@ -66,6 +67,7 @@ const store = configureStore({
     [uploadDesignApiSlice.reducerPath]: uploadDesignApiSlice.reducer,
     [multiProjectApiSlice.reducerPath]: multiProjectApiSlice.reducer,
     [inboxApiSlice.reducerPath]: inboxApiSlice.reducer,
+    [orderApiSlice.reducerPath]: orderApiSlice.reducer,
     // [inboxApiSlice.reducerPath]: persistedInboxApiReducer,
     chat: chatSlice,
     comment: commentSlice,
@@ -81,6 +83,7 @@ const store = configureStore({
       uploadDesignApiSlice.middleware,
       multiProjectApiSlice.middleware,
       inboxApiSlice.middleware,
+      orderApiSlice.middleware,
     ),
 });
 
