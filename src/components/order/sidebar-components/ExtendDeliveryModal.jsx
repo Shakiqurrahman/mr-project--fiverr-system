@@ -1,15 +1,17 @@
 import React, { useRef, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
+import { useSelector } from "react-redux";
 import useOutsideClick from "../../../hooks/useOutsideClick";
 
 const ExtendDeliveryModal = ({ handleClose }) => {
+  const { user } = useSelector((state) => state.user);
   const modalRef = useRef(null);
   const [extendType, setExtendType] = useState("requestByClient");
   const [form, setForm] = useState({
     days: 1,
     explainWhyExtend: "",
   });
-  const isAdmin = true;
+  const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
 
   const amount = form.days > 0 ? parseInt(form.days) * 5 : 0;
 

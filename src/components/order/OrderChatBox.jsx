@@ -56,6 +56,7 @@ const OrderChatBox = () => {
   const endOfMessagesRef = useRef(null);
 
   // all states defination here
+  const [isImageUploading, setIsImageUploading] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
   const [textValue, setTextValue] = useState("");
   const [qucikMsgBtnController, setQucikMsgBtnController] = useState(null);
@@ -160,6 +161,7 @@ const OrderChatBox = () => {
 
   // Image Preview Controllers
   const getImagesWithDimensions = (files) => {
+    setIsImageUploading(true);
     const handleImageLoad = async (file, index) => {
       console.log(file);
       const formData = new FormData();
@@ -206,6 +208,7 @@ const OrderChatBox = () => {
       } catch (error) {
         console.error("Error uploading image:", error);
       }
+      setIsImageUploading(false);
     };
 
     Array.from(files).forEach((file, i) => {
@@ -432,10 +435,20 @@ const OrderChatBox = () => {
                     </div>
                   )}
                   {msg?.imageComments?.length > 0 && <CommentsPreview />}
-                  {msg?.attachment?.length > 0 && <AttachmentsPreview />}
-                  {msg?.additionalOffer && <AdditionalOfferPreview />}
+                  {msg?.attachment?.length > 0 && (
+                    <AttachmentsPreview images={msg?.attachment || []} />
+                  )}
+                  {msg?.additionalOffer && (
+                    <AdditionalOfferPreview
+                      value={msg?.additionalOffer || {}}
+                    />
+                  )}
                   {msg?.deliverProject && <OrderDeliveryPreview />}
-                  {msg?.extendDeliveryTime && <ExtendingDeliveryPreview />}
+                  {msg?.extendDeliveryTime && (
+                    <ExtendingDeliveryPreview
+                      value={msg?.extendDeliveryTime || {}}
+                    />
+                  )}
                   {msg?.cancelProject && (
                     <div className="mt-8">
                       <CancellingProjectPreview />
@@ -607,8 +620,9 @@ const OrderChatBox = () => {
                 )}
               </div>
               <button
+                disabled={isImageUploading}
                 type="button"
-                className="flex h-full w-[100px] items-center justify-center bg-primary text-sm font-semibold text-white sm:w-[120px] sm:text-base"
+                className="flex h-full w-[100px] items-center justify-center bg-primary text-sm font-semibold text-white disabled:bg-primary/50 sm:w-[120px] sm:text-base"
                 onClick={handleSubmitMessage}
               >
                 Send
@@ -631,7 +645,7 @@ const OrderChatBox = () => {
           <AdditionalOfferModal
             handleClose={setOpenOfferModal}
             onOfferSubmit={socket}
-            // values={messages}
+            updateMessages={setMessages}
           />
         )}
       </div>

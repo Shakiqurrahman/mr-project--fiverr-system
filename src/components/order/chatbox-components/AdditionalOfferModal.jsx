@@ -1,7 +1,17 @@
 import { useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import useOutsideClick from "../../../hooks/useOutsideClick";
 
-const AdditionalOfferModal = ({ handleClose, onOfferSubmit }) => {
+const AdditionalOfferModal = ({
+  handleClose,
+  onOfferSubmit,
+  updateMessages,
+}) => {
+  const { user } = useSelector((state) => state?.user);
+
+  // Checking Admin
+  const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
+
   const formRef = useRef(null);
 
   const [form, setForm] = useState({
@@ -14,14 +24,71 @@ const AdditionalOfferModal = ({ handleClose, onOfferSubmit }) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // Setup sending message time and date
+  const dates = new Date();
+  const timeAndDate = dates.getTime();
+
+  const renderMessageTime = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
+  const renderMessageDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString([], {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(form);
+
+    const submitForm = {
+      messageText: "",
+      senderUserName: user?.userName,
+      userImage: user?.image,
+      attachment: [],
+      additionalOffer: form,
+      extendDeliveryTime: null,
+      deliverProject: null,
+      cancelProject: null,
+      imageComments: [],
+      timeAndDate,
+      // replyTo,
+    };
+
+    if (isAdmin) {
+      onOfferSubmit?.emit("order:admin-message", {
+        userId: "671ba677ed05eed5d29efb35",
+        ...submitForm,
+      });
+    } else {
+      onOfferSubmit?.emit("order:user-message", {
+        ...submitForm,
+      });
+    }
+
+    updateMessages((prev) => [
+      ...prev,
+      {
+        ...submitForm,
+        recipientId: isAdmin ? "671ba677ed05eed5d29efb35" : "",
+      },
+    ]);
+
     setForm({
       text: "",
       price: "",
       duration: "",
     });
+    // setReplyTo(null);
     handleClose(false);
   };
 

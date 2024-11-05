@@ -69,6 +69,7 @@ const PaymentPage = () => {
     const data = {
       userId: user?.id,
       items: itemsData,
+      originalItems: items,
       totalAmount: designs?.totalAmount || totalAmount,
       requirements: state?.requirements,
       bulletPoint: state?.bulletPoint,

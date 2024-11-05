@@ -2,7 +2,7 @@
 import FileIcon from "./FileIcon";
 
 const FilePreview = ({ file }) => {
-  const isImage = file.type.startsWith("image/");
+  const isImage = file?.type?.startsWith("image/");
   const isZip = file.format === "zip";
   const isRar = file.format === "rar";
 
