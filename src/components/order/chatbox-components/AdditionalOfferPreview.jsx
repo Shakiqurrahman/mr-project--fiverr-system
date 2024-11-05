@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 
-const AdditionalOfferPreview = () => {
+const AdditionalOfferPreview = ({ value }) => {
   const { user } = useSelector((state) => state.user);
   return (
     <div className="mt-3">
@@ -13,15 +13,17 @@ const AdditionalOfferPreview = () => {
         </div>
         <div className="p-4">
           <div className="flex items-center border-b pb-4">
-            <div className="w-4/6">
-              Pressure Washing Double Sided Door Hanger Design
+            <div className="w-4/6">{value?.text}</div>
+            <div className="w-1/6 text-center">
+              {parseInt(value?.duration) > 1
+                ? value?.duration + " Days"
+                : value?.duration + " Day"}
             </div>
-            <div className="w-1/6 text-center">0 Days</div>
-            <div className="w-1/6 text-end font-semibold">$20</div>
+            <div className="w-1/6 text-end font-semibold">${value?.price}</div>
           </div>
           <div className="flex items-center justify-between py-4">
             <div className="grow">Subtotal</div>
-            <div className="shrink-0 font-semibold">$20</div>
+            <div className="shrink-0 font-semibold">${value?.price}</div>
           </div>
           <div className="flex items-center justify-between border-b pb-4">
             <div className="grow">Fee</div>
@@ -29,7 +31,7 @@ const AdditionalOfferPreview = () => {
           </div>
           <div className="flex items-center justify-between py-4">
             <div className="grow font-semibold">Total</div>
-            <div className="shrink-0 font-semibold">$20</div>
+            <div className="shrink-0 font-semibold">${value?.price}</div>
           </div>
           <div className="flex items-center justify-center gap-5">
             {user?.role === "USER" ? (
