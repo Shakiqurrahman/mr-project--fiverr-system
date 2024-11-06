@@ -14,6 +14,7 @@ import categorySlice from "./features/category/categorySlice";
 import chatSlice from "./features/chatSlice";
 import commentSlice from "./features/commentsSlice";
 import offerProjectSlice from "./features/offerProjectSlice";
+import orderSlice from "./features/orderSlice";
 import passwordVisibilitySlice from "./features/passwordVisibilitySlice";
 import userSlice from "./features/userSlice";
 
@@ -35,7 +36,6 @@ const offerProjectPersistConfig = {
   version: 1,
   storage,
 };
-
 
 // Persisted reducers
 const persistedUserReducer = persistReducer(userPersistConfig, userSlice);
@@ -63,6 +63,7 @@ const store = configureStore({
     [orderApiSlice.reducerPath]: orderApiSlice.reducer,
     chat: chatSlice,
     comment: commentSlice,
+    order: orderSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

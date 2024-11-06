@@ -4,7 +4,7 @@ import { BsFillReplyFill } from "react-icons/bs";
 import { FaTrashAlt } from "react-icons/fa";
 import { IoIosArrowDown, IoIosArrowUp, IoIosAttach } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
@@ -21,6 +21,7 @@ import EmojiPicker from "../chat/EmojiPicker";
 
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { setMessages } from "../../Redux/features/orderSlice";
 import CircleProgressBar from "../CircleProgressBar";
 import FilePreview from "../FilePreview";
 import AdditionalOfferModal from "./chatbox-components/AdditionalOfferModal";
@@ -32,11 +33,14 @@ import ExtendingDeliveryPreview from "./chatbox-components/ExtendingDeliveryPrev
 import OrderDeliveryPreview from "./chatbox-components/OrderDeliveryPreview";
 
 const OrderChatBox = () => {
+  const dispatch = useDispatch();
   // Redux query imports here
   const { data: quickMsgs } = useFetchQuickResMsgQuery();
   const [deleteQuickResMsg] = useDeleteQuickResMsgMutation();
 
   const { user, token } = useSelector((state) => state.user);
+
+  const { messages } = useSelector((state) => state.order);
 
   // Checking Admin
   const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
@@ -63,7 +67,6 @@ const OrderChatBox = () => {
   const [openEditMsgModal, setOpenEditMsgModal] = useState(null);
   const [openAddMsgModal, setOpenAddMsgModal] = useState(false);
   const [openOfferModal, setOpenOfferModal] = useState(false);
-  const [messages, setMessages] = useState([]);
   const [replyTo, setReplyTo] = useState(null);
 
   console.log(messages);
@@ -77,7 +80,7 @@ const OrderChatBox = () => {
     socket?.on("order:message", (msg) => {
       console.log(msg, "checking messages");
       // if (!isAdmin) {
-      setMessages((prevMessages) => [...prevMessages, msg]);
+      dispatch(setMessages(msg));
       // }
       // let filter = msg.userId === conversationUser && msg;
       // if (isAdmin && filter) {
@@ -107,18 +110,18 @@ const OrderChatBox = () => {
     return () => {
       socket?.off("order:message");
     };
-  }, [socket, messages]);
+  }, [socket, dispatch]);
   // }, [conversationUser, isAdmin, socket, messages, dispatch, user]);
 
-  useEffect(
-    () => {
-      // Inital Scroll to last message
-      endOfMessagesRef.current?.scrollIntoView();
-    },
-    [
-      /*messages*/
-    ],
-  );
+  // useEffect(
+  //   () => {
+  //     // Inital Scroll to last message
+  //     endOfMessagesRef.current?.scrollIntoView();
+  //   },
+  //   [
+  //     /*messages*/
+  //   ],
+  // );
 
   // click outside the box it will be toggled
   useOutsideClick(menuRef, () => setQucikMsgBtnController(null));
@@ -333,13 +336,12 @@ const OrderChatBox = () => {
       }
 
       // Optimistically add the message to local state (before API response)
-      setMessages((prev) => [
-        ...prev,
-        {
+      dispatch(
+        setMessages({
           ...submitForm,
           recipientId: isAdmin ? "671ba677ed05eed5d29efb35" : "",
-        },
-      ]);
+        }),
+      );
 
       // Clear input fields and images on success
       setTextValue("");
@@ -451,7 +453,9 @@ const OrderChatBox = () => {
                   )}
                   {msg?.cancelProject && (
                     <div className="mt-8">
-                      <CancellingProjectPreview />
+                      <CancellingProjectPreview
+                        value={msg?.cancelProject || {}}
+                      />
                     </div>
                   )}
                 </div>
@@ -645,7 +649,6 @@ const OrderChatBox = () => {
           <AdditionalOfferModal
             handleClose={setOpenOfferModal}
             onOfferSubmit={socket}
-            updateMessages={setMessages}
           />
         )}
       </div>

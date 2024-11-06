@@ -1,12 +1,10 @@
 import { useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useOutsideClick from "../../../hooks/useOutsideClick";
+import { setMessages } from "../../../Redux/features/orderSlice";
 
-const AdditionalOfferModal = ({
-  handleClose,
-  onOfferSubmit,
-  updateMessages,
-}) => {
+const AdditionalOfferModal = ({ handleClose, onOfferSubmit }) => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state?.user);
 
   // Checking Admin
@@ -28,27 +26,8 @@ const AdditionalOfferModal = ({
   const dates = new Date();
   const timeAndDate = dates.getTime();
 
-  const renderMessageTime = (timestamp) => {
-    const date = new Date(timestamp);
-    return date.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-  };
-
-  const renderMessageDate = (timestamp) => {
-    const date = new Date(timestamp);
-    return date.toLocaleDateString([], {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(form);
 
     const submitForm = {
       messageText: "",
@@ -75,13 +54,12 @@ const AdditionalOfferModal = ({
       });
     }
 
-    updateMessages((prev) => [
-      ...prev,
-      {
+    dispatch(
+      setMessages({
         ...submitForm,
         recipientId: isAdmin ? "671ba677ed05eed5d29efb35" : "",
-      },
-    ]);
+      }),
+    );
 
     setForm({
       text: "",

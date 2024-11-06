@@ -1,33 +1,80 @@
 import React, { useRef, useState } from "react";
-import useOutsideClick from "../../../hooks/useOutsideClick";
 import { IoCloseSharp } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux";
+import useOutsideClick from "../../../hooks/useOutsideClick";
+import { configApi } from "../../../libs/configApi";
+import { connectSocket } from "../../../libs/socketService";
+import { setMessages } from "../../../Redux/features/orderSlice";
 
 const CancelProjectModal = ({ handleClose }) => {
-    const modalRef = useRef(null);
+  const dispatch = useDispatch();
+  const { user, token } = useSelector((state) => state?.user);
+
+  // Socket Connection
+  const socket = connectSocket(`${configApi.socket}`, token);
+
+  // Checking Admin
+  const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
+
+  const modalRef = useRef(null);
   const [extendType, setExtendType] = useState("requestByClient");
 
   const [form, setForm] = useState({
     explainWhyCancel: "",
   });
 
-  const isAdmin = true;
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
 
-
   const handleExtendType = (e) => {
     setExtendType(e.target.id);
   };
 
+  // Setup sending message time and date
+  const dates = new Date();
+  const timeAndDate = dates.getTime();
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const data = {...form, extendType}
-    console.log(data);
+    const data = { ...form, extendType };
 
-    // onNoteSubmit(form);
+    const submitForm = {
+      messageText: "",
+      senderUserName: user?.userName,
+      userImage: user?.image,
+      attachment: [],
+      additionalOffer: null,
+      extendDeliveryTime: null,
+      deliverProject: null,
+      cancelProject: data,
+      imageComments: [],
+      timeAndDate,
+      // replyTo,
+    };
+
+    if (isAdmin) {
+      socket?.emit("order:admin-message", {
+        userId: "671ba677ed05eed5d29efb35",
+        ...submitForm,
+      });
+    } else {
+      socket?.emit("order:user-message", {
+        ...submitForm,
+      });
+    }
+
+    dispatch(
+      setMessages({
+        ...submitForm,
+        recipientId: isAdmin ? "671ba677ed05eed5d29efb35" : "",
+      }),
+    );
+
+    setForm({
+      explainWhyCancel: "",
+    });
     handleClose(false);
   };
 
@@ -81,7 +128,7 @@ const CancelProjectModal = ({ handleClose }) => {
           <div className="mt-10 flex items-center justify-end gap-6 sm:flex-row sm:gap-2">
             <button
               type="submit"
-            //   disabled={form.days <= 0}
+              //   disabled={form.days <= 0}
               className="rounded bg-primary px-5 py-2 text-base font-semibold text-white outline-none duration-300 hover:bg-primary/80 disabled:bg-primary/60"
             >
               Confirm Cancel

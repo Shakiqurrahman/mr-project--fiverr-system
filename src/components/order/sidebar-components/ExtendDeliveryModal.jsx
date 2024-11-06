@@ -1,16 +1,24 @@
 import React, { useRef, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useOutsideClick from "../../../hooks/useOutsideClick";
+import { configApi } from "../../../libs/configApi";
+import { connectSocket } from "../../../libs/socketService";
+import { setMessages } from "../../../Redux/features/orderSlice";
 
 const ExtendDeliveryModal = ({ handleClose }) => {
-  const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const { user, token } = useSelector((state) => state.user);
   const modalRef = useRef(null);
   const [extendType, setExtendType] = useState("requestByClient");
   const [form, setForm] = useState({
     days: 1,
     explainWhyExtend: "",
   });
+
+  // Socket Connection
+  const socket = connectSocket(`${configApi.socket}`, token);
+
   const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
 
   const amount = form.days > 0 ? parseInt(form.days) * 5 : 0;
@@ -24,13 +32,48 @@ const ExtendDeliveryModal = ({ handleClose }) => {
     setExtendType(e.target.id);
   };
 
+  // Setup sending message time and date
+  const dates = new Date();
+  const timeAndDate = dates.getTime();
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const data =
       extendType === "requestByMe"
         ? { ...form, extendType }
         : { ...form, extendType, amount };
-    console.log(data);
+
+    const submitForm = {
+      messageText: "",
+      senderUserName: user?.userName,
+      userImage: user?.image,
+      attachment: [],
+      additionalOffer: null,
+      extendDeliveryTime: data,
+      deliverProject: null,
+      cancelProject: null,
+      imageComments: [],
+      timeAndDate,
+      // replyTo,
+    };
+
+    if (isAdmin) {
+      socket?.emit("order:admin-message", {
+        userId: "671ba677ed05eed5d29efb35",
+        ...submitForm,
+      });
+    } else {
+      socket?.emit("order:user-message", {
+        ...submitForm,
+      });
+    }
+
+    dispatch(
+      setMessages({
+        ...submitForm,
+        recipientId: isAdmin ? "671ba677ed05eed5d29efb35" : "",
+      }),
+    );
 
     // onNoteSubmit(form);
     handleClose(false);
