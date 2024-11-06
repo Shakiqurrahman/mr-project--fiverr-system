@@ -13,7 +13,6 @@ const ExtendingDeliveryPreview = ({ value }) => {
         <div className="mb-6 flex items-center">
           <div className="w-4/6 pr-4">{value?.explainWhyExtend}</div>
 
-          {/*TODO: more than 1 will add s - day's && if it is 1 it will day */}
           <div className="w-1/6 text-center">
             {parseInt(value?.days) > 1
               ? value?.days + " Days"

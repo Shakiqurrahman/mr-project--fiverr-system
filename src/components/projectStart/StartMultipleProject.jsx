@@ -10,7 +10,7 @@ const StartMultipleProject = ({ items }) => {
   const navigate = useNavigate();
   const { data } = useFetchMultiProjectQuery();
   const dispatch = useDispatch();
-  const { category: categories } = useSelector((state) => state.category);
+  const { category: categories } = useSelector((state) => state?.category);
   const [multiProjectData, setMultiProjectData] = useState(null);
   const [choosenItems, setChoosenItems] = useState([]);
 
@@ -72,29 +72,29 @@ const StartMultipleProject = ({ items }) => {
     if (categories && choosenItems.length > 0) {
       setChoosenItems((prevItems) =>
         prevItems.map((item) => {
-          const categoryObj = categories.find(
+          const categoryObj = categories?.find(
             (cat) => cat.categoryName === item.category,
           );
           const subCategoryObj = categories
-            .filter((cat) => cat.categoryName === item.category)[0]
+            ?.filter((cat) => cat.categoryName === item.category)[0]
             ?.subCategory?.find((sub) => sub.subTitle === item.subCategory);
 
           return {
             ...item,
-            category: categoryObj || item.category,
-            subCategory: subCategoryObj || item.subCategory,
-            subTotal: subCategoryObj?.subAmount || item.subTotal,
+            category: categoryObj || item?.category,
+            subCategory: subCategoryObj || item?.subCategory,
+            subTotal: subCategoryObj?.subAmount || item?.subTotal,
             regularDeliveryDays:
-              subCategoryObj?.regularDeliveryDays || item.regularDeliveryDays,
+              subCategoryObj?.regularDeliveryDays || item?.regularDeliveryDays,
             fastDeliveryDays:
-              subCategoryObj?.fastDeliveryDays || item.fastDeliveryDays,
+              subCategoryObj?.fastDeliveryDays || item?.fastDeliveryDays,
             fastDeliveryPrice:
-              subCategoryObj?.fastDeliveryPrice || item.fastDeliveryPrice,
+              subCategoryObj?.fastDeliveryPrice || item?.fastDeliveryPrice,
           };
         }),
       );
     }
-  }, [categories, choosenItems.length]);
+  }, [categories, choosenItems.length, items]);
 
   const handleFastDeliveryToggle = (e, id) => {
     const isChecked = e.target.checked;
@@ -207,14 +207,17 @@ const StartMultipleProject = ({ items }) => {
         totalAmount,
         designs: newItems,
         from: "multipleProject",
+        projectType: "M-D Project",
+        projectImage: multiProjectData.projectImage?.url,
       };
       navigate("/payment", { state: data });
     } else if (choosenItems?.length === 1) {
       const choosenItem = choosenItems[0];
+      console.log("choosen item", choosenItem);
       const selectedCategory = choosenItem.category;
       const data = {
         ...selectedCategory,
-        subCategory: selectedCategory.subCategory.subTitle,
+        subCategory: choosenItem.subCategory.subTitle,
         selectedQuantity: choosenItem.quantity,
         title: choosenItem.category.categoryName,
         designTitle: choosenItem.title,
@@ -227,8 +230,10 @@ const StartMultipleProject = ({ items }) => {
         fastDeliveryAmount: choosenItem.fastDeliveryPrice,
         fastDeliveryDuration: choosenItem.fastDeliveryDays,
         subTotal: choosenItem.subCategory.subAmount,
-        totalAmount: choosenItem.subTitle,
+        totalAmount: choosenItem.subTotal,
         designDbId: choosenItem.id,
+        projectType: "Category Project",
+        projectImage: selectedCategory?.image?.url,
       };
       navigate("/payment", { state: data });
     }

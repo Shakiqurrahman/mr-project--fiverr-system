@@ -21,6 +21,7 @@ const PaymentPage = () => {
   );
 
   const [designs, setDesigns] = useState(state || []);
+  console.log("designs", designs);
 
   // Function to handle tab click
   const handleTabClick = (tab) => {
@@ -66,6 +67,12 @@ const PaymentPage = () => {
       fastDeliveryPrice:
         parseInt(item.fastDeliveryAmount) || parseInt(item.fastDeliveryPrice),
     }));
+
+    const projectType = designs?.projectType;
+    const projectImage = designs?.projectImage;
+
+    console.log(projectType, projectImage);
+
     const data = {
       userId: user?.id,
       items: itemsData,
@@ -75,6 +82,8 @@ const PaymentPage = () => {
       bulletPoint: state?.bulletPoint,
       deliveryDuration: state?.deliveryDuration || state?.duration,
       title: state?.title,
+      projectType,
+      projectImage,
     };
     try {
       const response = await axios.post(
