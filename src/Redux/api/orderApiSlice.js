@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import { configApi } from "../../libs/configApi";
 
 export const orderApiSlice = createApi({
-  reducerPath: "inboxApi",
+  reducerPath: "orderApi",
   baseQuery: fetchBaseQuery({
     baseUrl: `${configApi.api}`,
     prepareHeaders: (headers) => {
