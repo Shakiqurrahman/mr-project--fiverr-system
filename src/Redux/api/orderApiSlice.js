@@ -19,7 +19,13 @@ export const orderApiSlice = createApi({
       query: () => "order-status",
       transformResponse: (response) => response?.data,
     }),
+
+    fetchCompletedProjects: builder.query({
+      query: ({ status }) => `order-status?status=${status}`,
+      transformResponse: (response) => response?.data,
+    }),
   }),
 });
 
-export const { useFetchActiveProjectsQuery } = orderApiSlice;
+export const { useFetchActiveProjectsQuery, useFetchCompletedProjectsQuery } =
+  orderApiSlice;

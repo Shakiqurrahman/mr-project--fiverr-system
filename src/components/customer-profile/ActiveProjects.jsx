@@ -1,42 +1,18 @@
+import {
+  differenceInDays,
+  differenceInHours,
+  differenceInMinutes,
+  differenceInMonths,
+  differenceInYears,
+  isPast,
+  parseISO,
+} from "date-fns";
 import React from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useFetchActiveProjectsQuery } from "../../Redux/api/orderApiSlice";
 import { getStatusText } from "./StatusText";
 
 const ActiveProjects = () => {
-  // const [activeProjects] = useState([
-  //   {
-  //       id: 1,
-  //       title: "Flyer Design",
-  //       img: designImg,
-  //       price: 30,
-  //       time: "11h - 45m late",
-  //       status: "Revision",
-  //     },
-  //     {
-  //       id: 2,
-  //       title: "Door Hanger Design",
-  //       img: designImg,
-  //       price: 40,
-  //       time: "11h - 45m",
-  //       status: "Ongoing",
-  //     },
-  //     {
-  //       id: 3,
-  //       title: "Postcard Design",
-  //       img: designImg,
-  //       price: 40,
-  //       time: "00 - 00",
-  //       status: "Waiting",
-  //     },
-  //     {
-  //       id: 4,
-  //       title: "Business Card Design",
-  //       img: designImg,
-  //       price: 25,
-  //       time: "00 - 00",
-  //       status: "Delivered",
-  //     },
-  // ]);
   const {
     data: activeProjects,
     isLoading,
@@ -44,10 +20,80 @@ const ActiveProjects = () => {
   } = useFetchActiveProjectsQuery();
   console.log("data", activeProjects);
 
+  // Function to get time status
+  const getTimeStatus = (deadline) => {
+    const now = new Date();
+    const eventDate = parseISO(deadline); // Convert string to date
+
+    if (isPast(eventDate)) {
+      // time is late
+      const yearsLate = differenceInYears(now, eventDate);
+      const monthsLate = differenceInMonths(now, eventDate) % 12;
+      const daysLate = differenceInDays(now, eventDate) % 30;
+      const hoursLate = differenceInHours(now, eventDate) % 24;
+      const minutesLate = differenceInMinutes(now, eventDate) % 60;
+
+      let overdueText = "";
+
+      if (yearsLate >= 1) {
+        overdueText = `${yearsLate} year${yearsLate > 1 ? "s" : ""} late`;
+      } else if (monthsLate >= 1) {
+        overdueText = `${monthsLate} month${monthsLate > 1 ? "s" : ""} late`;
+      } else if (daysLate >= 1) {
+        overdueText = `${daysLate} day${daysLate > 1 ? "s" : ""}`;
+      } else if (hoursLate >= 1) {
+        overdueText = `${hoursLate}h ${minutesLate}min late`;
+      } else {
+        overdueText = `${minutesLate}min late`;
+      }
+
+      return {
+        time: overdueText,
+        color: "black", // Default color for overdue events
+      };
+    } else {
+      // time is remaining
+      const timeRemaining = eventDate - now;
+
+      const totalHours = Math.floor(timeRemaining / (1000 * 60 * 60)); // Total hours remaining
+      const days = Math.floor(totalHours / 24); // Calculate remaining days
+      const hours = totalHours % 24; // Remaining hours
+      const minutes = Math.floor(
+        (timeRemaining % (1000 * 60 * 60)) / (1000 * 60),
+      ); // Remaining minutes
+
+      let displayTime;
+      if (days > 0) {
+        displayTime = `${days}d - ${hours}h`;
+      } else {
+        displayTime = `${hours}h - ${minutes} min`;
+      }
+
+      // Set color based on remaining time
+      const color = totalHours < 12 ? "red" : "black"; // Red if less than 12 hours
+
+      return {
+        time: displayTime,
+        color: color,
+      };
+    }
+  };
+
+  const filteredActiveProjects = activeProjects?.filter(
+    (activeProject) =>
+      activeProject?.trackProjectStatus !== "COMPLETE_PROJECT" &&
+      activeProject?.trackProjectStatus !== "CANCELLED",
+  );
+
   return (
     <div className="mt-8 grid gap-4 min-[850px]:grid-cols-2">
-      {activeProjects?.length > 0 ? (
+      {isLoading ? (
+        <div className="flex justify-center text-primary">
+          <AiOutlineLoading3Quarters className="animate-spin text-4xl" />
+        </div>
+      ) : filteredActiveProjects?.length > 0 ? (
         activeProjects?.map((project) => {
+          const { time, color } = getTimeStatus(project?.deliveryDate);
           return (
             <div
               className="rounded-lg border border-gray-300 p-2 shadow-sm lg:p-4"
@@ -56,22 +102,26 @@ const ActiveProjects = () => {
               <div className="flex items-center gap-3">
                 <img
                   className="w-28 lg:w-36"
-                  src={project?.img}
+                  src={project?.projectImage}
                   alt={project?.projectName}
                 />
                 <div>
-                  <h3 className="mb-1 text-sm sm:text-base">
+                  <h3 className="mb-1 text-sm capitalize sm:text-base">
                     {project?.projectName}
                   </h3>
                   <p className="text-lg font-semibold sm:text-xl">
-                    ${project?.price}
+                    ${project?.totalPrice}
                   </p>
                 </div>
               </div>
               <div className="mt-2 flex justify-between">
-                <p>{project?.time}</p>
+                <p
+                  className={`${color === "red" ? "text-red-500" : "text-black"}`}
+                >
+                  {time}
+                </p>
                 <p className="font-semibold">
-                  {getStatusText(project?.status)}
+                  {getStatusText(project?.projectStatus)}
                 </p>
               </div>
             </div>
