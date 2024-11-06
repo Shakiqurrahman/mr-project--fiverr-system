@@ -26,10 +26,28 @@ import { configApi } from "../libs/configApi";
 import { connectSocket } from "../libs/socketService";
 import { timeAgoTracker } from "../libs/timeAgoTracker";
 import { useLazyGetAllMessagesQuery } from "../Redux/api/inboxApiSlice";
+import {
+  useFetchActiveProjectsQuery,
+  useFetchCompletedProjectsQuery,
+} from "../Redux/api/orderApiSlice";
 import { setChatData, setConversationUser } from "../Redux/features/chatSlice";
 import { setOnlineUsers, setUser } from "../Redux/features/userSlice";
 
 function Profile({ user = {}, slug }) {
+  const {
+    data: activeProjects,
+    isActiveProjectsLoading,
+    // error,
+  } = useFetchActiveProjectsQuery();
+
+  const {
+    data: completedProjects,
+    isCompletedProjectLoading,
+    // error,
+  } = useFetchCompletedProjectsQuery({
+    status: "COMPLETE_PROJECT",
+  });
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {
@@ -410,7 +428,7 @@ function Profile({ user = {}, slug }) {
             }`}
             onClick={() => setActiveTab("active")}
           >
-            Active Projects (4)
+            Active Projects ({activeProjects?.length})
           </h2>
           <h2
             className={`cursor-pointer text-lg font-semibold sm:text-xl ${
@@ -418,13 +436,23 @@ function Profile({ user = {}, slug }) {
             }`}
             onClick={() => setActiveTab("completed")}
           >
-            Completed Projects (13)
+            Completed Projects ({completedProjects?.length})
           </h2>
         </div>
         {/* activeProject */}
-        {activeTab === "active" && <ActiveProjects />}
+        {activeTab === "active" && (
+          <ActiveProjects
+            activeProjects={activeProjects}
+            isActiveProjectsLoading={isActiveProjectsLoading}
+          />
+        )}
         {/* completedProjects */}
-        {activeTab === "completed" && <CompletedProjects />}
+        {activeTab === "completed" && (
+          <CompletedProjects
+            completedProjects={completedProjects}
+            isCompletedProjectLoading={isCompletedProjectLoading}
+          />
+        )}
         {/* All Reviews  */}
         <AllReviews />
       </div>

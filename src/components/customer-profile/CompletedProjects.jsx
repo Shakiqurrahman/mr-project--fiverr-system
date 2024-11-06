@@ -1,17 +1,11 @@
 import React from "react";
-import { useFetchCompletedProjectsQuery } from "../../Redux/api/orderApiSlice";
 import { getStatusText } from "./StatusText";
 
-const CompletedProjects = () => {
-  const {
-    data: completedProjects,
-    isLoading,
-    error,
-  } = useFetchCompletedProjectsQuery({
-    status: "COMPLETE_PROJECT",
-  });
+const CompletedProjects = ({
+  completedProjects,
+  isCompletedProjectLoading,
+}) => {
   console.log("data", completedProjects);
-
   return (
     <div className="mt-8 grid grid-cols-2 gap-4">
       {completedProjects?.length > 0 ? (

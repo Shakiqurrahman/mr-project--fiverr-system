@@ -9,15 +9,9 @@ import {
 } from "date-fns";
 import React from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { useFetchActiveProjectsQuery } from "../../Redux/api/orderApiSlice";
 import { getStatusText } from "./StatusText";
 
-const ActiveProjects = () => {
-  const {
-    data: activeProjects,
-    isLoading,
-    error,
-  } = useFetchActiveProjectsQuery();
+const ActiveProjects = ({ activeProjects, isActiveProjectsLoading }) => {
   console.log("data", activeProjects);
 
   // Function to get time status
@@ -82,17 +76,18 @@ const ActiveProjects = () => {
   const filteredActiveProjects = activeProjects?.filter(
     (activeProject) =>
       activeProject?.trackProjectStatus !== "COMPLETE_PROJECT" &&
-      activeProject?.trackProjectStatus !== "CANCELLED",
+      activeProject?.trackProjectStatus !== "CANCELLED" &&
+      activeProject?.paymentStatus === "COMPLETED",
   );
 
   return (
     <div className="mt-8 grid gap-4 min-[850px]:grid-cols-2">
-      {isLoading ? (
+      {isActiveProjectsLoading ? (
         <div className="flex justify-center text-primary">
           <AiOutlineLoading3Quarters className="animate-spin text-4xl" />
         </div>
       ) : filteredActiveProjects?.length > 0 ? (
-        activeProjects?.map((project) => {
+        filteredActiveProjects?.map((project) => {
           const { time, color } = getTimeStatus(project?.deliveryDate);
           return (
             <div
