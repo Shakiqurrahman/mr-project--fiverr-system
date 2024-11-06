@@ -308,6 +308,7 @@ const OrderChatBox = () => {
         size: img.size,
         url: img.url,
         format: img.format,
+        comments: [],
       }));
 
       const submitForm = {
@@ -436,7 +437,7 @@ const OrderChatBox = () => {
                       <p className="text-sm sm:text-base">{msg?.messageText}</p>
                     </div>
                   )}
-                  {msg?.imageComments?.length > 0 && <CommentsPreview />}
+                  <CommentsPreview />
                   {msg?.attachment?.length > 0 && (
                     <AttachmentsPreview images={msg?.attachment || []} />
                   )}

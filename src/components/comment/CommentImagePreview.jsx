@@ -19,6 +19,7 @@ const CommentImagePreview = () => {
   const { user } = useSelector((state) => state.user);
   const { imageDetails, highlight } = useSelector((state) => state.comment);
   const comments = imageDetails?.comments;
+  console.log("image comments", comments);
   const filteredComments = comments?.filter((c) => c.top);
   const [images, setImages] = useState([
     {
@@ -148,7 +149,7 @@ const CommentImagePreview = () => {
               <img
                 src={img?.url}
                 alt={img?.name}
-                className={`h-2/3 object-contain ${img.id === selectedImage.id && "scale-105"}`}
+                className={`h-2/3 object-contain opacity-50 ${img.id === selectedImage.id && "scale-105 !opacity-100"}`}
               />
               <h1 className="line-clamp-1 text-xs text-white">{img?.name}</h1>
             </button>
