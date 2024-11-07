@@ -24,8 +24,16 @@ export const orderApiSlice = createApi({
       query: ({ status }) => `order-status?status=${status}`,
       transformResponse: (response) => response?.data,
     }),
+
+    usersAllProjects: builder.query({
+      query: ({ userId }) => `order-status?user_id=${userId}`,
+      transformResponse: (response) => response?.data,
+    }),
   }),
 });
 
-export const { useFetchActiveProjectsQuery, useFetchCompletedProjectsQuery } =
-  orderApiSlice;
+export const {
+  useFetchActiveProjectsQuery,
+  useFetchCompletedProjectsQuery,
+  useUsersAllProjectsQuery,
+} = orderApiSlice;

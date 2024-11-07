@@ -29,6 +29,7 @@ import { useLazyGetAllMessagesQuery } from "../Redux/api/inboxApiSlice";
 import {
   useFetchActiveProjectsQuery,
   useFetchCompletedProjectsQuery,
+  useUsersAllProjectsQuery,
 } from "../Redux/api/orderApiSlice";
 import { setChatData, setConversationUser } from "../Redux/features/chatSlice";
 import { setOnlineUsers, setUser } from "../Redux/features/userSlice";
@@ -47,6 +48,12 @@ function Profile({ user = {}, slug }) {
   } = useFetchCompletedProjectsQuery({
     status: "COMPLETE_PROJECT",
   });
+
+  const { data: usersProjects } = useUsersAllProjectsQuery({
+    userId: user?.id,
+  });
+
+  console.log(usersProjects);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
