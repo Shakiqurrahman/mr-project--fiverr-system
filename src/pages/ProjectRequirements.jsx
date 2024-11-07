@@ -74,7 +74,7 @@ const ProjectRequirements = () => {
     if (projectDetails?.requirements) {
       const updateRequirements = projectDetails?.requirements?.map((item) => ({
         id: shortid.generate(),
-        question: item,
+        question: item.question,
         answer: "",
         attachments: [],
       }));
