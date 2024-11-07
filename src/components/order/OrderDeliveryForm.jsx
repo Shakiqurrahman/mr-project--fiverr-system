@@ -341,7 +341,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
                   </button>
                 </div>
                 <div className="hidden items-center gap-3 text-xs font-medium sm:flex">
-                  <p>Local time: 4:52 PM</p>
+                  <p>Local time: 07:13 PM, Nov 7, 2024</p>
                   <Divider className="h-4 w-px !bg-black" />
                   <p>Last seen 23 hours ago</p>
                 </div>

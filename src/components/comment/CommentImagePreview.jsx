@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { FaRegCommentDots } from "react-icons/fa";
 import { IoMdArrowBack } from "react-icons/io";
 import { LiaDownloadSolid } from "react-icons/lia";
 import ImageMarker from "react-image-marker";
@@ -10,35 +11,24 @@ import {
   setImageDetails,
   setMarkersData,
 } from "../../Redux/features/commentsSlice";
-import thumbnail from "../../assets/images/MR Logo Icon.png";
-import thumbnail2 from "../../assets/images/project-thumbnail-alt.jpg";
 import formatFileSize from "../../libs/formatFileSize";
 
-const CommentImagePreview = () => {
+const CommentImagePreview = ({
+  selected,
+  imagesArray,
+  close,
+  openDrawer,
+  drawer,
+}) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const { imageDetails, highlight } = useSelector((state) => state.comment);
   const comments = imageDetails?.comments;
   console.log("image comments", comments);
   const filteredComments = comments?.filter((c) => c.top);
-  const [images, setImages] = useState([
-    {
-      id: 1,
-      url: thumbnail,
-      name: "Image 1.jpg",
-      size: 215463,
-      comments: [],
-    },
-    {
-      id: 2,
-      url: thumbnail2,
-      name: "Image 2.jpg",
-      size: 2154631,
-      comments: [],
-    },
-  ]);
+  const [images, setImages] = useState(imagesArray || []);
 
-  const [selectedImage, setSelectedImage] = useState(images[0]);
+  const [selectedImage, setSelectedImage] = useState(selected || {});
 
   const CustomMarker = ({ markerId }) => {
     return (
@@ -71,7 +61,7 @@ const CommentImagePreview = () => {
     if (imageDetails) {
       setImages((prev) =>
         prev.map((img) => {
-          if (img.id === imageDetails.id) {
+          if (img.imageId === imageDetails.imageId) {
             return imageDetails;
           } else {
             return img;
@@ -87,6 +77,7 @@ const CommentImagePreview = () => {
     <div className="h-full w-full">
       <div className="flex h-[60px] items-center gap-3 p-4 font-medium text-white">
         <button
+          onClick={() => close(false)}
           type="buttton"
           className="flex size-8 items-center justify-center rounded-full bg-black"
         >
@@ -98,7 +89,11 @@ const CommentImagePreview = () => {
             ({formatFileSize(selectedImage?.size)})
           </span>
         </p>
-        <a href={selectedImage?.url} download={selectedImage?.name}>
+        <a
+          href={selectedImage?.url}
+          download={selectedImage?.name}
+          target="_blank"
+        >
           <LiaDownloadSolid className="text-xl text-primary" />
         </a>
         <div className="ms-auto flex gap-2">
@@ -125,6 +120,12 @@ const CommentImagePreview = () => {
             </div>
           )}
         </div>
+        {!drawer && (
+          <FaRegCommentDots
+            className="hidden cursor-pointer text-3xl text-gray-300 md:block"
+            onClick={() => openDrawer(true)}
+          />
+        )}
       </div>
       <div
         className={`flex ${multiple ? "h-[calc(100%_-_160px)]" : "h-[calc(100%_-_60px)]"} w-full items-center justify-center p-10`}
@@ -143,13 +144,13 @@ const CommentImagePreview = () => {
             <button
               key={index}
               type="button"
-              className="flex h-full flex-col items-center gap-1"
+              className="flex h-full w-[150px] flex-col items-center gap-1"
               onClick={() => setSelectedImage(img)}
             >
               <img
                 src={img?.url}
                 alt={img?.name}
-                className={`h-2/3 object-contain opacity-50 ${img.id === selectedImage.id && "scale-105 !opacity-100"}`}
+                className={`h-2/3 object-contain opacity-50 ${img.imageId === selectedImage.imageId && "scale-105 !opacity-100"}`}
               />
               <h1 className="line-clamp-1 text-xs text-white">{img?.name}</h1>
             </button>

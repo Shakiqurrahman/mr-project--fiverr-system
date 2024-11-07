@@ -21,6 +21,7 @@ import EmojiPicker from "../chat/EmojiPicker";
 
 import axios from "axios";
 import { Link } from "react-router-dom";
+import shortid from "shortid";
 import { setMessages } from "../../Redux/features/orderSlice";
 import CircleProgressBar from "../CircleProgressBar";
 import FilePreview from "../FilePreview";
@@ -110,7 +111,7 @@ const OrderChatBox = () => {
     return () => {
       socket?.off("order:message");
     };
-  }, [socket, dispatch]);
+  }, [socket]);
   // }, [conversationUser, isAdmin, socket, messages, dispatch, user]);
 
   // useEffect(
@@ -304,6 +305,7 @@ const OrderChatBox = () => {
 
     if (textValue || selectedImages.length > 0) {
       const attachments = selectedImages?.map((img) => ({
+        imageId: shortid.generate(),
         name: img.name,
         size: img.size,
         url: img.url,
@@ -477,12 +479,12 @@ const OrderChatBox = () => {
                 {selectedImages?.map((image, index) => (
                   <div key={index} className="w-[120px]">
                     <div className="group relative">
-                      {image.url ? (
+                      {image?.url ? (
                         <FilePreview file={image} />
                       ) : (
                         <div className="flex h-[80px] w-full items-center justify-center bg-lightcream">
                           <CircleProgressBar
-                            precentage={image.progress}
+                            precentage={image?.progress}
                             circleWidth={50}
                           />
                         </div>
@@ -499,12 +501,12 @@ const OrderChatBox = () => {
                     </div>
                     <h1
                       className="truncate text-xs font-medium"
-                      title={image.name}
+                      title={image?.name}
                     >
-                      {image.name}
+                      {image?.name}
                     </h1>
                     <span className="text-xs">
-                      ({formatFileSize(image.size)})
+                      ({formatFileSize(image?.size)})
                     </span>
                   </div>
                 ))}
@@ -529,7 +531,7 @@ const OrderChatBox = () => {
                   </button>
                 </div>
                 <div className="flex items-center gap-3 text-xs font-medium">
-                  <p>Local time: 4:52 PM</p>
+                  <p>Local time: 07:13 PM, Nov 7, 2024</p>
                   <Divider className="h-4 w-px !bg-black" />
                   <p>Last seen 23 hours ago</p>
                 </div>
@@ -544,18 +546,18 @@ const OrderChatBox = () => {
                   >
                     <button
                       type="button"
-                      value={msg.description}
+                      value={msg?.description}
                       onClick={handleChangeQuickMsg}
                     >
-                      {msg.title}
+                      {msg?.title}
                     </button>
                     <button
                       type="button"
-                      onClick={() => handleQuickMsgs(msg.id)}
+                      onClick={() => handleQuickMsgs(msg?.id)}
                     >
                       <IoIosArrowDown className="text-base text-gray-400" />
                     </button>
-                    {qucikMsgBtnController === msg.id && (
+                    {qucikMsgBtnController === msg?.id && (
                       <div
                         className="absolute top-full z-10 rounded-lg border border-solid bg-white py-2 text-center *:block *:p-[5px_15px]"
                         ref={menuRef}
@@ -569,7 +571,7 @@ const OrderChatBox = () => {
                         </button>
                         <button
                           type="button"
-                          onClick={() => handleDeleteQuickMsg(msg.id)}
+                          onClick={() => handleDeleteQuickMsg(msg?.id)}
                           className="w-full text-xs hover:bg-gray-200"
                         >
                           Delete

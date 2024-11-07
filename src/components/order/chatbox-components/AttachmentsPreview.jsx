@@ -1,12 +1,18 @@
 import { useState } from "react";
 import { BiDownload } from "react-icons/bi";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import DownArrow from "../../../assets/images/icons/Down Arrow.svg";
 import UpArrow from "../../../assets/images/icons/Upper Arrow.svg";
 import formatFileSize from "../../../libs/formatFileSize";
+import CommentPage from "../../../pages/CommentPage";
 
 const AttachmentsPreview = ({ images }) => {
+  const { user } = useSelector((state) => state.user);
   const [expand, setExpand] = useState(false);
+
+  const [openCommentBox, setOpenCommentBox] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   // handle download all button
   const handleDownloadAll = (files) => {
@@ -20,61 +26,79 @@ const AttachmentsPreview = ({ images }) => {
     });
   };
 
+  const handleOpenComment = (att) => {
+    setOpenCommentBox(true);
+    setSelectedImage(att);
+  };
+
+  console.log(images);
+
   return (
-    <div className="relative mt-3">
-      {images?.length > 3 && (
-        <Link
-          className="font-medium text-primary"
-          onClick={() => handleDownloadAll()}
-        >
-          Download All
-        </Link>
-      )}
-      <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
-        {images?.map((att, index) => (
-          <div key={index}>
-            <img
-              src={att?.url}
-              alt={att?.name}
-              className="h-[100px] w-full object-cover sm:h-[150px]"
-            />
-            <a
-              href={att?.url}
-              download={att?.name}
-              className="mt-2 flex items-center justify-center text-xs"
-            >
-              <BiDownload className="shrink-0 text-lg text-primary" />
-              <p className="mx-2 line-clamp-1 font-medium" title={att?.name}>
-                {att?.name}
-              </p>
-              <span className="shrink-0 text-black/50">
-                ({formatFileSize(att?.size)})
-              </span>
-            </a>
-          </div>
-        ))}
+    <>
+      <div className="relative mt-3">
+        {images?.length > 3 && (
+          <Link
+            className="font-medium text-primary"
+            onClick={() => handleDownloadAll()}
+          >
+            Download All
+          </Link>
+        )}
+        <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+          {images?.map((att, index) => (
+            <div key={index}>
+              <img
+                onClick={() => handleOpenComment(att)}
+                src={att?.url}
+                alt={att?.name}
+                className="h-[100px] w-full cursor-pointer object-cover sm:h-[150px]"
+              />
+              <a
+                href={att?.url}
+                download={att?.name}
+                target="_blank"
+                className="mt-2 flex items-center justify-center text-xs"
+              >
+                <BiDownload className="shrink-0 text-lg text-primary" />
+                <p className="mx-2 line-clamp-1 font-medium" title={att?.name}>
+                  {att?.name}
+                </p>
+                <span className="shrink-0 text-black/50">
+                  ({formatFileSize(att?.size)})
+                </span>
+              </a>
+            </div>
+          ))}
+        </div>
+        {images?.length >= 8 &&
+          (!expand ? (
+            <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
+              <button
+                className="rounded-full border bg-white"
+                onClick={() => setExpand(!expand)}
+              >
+                <img src={DownArrow} alt="" className="h-[50px] w-[50px]" />
+              </button>
+            </div>
+          ) : (
+            <div className="relative z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-5">
+              <button
+                className="rounded-full border bg-white"
+                onClick={() => setExpand(!expand)}
+              >
+                <img src={UpArrow} alt="" className="h-[50px] w-[50px]" />
+              </button>
+            </div>
+          ))}
       </div>
-      {images?.length >= 8 &&
-        (!expand ? (
-          <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
-            <button
-              className="rounded-full border bg-white"
-              onClick={() => setExpand(!expand)}
-            >
-              <img src={DownArrow} alt="" className="h-[50px] w-[50px]" />
-            </button>
-          </div>
-        ) : (
-          <div className="relative z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-5">
-            <button
-              className="rounded-full border bg-white"
-              onClick={() => setExpand(!expand)}
-            >
-              <img src={UpArrow} alt="" className="h-[50px] w-[50px]" />
-            </button>
-          </div>
-        ))}
-    </div>
+      {openCommentBox && (
+        <CommentPage
+          selected={selectedImage}
+          images={images || []}
+          close={setOpenCommentBox}
+        />
+      )}
+    </>
   );
 };
 

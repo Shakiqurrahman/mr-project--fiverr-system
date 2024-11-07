@@ -15,7 +15,7 @@ import EditCommentBox from "./EditCommentBox";
 import EditReplyBox from "./EditReplyBox";
 import ReplyCommentBox from "./ReplyCommentBox";
 
-const CommentSideDrawer = () => {
+const CommentSideDrawer = ({ drawerClose }) => {
   const dispatch = useDispatch();
   const commentRef = useRef(null);
   const commentBoxRef = useRef(null);
@@ -134,7 +134,10 @@ const CommentSideDrawer = () => {
     <div className="flex h-full w-full flex-col bg-white" ref={commentBoxRef}>
       <div className="flex items-center justify-between p-4">
         <h2 className="text-base font-semibold">Comments</h2>
-        {/* <TfiShiftRight className="text-xl text-gray-500" /> */}
+        <TfiShiftRight
+          className="hidden cursor-pointer text-xl md:block"
+          onClick={() => drawerClose(false)}
+        />
       </div>
       {/* file name  */}
       <div className="border-y bg-lightskyblue px-4 py-2">
