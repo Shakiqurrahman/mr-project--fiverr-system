@@ -9,21 +9,22 @@ import {
 } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocalStorageObject } from "../../hooks/useLocalStorageObject";
-import useOutsideClick from "../../hooks/useOutsideClick";
-import { configApi } from "../../libs/configApi";
-import formatFileSize from "../../libs/formatFileSize";
-import { connectSocket } from "../../libs/socketService";
+import shortid from "shortid";
 import {
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
 } from "../../Redux/api/inboxApiSlice";
 import { setMessages } from "../../Redux/features/orderSlice";
-import AddQuickMsgModal from "../chat/AddQuickMsgModal";
-import EditQuickMsgModal from "../chat/EditQuickMsgModal";
+import { useLocalStorageObject } from "../../hooks/useLocalStorageObject";
+import useOutsideClick from "../../hooks/useOutsideClick";
+import { configApi } from "../../libs/configApi";
+import formatFileSize from "../../libs/formatFileSize";
+import { connectSocket } from "../../libs/socketService";
 import CircleProgressBar from "../CircleProgressBar";
 import Divider from "../Divider";
 import FilePreview from "../FilePreview";
+import AddQuickMsgModal from "../chat/AddQuickMsgModal";
+import EditQuickMsgModal from "../chat/EditQuickMsgModal";
 
 const OrderDeliveryForm = ({ handleClose }) => {
   const dispatch = useDispatch();
@@ -121,6 +122,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
       const uploadUrl = `${configApi.api}upload-image`;
 
       const uploadData = {
+        imageId: shortid.generate(),
         name: file.name,
         size: file.size,
         progress: 0,

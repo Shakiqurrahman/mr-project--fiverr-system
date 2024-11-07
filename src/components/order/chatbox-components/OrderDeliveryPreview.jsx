@@ -4,11 +4,16 @@ import Slider from "react-slick/lib/slider";
 import LeftArrowIcon from "../../../assets/images/icons/Left Arrow.svg";
 import RightArrowIcon from "../../../assets/images/icons/Right Arrow.svg";
 
+import { useState } from "react";
 import { BiDownload } from "react-icons/bi";
 import formatFileSize from "../../../libs/formatFileSize";
+import CommentPage from "../../../pages/CommentPage";
 import Divider from "../../Divider";
 
 const OrderDeliveryPreview = ({ data }) => {
+  const [openCommentBox, setOpenCommentBox] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
   // handle download all button
   const handleDownloadAll = (files) => {
     files.forEach((file) => {
@@ -76,106 +81,123 @@ const OrderDeliveryPreview = ({ data }) => {
       },
     ],
   };
+
+  const handleOpenComment = (att) => {
+    setOpenCommentBox(true);
+    setSelectedImage(att);
+  };
+
   return (
-    <div className="mt-5 flex items-start gap-3">
-      <div className="w-2/3">
-        <h1 className="mb-2 text-lg font-semibold">Preview Image</h1>
-        <div>
-          <Slider {...settings}>
-            {data?.attachments?.map((att, index) => (
-              <div key={index} className="w-full">
-                <img
-                  src={att?.url}
-                  alt={att?.name}
-                  className="block w-full object-cover"
-                />
-                <div className="mb-10 mt-4 text-center">
-                  <a
-                    href={att?.url}
-                    download={att?.name}
-                    target="_blank"
-                    className="rounded-[30px] border border-gray-400 px-5 py-2 text-lg font-medium text-black/50"
-                  >
-                    Download
-                  </a>
+    <>
+      <div className="mt-5 flex items-start gap-3">
+        <div className="w-2/3">
+          <h1 className="mb-2 text-lg font-semibold">Preview Image</h1>
+          <div>
+            <Slider {...settings}>
+              {data?.attachments?.map((att, index) => (
+                <div key={index} className="w-full">
+                  <img
+                    onClick={() => handleOpenComment(att)}
+                    src={att?.url}
+                    alt={att?.name}
+                    className="block w-full cursor-pointer object-cover"
+                  />
+                  <div className="mb-10 mt-4 text-center">
+                    <a
+                      href={att?.url}
+                      download={att?.name}
+                      target="_blank"
+                      className="rounded-[30px] border border-gray-400 px-5 py-2 text-lg font-medium text-black/50"
+                    >
+                      Download
+                    </a>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </Slider>
-        </div>
-        <div className="flex gap-3">
-          <button
-            type="button"
-            className="w-1/2 rounded-[30px] bg-primary p-2 text-center font-semibold text-white"
-            onClick={() => handleDownloadZip(data?.attachments)}
-          >
-            Zip Download
-          </button>
-          <button
-            type="button"
-            className="w-1/2 rounded-[30px] bg-revision p-2 text-center font-semibold text-white"
-            onClick={() => handleDownloadAll(data?.attachments)}
-          >
-            Individual Download
-          </button>
-        </div>
-        <div className="mt-10">
-          <p>
-            The watermark will no longer show after accepting the delivery file.
-            Please accept your final file first, then download the files.
-          </p>
-          <div className="my-10 flex justify-center gap-5">
+              ))}
+            </Slider>
+          </div>
+          <div className="flex gap-3">
             <button
               type="button"
-              className="rounded-[30px] bg-primary px-10 py-2 text-center font-semibold text-white"
+              className="w-1/2 rounded-[30px] bg-primary p-2 text-center font-semibold text-white"
+              onClick={() => handleDownloadZip(data?.attachments)}
             >
-              Accept
+              Zip Download
             </button>
             <button
               type="button"
-              className="rounded-[30px] bg-revision px-10 py-2 text-center font-semibold text-white"
+              className="w-1/2 rounded-[30px] bg-revision p-2 text-center font-semibold text-white"
+              onClick={() => handleDownloadAll(data?.attachments)}
             >
-              Revision
+              Individual Download
             </button>
+          </div>
+          <div className="mt-10">
+            <p>
+              The watermark will no longer show after accepting the delivery
+              file. Please accept your final file first, then download the
+              files.
+            </p>
+            <div className="my-10 flex justify-center gap-5">
+              <button
+                type="button"
+                className="rounded-[30px] bg-primary px-10 py-2 text-center font-semibold text-white"
+              >
+                Accept
+              </button>
+              <button
+                type="button"
+                className="rounded-[30px] bg-revision px-10 py-2 text-center font-semibold text-white"
+              >
+                Revision
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="w-1/3">
+          <h1 className="mb-2 ms-6 text-lg font-semibold">Final Files</h1>
+          <div>
+            {data?.thumbnailImage && (
+              <>
+                <a
+                  href={data?.thumbnailImage?.url}
+                  download={data?.thumbnailImage?.name}
+                  className="flex items-start gap-2 text-sm"
+                >
+                  <BiDownload className="shrink-0 text-lg text-primary" />
+                  <p>
+                    {data?.thumbnailImage?.name}{" "}
+                    <span className="text-black/50">
+                      ({formatFileSize(parseInt(data?.thumbnailImage?.size))})
+                    </span>
+                  </p>
+                </a>
+                <Divider className="my-5 ms-6 h-px w-[50px] !bg-black" />
+              </>
+            )}
+            {data?.attachments?.length > 0 &&
+              data?.attachments?.map((att, index) => (
+                <a key={index} className="flex items-start gap-2 text-sm">
+                  <BiDownload className="shrink-0 text-lg text-primary" />
+                  <p>
+                    {att?.name}{" "}
+                    <span className="text-black/50">
+                      ({formatFileSize(att?.size)})
+                    </span>
+                  </p>
+                </a>
+              ))}
           </div>
         </div>
       </div>
-      <div className="w-1/3">
-        <h1 className="mb-2 ms-6 text-lg font-semibold">Final Files</h1>
-        <div>
-          {data?.thumbnailImage && (
-            <>
-              <a
-                href={data?.thumbnailImage?.url}
-                download={data?.thumbnailImage?.name}
-                className="flex items-start gap-2 text-sm"
-              >
-                <BiDownload className="shrink-0 text-lg text-primary" />
-                <p>
-                  {data?.thumbnailImage?.name}{" "}
-                  <span className="text-black/50">
-                    ({formatFileSize(parseInt(data?.thumbnailImage?.size))})
-                  </span>
-                </p>
-              </a>
-              <Divider className="my-5 ms-6 h-px w-[50px] !bg-black" />
-            </>
-          )}
-          {data?.attachments?.length > 0 &&
-            data?.attachments?.map((att, index) => (
-              <a key={index} className="flex items-start gap-2 text-sm">
-                <BiDownload className="shrink-0 text-lg text-primary" />
-                <p>
-                  {att?.name}{" "}
-                  <span className="text-black/50">
-                    ({formatFileSize(att?.size)})
-                  </span>
-                </p>
-              </a>
-            ))}
-        </div>
-      </div>
-    </div>
+      {openCommentBox && (
+        <CommentPage
+          selected={selectedImage}
+          images={data?.attachments || []}
+          close={setOpenCommentBox}
+        />
+      )}
+    </>
   );
 };
 
