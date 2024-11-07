@@ -23,6 +23,7 @@ const ProjectRequirements = () => {
   const { data: projectDetails } = useRequirementByProjectNumberQuery({
     projectNumber,
   });
+  console.log(projectDetails);
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const textareasRef = useRef([]);
@@ -197,6 +198,9 @@ const ProjectRequirements = () => {
       (item) => item.answer.length <= 5000,
     );
     console.log(checkTextLength, requirements);
+
+    // @TODO: send api data as like this format
+    // const { orderId, requirements, isRequirementsFullFilled } = req.body;
   };
 
   return (
