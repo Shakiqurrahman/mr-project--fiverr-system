@@ -15,6 +15,11 @@ export const orderApiSlice = createApi({
     },
   }),
   endpoints: (builder) => ({
+    requirementByProjectNumber: builder.query({
+      query: ({ projectNumber }) => `find-order/${projectNumber}`,
+      transformResponse: (response) => response?.data,
+    }),
+
     fetchActiveProjects: builder.query({
       query: () => "order-status",
       transformResponse: (response) => response?.data,
@@ -36,4 +41,5 @@ export const {
   useFetchActiveProjectsQuery,
   useFetchCompletedProjectsQuery,
   useUsersAllProjectsQuery,
+  useRequirementByProjectNumberQuery,
 } = orderApiSlice;

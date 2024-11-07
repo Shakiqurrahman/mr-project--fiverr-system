@@ -1,8 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaSpinner } from "react-icons/fa";
 import { IoMdAttach } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import shortid from "shortid";
+import { useRequirementByProjectNumberQuery } from "../Redux/api/orderApiSlice";
 import adobeStock from "../assets//images/Stock Logos/01 Adobe Stock Logo.svg";
 import shutterStock from "../assets/images/Stock Logos/01 Shutterstock_logo.svg";
 import iStock from "../assets/images/Stock Logos/03 iStock logo.png";
@@ -17,21 +19,14 @@ import EmojiPicker from "../components/chat/EmojiPicker";
 import formatFileSize from "../libs/formatFileSize";
 
 const ProjectRequirements = () => {
+  const { projectNumber } = useParams();
+  const { data: projectDetails } = useRequirementByProjectNumberQuery({
+    projectNumber,
+  });
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const textareasRef = useRef([]);
   const [submitLoading, setSubmitLoading] = useState(false);
-  const requirementsData = useMemo(
-    () => [
-      "Which industry do you work in?",
-      "Do you have your own/Industry logo?",
-      "Do you have your own/Industry website?",
-      "Do you have your specific design size?",
-      "Do you have any imaginary or specific design ideas?",
-      "You have to give clear information that you need in the design. (E.g. all texts, all photos, logo, contact info, etc.)",
-    ],
-    [],
-  );
   const [requirements, setRequirements] = useState(null);
 
   //Sidebar Stock Images Data
@@ -76,16 +71,16 @@ const ProjectRequirements = () => {
 
   // Initial stage Update requirements state
   useEffect(() => {
-    if (requirementsData) {
-      const updateRequirements = requirementsData.map((item, i) => ({
-        id: i + 1,
+    if (projectDetails?.requirements) {
+      const updateRequirements = projectDetails?.requirements?.map((item) => ({
+        id: shortid.generate(),
         question: item,
         answer: "",
         attachments: [],
       }));
       setRequirements(updateRequirements);
     }
-  }, [requirementsData]);
+  }, [projectDetails?.requirements]);
 
   //Emoji Picker component handler
 

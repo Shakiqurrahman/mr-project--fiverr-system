@@ -5,8 +5,8 @@ import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import Check from "../assets/svg/Check";
 import PaymentTabs from "../components/PaymentTabs";
-import { configApi, STRIPE_PUBLIC_KEY } from "../libs/configApi";
 import { ToggleSwitch } from "../libs/ToggleSwitch";
+import { STRIPE_PUBLIC_KEY, configApi } from "../libs/configApi";
 
 const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 const PaymentPage = () => {
@@ -73,12 +73,16 @@ const PaymentPage = () => {
 
     console.log(projectType, projectImage);
 
+    const requirementsArray = state?.requirements?.map((question) => ({
+      question,
+    }));
+
     const data = {
       userId: user?.id,
       items: itemsData,
       originalItems: items,
       totalAmount: designs?.totalAmount || totalAmount,
-      requirements: state?.requirements,
+      requirements: requirementsArray,
       bulletPoint: state?.bulletPoint,
       deliveryDuration: state?.deliveryDuration || state?.duration,
       title: state?.title,
