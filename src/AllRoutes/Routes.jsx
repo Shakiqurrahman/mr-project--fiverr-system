@@ -195,7 +195,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/project-requirements",
+        path: "/project-requirements/:projectNumber",
         element: (
           <PrivateRoute>
             <ProjectRequirements />
