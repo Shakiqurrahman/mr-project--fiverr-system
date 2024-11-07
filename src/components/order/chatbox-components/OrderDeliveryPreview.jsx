@@ -177,7 +177,12 @@ const OrderDeliveryPreview = ({ data }) => {
             )}
             {data?.attachments?.length > 0 &&
               data?.attachments?.map((att, index) => (
-                <a key={index} className="flex items-start gap-2 text-sm">
+                <a
+                  key={index}
+                  href={att?.url}
+                  download={att?.name}
+                  className="flex items-start gap-2 text-sm"
+                >
                   <BiDownload className="shrink-0 text-lg text-primary" />
                   <p>
                     {att?.name}{" "}
