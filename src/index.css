@@ -207,6 +207,16 @@ textarea:placeholder-shown {
   align-items: stretch !important;
 }
 
+/* order delivery images slider design */
+.order-slider .slick-track {
+  width: auto !important;
+  display: flex;
+}
+.order-slider .slick-track .slick-slide {
+  width: 100% !important;
+  min-width: 100% !important;
+}
+
 .profile-info .MuiPaper-root.MuiPaper-elevation {
   @apply !m-4 !w-full !max-w-[500px];
 }

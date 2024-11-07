@@ -5,7 +5,7 @@ import LeftArrowIcon from "../../../assets/images/icons/Left Arrow.svg";
 import RightArrowIcon from "../../../assets/images/icons/Right Arrow.svg";
 
 import { BiDownload } from "react-icons/bi";
-import thumbnail from "../../../assets/images/project-thumbnail.jpg";
+import formatFileSize from "../../../libs/formatFileSize";
 import Divider from "../../Divider";
 
 const OrderDeliveryPreview = ({ data }) => {
@@ -15,6 +15,7 @@ const OrderDeliveryPreview = ({ data }) => {
       const link = document.createElement("a");
       link.href = file.url; // Ensure this points to the file's URL
       link.setAttribute("download", file.name); // Set the filename
+      link.target = "_blank";
       document.body.appendChild(link);
       link.click(); // Simulate click to download
       document.body.removeChild(link); // Clean up
@@ -43,8 +44,9 @@ const OrderDeliveryPreview = ({ data }) => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    className: "order-slider",
     arrows: true,
-    autoplay: true,
+    // autoplay: true,
     autoplaySpeed: 2000,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
@@ -78,19 +80,20 @@ const OrderDeliveryPreview = ({ data }) => {
     <div className="mt-5 flex items-start gap-3">
       <div className="w-2/3">
         <h1 className="mb-2 text-lg font-semibold">Preview Image</h1>
-        <div className="w-full">
+        <div>
           <Slider {...settings}>
-            {[1, 2, 3].map((v) => (
-              <div key={v} className="w-full">
+            {data?.attachments?.map((att, index) => (
+              <div key={index} className="w-full">
                 <img
-                  src={thumbnail}
-                  alt=""
+                  src={att?.url}
+                  alt={att?.name}
                   className="block w-full object-cover"
                 />
                 <div className="mb-10 mt-4 text-center">
                   <a
-                    href={thumbnail}
-                    download={"thumbnail.jpg"}
+                    href={att?.url}
+                    download={att?.name}
+                    target="_blank"
                     className="rounded-[30px] border border-gray-400 px-5 py-2 text-lg font-medium text-black/50"
                   >
                     Download
@@ -104,14 +107,14 @@ const OrderDeliveryPreview = ({ data }) => {
           <button
             type="button"
             className="w-1/2 rounded-[30px] bg-primary p-2 text-center font-semibold text-white"
-            onClick={() => handleDownloadZip()}
+            onClick={() => handleDownloadZip(data?.attachments)}
           >
             Zip Download
           </button>
           <button
             type="button"
             className="w-1/2 rounded-[30px] bg-revision p-2 text-center font-semibold text-white"
-            onClick={() => handleDownloadAll()}
+            onClick={() => handleDownloadAll(data?.attachments)}
           >
             Individual Download
           </button>
@@ -140,56 +143,36 @@ const OrderDeliveryPreview = ({ data }) => {
       <div className="w-1/3">
         <h1 className="mb-2 ms-6 text-lg font-semibold">Final Files</h1>
         <div>
-          <a className="flex items-start gap-2 text-sm">
-            <BiDownload className="shrink-0 text-lg text-primary" />
-            <p>
-              Pressure and Soft Washing Door Hanger Design.jpg{" "}
-              <span className="text-black/50">(3.25 mb)</span>
-            </p>
-          </a>
-          <Divider className="my-5 ms-6 h-px w-[50px] !bg-black" />
-          <a className="flex items-start gap-2 text-sm">
-            <BiDownload className="shrink-0 text-lg text-primary" />
-            <p>
-              Door Hanger Front.jpg{" "}
-              <span className="text-black/50">(3.64 mb)</span>
-            </p>
-          </a>
-          <a className="flex items-start gap-2 text-sm">
-            <BiDownload className="shrink-0 text-lg text-primary" />
-            <p>
-              Door Hanger Back.jpg{" "}
-              <span className="text-black/50">(3.37 mb)</span>
-            </p>
-          </a>
-          <a className="flex items-start gap-2 text-sm">
-            <BiDownload className="shrink-0 text-lg text-primary" />
-            <p>
-              Door Hanger Front.pdf{" "}
-              <span className="text-black/50">(5.82 mb)</span>
-            </p>
-          </a>
-          <a className="flex items-start gap-2 text-sm">
-            <BiDownload className="shrink-0 text-lg text-primary" />
-            <p>
-              Door Hanger Back.pdf{" "}
-              <span className="text-black/50">(4.75 mb)</span>
-            </p>
-          </a>
-          <a className="flex items-start gap-2 text-sm">
-            <BiDownload className="shrink-0 text-lg text-primary" />
-            <p>
-              Door Hanger Front.psd{" "}
-              <span className="text-black/50">(25.55 mb)</span>
-            </p>
-          </a>
-          <a className="flex items-start gap-2 text-sm">
-            <BiDownload className="shrink-0 text-lg text-primary" />
-            <p>
-              Door Hanger Back.psd{" "}
-              <span className="text-black/50">(23.65 mb)</span>
-            </p>
-          </a>
+          {data?.thumbnailImage && (
+            <>
+              <a
+                href={data?.thumbnailImage?.url}
+                download={data?.thumbnailImage?.name}
+                className="flex items-start gap-2 text-sm"
+              >
+                <BiDownload className="shrink-0 text-lg text-primary" />
+                <p>
+                  {data?.thumbnailImage?.name}{" "}
+                  <span className="text-black/50">
+                    ({formatFileSize(parseInt(data?.thumbnailImage?.size))})
+                  </span>
+                </p>
+              </a>
+              <Divider className="my-5 ms-6 h-px w-[50px] !bg-black" />
+            </>
+          )}
+          {data?.attachments?.length > 0 &&
+            data?.attachments?.map((att, index) => (
+              <a key={index} className="flex items-start gap-2 text-sm">
+                <BiDownload className="shrink-0 text-lg text-primary" />
+                <p>
+                  {att?.name}{" "}
+                  <span className="text-black/50">
+                    ({formatFileSize(att?.size)})
+                  </span>
+                </p>
+              </a>
+            ))}
         </div>
       </div>
     </div>
