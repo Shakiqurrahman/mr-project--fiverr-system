@@ -437,7 +437,7 @@ const OrderChatBox = () => {
                       <p className="text-sm sm:text-base">{msg?.messageText}</p>
                     </div>
                   )}
-                  <CommentsPreview />
+                  {msg?.imageComments?.length > 0 && <CommentsPreview />}
                   {msg?.attachment?.length > 0 && (
                     <AttachmentsPreview images={msg?.attachment || []} />
                   )}
@@ -446,7 +446,9 @@ const OrderChatBox = () => {
                       value={msg?.additionalOffer || {}}
                     />
                   )}
-                  {msg?.deliverProject && <OrderDeliveryPreview />}
+                  {msg?.deliverProject && (
+                    <OrderDeliveryPreview data={msg?.deliverProject || {}} />
+                  )}
                   {msg?.extendDeliveryTime && (
                     <ExtendingDeliveryPreview
                       value={msg?.extendDeliveryTime || {}}

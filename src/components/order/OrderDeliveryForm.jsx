@@ -8,14 +8,17 @@ import {
   IoMdClose,
 } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocalStorageObject } from "../../hooks/useLocalStorageObject";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { configApi } from "../../libs/configApi";
 import formatFileSize from "../../libs/formatFileSize";
+import { connectSocket } from "../../libs/socketService";
 import {
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
 } from "../../Redux/api/inboxApiSlice";
+import { setMessages } from "../../Redux/features/orderSlice";
 import AddQuickMsgModal from "../chat/AddQuickMsgModal";
 import EditQuickMsgModal from "../chat/EditQuickMsgModal";
 import CircleProgressBar from "../CircleProgressBar";
@@ -23,11 +26,18 @@ import Divider from "../Divider";
 import FilePreview from "../FilePreview";
 
 const OrderDeliveryForm = ({ handleClose }) => {
+  const dispatch = useDispatch();
+  const { user, token } = useSelector((state) => state.user);
   // All reference states here
   const textareaRef = useRef(null);
   const menuRef = useRef(null);
   const sourceInputRef = useRef(null);
   const thumbnailInputRef = useRef(null);
+
+  // Socket Connection
+  const socket = connectSocket(`${configApi.socket}`, token);
+
+  const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
 
   // Redux query imports here
   const { data: quickMsgs } = useFetchQuickResMsgQuery();
@@ -240,16 +250,49 @@ const OrderDeliveryForm = ({ handleClose }) => {
     localStorage.setItem("deliveryDraft", JSON.stringify(formData));
   };
 
+  // Setup sending message time and date
+  const dates = new Date();
+  const timeAndDate = dates.getTime();
+
   //   submitting form data
   const handleSubmit = (e) => {
     e.preventDefault();
     if (textValue.length <= 5000 && selectedImages && thumbnailImage) {
       const formData = {
-        messageText: textValue,
         attachments: selectedImages,
         thumbnailImage,
       };
-      console.log(formData);
+      const submitForm = {
+        messageText: textValue,
+        senderUserName: user?.userName,
+        userImage: user?.image,
+        attachment: [],
+        additionalOffer: null,
+        extendDeliveryTime: null,
+        deliverProject: formData,
+        cancelProject: null,
+        imageComments: [],
+        timeAndDate,
+        // replyTo,
+      };
+
+      if (isAdmin) {
+        socket?.emit("order:admin-message", {
+          userId: "671ba677ed05eed5d29efb35",
+          ...submitForm,
+        });
+      } else {
+        socket?.emit("order:user-message", {
+          ...submitForm,
+        });
+      }
+
+      dispatch(
+        setMessages({
+          ...submitForm,
+          recipientId: isAdmin ? "671ba677ed05eed5d29efb35" : "",
+        }),
+      );
 
       const resetStorage = {
         messageText: "",

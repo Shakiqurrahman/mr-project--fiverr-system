@@ -8,7 +8,7 @@ import { BiDownload } from "react-icons/bi";
 import thumbnail from "../../../assets/images/project-thumbnail.jpg";
 import Divider from "../../Divider";
 
-const OrderDeliveryPreview = () => {
+const OrderDeliveryPreview = ({ data }) => {
   // handle download all button
   const handleDownloadAll = (files) => {
     files.forEach((file) => {
@@ -75,27 +75,29 @@ const OrderDeliveryPreview = () => {
     ],
   };
   return (
-    <div className="mt-10 flex items-start gap-3">
+    <div className="mt-5 flex items-start gap-3">
       <div className="w-2/3">
         <h1 className="mb-2 text-lg font-semibold">Preview Image</h1>
-        <div>
+        <div className="w-full">
           <Slider {...settings}>
-            <div>
-              <img
-                src={thumbnail}
-                alt=""
-                className="block w-full object-cover"
-              />
-              <div className="mb-10 mt-4 text-center">
-                <a
-                  href={thumbnail}
-                  download={"thumbnail.jpg"}
-                  className="rounded-[30px] border border-gray-400 px-5 py-2 text-lg font-medium text-black/50"
-                >
-                  Download
-                </a>
+            {[1, 2, 3].map((v) => (
+              <div key={v} className="w-full">
+                <img
+                  src={thumbnail}
+                  alt=""
+                  className="block w-full object-cover"
+                />
+                <div className="mb-10 mt-4 text-center">
+                  <a
+                    href={thumbnail}
+                    download={"thumbnail.jpg"}
+                    className="rounded-[30px] border border-gray-400 px-5 py-2 text-lg font-medium text-black/50"
+                  >
+                    Download
+                  </a>
+                </div>
               </div>
-            </div>
+            ))}
           </Slider>
         </div>
         <div className="flex gap-3">
