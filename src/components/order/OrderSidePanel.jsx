@@ -7,7 +7,12 @@ import PrivateNote from "./sidebar-components/PrivateNote";
 import TrackProject from "./sidebar-components/TrackProject";
 
 const OrderSidePanel = () => {
+  const { user } = useSelector((state) => state.user);
   const { projectDetails } = useSelector((state) => state.order);
+
+  // Checking Admin
+  const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
+
   // Set delivery time in milliseconds
   // const deliveryDate = new Date("2024-10-09T14:09:25").getTime() - Date.now(); // YYYY-MM-DDTHH:MM:SS
 
@@ -37,14 +42,16 @@ const OrderSidePanel = () => {
       </div>
 
       {/* cancel project button  */}
-      <div>
-        <button
-          onClick={() => setOpenCancelModal(true)}
-          className="w-full bg-lightskyblue py-3 text-center font-semibold text-black shadow-btn-shadow duration-300 hover:bg-revision/70 hover:text-white"
-        >
-          Cancel Project
-        </button>
-      </div>
+      {isAdmin && (
+        <div>
+          <button
+            onClick={() => setOpenCancelModal(true)}
+            className="w-full bg-lightskyblue py-3 text-center font-semibold text-black shadow-btn-shadow duration-300 hover:bg-revision/70 hover:text-white"
+          >
+            Cancel Project
+          </button>
+        </div>
+      )}
       {openCancelModal && (
         <CancelProjectModal handleClose={setOpenCancelModal} />
       )}

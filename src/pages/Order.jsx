@@ -78,9 +78,11 @@ const Order = () => {
 
   return (
     <div className="max-width my-10">
-      <h1 className="mx-auto mb-10 flex w-full items-center justify-center gap-3 rounded-[30px] bg-revision px-5 py-2 text-xl font-semibold text-white sm:w-1/2 md:text-3xl">
-        <Check className="size-6 !fill-white md:size-10" /> Project Completed{" "}
-      </h1>
+      {projectDetails?.projectStatus === "Completed" && (
+        <h1 className="mx-auto mb-10 flex w-full items-center justify-center gap-3 rounded-[30px] bg-revision px-5 py-2 text-xl font-semibold text-white sm:w-1/2 md:text-3xl">
+          <Check className="size-6 !fill-white md:size-10" /> Project Completed{" "}
+        </h1>
+      )}
       <div className="flex flex-wrap gap-5 sm:flex-nowrap">
         <div className="mb-5 max-h-[2000px] min-h-screen w-[calc(100%_-_320px)] shrink">
           <div className="hidden items-center gap-10 sm:flex">
@@ -125,7 +127,8 @@ const Order = () => {
           <OrderReview />
           <OrderReviewForm />
           <OrderTipsForm />
-          {user?.role === "USER" ? (
+          {user?.role === "USER" &&
+          projectDetails?.projectStatus === "Completed" ? (
             <p className="mt-5 text-center text-lg font-semibold">
               Your project is complete. If you need to contact the seller,{" "}
               <Link to={"/inbox"} className="text-primary underline">
@@ -133,12 +136,14 @@ const Order = () => {
               </Link>
             </p>
           ) : (
-            <p className="mt-5 text-center text-lg font-semibold">
-              Your project is complete. If you need to contact the buyer,{" "}
-              <Link to={"/inbox"} className="text-primary underline">
-                Go to Inbox
-              </Link>
-            </p>
+            projectDetails?.projectStatus === "Completed" && (
+              <p className="mt-5 text-center text-lg font-semibold">
+                Your project is complete. If you need to contact the buyer,{" "}
+                <Link to={"/inbox"} className="text-primary underline">
+                  Go to Inbox
+                </Link>
+              </p>
+            )
           )}
         </div>
       )}
