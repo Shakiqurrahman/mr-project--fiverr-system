@@ -238,7 +238,9 @@ function Profile({ user = {}, slug }) {
           <div className="space-y-3 border-b border-gray-300 py-4">
             <div className="flex justify-between gap-1 text-sm">
               <span>Completed Projects</span>
-              <p className="font-semibold">13</p>
+              <p className="font-semibold">
+                {filteredCompletedProjects?.length}
+              </p>
             </div>
             <div className="flex justify-between gap-1 text-sm">
               <span>Project Completion Rate</span>
