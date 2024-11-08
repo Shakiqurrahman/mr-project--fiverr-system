@@ -305,7 +305,7 @@ export const router = createBrowserRouter([
     element: <ChatLayout />,
     children: [
       {
-        path: "/order",
+        path: "/order/:projectNumber",
         element: (
           <PrivateRoute>
             <Order />

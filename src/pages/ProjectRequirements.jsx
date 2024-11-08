@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { FaSpinner } from "react-icons/fa";
 import { IoMdAttach } from "react-icons/io";
@@ -16,6 +17,7 @@ import alamy from "../assets/images/Stock Logos/alamy logo.png";
 import depositPhotos from "../assets/images/Stock Logos/depositphotos.png";
 import Divider from "../components/Divider";
 import EmojiPicker from "../components/chat/EmojiPicker";
+import { configApi } from "../libs/configApi";
 import formatFileSize from "../libs/formatFileSize";
 
 const ProjectRequirements = () => {
@@ -92,8 +94,6 @@ const ProjectRequirements = () => {
           const textarea = textareasRef.current[index];
           const startPos = textarea.selectionStart;
           const endPos = textarea.selectionEnd;
-
-          console.log(textarea.value, id);
 
           // Insert the emoji at the cursor position
           const newText =
@@ -192,15 +192,29 @@ const ProjectRequirements = () => {
     fileInputRef.current.value = null;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const checkTextLength = requirements.every(
-      (item) => item.answer.length <= 5000,
+      (item) => item.answer.length <= 5000 && item.answer.length > 0,
     );
-    console.log(checkTextLength, requirements);
-
-    // @TODO: send api data as like this format
-    // const { orderId, requirements, isRequirementsFullFilled } = req.body;
+    if (checkTextLength) {
+      try {
+        setSubmitLoading(true);
+        const url = `${configApi.api}requirement/send/`;
+        const response = await axios.post(url, {
+          orderId: projectDetails?.id,
+          isRequirementsFullFilled: true,
+          requirements,
+        });
+        if (response?.data?.success) {
+          setSubmitLoading(false);
+          navigate(`/order/${projectNumber}`);
+        }
+      } catch {
+        console.log("error to save requirements");
+        setSubmitLoading(false);
+      }
+    }
   };
 
   return (
@@ -314,7 +328,7 @@ const ProjectRequirements = () => {
               <div className="mt-5 flex justify-center gap-5">
                 <button
                   type="button"
-                  onClick={() => navigate(-1)}
+                  onClick={() => navigate(`/order/${projectNumber}`)}
                   disabled={submitLoading}
                   className="mt-5 flex h-[45px] w-1/2 items-center justify-center bg-gray-400 text-base font-semibold text-white disabled:cursor-not-allowed sm:text-lg"
                 >
