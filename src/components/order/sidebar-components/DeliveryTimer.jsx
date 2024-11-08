@@ -1,14 +1,30 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import OrderDeliveryForm from "../OrderDeliveryForm";
 import ExtendDeliveryModal from "./ExtendDeliveryModal";
 
 const DeliveryTimer = ({ deliveryTime }) => {
+  const { projectDetails } = useSelector((state) => state.order);
+  const { user } = useSelector((state) => state.user);
+
+  // Checking Admin
+  const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
+
   // All states defination here
-  const [timeLeft, setTimeLeft] = useState(deliveryTime);
+  const [timeLeft, setTimeLeft] = useState(new Date().getTime());
   const [openDeliveryModal, setOpenDeliveryModal] = useState(false);
   const [openExtendDelivery, setOpenExtendDelivery] = useState(false);
 
   //   All useEffect Defination starts here
+  useEffect(() => {
+    if (projectDetails) {
+      const deliveryDate = new Date(projectDetails?.deliveryDate).getTime();
+      const currentDate = new Date().getTime();
+      const startTimerValue = deliveryDate - currentDate;
+      setTimeLeft(startTimerValue);
+    }
+  }, [projectDetails]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeLeft((prevTime) => {
@@ -64,13 +80,15 @@ const DeliveryTimer = ({ deliveryTime }) => {
             </h1>
             <p className="text-sm font-medium text-black/80">Second</p>
           </div>
-          <button
-            type="button"
-            className="w-full bg-primary p-2 text-lg font-semibold text-white"
-            onClick={() => setOpenDeliveryModal(true)}
-          >
-            Deliver Now
-          </button>
+          {isAdmin && (
+            <button
+              type="button"
+              className="w-full bg-primary p-2 text-lg font-semibold text-white"
+              onClick={() => setOpenDeliveryModal(true)}
+            >
+              Deliver Now
+            </button>
+          )}
         </div>
         <button
           type="button"

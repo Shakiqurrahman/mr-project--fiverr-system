@@ -71,7 +71,17 @@ const PaymentPage = () => {
     const projectType = designs?.projectType;
     const projectImage = designs?.projectImage;
 
-    console.log(projectType, projectImage);
+    let totalQuantity = 0;
+    if (designs?.designs) {
+      totalQuantity = designs?.designs?.reduce(
+        (prev, curr) => prev + parseInt(curr?.quantity),
+        0,
+      );
+    } else {
+      totalQuantity = parseInt(designs?.selectedQuantity);
+    }
+
+    console.log(totalQuantity);
 
     const requirementsArray = state?.requirements?.map((question) => ({
       question,
@@ -88,6 +98,7 @@ const PaymentPage = () => {
       title: state?.title,
       projectType,
       projectImage,
+      totalQuantity,
     };
     try {
       const response = await axios.post(

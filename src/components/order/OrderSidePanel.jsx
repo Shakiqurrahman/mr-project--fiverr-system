@@ -1,21 +1,25 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import CancelProjectModal from "./sidebar-components/CancelProjectModal";
 import DeliveryTimer from "./sidebar-components/DeliveryTimer";
 import OrderProjectDetails from "./sidebar-components/OrderProjectDetails";
 import PrivateNote from "./sidebar-components/PrivateNote";
 import TrackProject from "./sidebar-components/TrackProject";
-import CancelProjectModal from "./sidebar-components/CancelProjectModal";
 
 const OrderSidePanel = () => {
+  const { projectDetails } = useSelector((state) => state.order);
   // Set delivery time in milliseconds
-  const deliveryDate = new Date("2024-10-09T14:09:25").getTime() - Date.now(); // YYYY-MM-DDTHH:MM:SS
+  // const deliveryDate = new Date("2024-10-09T14:09:25").getTime() - Date.now(); // YYYY-MM-DDTHH:MM:SS
 
   const [openCancelModal, setOpenCancelModal] = useState(false);
   return (
     <div>
       {/* Delivery Timer */}
-      <div className="mb-5 shadow-btn-shadow">
-        <DeliveryTimer deliveryTime={deliveryDate} />
-      </div>
+      {projectDetails?.isRequirementsFullFilled && (
+        <div className="mb-5 shadow-btn-shadow">
+          <DeliveryTimer />
+        </div>
+      )}
 
       {/* Project Details */}
       <div className="mb-5 shadow-btn-shadow">
@@ -41,9 +45,9 @@ const OrderSidePanel = () => {
           Cancel Project
         </button>
       </div>
-      {
-        openCancelModal && <CancelProjectModal handleClose={setOpenCancelModal}/>
-      }
+      {openCancelModal && (
+        <CancelProjectModal handleClose={setOpenCancelModal} />
+      )}
     </div>
   );
 };

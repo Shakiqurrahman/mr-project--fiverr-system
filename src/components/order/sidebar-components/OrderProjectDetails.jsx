@@ -1,39 +1,77 @@
-import projectThumbnail from "../../../assets/images/project-thumbnail.jpg";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { getStatusText } from "../../customer-profile/StatusText";
 
 const OrderProjectDetails = () => {
-  const status = "Ongoing";
+  const { projectDetails, clientDetails } = useSelector((state) => state.order);
+
+  // all states here
+  const [status, setStatus] = useState("");
+  const [startTime, setStartTime] = useState("Not determined");
+  const [deliveryTime, setDeliveryTime] = useState("Not determined");
+
+  // all side effects here
+  useEffect(() => {
+    if (projectDetails) {
+      setStatus(projectDetails?.projectStatus);
+      if (projectDetails?.isRequirementsFullFilled) {
+        const start = new Date(projectDetails?.startDate).toLocaleDateString(
+          [],
+          {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          },
+        );
+        const end = new Date(projectDetails?.deliveryDate).toLocaleDateString(
+          [],
+          {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          },
+        );
+        setStartTime(start);
+        setDeliveryTime(end);
+      }
+    }
+  }, [projectDetails]);
   return (
     <div className="bg-lightskyblue p-3">
       <h1 className="text-xl font-semibold">Project Details</h1>
       <div className="my-5 flex items-start gap-3 rounded-lg border bg-white p-3">
-        <img src={projectThumbnail} alt="" className="w-[100px]" />
+        <img src={projectDetails?.projectImage} alt="" className="w-[100px]" />
         <div>
-          <h1 className="text-lg">Door Hanger Design</h1>
+          <h1 className="text-base">{projectDetails?.projectName}</h1>
           <p className="font-bold">{getStatusText(status)}</p>
         </div>
       </div>
       <ul>
         <li className="my-2 flex items-center justify-between gap-3 text-base">
-          Project by <b className="text-base">clientusername</b>
+          Project by <b className="text-base">{clientDetails?.userName}</b>
         </li>
         <li className="my-2 flex items-center justify-between gap-3 text-base">
-          Quantity <b className="text-base">1</b>
+          Quantity <b className="text-base">{projectDetails?.totalQuantity}</b>
         </li>
         <li className="my-2 flex items-center justify-between gap-3 text-base">
-          Duration <b className="text-base">2 Days</b>
+          Duration{" "}
+          <b className="text-base">
+            {projectDetails?.duration}{" "}
+            {parseInt(projectDetails?.duration) > 1 ? "Days" : "Day"}
+          </b>
         </li>
         <li className="my-2 flex items-center justify-between gap-3 text-base">
-          Project started <b className="text-base">Jun 17, 8:19 AM</b>
+          Project started <b className="text-base">{startTime}</b>
         </li>
         <li className="my-2 flex items-center justify-between gap-3 text-base">
-          Project delivery <b className="text-base">Jun 19, 8:19 AM</b>
+          Project delivery <b className="text-base">{deliveryTime}</b>
         </li>
         <li className="my-2 flex items-center justify-between gap-3 text-base">
-          Total price <b className="text-base">$40</b>
+          Total price <b className="text-base">${projectDetails?.totalPrice}</b>
         </li>
         <li className="my-2 flex items-center justify-between gap-3 text-base">
-          Project number <b className="text-base">#MR1N5ZPN</b>
+          Project number{" "}
+          <b className="text-base">#{projectDetails?.projectNumber}</b>
         </li>
       </ul>
     </div>
