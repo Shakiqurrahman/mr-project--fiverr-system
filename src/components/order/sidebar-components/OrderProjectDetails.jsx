@@ -18,21 +18,33 @@ const OrderProjectDetails = () => {
         const start = new Date(projectDetails?.startDate).toLocaleDateString(
           [],
           {
-            year: "numeric",
             month: "short",
             day: "numeric",
           },
         );
+        const starttime = new Date(
+          projectDetails?.startDate,
+        ).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
         const end = new Date(projectDetails?.deliveryDate).toLocaleDateString(
           [],
           {
-            year: "numeric",
             month: "short",
             day: "numeric",
           },
         );
-        setStartTime(start);
-        setDeliveryTime(end);
+        const endtime = new Date(
+          projectDetails?.deliveryDate,
+        ).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+        setStartTime(start + ", " + starttime);
+        setDeliveryTime(end + ", " + endtime);
       }
     }
   }, [projectDetails]);

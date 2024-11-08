@@ -5,44 +5,49 @@ import { Link } from "react-router-dom";
 
 const OrderDetails = () => {
   const { projectDetails, clientDetails } = useSelector((state) => state.order);
+
+  // all states here
   const [items, setItems] = useState([]);
-  // const items = [
-  //   {
-  //     id: 1,
-  //     categoryName: "Door Hanger Design",
-  //     subCategoryName: "Double sided design",
-  //     quantity: 1,
-  //     duration: 1,
-  //     price: 40,
-  //     fastDeliveryPrice: 10,
-  //     fastDeliveryDays: 1,
-  //     isFastDelivery: true,
-  //     bulletPoints: [
-  //       "Unlimited Revisions",
-  //       "PSD Source File",
-  //       "Print Ready PDF or JPEG File",
-  //     ],
-  //     title: "",
-  //   },
-  //   {
-  //     id: 2,
-  //     categoryName: "Flyer Design",
-  //     subCategoryName: "Double sided design",
-  //     quantity: 1,
-  //     duration: 2,
-  //     price: 50,
-  //     fastDeliveryPrice: 10,
-  //     fastDeliveryDays: 1,
-  //     isFastDelivery: false,
-  //     bulletPoints: [
-  //       "Unlimited Revisions",
-  //       "PSD Source File",
-  //       "Print Ready PDF or JPEG File",
-  //     ],
-  //     title: "Design Name",
-  //     designId: "MR1DN",
-  //   },
-  // ];
+  const [startTime, setStartTime] = useState("Not determined");
+  const [deliveryTime, setDeliveryTime] = useState("Not determined");
+
+  // all side effects here
+  useEffect(() => {
+    if (projectDetails) {
+      if (projectDetails?.isRequirementsFullFilled) {
+        const start = new Date(projectDetails?.startDate).toLocaleDateString(
+          [],
+          {
+            month: "short",
+            day: "numeric",
+          },
+        );
+        const starttime = new Date(
+          projectDetails?.startDate,
+        ).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+        const end = new Date(projectDetails?.deliveryDate).toLocaleDateString(
+          [],
+          {
+            month: "short",
+            day: "numeric",
+          },
+        );
+        const endtime = new Date(
+          projectDetails?.deliveryDate,
+        ).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+        setStartTime(start + ", " + starttime);
+        setDeliveryTime(end + ", " + endtime);
+      }
+    }
+  }, [projectDetails]);
 
   useEffect(() => {
     if (projectDetails) {
@@ -77,8 +82,8 @@ const OrderDetails = () => {
         <span className="font-semibold">{clientDetails?.userName}</span>
       </p>
       <p className="mb-2">
-        The project has started Oct 25, 2023, 8:45 PM - The project will be
-        completed Oct 27, 2023, 8:45 PM
+        The project has started {startTime} - The project will be completed{" "}
+        {deliveryTime}
       </p>
       <p className="mb-2">
         Project number{" "}
