@@ -1,13 +1,9 @@
 import React from "react";
 import { getStatusText } from "./StatusText";
 
-const CompletedProjects = ({
-  completedProjects,
-  isCompletedProjectLoading,
-}) => {
-  console.log("data", completedProjects);
+const CompletedProjects = ({ completedProjects }) => {
   return (
-    <div className="mt-8 grid grid-cols-2 gap-4">
+    <div className="mb-16 mt-8 grid grid-cols-2 gap-4">
       {completedProjects?.length > 0 ? (
         completedProjects?.map((project) => {
           return (

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BsInfoCircle } from "react-icons/bs";
 import {
   FaFacebookF,
@@ -26,34 +26,35 @@ import { configApi } from "../libs/configApi";
 import { connectSocket } from "../libs/socketService";
 import { timeAgoTracker } from "../libs/timeAgoTracker";
 import { useLazyGetAllMessagesQuery } from "../Redux/api/inboxApiSlice";
-import {
-  useFetchActiveProjectsQuery,
-  useFetchCompletedProjectsQuery,
-  useUsersAllProjectsQuery,
-} from "../Redux/api/orderApiSlice";
+import { useUsersAllProjectsQuery } from "../Redux/api/orderApiSlice";
 import { setChatData, setConversationUser } from "../Redux/features/chatSlice";
 import { setOnlineUsers, setUser } from "../Redux/features/userSlice";
 
 function Profile({ user = {}, slug }) {
-  const {
-    data: activeProjects,
-    isActiveProjectsLoading,
-    // error,
-  } = useFetchActiveProjectsQuery();
-
-  const {
-    data: completedProjects,
-    isCompletedProjectLoading,
-    // error,
-  } = useFetchCompletedProjectsQuery({
-    status: "COMPLETE_PROJECT",
-  });
-
   const { data: usersProjects } = useUsersAllProjectsQuery({
     userId: user?.id,
   });
 
-  console.log(usersProjects);
+  //functions for filtering projects
+  const isActiveProject = (project) =>
+    project?.trackProjectStatus !== "COMPLETE_PROJECT" &&
+    project?.trackProjectStatus !== "CANCELLED" &&
+    project?.paymentStatus === "COMPLETED";
+
+  const isCompletedProject = (project) =>
+    project?.trackProjectStatus === "COMPLETE_PROJECT" &&
+    project?.paymentStatus === "COMPLETED";
+
+  // Using useMemo to  optimization
+  const filteredActiveProjects = useMemo(
+    () => usersProjects?.filter(isActiveProject),
+    [usersProjects],
+  );
+
+  const filteredCompletedProjects = useMemo(
+    () => usersProjects?.filter(isCompletedProject),
+    [usersProjects],
+  );
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -237,7 +238,9 @@ function Profile({ user = {}, slug }) {
           <div className="space-y-3 border-b border-gray-300 py-4">
             <div className="flex justify-between gap-1 text-sm">
               <span>Completed Projects</span>
-              <p className="font-semibold">13</p>
+              <p className="font-semibold">
+                {filteredCompletedProjects?.length}
+              </p>
             </div>
             <div className="flex justify-between gap-1 text-sm">
               <span>Project Completion Rate</span>
@@ -428,40 +431,36 @@ function Profile({ user = {}, slug }) {
 
       {/* projects  */}
       <div className="flex-1">
-        <div className="flex justify-around gap-4">
-          <h2
-            className={`cursor-pointer text-lg font-semibold sm:text-xl ${
-              activeTab === "active" && "text-primary underline"
-            }`}
-            onClick={() => setActiveTab("active")}
-          >
-            Active Projects ({activeProjects?.length})
-          </h2>
-          <h2
-            className={`cursor-pointer text-lg font-semibold sm:text-xl ${
-              activeTab === "completed" && "text-primary underline"
-            }`}
-            onClick={() => setActiveTab("completed")}
-          >
-            Completed Projects ({completedProjects?.length})
-          </h2>
-        </div>
+        {user?.role === "USER" && (
+          <div className="flex justify-around gap-4">
+            <h2
+              className={`cursor-pointer text-lg font-semibold sm:text-xl ${
+                activeTab === "active" && "text-primary underline"
+              }`}
+              onClick={() => setActiveTab("active")}
+            >
+              Active Projects ({filteredActiveProjects?.length})
+            </h2>
+            <h2
+              className={`cursor-pointer text-lg font-semibold sm:text-xl ${
+                activeTab === "completed" && "text-primary underline"
+              }`}
+              onClick={() => setActiveTab("completed")}
+            >
+              Completed Projects ({filteredCompletedProjects?.length})
+            </h2>
+          </div>
+        )}
         {/* activeProject */}
-        {activeTab === "active" && (
-          <ActiveProjects
-            activeProjects={activeProjects}
-            isActiveProjectsLoading={isActiveProjectsLoading}
-          />
+        {user?.role === "USER" && activeTab === "active" && (
+          <ActiveProjects activeProjects={filteredActiveProjects} />
         )}
         {/* completedProjects */}
-        {activeTab === "completed" && (
-          <CompletedProjects
-            completedProjects={completedProjects}
-            isCompletedProjectLoading={isCompletedProjectLoading}
-          />
+        {user?.role === "USER" && activeTab === "completed" && (
+          <CompletedProjects completedProjects={filteredCompletedProjects} />
         )}
         {/* All Reviews  */}
-        <AllReviews />
+        <AllReviews user={user} />
       </div>
     </section>
   );

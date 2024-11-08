@@ -142,7 +142,11 @@ const ChatBox = ({ openToggle }) => {
 
     socket.on("admin-notification", (msg) => {
       console.log("admin-notification", msg);
-      if (isAdmin && msg?.userId !== user.id) {
+      if (
+        isAdmin &&
+        msg?.userId !== user.id &&
+        msg?.userId === conversationUser
+      ) {
         setMessages((prevMessages) => [...prevMessages, msg]);
       }
     });
