@@ -21,6 +21,9 @@ const Order = () => {
   console.log(projectDetails);
   const { user } = useSelector((state) => state.user);
 
+  // Checking Admin
+  const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
+
   const tabButtons = ["ACTIVITY", "REQUIREMENTS", "DETAILS"];
 
   const [selectedTabButton, setSelectedTabButton] = useState("ACTIVITY");
@@ -28,11 +31,11 @@ const Order = () => {
   const RenderTabComponent = () => {
     switch (selectedTabButton) {
       case "ACTIVITY":
-        return <OrderChatBox />;
+        return <OrderChatBox projectDetails={projectDetails || {}} />;
       case "REQUIREMENTS":
-        return <OrderRequirements />;
+        return <OrderRequirements projectDetails={projectDetails || {}} />;
       case "DETAILS":
-        return <OrderDetails />;
+        return <OrderDetails projectDetails={projectDetails || {}} />;
       default:
         break;
     }
@@ -55,11 +58,12 @@ const Order = () => {
                 onClick={() => setSelectedTabButton(btn)}
               >
                 {btn}
-                {btn === "REQUIREMENTS" && (
-                  <div className="absolute -right-3 -top-2">
-                    <PiWarningCircleFill className="text-primary" />
-                  </div>
-                )}
+                {btn === "REQUIREMENTS" &&
+                  !projectDetails?.isRequirementsFullFilled && (
+                    <div className="absolute -right-3 -top-2">
+                      <PiWarningCircleFill className="text-primary" />
+                    </div>
+                  )}
               </button>
             ))}
           </div>
@@ -78,7 +82,7 @@ const Order = () => {
           <RenderTabComponent />
         </div>
         <div className="w-full shrink-0 sm:w-[300px]">
-          <OrderSidePanel />
+          <OrderSidePanel projectDetails={projectDetails || {}} />
         </div>
       </div>
       {selectedTabButton === "ACTIVITY" && (
