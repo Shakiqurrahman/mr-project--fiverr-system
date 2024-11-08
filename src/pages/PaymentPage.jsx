@@ -105,9 +105,10 @@ const PaymentPage = () => {
         `${configApi.api}api/checkout-session`,
         { data },
       );
-      console.log(response);
-
+      console.log('res',response);
+      
       const sessionId = response.data.id;
+      console.log('sessiom',sessionId);
 
       // Redirect to Stripe Checkout
       const stripe = await stripePromise;

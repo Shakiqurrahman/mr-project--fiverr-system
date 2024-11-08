@@ -17,12 +17,12 @@ export const orderApiSlice = createApi({
   tagTypes: ["requirements"],
   endpoints: (builder) => ({
     requirementByProjectNumber: builder.query({
-      query: ({ projectNumber }) => `find-order/${projectNumber}`,
+      query: ({ projectNumber }) => `find-order?projectNumber=${projectNumber}`,
       transformResponse: (response) => response?.data,
-      providesTags : ["requirements"]
+      providesTags: ["requirements"],
     }),
 
-    updateRequirement : builder.mutation({
+    updateRequirement: builder.mutation({
       query: (requirementData) => ({
         url: "requirement/send/",
         method: "POST",
@@ -46,7 +46,7 @@ export const orderApiSlice = createApi({
       transformResponse: (response) => response?.data,
     }),
 
-    createNote : builder.mutation({
+    createNote: builder.mutation({
       query: (noteData) => ({
         url: "order/create-order-note",
         method: "POST",
@@ -54,7 +54,7 @@ export const orderApiSlice = createApi({
       }),
     }),
 
-    updateNote : builder.mutation({
+    updateNote: builder.mutation({
       query: ({ noteData, orderId, noteId }) => ({
         url: `order/update-order-note/${orderId}/${noteId}`,
         method: "PUT",
@@ -62,18 +62,17 @@ export const orderApiSlice = createApi({
       }),
     }),
 
-    deleteById : builder.mutation({
-      query: ({ orderId ,noteId }) => ({
+    deleteById: builder.mutation({
+      query: ({ orderId, noteId }) => ({
         url: `delete-order-note/${orderId}/${noteId}`,
         method: "DELETE",
       }),
     }),
 
-    getNoteData : builder.query({
-      query: ({orderId}) => `order/find-order-note/${orderId}`,
+    getNoteData: builder.query({
+      query: ({ orderId }) => `order/find-order-note/${orderId}`,
       transformResponse: (response) => response?.data,
-    })
-
+    }),
   }),
 });
 
