@@ -20,6 +20,14 @@ export const orderApiSlice = createApi({
       transformResponse: (response) => response?.data,
     }),
 
+    updateRequirement : builder.mutation({
+      query: (requirementData) => ({
+        url: "requirement/send/",
+        method: "POST",
+        body: requirementData,
+      }),
+    }),
+
     fetchActiveProjects: builder.query({
       query: () => "order-status",
       transformResponse: (response) => response?.data,
@@ -34,12 +42,44 @@ export const orderApiSlice = createApi({
       query: ({ userId }) => `order-status?user_id=${userId}`,
       transformResponse: (response) => response?.data,
     }),
+
+    createNote : builder.mutation({
+      query: (noteData) => ({
+        url: "order/create-order-note",
+        method: "POST",
+        body: noteData,
+      }),
+    }),
+
+    updateNote : builder.mutation({
+      query: ({ noteData, orderId, noteId }) => ({
+        url: `order/update-order-note/${orderId}/${noteId}`,
+        method: "PUT",
+        body: noteData,
+      }),
+    }),
+
+    deleteById : builder.mutation({
+      query: ({ orderId ,noteId }) => ({
+        url: `delete-order-note/${orderId}/${noteId}`,
+        method: "DELETE",
+      }),
+    }),
+
+    getNoteData : builder.query({
+      query: ({orderId}) => `order/find-order-note/${orderId}`,
+      transformResponse: (response) => response?.data,
+    })
+
   }),
 });
 
 export const {
+  useRequirementByProjectNumberQuery,
+  useUpdateRequirementMutation,
   useFetchActiveProjectsQuery,
   useFetchCompletedProjectsQuery,
   useUsersAllProjectsQuery,
-  useRequirementByProjectNumberQuery,
+  useCreateNoteMutation,
+  useUpdateNoteMutation,
 } = orderApiSlice;

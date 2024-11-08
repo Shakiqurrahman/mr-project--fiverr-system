@@ -10,10 +10,13 @@ import { configApi } from "../../../libs/configApi";
 import formatFileSize from "../../../libs/formatFileSize";
 import Divider from "../../Divider";
 import EmojiPicker from "../../chat/EmojiPicker";
+import { useUpdateRequirementMutation } from "../../../Redux/api/orderApiSlice";
 
 const OrderRequirementsForm = () => {
   const { user } = useSelector((state) => state.user);
   const { projectDetails, clientDetails } = useSelector((state) => state.order);
+  const [updateRequirementHandler, { isSuccess: isUpdated }] =
+    useUpdateRequirementMutation();
   // Checking Admin
   const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
 
@@ -158,13 +161,13 @@ const OrderRequirementsForm = () => {
     e.preventDefault();
     try {
       setSubmitLoading(true);
-      const url = `${configApi.api}requirement/send/`;
-      const response = await axios.post(url, {
+      const requirementData = {
         orderId: projectDetails?.id,
         isRequirementsFullFilled: true,
         requirements,
-      });
-      if (response?.data?.success) {
+      };
+      await updateRequirementHandler(requirementData).unwrap();
+      if (isUpdated) {
         setSubmitLoading(false);
         setIsOrderStartByAdmin(true);
       }
@@ -182,13 +185,13 @@ const OrderRequirementsForm = () => {
     if (checkTextLength) {
       try {
         setSubmitLoading(true);
-        const url = `${configApi.api}requirement/send/`;
-        const response = await axios.post(url, {
+        const requirementData = {
           orderId: projectDetails?.id,
           isRequirementsFullFilled: true,
           requirements,
-        });
-        if (response?.data?.success) {
+        };
+        await updateRequirementHandler(requirementData).unwrap();
+        if (isUpdated) {
           setSubmitLoading(false);
         }
       } catch {

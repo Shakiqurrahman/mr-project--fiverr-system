@@ -1,11 +1,13 @@
-import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { FaSpinner } from "react-icons/fa";
 import { IoMdAttach } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import shortid from "shortid";
-import { useRequirementByProjectNumberQuery } from "../Redux/api/orderApiSlice";
+import {
+  useRequirementByProjectNumberQuery,
+  useUpdateRequirementMutation,
+} from "../Redux/api/orderApiSlice";
 import adobeStock from "../assets//images/Stock Logos/01 Adobe Stock Logo.svg";
 import shutterStock from "../assets/images/Stock Logos/01 Shutterstock_logo.svg";
 import iStock from "../assets/images/Stock Logos/03 iStock logo.png";
@@ -17,7 +19,6 @@ import alamy from "../assets/images/Stock Logos/alamy logo.png";
 import depositPhotos from "../assets/images/Stock Logos/depositphotos.png";
 import Divider from "../components/Divider";
 import EmojiPicker from "../components/chat/EmojiPicker";
-import { configApi } from "../libs/configApi";
 import formatFileSize from "../libs/formatFileSize";
 
 const ProjectRequirements = () => {
@@ -25,6 +26,8 @@ const ProjectRequirements = () => {
   const { data: projectDetails } = useRequirementByProjectNumberQuery({
     projectNumber,
   });
+  const [updateRequirementHandler, { isSuccess: isUpdated }] =
+    useUpdateRequirementMutation();
   console.log(projectDetails);
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
@@ -200,13 +203,13 @@ const ProjectRequirements = () => {
     if (checkTextLength) {
       try {
         setSubmitLoading(true);
-        const url = `${configApi.api}requirement/send/`;
-        const response = await axios.post(url, {
+        const requirementData = {
           orderId: projectDetails?.id,
           isRequirementsFullFilled: true,
           requirements,
-        });
-        if (response?.data?.success) {
+        };
+        await updateRequirementHandler(requirementData).unwrap();
+        if (isUpdated) {
           setSubmitLoading(false);
           navigate(`/order/${projectNumber}`);
         }

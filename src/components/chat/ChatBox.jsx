@@ -129,14 +129,14 @@ const ChatBox = ({ openToggle }) => {
 
     socket?.on("delete-message", (msg) => {
       if (!isAdmin) {
-        console.log("deltedMsg", msg);
+        console.log("deltedMsg from user", msg);
 
         // setMessages((prevMessages) => [...prevMessages, msg]);
       }
       let filter = msg.userId === conversationUser && msg;
       if (isAdmin && filter) {
         // setMessages((prev) => [...prev, filter]);
-        console.log("deltedMsg", msg);
+        console.log("deltedMsg from admin", msg);
       }
     });
 
@@ -519,7 +519,9 @@ const ChatBox = ({ openToggle }) => {
   // for deleting a single message
   const handleDeleteAMessage = async (messageId) => {
     try {
-      await deleteAMessage(messageId).unwrap();
+      const res = await deleteAMessage(messageId).unwrap();
+      console.log(res);
+      
       socket.emit("delete-message", { messageId, userId: user?.id });
       toast.success("Message deleted successfully");
     } catch {
@@ -973,7 +975,6 @@ const ChatBox = ({ openToggle }) => {
                                 alt=""
                                 className="h-[180px] w-full object-cover"
                               />
-                              {console.log(att)}
                               <a
                                 href={att.url}
                                 download={att.name}
