@@ -14,7 +14,7 @@ export const orderApiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ["requirements"],
+  tagTypes: ["requirements", "notes"],
   endpoints: (builder) => ({
     requirementByProjectNumber: builder.query({
       query: ({ projectNumber }) => `find-order?projectNumber=${projectNumber}`,
@@ -52,6 +52,7 @@ export const orderApiSlice = createApi({
         method: "POST",
         body: noteData,
       }),
+      invalidatesTags: ["notes"],
     }),
 
     updateNote: builder.mutation({
@@ -60,18 +61,21 @@ export const orderApiSlice = createApi({
         method: "PUT",
         body: noteData,
       }),
+      invalidatesTags: ["notes"],
     }),
 
-    deleteById: builder.mutation({
+    deleteNoteById: builder.mutation({
       query: ({ orderId, noteId }) => ({
-        url: `delete-order-note/${orderId}/${noteId}`,
+        url: `order/delete-order-note/${orderId}/${noteId}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["notes"],
     }),
 
     getNoteData: builder.query({
       query: ({ orderId }) => `order/find-order-note/${orderId}`,
       transformResponse: (response) => response?.data,
+      providesTags: ["notes"],
     }),
   }),
 });
@@ -84,4 +88,6 @@ export const {
   useUsersAllProjectsQuery,
   useCreateNoteMutation,
   useUpdateNoteMutation,
+  useGetNoteDataQuery,
+  useDeleteNoteByIdMutation,
 } = orderApiSlice;

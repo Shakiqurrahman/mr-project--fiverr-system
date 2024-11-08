@@ -2,29 +2,28 @@ import React, { useState } from "react";
 import { LiaEdit } from "react-icons/lia";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { useSelector } from "react-redux";
+import {
+  useDeleteNoteByIdMutation,
+  useGetNoteDataQuery,
+} from "../../../Redux/api/orderApiSlice";
 import AddNoteModal from "./AddNoteModal";
 import EditNoteModal from "./EditNoteModal";
 
 const PrivateNote = () => {
   const { projectDetails } = useSelector((state) => state.order);
+  const { data: notes } = useGetNoteDataQuery({ orderId: projectDetails?.id });
+  const [deleteANote] = useDeleteNoteByIdMutation();
+  console.log("notes", notes);
   const [addNoteModal, setAddNoteModal] = useState(false);
   const [editNoteModal, setEditNoteModal] = useState(null);
 
-  const [notes, setNotes] = useState([
-    {
-      id: 1,
-      title: "Note 1",
-      note: "Don't forget to attend our meeting tonight at 12 PM",
-    },
-    {
-      id: 2,
-      title: "Note 2",
-      note: "Don't forget to attend our meeting tonight at 12 PM",
-    },
-  ]);
-
-  const handleAddNote = (note) => {
-    setNotes((prev) => [...prev, note]);
+  const handleDeleteNote = async (orderId, noteId) => {
+    console.log("Order Id", orderId, "Note Id", noteId);
+    try {
+      await deleteANote({ orderId, noteId }).unwrap();
+    } catch {
+      console.log("Note Delete Failed");
+    }
   };
 
   return (
@@ -41,7 +40,9 @@ const PrivateNote = () => {
       <div className="mb-1 mt-5 space-y-4">
         {notes?.map((note, idx) => (
           <div key={idx} className="flex items-center justify-between gap-1">
-            <h2 className="text-base">{note?.title}</h2>
+            <h2 className="text-base" title={note?.content?.note}>
+              {note?.content?.title}
+            </h2>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setEditNoteModal(note)}
@@ -49,7 +50,10 @@ const PrivateNote = () => {
               >
                 <LiaEdit />
               </button>
-              <button className="text-base text-gray-500">
+              <button
+                onClick={() => handleDeleteNote(note?.orderId, note?.id)}
+                className="text-base text-gray-500"
+              >
                 <RiDeleteBinLine />
               </button>
             </div>
@@ -57,16 +61,12 @@ const PrivateNote = () => {
         ))}
       </div>
       {addNoteModal && (
-        <AddNoteModal
-          handleClose={() => setAddNoteModal(false)}
-          onNoteSubmit={handleAddNote}
-        />
+        <AddNoteModal handleClose={() => setAddNoteModal(false)} />
       )}
       {editNoteModal && (
         <EditNoteModal
           handleClose={() => setEditNoteModal(false)}
           value={editNoteModal}
-          //   onNoteSubmit={handleAddNote}
         />
       )}
     </div>

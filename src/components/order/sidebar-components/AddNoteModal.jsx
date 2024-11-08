@@ -1,8 +1,10 @@
 import React, { useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { useCreateNoteMutation } from "../../../Redux/api/orderApiSlice";
 import useOutsideClick from "../../../hooks/useOutsideClick";
 
-const AddNoteModal = ({ handleClose, onNoteSubmit }) => {
+const AddNoteModal = ({ handleClose }) => {
+  const [createNote] = useCreateNoteMutation();
   const { projectDetails } = useSelector((state) => state.order);
   const modalRef = useRef(null);
   const [form, setForm] = useState({
@@ -14,10 +16,22 @@ const AddNoteModal = ({ handleClose, onNoteSubmit }) => {
     setForm({ ...form, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onNoteSubmit(form);
-    handleClose(false);
+    if (projectDetails) {
+      try {
+        const noteData = {
+          orderId: projectDetails?.id,
+          content: form,
+        };
+        const response = await createNote(noteData).unwrap();
+        if (response?.success) {
+          handleClose(false);
+        }
+      } catch {
+        console.log("Note Create Failed");
+      }
+    }
   };
 
   useOutsideClick(modalRef, () => handleClose(false));
