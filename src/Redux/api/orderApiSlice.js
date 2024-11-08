@@ -14,10 +14,12 @@ export const orderApiSlice = createApi({
       return headers;
     },
   }),
+  tagTypes: ["requirements"],
   endpoints: (builder) => ({
     requirementByProjectNumber: builder.query({
       query: ({ projectNumber }) => `find-order/${projectNumber}`,
       transformResponse: (response) => response?.data,
+      providesTags : ["requirements"]
     }),
 
     updateRequirement : builder.mutation({
@@ -26,6 +28,7 @@ export const orderApiSlice = createApi({
         method: "POST",
         body: requirementData,
       }),
+      invalidatesTags: ["requirements"],
     }),
 
     fetchActiveProjects: builder.query({

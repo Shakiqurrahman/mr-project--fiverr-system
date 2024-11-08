@@ -44,5 +44,5 @@ export const allUserApiSlice = createApi({
 export const {
   useFetchAllUsersQuery,
   useUpdateUserRolesMutation,
-  useFetchSingleUserByIdQuery,
+  useLazyFetchSingleUserByIdQuery,
 } = allUserApiSlice;

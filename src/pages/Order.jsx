@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { PiWarningCircleFill } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useFetchSingleUserByIdQuery } from "../Redux/api/allUserApiSlice";
+import { useLazyFetchSingleUserByIdQuery } from "../Redux/api/allUserApiSlice";
 import { useRequirementByProjectNumberQuery } from "../Redux/api/orderApiSlice";
 import {
   setClientDetails,
@@ -25,9 +25,9 @@ const Order = () => {
   const { data: projectDetails } = useRequirementByProjectNumberQuery({
     projectNumber,
   });
-  const { data: clientDetails } = useFetchSingleUserByIdQuery({
-    userId: projectDetails?.userId,
-  });
+  const [fetchUserById, { data: clientDetails }] =
+    useLazyFetchSingleUserByIdQuery();
+
   console.log(projectDetails, clientDetails);
   const { user } = useSelector((state) => state.user);
 
@@ -39,6 +39,15 @@ const Order = () => {
   const [selectedTabButton, setSelectedTabButton] = useState("ACTIVITY");
 
   // All Side Effects here
+
+  useEffect(() => {
+    if (projectDetails) {
+      fetchUserById({
+        userId: projectDetails?.userId,
+      });
+    }
+  }, [fetchUserById, projectDetails]);
+  
   useEffect(() => {
     if (projectDetails) {
       if (

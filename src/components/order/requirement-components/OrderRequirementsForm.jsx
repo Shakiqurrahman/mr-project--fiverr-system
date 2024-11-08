@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { FaSpinner } from "react-icons/fa6";
 import { IoMdAttach } from "react-icons/io";
@@ -6,17 +5,15 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import shortid from "shortid";
-import { configApi } from "../../../libs/configApi";
+import { useUpdateRequirementMutation } from "../../../Redux/api/orderApiSlice";
 import formatFileSize from "../../../libs/formatFileSize";
 import Divider from "../../Divider";
 import EmojiPicker from "../../chat/EmojiPicker";
-import { useUpdateRequirementMutation } from "../../../Redux/api/orderApiSlice";
 
 const OrderRequirementsForm = () => {
   const { user } = useSelector((state) => state.user);
   const { projectDetails, clientDetails } = useSelector((state) => state.order);
-  const [updateRequirementHandler, { isSuccess: isUpdated }] =
-    useUpdateRequirementMutation();
+  const [updateRequirementHandler] = useUpdateRequirementMutation();
   // Checking Admin
   const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
 
@@ -166,8 +163,8 @@ const OrderRequirementsForm = () => {
         isRequirementsFullFilled: true,
         requirements,
       };
-      await updateRequirementHandler(requirementData).unwrap();
-      if (isUpdated) {
+      const res = await updateRequirementHandler(requirementData).unwrap();
+      if (res?.success) {
         setSubmitLoading(false);
         setIsOrderStartByAdmin(true);
       }
@@ -190,8 +187,8 @@ const OrderRequirementsForm = () => {
           isRequirementsFullFilled: true,
           requirements,
         };
-        await updateRequirementHandler(requirementData).unwrap();
-        if (isUpdated) {
+        const res = await updateRequirementHandler(requirementData).unwrap();
+        if (res?.success) {
           setSubmitLoading(false);
         }
       } catch {

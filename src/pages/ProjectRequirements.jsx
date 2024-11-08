@@ -26,8 +26,7 @@ const ProjectRequirements = () => {
   const { data: projectDetails } = useRequirementByProjectNumberQuery({
     projectNumber,
   });
-  const [updateRequirementHandler, { isSuccess: isUpdated }] =
-    useUpdateRequirementMutation();
+  const [updateRequirementHandler] = useUpdateRequirementMutation();
   console.log(projectDetails);
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
@@ -208,8 +207,8 @@ const ProjectRequirements = () => {
           isRequirementsFullFilled: true,
           requirements,
         };
-        await updateRequirementHandler(requirementData).unwrap();
-        if (isUpdated) {
+        const res = await updateRequirementHandler(requirementData).unwrap();
+        if (res?.success) {
           setSubmitLoading(false);
           navigate(`/order/${projectNumber}`);
         }
