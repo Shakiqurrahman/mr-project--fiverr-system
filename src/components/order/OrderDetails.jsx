@@ -87,7 +87,7 @@ const OrderDetails = () => {
       </p>
       <p className="mb-2">
         Project number{" "}
-        <span className="font-semibold">{projectDetails?.projectNumber}</span>
+        <span className="font-semibold">#{projectDetails?.projectNumber}</span>
       </p>
       <div className="overflow-x-auto">
         <div className="flex min-w-[600px] flex-col border border-gray-300">
