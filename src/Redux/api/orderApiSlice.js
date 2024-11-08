@@ -88,6 +88,6 @@ export const {
   useUsersAllProjectsQuery,
   useCreateNoteMutation,
   useUpdateNoteMutation,
-  useGetNoteDataQuery,
   useDeleteNoteByIdMutation,
+  useLazyGetNoteDataQuery,
 } = orderApiSlice;

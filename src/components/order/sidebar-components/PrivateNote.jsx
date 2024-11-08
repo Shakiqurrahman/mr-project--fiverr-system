@@ -1,21 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LiaEdit } from "react-icons/lia";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import {
   useDeleteNoteByIdMutation,
-  useGetNoteDataQuery,
+  useLazyGetNoteDataQuery,
 } from "../../../Redux/api/orderApiSlice";
 import AddNoteModal from "./AddNoteModal";
 import EditNoteModal from "./EditNoteModal";
 
 const PrivateNote = () => {
   const { projectDetails } = useSelector((state) => state.order);
-  const { data: notes } = useGetNoteDataQuery({ orderId: projectDetails?.id });
+  const [getNotesData, { data: notes }] = useLazyGetNoteDataQuery();
   const [deleteANote] = useDeleteNoteByIdMutation();
   console.log("notes", notes);
   const [addNoteModal, setAddNoteModal] = useState(false);
   const [editNoteModal, setEditNoteModal] = useState(null);
+
+  useEffect(() => {
+    if (projectDetails) {
+      getNotesData({ orderId: projectDetails?.id });
+    }
+  }, [projectDetails, getNotesData]);
 
   const handleDeleteNote = async (orderId, noteId) => {
     console.log("Order Id", orderId, "Note Id", noteId);
