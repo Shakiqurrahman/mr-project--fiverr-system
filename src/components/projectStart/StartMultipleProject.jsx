@@ -195,7 +195,9 @@ const StartMultipleProject = ({ items }) => {
         } = item.category;
         return {
           ...item,
-          designId: id,
+          designDbId: id,
+          designId: item?.designId,
+          bulletPoint,
           category: { categoryId, ...restCategory },
         };
       });

@@ -1,43 +1,50 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import axios from "axios";
+import { useEffect, useRef, useState } from "react";
 import { FaSpinner } from "react-icons/fa6";
 import { IoMdAttach } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import shortid from "shortid";
+import { configApi } from "../../../libs/configApi";
 import formatFileSize from "../../../libs/formatFileSize";
 import Divider from "../../Divider";
 import EmojiPicker from "../../chat/EmojiPicker";
 
 const OrderRequirementsForm = () => {
   const { user } = useSelector((state) => state.user);
-  const navigate = useNavigate();
+  const { projectDetails, clientDetails } = useSelector((state) => state.order);
+  // Checking Admin
+  const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
+
   const fileInputRef = useRef(null);
   const textareasRef = useRef([]);
   const [submitLoading, setSubmitLoading] = useState(false);
-  const requirementsData = useMemo(
-    () => [
-      "Which industry do you work in?",
-      "Do you have your own/Industry logo?",
-      "Do you have your own/Industry website?",
-      "Do you have your specific design size?",
-      "Do you have any imaginary or specific design ideas?",
-      "You have to give clear information that you need in the design. (E.g. all texts, all photos, logo, contact info, etc.)",
-    ],
-    [],
-  );
-  const [requirements, setRequirements] = useState(null);
+  const [requirements, setRequirements] = useState([]);
+  const [isOrderStartByAdmin, setIsOrderStartByAdmin] = useState(false);
   // Initial stage Update requirements state
   useEffect(() => {
-    if (requirementsData) {
-      const updateRequirements = requirementsData.map((item, i) => ({
-        id: i + 1,
-        question: item,
+    if (!projectDetails?.isRequirementsFullFilled) {
+      const updateRequirements = projectDetails?.requirements?.map((item) => ({
+        id: shortid.generate(),
+        question: item.question,
         answer: "",
         attachments: [],
       }));
       setRequirements(updateRequirements);
     }
-  }, [requirementsData]);
+  }, [projectDetails?.isRequirementsFullFilled, projectDetails?.requirements]);
+
+  useEffect(() => {
+    if (projectDetails) {
+      const allAnswers = projectDetails?.requirements?.every(
+        (item) => item?.answer,
+      );
+      if (!allAnswers && projectDetails?.isRequirementsFullFilled) {
+        setIsOrderStartByAdmin(true);
+      }
+    }
+  }, [projectDetails]);
 
   //Emoji Picker component handler
   const handleEmojiSelect = (emoji, index, id) => {
@@ -147,17 +154,53 @@ const OrderRequirementsForm = () => {
     fileInputRef.current.value = null;
   };
 
-  const handleSubmit = (e) => {
+  const handleAdminStart = async (e) => {
+    e.preventDefault();
+    try {
+      setSubmitLoading(true);
+      const url = `${configApi.api}requirement/send/`;
+      const response = await axios.post(url, {
+        orderId: projectDetails?.id,
+        isRequirementsFullFilled: true,
+        requirements,
+      });
+      if (response?.data?.success) {
+        setSubmitLoading(false);
+        setIsOrderStartByAdmin(true);
+      }
+    } catch {
+      console.log("error to save requirements");
+      setSubmitLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const checkTextLength = requirements.every(
-      (item) => item.answer.length <= 5000,
+      (item) => item.answer.length <= 5000 && item.answer.length > 0,
     );
-    console.log(checkTextLength, requirements);
+    if (checkTextLength) {
+      try {
+        setSubmitLoading(true);
+        const url = `${configApi.api}requirement/send/`;
+        const response = await axios.post(url, {
+          orderId: projectDetails?.id,
+          isRequirementsFullFilled: true,
+          requirements,
+        });
+        if (response?.data?.success) {
+          setSubmitLoading(false);
+        }
+      } catch {
+        console.log("error to save requirements");
+        setSubmitLoading(false);
+      }
+    }
   };
 
   return (
     <>
-      {user?.role === "USER" ? (
+      {!isAdmin && !isOrderStartByAdmin ? (
         <div className="w-full">
           <h1 className="mb-5 text-center text-xl font-bold leading-relaxed">
             Please fill in the answers to the questions below and attach the
@@ -279,22 +322,46 @@ const OrderRequirementsForm = () => {
           </form>
         </div>
       ) : (
-        <div className="text-center">
-          <p className="mx-auto mb-5 px-3 font-medium md:w-3/4">
-            Your Client{" "}
-            <Link className="font-semibold text-primary">clientusername</Link>{" "}
-            Did not completed all the requirement questions that you have asked
-            him. Tell him to fill up all the questions or you can start the
-            project by clicking this{" "}
-            <span className="font-semibold">&quot;Start The Project&quot;</span>{" "}
-            button.
-          </p>
-          <button
-            type="button"
-            className="rounded-[30px] bg-primary px-10 py-2 text-lg font-semibold text-white"
-          >
-            Start The Project
-          </button>
+        <>
+          {!isOrderStartByAdmin && (
+            <div className="text-center">
+              <p className="mx-auto mb-5 px-3 font-medium md:w-3/4">
+                Your Client{" "}
+                <Link
+                  to={"/" + clientDetails?.userName}
+                  className="font-semibold text-primary"
+                >
+                  {clientDetails?.userName}
+                </Link>{" "}
+                Did not completed all the requirement questions that you have
+                asked him. Tell him to fill up all the questions or you can
+                start the project by clicking this{" "}
+                <span className="font-semibold">
+                  &quot;Start The Project&quot;
+                </span>{" "}
+                button.
+              </p>
+              <button
+                onClick={handleAdminStart}
+                disabled={submitLoading}
+                type="button"
+                className="mx-auto mt-5 flex h-[45px] w-1/3 items-center justify-center rounded-[30px] bg-primary text-base font-semibold text-white disabled:cursor-not-allowed sm:text-lg"
+              >
+                {submitLoading ? (
+                  <span className="animate-spin text-xl">
+                    <FaSpinner />
+                  </span>
+                ) : (
+                  "Start The Project"
+                )}
+              </button>
+            </div>
+          )}
+        </>
+      )}
+      {isOrderStartByAdmin && (
+        <div className="text-lg font-medium">
+          This Project Requirements Are Manually Submitted.
         </div>
       )}
     </>

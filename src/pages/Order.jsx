@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PiWarningCircleFill } from "react-icons/pi";
-import { useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useFetchSingleUserByIdQuery } from "../Redux/api/allUserApiSlice";
 import { useRequirementByProjectNumberQuery } from "../Redux/api/orderApiSlice";
+import {
+  setClientDetails,
+  setProjectDetails,
+} from "../Redux/features/orderSlice";
 import Check from "../assets/svg/Check";
 import Divider from "../components/Divider";
 import OrderChatBox from "../components/order/OrderChatBox";
@@ -14,28 +19,58 @@ import OrderSidePanel from "../components/order/OrderSidePanel";
 import OrderTipsForm from "../components/order/OrderTipsForm";
 
 const Order = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { projectNumber } = useParams();
   const { data: projectDetails } = useRequirementByProjectNumberQuery({
     projectNumber,
   });
-  console.log(projectDetails);
+  const { data: clientDetails } = useFetchSingleUserByIdQuery({
+    userId: projectDetails?.userId,
+  });
+  console.log(projectDetails, clientDetails);
   const { user } = useSelector((state) => state.user);
 
   // Checking Admin
   const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
 
+  // All States Here
   const tabButtons = ["ACTIVITY", "REQUIREMENTS", "DETAILS"];
-
   const [selectedTabButton, setSelectedTabButton] = useState("ACTIVITY");
+
+  // All Side Effects here
+  useEffect(() => {
+    if (projectDetails) {
+      if (
+        !isAdmin &&
+        user?.id !== projectDetails?.userId &&
+        projectDetails?.paymentStatus !== "COMPLETED"
+      ) {
+        navigate("/");
+      }
+    }
+  }, [projectDetails, isAdmin, user, navigate]);
+
+  useEffect(() => {
+    if (projectDetails) {
+      dispatch(setProjectDetails(projectDetails));
+    }
+  }, [projectDetails, dispatch]);
+
+  useEffect(() => {
+    if (clientDetails) {
+      dispatch(setClientDetails(clientDetails));
+    }
+  }, [clientDetails, dispatch]);
 
   const RenderTabComponent = () => {
     switch (selectedTabButton) {
       case "ACTIVITY":
-        return <OrderChatBox projectDetails={projectDetails || {}} />;
+        return <OrderChatBox />;
       case "REQUIREMENTS":
-        return <OrderRequirements projectDetails={projectDetails || {}} />;
+        return <OrderRequirements />;
       case "DETAILS":
-        return <OrderDetails projectDetails={projectDetails || {}} />;
+        return <OrderDetails />;
       default:
         break;
     }
@@ -82,7 +117,7 @@ const Order = () => {
           <RenderTabComponent />
         </div>
         <div className="w-full shrink-0 sm:w-[300px]">
-          <OrderSidePanel projectDetails={projectDetails || {}} />
+          <OrderSidePanel />
         </div>
       </div>
       {selectedTabButton === "ACTIVITY" && (

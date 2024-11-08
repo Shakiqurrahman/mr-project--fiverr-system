@@ -23,6 +23,12 @@ export const allUserApiSlice = createApi({
       providesTags: ["usersRole"],
     }),
 
+    fetchSingleUserById: builder.query({
+      query: ({ userId }) => `getUserById/${userId}`,
+      transformResponse: (response) => response?.data,
+      providesTags: ["usersRole"],
+    }),
+
     //update users role
     updateUserRoles: builder.mutation({
       query: (data) => ({
@@ -35,5 +41,8 @@ export const allUserApiSlice = createApi({
   }),
 });
 
-export const { useFetchAllUsersQuery, useUpdateUserRolesMutation } =
-  allUserApiSlice;
+export const {
+  useFetchAllUsersQuery,
+  useUpdateUserRolesMutation,
+  useFetchSingleUserByIdQuery,
+} = allUserApiSlice;

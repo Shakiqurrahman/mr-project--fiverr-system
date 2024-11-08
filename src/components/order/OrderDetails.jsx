@@ -1,60 +1,70 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { FaCircleCheck } from "react-icons/fa6";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const OrderDetails = () => {
-  const items = [
-    {
-      id: 1,
-      categoryName: "Door Hanger Design",
-      subCategoryName: "Double sided design",
-      quantity: 1,
-      duration: 1,
-      price: 40,
-      fastDeliveryPrice: 10,
-      fastDeliveryDays: 1,
-      isFastDelivery: true,
-      bulletPoints: [
-        "Unlimited Revisions",
-        "PSD Source File",
-        "Print Ready PDF or JPEG File",
-      ],
-      title: "",
-    },
-    {
-      id: 2,
-      categoryName: "Flyer Design",
-      subCategoryName: "Double sided design",
-      quantity: 1,
-      duration: 2,
-      price: 50,
-      fastDeliveryPrice: 10,
-      fastDeliveryDays: 1,
-      isFastDelivery: false,
-      bulletPoints: [
-        "Unlimited Revisions",
-        "PSD Source File",
-        "Print Ready PDF or JPEG File",
-      ],
-      title: "Design Name",
-      designId: "MR1DN",
-    },
-  ];
+  const { projectDetails, clientDetails } = useSelector((state) => state.order);
+  const [items, setItems] = useState([]);
+  // const items = [
+  //   {
+  //     id: 1,
+  //     categoryName: "Door Hanger Design",
+  //     subCategoryName: "Double sided design",
+  //     quantity: 1,
+  //     duration: 1,
+  //     price: 40,
+  //     fastDeliveryPrice: 10,
+  //     fastDeliveryDays: 1,
+  //     isFastDelivery: true,
+  //     bulletPoints: [
+  //       "Unlimited Revisions",
+  //       "PSD Source File",
+  //       "Print Ready PDF or JPEG File",
+  //     ],
+  //     title: "",
+  //   },
+  //   {
+  //     id: 2,
+  //     categoryName: "Flyer Design",
+  //     subCategoryName: "Double sided design",
+  //     quantity: 1,
+  //     duration: 2,
+  //     price: 50,
+  //     fastDeliveryPrice: 10,
+  //     fastDeliveryDays: 1,
+  //     isFastDelivery: false,
+  //     bulletPoints: [
+  //       "Unlimited Revisions",
+  //       "PSD Source File",
+  //       "Print Ready PDF or JPEG File",
+  //     ],
+  //     title: "Design Name",
+  //     designId: "MR1DN",
+  //   },
+  // ];
+
+  useEffect(() => {
+    if (projectDetails) {
+      setItems(projectDetails?.items);
+    }
+  }, [projectDetails]);
 
   const totalQuantity = items?.reduce(
-    (accumulator, item) => accumulator + parseInt(item?.quantity),
+    (accumulator, item) =>
+      accumulator + parseInt(item?.selectedQuantity || item?.quantity),
     0,
   );
   const totalDuration = items?.reduce((accumulator, item) => {
     let duration = item?.isFastDelivery
-      ? parseInt(item?.fastDeliveryDays)
-      : parseInt(item?.duration);
+      ? parseInt(item?.fastDeliveryDuration || item?.fastDeliveryDays)
+      : parseInt(item?.deliveryDuration || item?.regularDeliveryDays);
     return accumulator + duration;
   }, 0);
   const totalAmount = items?.reduce((accumulator, item) => {
-    let price = parseInt(item?.price);
+    let price = parseInt(item?.subCategory?.subAmount || item?.subTotal);
     if (item.isFastDelivery) {
-      price += parseInt(item.fastDeliveryPrice);
+      price += parseInt(item?.fastDeliveryAmount || item?.fastDeliveryPrice);
     }
     return accumulator + price;
   }, 0);
@@ -63,14 +73,16 @@ const OrderDetails = () => {
     <>
       <h1 className="mb-5 text-xl font-bold text-primary">PROJECT DETAILS</h1>
       <p className="mb-2">
-        Project started by <span className="font-semibold">clientusername</span>
+        Project started by{" "}
+        <span className="font-semibold">{clientDetails?.userName}</span>
       </p>
       <p className="mb-2">
         The project has started Oct 25, 2023, 8:45 PM - The project will be
         completed Oct 27, 2023, 8:45 PM
       </p>
       <p className="mb-2">
-        Project number <span className="font-semibold">#MRA2EPN</span>
+        Project number{" "}
+        <span className="font-semibold">{projectDetails?.projectNumber}</span>
       </p>
       <div className="overflow-x-auto">
         <div className="flex min-w-[600px] flex-col border border-gray-300">
@@ -98,26 +110,32 @@ const OrderDetails = () => {
                       {item?.title}
                     </Link>
                   )}
-                  <h1 className="text-lg font-medium">{item?.categoryName}</h1>
-                  <p className="text-black/80">{item?.subCategoryName}</p>
+                  <h1 className="text-lg font-medium">
+                    {item?.category?.categoryName || item?.categoryName}
+                  </h1>
+                  <p className="text-black/80">
+                    {item?.subCategory.subTitle || item?.subCategory}
+                  </p>
                 </div>
                 <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
-                  {item?.quantity}
+                  {item?.selectedQuantity || item?.quantity}
                 </div>
                 <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
-                  {item?.duration}
+                  {item?.deliveryDuration || item?.regularDeliveryDays}
                 </div>
                 <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
-                  {item?.price}
+                  {item?.subCategory?.subAmount || item?.subTotal}
                 </div>
               </div>
               {item?.isFastDelivery && (
                 <div className="flex items-center border-b border-gray-300">
                   <div className="w-5/6 shrink-0 p-3">
-                    Extra-fast {item?.fastDeliveryDays}-day delivery
+                    Extra-fast{" "}
+                    {item?.fastDeliveryDuration || item?.fastDeliveryDays}-day
+                    delivery
                   </div>
                   <div className="w-1/6 shrink-0 p-3 text-center font-medium">
-                    ${item?.fastDeliveryPrice}
+                    ${item?.fastDeliveryAmount || item?.fastDeliveryPrice}
                   </div>
                 </div>
               )}

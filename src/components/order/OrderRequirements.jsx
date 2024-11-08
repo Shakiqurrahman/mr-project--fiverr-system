@@ -1,14 +1,15 @@
+import { useSelector } from "react-redux";
 import OrderRequirementsDetails from "./requirement-components/OrderRequirementsDetails";
 import OrderRequirementsForm from "./requirement-components/OrderRequirementsForm";
 
 const OrderRequirements = () => {
-  const isRequirementsDone = false;
+  const { projectDetails } = useSelector((state) => state.order);
   return (
     <div>
-      {isRequirementsDone ? (
-        <OrderRequirementsDetails />
+      {projectDetails?.isRequirementsFullFilled ? (
+        <OrderRequirementsDetails projectDetails={projectDetails} />
       ) : (
-        <OrderRequirementsForm />
+        <OrderRequirementsForm projectDetails={projectDetails} />
       )}
     </div>
   );
