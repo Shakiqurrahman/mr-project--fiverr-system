@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { PiWarningCircleFill } from "react-icons/pi";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useRequirementByProjectNumberQuery } from "../Redux/api/orderApiSlice";
 import Check from "../assets/svg/Check";
 import Divider from "../components/Divider";
 import OrderChatBox from "../components/order/OrderChatBox";
@@ -13,6 +14,11 @@ import OrderSidePanel from "../components/order/OrderSidePanel";
 import OrderTipsForm from "../components/order/OrderTipsForm";
 
 const Order = () => {
+  const { projectNumber } = useParams();
+  const { data: projectDetails } = useRequirementByProjectNumberQuery({
+    projectNumber,
+  });
+  console.log(projectDetails);
   const { user } = useSelector((state) => state.user);
 
   const tabButtons = ["ACTIVITY", "REQUIREMENTS", "DETAILS"];
