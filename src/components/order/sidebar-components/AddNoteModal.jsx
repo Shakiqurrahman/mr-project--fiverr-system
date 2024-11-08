@@ -1,7 +1,9 @@
 import React, { useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import useOutsideClick from "../../../hooks/useOutsideClick";
 
 const AddNoteModal = ({ handleClose, onNoteSubmit }) => {
+  const { projectDetails } = useSelector((state) => state.order);
   const modalRef = useRef(null);
   const [form, setForm] = useState({
     title: "",

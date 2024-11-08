@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { LiaEdit } from "react-icons/lia";
 import { RiDeleteBinLine } from "react-icons/ri";
+import { useSelector } from "react-redux";
 import AddNoteModal from "./AddNoteModal";
 import EditNoteModal from "./EditNoteModal";
 
 const PrivateNote = () => {
+  const { projectDetails } = useSelector((state) => state.order);
   const [addNoteModal, setAddNoteModal] = useState(false);
   const [editNoteModal, setEditNoteModal] = useState(null);
 

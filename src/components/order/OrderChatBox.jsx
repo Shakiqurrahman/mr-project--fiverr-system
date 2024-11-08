@@ -40,6 +40,7 @@ const OrderChatBox = () => {
   const [deleteQuickResMsg] = useDeleteQuickResMsgMutation();
 
   const { user, token } = useSelector((state) => state.user);
+  const { projectDetails, clientDetails } = useSelector((state) => state.order);
 
   const { messages } = useSelector((state) => state.order);
 
@@ -657,13 +658,21 @@ const OrderChatBox = () => {
           />
         )}
       </div>
-      <p className="my-5 text-center">
-        View conversation with{" "}
-        <Link to={`/clientusername`} className="font-semibold text-primary">
-          clientusername
-        </Link>{" "}
-        in your inbox
-      </p>
+      {projectDetails?.projectStatus !== "Completed" && (
+        <p className="my-5 text-center">
+          View conversation with{" "}
+          {isAdmin ? (
+            <Link to={`/inbox`} className="font-semibold text-primary">
+              {clientDetails?.userName}
+            </Link>
+          ) : (
+            <Link to={`/inbox`} className="font-semibold text-primary">
+              mahfujurrahm535
+            </Link>
+          )}{" "}
+          in your inbox
+        </p>
+      )}
     </>
   );
 };
