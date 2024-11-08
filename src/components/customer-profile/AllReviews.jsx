@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { IoIosStar } from "react-icons/io";
+import downArrow from "../../assets/images/icons/Down Arrow.svg";
 import sellerImg from "../../assets/images/icons/money.svg";
-import downArrow from '../../assets/images/icons/Down Arrow.svg'
-import upperArrow from '../../assets/images/icons/Upper Arrow.svg'
+import upperArrow from "../../assets/images/icons/Upper Arrow.svg";
 
-const AllReviews = () => {
+const AllReviews = ({ user }) => {
   const [showMore, setShowMore] = useState(false);
 
   const [allReviews] = useState([
@@ -83,48 +83,62 @@ const AllReviews = () => {
   ]);
 
   const initialReviews = 5;
-  const reviewsToShow = showMore ? allReviews : allReviews.slice(0, initialReviews);
+  const reviewsToShow = showMore
+    ? allReviews
+    : allReviews.slice(0, initialReviews);
 
   return (
-    <div className="mt-16">
-      <h2 className="mb-2 text-2xl font-semibold">Reviews from seller</h2>
+    <div>
+      <h2 className="mb-2 text-2xl font-semibold">
+        {user?.role === "USER"
+          ? "Reviews from Seller"
+          : "Reviews From Customer"}
+      </h2>
       <h3 className="text-xl font-medium">{allReviews?.length} Reviews</h3>
       {/* divider */}
       <div className="my-8 h-0.5 w-20 bg-gray-300"></div>
 
       <div className="space-y-8">
-        {allReviews.length > 0 ? (reviewsToShow.map((review) => (
-          <div key={review.id}>
-            <div className="mb-2 flex items-center gap-4">
-              <img
-                src={review.img}
-                alt=""
-                className="size-10 rounded-full object-cover"
-              />
-              <h4 className="text-lg font-semibold">{review.name}</h4>
+        {allReviews.length > 0 ? (
+          reviewsToShow.map((review) => (
+            <div key={review.id}>
+              <div className="mb-2 flex items-center gap-4">
+                <img
+                  src={review.img}
+                  alt=""
+                  className="size-10 rounded-full object-cover"
+                />
+                <h4 className="text-lg font-semibold">{review.name}</h4>
+              </div>
+              <p className="mb-2 text-gray-600">{review.review}</p>
+              <div className="flex items-center gap-8">
+                <span className="flex items-center gap-2">
+                  {review?.rating}
+                  {[...Array(review.rating)].map((_, i) => (
+                    <IoIosStar className="text-primary" key={i} />
+                  ))}
+                </span>
+                <p className="text-xs text-gray-500">{review.time}</p>
+              </div>
             </div>
-            <p className="mb-2 text-gray-600">{review.review}</p>
-            <div className="flex items-center gap-8">
-              <span className="flex items-center gap-2">
-                {review?.rating}
-                {[...Array(review.rating)].map((_, i) => (
-                <IoIosStar  className="text-primary" key={i} />
-              ))}
-              </span>
-              <p className="text-xs text-gray-500">{review.time}</p>
-            </div>
-          </div>
-        ))) : <p>There are currently no reviews!</p>}
+          ))
+        ) : (
+          <p>There are currently no reviews!</p>
+        )}
       </div>
 
       {/* see more/less button  */}
       {allReviews.length > initialReviews && (
         <button
           onClick={() => setShowMore(!showMore)}
-          className="mt-8 text-center text-primary text-lg sm:text-xl font-semibold flex items-center gap-2"
+          className="mt-8 flex items-center gap-2 text-center text-lg font-semibold text-primary sm:text-xl"
         >
-          {showMore ? 'Show Less' : 'See More'}
-          <img className="size-7 border rounded-full" src={showMore ? upperArrow : downArrow} alt="" />
+          {showMore ? "Show Less" : "See More"}
+          <img
+            className="size-7 rounded-full border"
+            src={showMore ? upperArrow : downArrow}
+            alt=""
+          />
         </button>
       )}
     </div>

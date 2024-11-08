@@ -12,8 +12,6 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { getStatusText } from "./StatusText";
 
 const ActiveProjects = ({ activeProjects, isActiveProjectsLoading }) => {
-  console.log("data", activeProjects);
-
   // Function to get time status
   const getTimeStatus = (deadline) => {
     const now = new Date();
@@ -73,21 +71,14 @@ const ActiveProjects = ({ activeProjects, isActiveProjectsLoading }) => {
     }
   };
 
-  const filteredActiveProjects = activeProjects?.filter(
-    (activeProject) =>
-      activeProject?.trackProjectStatus !== "COMPLETE_PROJECT" &&
-      activeProject?.trackProjectStatus !== "CANCELLED" &&
-      activeProject?.paymentStatus === "COMPLETED",
-  );
-
   return (
-    <div className="mt-8 grid gap-4 min-[850px]:grid-cols-2">
+    <div className="mb-16 mt-8 grid gap-4 min-[850px]:grid-cols-2">
       {isActiveProjectsLoading ? (
         <div className="flex justify-center text-primary">
           <AiOutlineLoading3Quarters className="animate-spin text-4xl" />
         </div>
-      ) : filteredActiveProjects?.length > 0 ? (
-        filteredActiveProjects?.map((project) => {
+      ) : activeProjects?.length > 0 ? (
+        activeProjects?.map((project) => {
           const { time, color } = getTimeStatus(project?.deliveryDate);
           return (
             <div
