@@ -8,6 +8,7 @@ import useOutsideClick from "../../hooks/useOutsideClick";
 import {
   deleteComment,
   setHighlight,
+  setUnsubmittedCommentsCount,
   updateAComment,
 } from "../../Redux/features/commentsSlice";
 import CommentInputBox from "./CommentInputBox";
@@ -15,15 +16,14 @@ import EditCommentBox from "./EditCommentBox";
 import EditReplyBox from "./EditReplyBox";
 import ReplyCommentBox from "./ReplyCommentBox";
 
-const CommentSideDrawer = ({ drawerClose }) => {
+const CommentSideDrawer = ({ drawerClose, images }) => {
   const dispatch = useDispatch();
   const commentRef = useRef(null);
   const commentBoxRef = useRef(null);
 
   const { user } = useSelector((state) => state.user);
-  const { commentObj, imageDetails, highlight } = useSelector(
-    (state) => state.comment,
-  );
+  const { commentObj, imageDetails, highlight, unsubmittedCommentsCount } =
+    useSelector((state) => state.comment);
   const comments = imageDetails?.comments;
 
   const [commentCollapse, setCommentCollapse] = useState(false);
@@ -90,7 +90,9 @@ const CommentSideDrawer = ({ drawerClose }) => {
     ?.flatMap((c) => c.replies || [])
     ?.filter((r) => !r?.isSubmitted)?.length;
 
-  const totalUnsubmitted = unsubmittedComments + unsubmittedRepliedComments;
+  const totalUnsubmitted = (unsubmittedComments + unsubmittedRepliedComments);
+  // dispatch(setUnsubmittedCommentsCount(parseInt(totalUnsubmitted)));
+  console.log("total numbers", totalUnsubmitted);
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();

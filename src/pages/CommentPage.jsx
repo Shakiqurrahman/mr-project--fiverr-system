@@ -16,7 +16,7 @@ const CommentPage = ({ selected, images, close }) => {
         />
       </div>
       <div className={`w-full ${sideDrawer ? "block" : "hidden"} md:w-[320px]`}>
-        <CommentSideDrawer drawerClose={setSideDrawer} />
+        <CommentSideDrawer drawerClose={setSideDrawer} images={images}/>
       </div>
     </div>
   );

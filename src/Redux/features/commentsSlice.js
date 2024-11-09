@@ -6,6 +6,7 @@ const commentSlice = createSlice({
     commentObj: null,
     imageDetails: null,
     highlight: null,
+    unsubmittedCommentsCount: 0,
   },
   reducers: {
     setCommentObj: (state, action) => {
@@ -82,6 +83,10 @@ const commentSlice = createSlice({
     setHighlight: (state, action) => {
       state.highlight = action.payload;
     },
+
+    // setUnsubmittedCommentsCount: (state, action) => {
+    //   state.unsubmittedCommentsCount = state.unsubmittedCommentsCount + action.payload;
+    // },
   },
 });
 
@@ -96,6 +101,7 @@ export const {
   updateAComment,
   setReplyData,
   setHighlight,
+  setUnsubmittedCommentsCount,
 } = commentSlice.actions;
 
 export default commentSlice.reducer;
