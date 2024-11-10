@@ -4,6 +4,7 @@ import persistStore from "redux-persist/es/persistStore";
 import storage from "redux-persist/lib/storage";
 import { allUserApiSlice } from "./api/allUserApiSlice";
 import { apiSlice } from "./api/apiSlice";
+import { dashboardApiSlice } from "./api/dashboardApiSlice";
 import { inboxApiSlice } from "./api/inboxApiSlice";
 import { multiProjectApiSlice } from "./api/multiProjectApiSlice";
 import { offerProjectApiSlice } from "./api/offerProjectApiSlice";
@@ -64,6 +65,7 @@ const store = configureStore({
     chat: chatSlice,
     comment: commentSlice,
     order: orderSlice,
+    [dashboardApiSlice.reducerPath]: dashboardApiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -77,6 +79,7 @@ const store = configureStore({
       multiProjectApiSlice.middleware,
       inboxApiSlice.middleware,
       orderApiSlice.middleware,
+      dashboardApiSlice.middleware,
     ),
 });
 
