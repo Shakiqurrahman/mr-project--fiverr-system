@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useLazyGetProjectsStatsQuery } from "../../Redux/api/dashboardApiSlice";
 
 const AllTimeStats = () => {
   const statsType = [
@@ -35,9 +36,19 @@ const AllTimeStats = () => {
     statsType[0]?.name || 0,
   );
 
+  const [getStatus, { data: stats }] = useLazyGetProjectsStatsQuery();  
+
   const handleStatsTypeChange = (e) => {
     setSelectedStatsType(e.target.value);
   };
+
+  useEffect(() => {
+    if (selectedStatsType) {
+      getStatus({
+        timeFilter: selectedStatsType,
+      });
+    }
+  }, [selectedStatsType, getStatus]);
 
   return (
     <>
@@ -61,21 +72,21 @@ const AllTimeStats = () => {
         </div>
 
         <div className="space-y-2">
-          <div className="flex justify-between flex-wrap gap-1 text-sm">
+          <div className="flex flex-wrap justify-between gap-1 text-sm">
             <span>Completed Projects</span>
-            <p className="font-semibold">950</p>
+            <p className="font-semibold">{stats?.completedOrders}</p>
           </div>
-          <div className="flex justify-between flex-wrap gap-1 text-sm">
+          <div className="flex flex-wrap justify-between gap-1 text-sm">
             <span>Earnings</span>
-            <p className="font-semibold">$12,50432</p>
+            <p className="font-semibold">${stats?.totalEarnings}</p>
           </div>
-          <div className="flex justify-between flex-wrap gap-1 text-sm">
+          <div className="flex flex-wrap justify-between gap-1 text-sm">
             <span>Cancelled Projects</span>
-            <p className="font-semibold">9 ($230)</p>
+            <p className="font-semibold">{stats?.canceledOrders} (${stats?.totalCancelledAmount})</p>
           </div>
-          <div className="flex justify-between flex-wrap gap-1 text-sm">
+          <div className="flex flex-wrap justify-between gap-1 text-sm">
             <span>Avg. Selling Price</span>
-            <p className="font-semibold">$32.55</p>
+            <p className="font-semibold">${stats?.averageOrderValue}</p>
           </div>
         </div>
       </div>

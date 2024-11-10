@@ -39,11 +39,11 @@ function Profile({ user = {}, slug }) {
   const isActiveProject = (project) =>
     project?.trackProjectStatus !== "COMPLETE_PROJECT" &&
     project?.trackProjectStatus !== "CANCELLED" &&
-    project?.paymentStatus === "COMPLETED";
+    project?.paymentStatus === "PAID";
 
   const isCompletedProject = (project) =>
     project?.trackProjectStatus === "COMPLETE_PROJECT" &&
-    project?.paymentStatus === "COMPLETED";
+    project?.paymentStatus === "PAID";
 
   // Using useMemo to  optimization
   const filteredActiveProjects = useMemo(
