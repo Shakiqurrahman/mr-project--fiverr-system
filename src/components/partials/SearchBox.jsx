@@ -1,8 +1,10 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IoClose, IoSearch } from "react-icons/io5";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 const SearchBox = ({ handleClose }) => {
   const textRef = useRef(null);
+  const searchBoxRef = useRef(null);
   const [textInput, setTextInput] = useState("");
 
   const handleInput = (e) => {
@@ -14,9 +16,20 @@ const SearchBox = ({ handleClose }) => {
     textRef.current && textRef.current.focus();
   };
 
+  useEffect(() => {
+    if (textRef.current) {
+      textRef.current.focus();
+    }
+  }, []);
+
+  useOutsideClick(searchBoxRef, handleClose);
+
   return (
     <div className="fixed left-0 top-0 z-[99999] flex h-screen w-full items-start justify-center overflow-y-auto bg-black/80 px-5 py-10 backdrop-blur-sm">
-      <div className="w-full max-w-[600px] rounded-lg bg-white p-3">
+      <div
+        className="w-full max-w-[600px] rounded-lg bg-white p-3"
+        ref={searchBoxRef}
+      >
         <div className="flex items-center gap-2 rounded-lg border-2 border-primary p-3">
           <IoSearch className="shrink-0 text-2xl text-gray-400" />
           <input

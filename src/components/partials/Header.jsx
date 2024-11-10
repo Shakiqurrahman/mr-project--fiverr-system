@@ -73,6 +73,7 @@ function Header() {
                   className="w-full rounded-md px-4 py-2 outline-none"
                   type="text"
                   placeholder="What design you are looking for today?"
+                  onClick={() => setOpenSearchBox(true)}
                 />
                 <button
                   className="m-px rounded-md bg-primary p-2"
