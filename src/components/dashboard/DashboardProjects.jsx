@@ -1,3 +1,12 @@
+import {
+  differenceInDays,
+  differenceInHours,
+  differenceInMinutes,
+  differenceInMonths,
+  differenceInYears,
+  isPast,
+  parseISO,
+} from "date-fns";
 import React, { Fragment, useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { Link } from "react-router-dom";
@@ -30,6 +39,7 @@ const DashboardProjects = () => {
   const [addDesignerModal, setAddDesignerModal] = useState(false);
 
   const [selectedProjectType, setSelectedProjectType] = useState("");
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
 
   useEffect(() => {
     if (projectType) {
@@ -124,66 +134,62 @@ const DashboardProjects = () => {
   }, [selectedProjectType, getAllProjects]);
 
   // Function to get time status
-  // const getTimeStatus = (deadline) => {
-  //   const now = new Date();
-  //   const eventDate = parseISO(deadline); // Convert string to date
+  const getTimeStatus = (deadline) => {
+    const now = new Date();
+    const eventDate = parseISO(deadline); // Convert string to date
 
-  //   if (isPast(eventDate)) {
-  //     // time is late
-  //     const yearsLate = differenceInYears(now, eventDate);
-  //     const monthsLate = differenceInMonths(now, eventDate) % 12;
-  //     const daysLate = differenceInDays(now, eventDate) % 30;
-  //     const hoursLate = differenceInHours(now, eventDate) % 24;
-  //     const minutesLate = differenceInMinutes(now, eventDate) % 60;
+    if (isPast(eventDate)) {
+      // time is late
+      const yearsLate = differenceInYears(now, eventDate);
+      const monthsLate = differenceInMonths(now, eventDate) % 12;
+      const daysLate = differenceInDays(now, eventDate) % 30;
+      const hoursLate = differenceInHours(now, eventDate) % 24;
+      const minutesLate = differenceInMinutes(now, eventDate) % 60;
 
-  //     let overdueText = "";
+      let overdueText = "";
 
-  //     if (yearsLate >= 1) {
-  //       overdueText = `${yearsLate} year${yearsLate > 1 ? "s" : ""} late`;
-  //     } else if (monthsLate >= 1) {
-  //       overdueText = `${monthsLate} month${monthsLate > 1 ? "s" : ""} late`;
-  //     } else if (daysLate >= 1) {
-  //       overdueText = `${daysLate} day${daysLate > 1 ? "s" : ""}`;
-  //     } else if (hoursLate >= 1) {
-  //       overdueText = `${hoursLate}h ${minutesLate}min late`;
-  //     } else {
-  //       overdueText = `${minutesLate}min late`;
-  //     }
+      if (yearsLate >= 1) {
+        overdueText = `${yearsLate} year${yearsLate > 1 ? "s" : ""} late`;
+      } else if (monthsLate >= 1) {
+        overdueText = `${monthsLate} month${monthsLate > 1 ? "s" : ""} late`;
+      } else if (daysLate >= 1) {
+        overdueText = `${daysLate} day${daysLate > 1 ? "s" : ""}`;
+      } else if (hoursLate >= 1) {
+        overdueText = `${hoursLate}h ${minutesLate}min late`;
+      } else {
+        overdueText = `${minutesLate}min late`;
+      }
 
-  //     return {
-  //       time: overdueText,
-  //       color: "black", // Default color for overdue events
-  //     };
-  //   } else {
-  //     // time is remaining
-  //     const timeRemaining = eventDate - now;
+      return {
+        time: overdueText,
+        color: "black", // Default color for overdue events
+      };
+    } else {
+      // time is remaining
+      const timeRemaining = eventDate - now;
 
-  //     const totalHours = Math.floor(timeRemaining / (1000 * 60 * 60)); // Total hours remaining
-  //     const days = Math.floor(totalHours / 24); // Calculate remaining days
-  //     const hours = totalHours % 24; // Remaining hours
-  //     const minutes = Math.floor(
-  //       (timeRemaining % (1000 * 60 * 60)) / (1000 * 60),
-  //     ); // Remaining minutes
+      const totalHours = Math.floor(timeRemaining / (1000 * 60 * 60)); // Total hours remaining
+      const days = Math.floor(totalHours / 24); // Calculate remaining days
+      const hours = totalHours % 24; // Remaining hours
+      const minutes = Math.floor(
+        (timeRemaining % (1000 * 60 * 60)) / (1000 * 60),
+      ); // Remaining minutes
 
-  //     let displayTime;
-  //     if (days > 0) {
-  //       displayTime = `${days}d - ${hours}h`;
-  //     } else {
-  //       displayTime = `${hours}h - ${minutes} min`;
-  //     }
+      let displayTime;
+      if (days > 0) {
+        displayTime = `${days}d - ${hours}h`;
+      } else {
+        displayTime = `${hours}h - ${minutes} min`;
+      }
 
-  //     // Set color based on remaining time
-  //     const color = totalHours < 12 ? "red" : "black"; // Red if less than 12 hours
+      // Set color based on remaining time
+      const color = totalHours < 12 ? "red" : "black"; // Red if less than 12 hours
 
-  //     return {
-  //       time: displayTime,
-  //       color: color,
-  //     };
-  //   }
-  // };
-
-  const handleDesignerModal = (value) => {
-    console.log(value);
+      return {
+        time: displayTime,
+        color: color,
+      };
+    }
   };
 
   return (
@@ -210,15 +216,19 @@ const DashboardProjects = () => {
       </div>
       <div className="dashboard-overflow-x">
         {isLoading ? (
-          <div className="max-width flex justify-center text-primary h-[200px] items-center">
+          <div className="max-width flex h-[200px] items-center justify-center text-primary">
             <AiOutlineLoading3Quarters className="animate-spin text-4xl" />
           </div>
         ) : projects?.length > 0 ? (
           projects?.map((project, idx) => {
-            // const { time, color } = getTimeStatus(project?.deadline);
+            let timeStatus;
+            if (project?.deliveryDate) {
+              timeStatus = getTimeStatus(project?.deliveryDate || "");
+            }
+            const { time, color } = timeStatus || "";
             const letterLogo =
-              !project?.client?.avatar &&
-              project?.client?.userName?.trim()?.charAt(0)?.toUpperCase();
+              !project?.user?.image &&
+              project?.user?.userName?.trim()?.charAt(0)?.toUpperCase() || "";
             return (
               <Fragment key={idx}>
                 <div className="mb-6 flex min-w-[700px] items-center justify-between gap-4 border bg-lightskyblue p-4 last:mb-0">
@@ -229,14 +239,14 @@ const DashboardProjects = () => {
                       className="h-[74px] w-[100px] flex-shrink-0 border bg-[#ffefef]/80 object-cover"
                     />
                     <Link
-                      to={`/${project?.client?.userName}`}
+                      to={`/${project?.user?.userName}`}
                       className="group ml-4 flex items-center gap-2"
                     >
                       <div className="relative flex-shrink-0">
-                        {project?.client?.avatar ? (
+                        {project?.user?.image ? (
                           <img
-                            src={project?.client?.avatar}
-                            alt={project?.client?.name}
+                            src={project?.user?.image}
+                            alt={project?.user?.name}
                             className="size-10 rounded-full border bg-gray-200 object-cover"
                           />
                         ) : (
@@ -245,14 +255,14 @@ const DashboardProjects = () => {
                           </div>
                         )}
                         <span
-                          className={`absolute bottom-0 right-1 size-2 rounded-full border border-white ${project?.client?.isOnline ? "bg-primary" : "bg-gray-400"}`}
+                          className={`absolute bottom-0 right-1 size-2 rounded-full border border-white ${project?.user?.isOnline ? "bg-primary" : "bg-gray-400"}`}
                         ></span>
                       </div>
                       <h2
-                        title={project?.client?.userName}
+                        title={project?.user?.userName}
                         className="max-w-[160px] truncate text-sm font-semibold duration-300 group-hover:underline"
                       >
-                        {project?.client?.userName}
+                        {project?.user?.userName}
                       </h2>
                     </Link>
                   </div>
@@ -263,11 +273,11 @@ const DashboardProjects = () => {
                     </div>
                     <div className="w-[50%] text-center text-sm">
                       <p className="font-medium text-gray-500">Time</p>
-                      {/* <p
-                      className={`font-bold ${color === "red" ? "text-red-500" : "text-black"}`}
-                    >
-                      {time}
-                    </p> */}
+                      <p
+                        className={`font-bold ${color === "red" ? "text-red-500" : "text-black"}`}
+                      >
+                        {time || "Not Determined"}
+                      </p>
                     </div>
                     <div className="w-[30%] text-center text-sm">
                       <p className="font-medium text-gray-500">Status</p>
@@ -284,10 +294,16 @@ const DashboardProjects = () => {
                       View
                     </button>
                     <button
+                      title={project?.designerName}
                       type="button"
-                      onClick={() => setAddDesignerModal(true)}
+                      onClick={() => {
+                        setSelectedOrderId(project?.id);
+                        setAddDesignerModal(true);
+                      }}
                     >
-                      <ComputerIcon className="size-7 flex-shrink-0 cursor-pointer fill-black duration-200 hover:fill-primary" />
+                      <ComputerIcon
+                        className={`${project?.designerName && "fill-primary"} size-7 flex-shrink-0 cursor-pointer fill-black duration-200 hover:fill-primary`}
+                      />
                     </button>
                   </div>
                 </div>
@@ -300,8 +316,8 @@ const DashboardProjects = () => {
       </div>
       {addDesignerModal && (
         <AddDesignerModal
+          orderId={selectedOrderId}
           handleClose={setAddDesignerModal}
-          onMsgSubmit={handleDesignerModal}
         />
       )}
     </>

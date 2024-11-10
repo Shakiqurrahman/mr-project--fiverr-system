@@ -77,9 +77,9 @@ function Profile({ user = {}, slug }) {
   // for user creating date making readable and formatted
   const date = new Date(user?.createdAt);
   const options = { year: "numeric", month: "long" };
-  const monthYear = date.toLocaleDateString("en-US", options);
+  const monthYear = date?.toLocaleDateString("en-US", options);
 
-  const letterLogo = user?.userName?.trim().charAt(0).toUpperCase();
+  const letterLogo = user?.userName?.trim()?.charAt(0)?.toUpperCase();
 
   const socket = connectSocket(`${configApi.socket}`, token);
   // all avaliable users
@@ -103,14 +103,14 @@ function Profile({ user = {}, slug }) {
   };
 
   const handleSave = async () => {
-    if (user.description !== description) {
+    if (user?.description !== description) {
       try {
         setLoading(true);
         const { data } = await axios.post(`${configApi.api}update-user`, {
-          email: user.email,
+          email: user?.email,
           description,
         });
-        dispatch(setUser({ user: data.data }));
+        dispatch(setUser({ user: data?.data }));
         setShowDesqEdit(false);
         setLoading(false);
       } catch (error) {
@@ -180,10 +180,10 @@ function Profile({ user = {}, slug }) {
           )}
           <div className="pb-4">
             <div className="relative mx-auto flex size-32 items-center justify-center rounded-full border border-gray-300 bg-[#ffefef]/30">
-              {user.image ? (
+              {user?.image ? (
                 <img
                   className="h-full w-full rounded-full object-cover"
-                  src={user.image}
+                  src={user?.image}
                   alt={user?.fullName}
                 />
               ) : (
@@ -192,7 +192,7 @@ function Profile({ user = {}, slug }) {
                 </div>
               )}
               <span
-                className={`absolute bottom-1.5 right-4 size-4 rounded-full border border-white ${isUserOnline(user.id) ? "bg-primary" : "bg-gray-400"}`}
+                className={`absolute bottom-1.5 right-4 size-4 rounded-full border border-white ${isUserOnline(user?.id) ? "bg-primary" : "bg-gray-400"}`}
               ></span>
             </div>
             <h2 className="mt-3 text-center text-lg font-semibold sm:text-xl">
@@ -229,7 +229,7 @@ function Profile({ user = {}, slug }) {
                 <p className="font-semibold">{lastSeen}</p>
               ) : (
                 <p className="font-semibold">
-                  {isUserOnline(user.id) ? "Online" : "Offline"}
+                  {isUserOnline(user?.id) ? "Online" : "Offline"}
                 </p>
               )}
             </div>

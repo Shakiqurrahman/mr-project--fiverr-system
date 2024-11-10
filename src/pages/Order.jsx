@@ -22,9 +22,12 @@ const Order = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { projectNumber } = useParams();
+  
   const { data: projectDetails } = useRequirementByProjectNumberQuery({
     projectNumber,
   });
+
+  console.log(projectNumber, projectDetails );
   const [fetchUserById, { data: clientDetails }] =
     useLazyFetchSingleUserByIdQuery();
 

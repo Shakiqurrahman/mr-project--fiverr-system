@@ -79,7 +79,11 @@ const ActiveProjects = ({ activeProjects, isActiveProjectsLoading }) => {
         </div>
       ) : activeProjects?.length > 0 ? (
         activeProjects?.map((project) => {
-          const { time, color } = getTimeStatus(project?.deliveryDate);
+          let timeStatus;
+            if (project?.deliveryDate) {
+              timeStatus = getTimeStatus(project?.deliveryDate || "");
+            }
+            const { time, color } = timeStatus || "";
           return (
             <div
               className="rounded-lg border border-gray-300 p-2 shadow-sm lg:p-4"
@@ -104,7 +108,7 @@ const ActiveProjects = ({ activeProjects, isActiveProjectsLoading }) => {
                 <p
                   className={`${color === "red" ? "text-red-500" : "text-black"}`}
                 >
-                  {time}
+                  {time || <span className="text-sm">Not Determined</span>}
                 </p>
                 <p className="font-semibold">
                   {getStatusText(project?.projectStatus)}
