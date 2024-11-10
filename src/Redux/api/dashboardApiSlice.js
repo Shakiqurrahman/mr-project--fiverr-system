@@ -16,8 +16,12 @@ export const dashboardApiSlice = createApi({
   }),
 
   endpoints: (builder) => ({
+    allProjectStatus: builder.query({
+      query: () => "find-order/project-status",
+      transformResponse: (response) => response?.data,
+    }),
     getAllProjects: builder.query({
-      query: () => "find-order",
+      query: ({status}) => `find-order?projectStatus=${status}`,
       transformResponse: (response) => response?.data,
     }),
 
@@ -30,7 +34,8 @@ export const dashboardApiSlice = createApi({
 });
 
 export const {
-  useGetAllProjectsQuery,
+  useAllProjectStatusQuery,
+  useLazyGetAllProjectsQuery,
   useGetProjectsStatsQuery,
   useLazyGetProjectsStatsQuery,
 } = dashboardApiSlice;

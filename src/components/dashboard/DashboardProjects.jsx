@@ -1,82 +1,41 @@
-import {
-  differenceInDays,
-  differenceInHours,
-  differenceInMinutes,
-  differenceInMonths,
-  differenceInYears,
-  isPast,
-  parseISO,
-} from "date-fns";
-import React, { Fragment, useMemo, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import ComputerIcon from "../../assets/svg/ComputerIcon";
-import { useGetAllProjectsQuery } from "../../Redux/api/dashboardApiSlice";
+import {
+  useAllProjectStatusQuery,
+  useLazyGetAllProjectsQuery,
+} from "../../Redux/api/dashboardApiSlice";
 import { getStatusText } from "../customer-profile/StatusText";
 import AddDesignerModal from "./AddDesignerModal";
 
 const DashboardProjects = () => {
-  const projectType = [
-    {
-      id: 1,
-      name: "Active Projects",
-      quantity: 12,
-      totalPrice: 290,
-    },
-    {
-      id: 2,
-      name: "Revision",
-      quantity: 7,
-      totalPrice: 290,
-    },
-    {
-      id: 3,
-      name: "Ongoing",
-      quantity: 3,
-      totalPrice: 290,
-    },
-    {
-      id: 4,
-      name: "Waiting",
-      quantity: 5,
-      totalPrice: 290,
-    },
-    {
-      id: 5,
-      name: "Delivered",
-      quantity: 3,
-      totalPrice: 290,
-    },
-    {
-      id: 6,
-      name: "Completed",
-      quantity: 1,
-      totalPrice: 290,
-    },
-    {
-      id: 7,
-      name: "Canceled",
-      quantity: 2,
-      totalPrice: 290,
-    },
-  ];
+  const { data: projectType, isLoading: isStatusLoading } =
+    useAllProjectStatusQuery();
 
-  const { data: projects } = useGetAllProjectsQuery();
+  const [getAllProjects, { data: projects, isLoading }] =
+    useLazyGetAllProjectsQuery();
+  console.log(projects);
 
-  const isActiveProject = (project) =>
-    project?.projectStatus !== "COMPLETED" &&
-    project?.projectStatus !== "CANCELLED" &&
-    project?.paymentStatus === "PAID";
+  // const isActiveProject = (project) =>
+  //   project?.projectStatus !== "COMPLETED" &&
+  //   project?.projectStatus !== "CANCELLED" &&
+  //   project?.paymentStatus === "PAID";
 
-  const activeProjectList = useMemo(
-    () => projects?.filter(isActiveProject),
-    [projects],
-  );
+  // const activeProjectList = useMemo(
+  //   () => projects?.filter(isActiveProject),
+  //   [projects],
+  // );
 
   const [addDesignerModal, setAddDesignerModal] = useState(false);
 
-  const [selectedProjectType, setSelectedProjectType] = useState(
-    projectType[0]?.name || "",
-  );
+  const [selectedProjectType, setSelectedProjectType] = useState("");
+
+  useEffect(() => {
+    if (projectType) {
+      setSelectedProjectType(projectType[0]?.name);
+    }
+  }, [projectType]);
 
   // const [activeProjectList, setActiveProjectList] = useState([
   //   {
@@ -158,6 +117,12 @@ const DashboardProjects = () => {
     (type) => type?.name?.toLowerCase() === selectedProjectType?.toLowerCase(),
   );
 
+  useEffect(() => {
+    if (selectedProjectType) {
+      getAllProjects({ status: selectedProjectType?.split(" ")[0] });
+    }
+  }, [selectedProjectType, getAllProjects]);
+
   // Function to get time status
   // const getTimeStatus = (deadline) => {
   //   const now = new Date();
@@ -234,6 +199,7 @@ const DashboardProjects = () => {
           name="projectType"
           id="projectType"
           onChange={handleProjectTypeChange}
+          disabled={isStatusLoading}
         >
           {projectType?.map((type, idx) => (
             <option key={idx} value={type?.name}>
@@ -243,86 +209,94 @@ const DashboardProjects = () => {
         </select>
       </div>
       <div className="dashboard-overflow-x">
-        {activeProjectList?.map((project, idx) => {
-          // const { time, color } = getTimeStatus(project?.deadline);
-          const letterLogo =
-            !project?.client?.avatar &&
-            project?.client?.userName?.trim()?.charAt(0)?.toUpperCase();
-          return (
-            <Fragment key={idx}>
-              <div className="mb-6 flex min-w-[700px] items-center justify-between gap-4 border bg-lightskyblue p-4 last:mb-0">
-                <div className="flex w-full items-center">
-                  <img
-                    src={project?.image?.url}
-                    alt={project?.image?.name}
-                    className="h-[74px] w-[100px] flex-shrink-0 border bg-[#ffefef]/80 object-cover"
-                  />
-                  <Link
-                    to={`/${project?.client?.userName}`}
-                    className="group ml-4 flex items-center gap-2"
-                  >
-                    <div className="relative flex-shrink-0">
-                      {project?.client?.avatar ? (
-                        <img
-                          src={project?.client?.avatar}
-                          alt={project?.client?.name}
-                          className="size-10 rounded-full border bg-gray-200 object-cover"
-                        />
-                      ) : (
-                        <div className="flex size-10 items-center justify-center rounded-full border bg-gray-200 object-cover text-2xl font-bold text-[#3b3b3b]/50">
-                          {letterLogo}
-                        </div>
-                      )}
-                      <span
-                        className={`absolute bottom-0 right-1 size-2 rounded-full border border-white ${project?.client?.isOnline ? "bg-primary" : "bg-gray-400"}`}
-                      ></span>
-                    </div>
-                    <h2
-                      title={project?.client?.userName}
-                      className="max-w-[160px] truncate text-sm font-semibold duration-300 group-hover:underline"
+        {isLoading ? (
+          <div className="max-width flex justify-center text-primary h-[200px] items-center">
+            <AiOutlineLoading3Quarters className="animate-spin text-4xl" />
+          </div>
+        ) : projects?.length > 0 ? (
+          projects?.map((project, idx) => {
+            // const { time, color } = getTimeStatus(project?.deadline);
+            const letterLogo =
+              !project?.client?.avatar &&
+              project?.client?.userName?.trim()?.charAt(0)?.toUpperCase();
+            return (
+              <Fragment key={idx}>
+                <div className="mb-6 flex min-w-[700px] items-center justify-between gap-4 border bg-lightskyblue p-4 last:mb-0">
+                  <div className="flex w-full items-center">
+                    <img
+                      src={project?.projectImage}
+                      alt={project?.projectName}
+                      className="h-[74px] w-[100px] flex-shrink-0 border bg-[#ffefef]/80 object-cover"
+                    />
+                    <Link
+                      to={`/${project?.client?.userName}`}
+                      className="group ml-4 flex items-center gap-2"
                     >
-                      {project?.client?.userName}
-                    </h2>
-                  </Link>
-                </div>
-                <div className="flex w-full items-center gap-6 lg:gap-10">
-                  <div className="w-[20%] text-center text-sm">
-                    <p className="font-medium text-gray-500">Price</p>
-                    <p className="font-bold">${project?.price}</p>
+                      <div className="relative flex-shrink-0">
+                        {project?.client?.avatar ? (
+                          <img
+                            src={project?.client?.avatar}
+                            alt={project?.client?.name}
+                            className="size-10 rounded-full border bg-gray-200 object-cover"
+                          />
+                        ) : (
+                          <div className="flex size-10 items-center justify-center rounded-full border bg-gray-200 object-cover text-2xl font-bold text-[#3b3b3b]/50">
+                            {letterLogo}
+                          </div>
+                        )}
+                        <span
+                          className={`absolute bottom-0 right-1 size-2 rounded-full border border-white ${project?.client?.isOnline ? "bg-primary" : "bg-gray-400"}`}
+                        ></span>
+                      </div>
+                      <h2
+                        title={project?.client?.userName}
+                        className="max-w-[160px] truncate text-sm font-semibold duration-300 group-hover:underline"
+                      >
+                        {project?.client?.userName}
+                      </h2>
+                    </Link>
                   </div>
-                  <div className="w-[50%] text-center text-sm">
-                    <p className="font-medium text-gray-500">Time</p>
-                    {/* <p
+                  <div className="flex w-full items-center gap-6 lg:gap-10">
+                    <div className="w-[20%] text-center text-sm">
+                      <p className="font-medium text-gray-500">Price</p>
+                      <p className="font-bold">${project?.totalPrice}</p>
+                    </div>
+                    <div className="w-[50%] text-center text-sm">
+                      <p className="font-medium text-gray-500">Time</p>
+                      {/* <p
                       className={`font-bold ${color === "red" ? "text-red-500" : "text-black"}`}
                     >
                       {time}
                     </p> */}
+                    </div>
+                    <div className="w-[30%] text-center text-sm">
+                      <p className="font-medium text-gray-500">Status</p>
+                      <p className="font-bold">
+                        {getStatusText(project?.projectStatus)}
+                      </p>
+                    </div>
                   </div>
-                  <div className="w-[30%] text-center text-sm">
-                    <p className="font-medium text-gray-500">Status</p>
-                    <p className="font-bold">
-                      {getStatusText(project?.status)}
-                    </p>
+                  <div className="flex items-center gap-6 lg:gap-8">
+                    <button
+                      type="button"
+                      className="text-sm font-semibold text-primary"
+                    >
+                      View
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAddDesignerModal(true)}
+                    >
+                      <ComputerIcon className="size-7 flex-shrink-0 cursor-pointer fill-black duration-200 hover:fill-primary" />
+                    </button>
                   </div>
                 </div>
-                <div className="flex items-center gap-6 lg:gap-8">
-                  <button
-                    type="button"
-                    className="text-sm font-semibold text-primary"
-                  >
-                    View
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setAddDesignerModal(true)}
-                  >
-                    <ComputerIcon className="size-7 flex-shrink-0 cursor-pointer fill-black duration-200 hover:fill-primary" />
-                  </button>
-                </div>
-              </div>
-            </Fragment>
-          );
-        })}
+              </Fragment>
+            );
+          })
+        ) : (
+          <p className="text-center">No projects Found!</p>
+        )}
       </div>
       {addDesignerModal && (
         <AddDesignerModal
