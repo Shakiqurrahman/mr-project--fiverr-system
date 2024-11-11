@@ -18,7 +18,7 @@ export const orderApiSlice = createApi({
   endpoints: (builder) => ({
     requirementByProjectNumber: builder.query({
       query: ({ projectNumber }) => `find-order?projectNumber=${projectNumber}`,
-      transformResponse: (response) => response?.data,
+      transformResponse: (response) => response?.data[0],
       providesTags: ["requirements"],
     }),
 

@@ -4,7 +4,7 @@ const orderSlice = createSlice({
   name: "order",
   initialState: {
     messages: [],
-    projectDetails: {},
+    projectDetails: null,
     clientDetails: {},
   },
   reducers: {

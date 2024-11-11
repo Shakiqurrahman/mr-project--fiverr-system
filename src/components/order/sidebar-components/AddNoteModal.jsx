@@ -4,8 +4,8 @@ import { useCreateNoteMutation } from "../../../Redux/api/orderApiSlice";
 import useOutsideClick from "../../../hooks/useOutsideClick";
 
 const AddNoteModal = ({ handleClose }) => {
-  const [createNote] = useCreateNoteMutation();
   const { projectDetails } = useSelector((state) => state.order);
+  const [createNote] = useCreateNoteMutation();
   const modalRef = useRef(null);
   const [form, setForm] = useState({
     title: "",

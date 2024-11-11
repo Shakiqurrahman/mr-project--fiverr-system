@@ -11,9 +11,9 @@ import EditNoteModal from "./EditNoteModal";
 
 const PrivateNote = () => {
   const { projectDetails } = useSelector((state) => state.order);
+
   const [getNotesData, { data: notes }] = useLazyGetNoteDataQuery();
   const [deleteANote] = useDeleteNoteByIdMutation();
-  console.log("notes", notes);
   const [addNoteModal, setAddNoteModal] = useState(false);
   const [editNoteModal, setEditNoteModal] = useState(null);
 
