@@ -32,8 +32,6 @@ const StartMultipleProject = ({ items }) => {
           relatedDesigns,
           size,
           subFolder,
-          tags,
-
           ...newItem
         }) => {
           const designImage = images.find((i) => i.thumbnail === true).url;
@@ -236,6 +234,7 @@ const StartMultipleProject = ({ items }) => {
         designDbId: choosenItem.id,
         projectType: "Category Project",
         projectImage: selectedCategory?.image?.url,
+        tags: choosenItem.tags,
       };
       navigate("/payment", { state: data });
     }

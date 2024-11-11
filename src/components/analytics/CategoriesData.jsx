@@ -134,7 +134,7 @@ const CategoriesData = () => {
       <div className="border border-gray-300 bg-lightskyblue">
         <div className="flex flex-wrap items-center gap-5 p-3">
           <h1 className="grow text-base font-semibold text-primary sm:text-lg">
-            Top Keywords
+            Top Categories
           </h1>
           <select
             value={selectedFilterOption}
@@ -164,7 +164,7 @@ const CategoriesData = () => {
             <thead>
               <tr className="bg-white">
                 <th className="w-[50%] border-collapse border border-gray-300 px-3 py-2 text-start font-semibold">
-                  Keyword
+                  Category
                 </th>
                 <th className="w-[25%] border-collapse border border-gray-300 px-3 py-2 font-semibold">
                   Projects
