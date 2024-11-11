@@ -7,9 +7,9 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Avatar from "../assets/images/camera.jpg";
+import CountryCode from "../components/CountryCode";
 import CountryList from "../components/CountryList";
 import { configApi } from "../libs/configApi";
-import { countryCodes } from "../libs/countryCodeList";
 import { setUser } from "../Redux/features/userSlice";
 
 function SetupProfile({ from_profile }) {
@@ -31,6 +31,7 @@ function SetupProfile({ from_profile }) {
     description: "",
     countryCode: "",
   });
+  console.log(form.countryCode, form.country);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -77,6 +78,8 @@ function SetupProfile({ from_profile }) {
         // Update the form with either API data or fallback to localStorage data
         setForm({
           country: (apiData?.country ?? dataFromLocalStorage?.country) || "",
+          countryCode:
+            (apiData?.countryCode ?? dataFromLocalStorage?.countryCode) || "",
           email: (apiData?.email ?? dataFromLocalStorage?.email) || "",
           userName: (apiData?.userName ?? dataFromLocalStorage?.userName) || "",
           fullName: (apiData?.fullName ?? dataFromLocalStorage?.fullName) || "",
@@ -151,7 +154,14 @@ function SetupProfile({ from_profile }) {
             <label htmlFor="image" className="h-full w-full">
               {form.image ? (
                 uploading ? (
-                  <Box sx={{ display: "flex", alignItems: "center", justifyContent : "center" , height: "100%"}}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: "100%",
+                    }}
+                  >
                     <CircularProgress />
                   </Box>
                 ) : (
@@ -253,11 +263,12 @@ function SetupProfile({ from_profile }) {
             <label className="block px-2 pt-2">Phone Number</label>
             <div className="mt-1 flex">
               <div className="flex flex-shrink-0 select-none items-center border border-r-0 border-[#e7e7e7] bg-white p-1 sm:p-2">
-                {/* <CountryCode
+                <CountryCode
+                  setCountryCode={setForm}
                   countryCode={form.countryCode}
-                  handleChange={handleChange}
-                /> */}
-                {countryCodes[form.country]}
+                  countryName={form.country}
+                />
+                {/* {countryCodes[form.country]} */}
               </div>
               <input
                 type="number"
@@ -300,7 +311,7 @@ function SetupProfile({ from_profile }) {
                 onClick={handleSkip}
                 className="flex-grow rounded-3xl bg-gray-500 p-3 text-center text-white"
               >
-               {from_profile ? "Cancel" : "Skip"}
+                {from_profile ? "Cancel" : "Skip"}
               </button>
               {loading && (
                 <Backdrop

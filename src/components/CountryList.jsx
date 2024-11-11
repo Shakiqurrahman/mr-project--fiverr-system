@@ -57,7 +57,6 @@ function CountryList({ country, handleChange }) {
         <option value="Denmark">Denmark</option>
         <option value="Djibouti">Djibouti</option>
         <option value="Dominica">Dominica</option>
-        <option value="Dominican Republic">Dominican Republic</option>
         <option value="Ecuador">Ecuador</option>
         <option value="Egypt">Egypt</option>
         <option value="El Salvador">El Salvador</option>
