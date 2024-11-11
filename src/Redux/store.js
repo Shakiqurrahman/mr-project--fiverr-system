@@ -18,6 +18,7 @@ import offerProjectSlice from "./features/offerProjectSlice";
 import orderSlice from "./features/orderSlice";
 import passwordVisibilitySlice from "./features/passwordVisibilitySlice";
 import userSlice from "./features/userSlice";
+import { analyticsApiSlice } from "./api/analyticsApiSlice";
 
 // Persist configs
 const userPersistConfig = {
@@ -66,6 +67,7 @@ const store = configureStore({
     comment: commentSlice,
     order: orderSlice,
     [dashboardApiSlice.reducerPath]: dashboardApiSlice.reducer,
+    [analyticsApiSlice.reducerPath]: analyticsApiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -80,6 +82,7 @@ const store = configureStore({
       inboxApiSlice.middleware,
       orderApiSlice.middleware,
       dashboardApiSlice.middleware,
+      analyticsApiSlice.middleware,
     ),
 });
 
