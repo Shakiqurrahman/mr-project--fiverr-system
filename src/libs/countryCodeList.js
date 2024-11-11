@@ -47,7 +47,6 @@ export const countryCodes = {
   Denmark: "+45",
   Djibouti: "+253",
   Dominica: "+1-767",
-  "Dominican Republic": "+1-809, 1-829, 1-849",
   Ecuador: "+593",
   Egypt: "+20",
   "El Salvador": "+503",
