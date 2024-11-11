@@ -154,7 +154,7 @@ const AllUsers = () => {
       </div>
 
       {/* user type button  */}
-      <div className="flex flex-wrap justify-between gap-3">
+      <div className="flex flex-wrap sm:flex-nowrap justify-between gap-3">
         {usersType.map((type, idx) => (
           <button
             key={idx}
@@ -177,7 +177,7 @@ const AllUsers = () => {
               <div key={user?.id}>
                 <Link
                   to={`/${user?.userName}`}
-                  className="flex items-center gap-2 group"
+                  className="group flex items-center gap-2"
                 >
                   <div className="relative flex-shrink-0">
                     {user.avatar ? (
@@ -195,7 +195,9 @@ const AllUsers = () => {
                       className={`absolute bottom-0 right-0.5 size-2 rounded-full border border-white ${user.isOnline ? "bg-primary" : "bg-gray-400"}`}
                     ></span>
                   </div>
-                  <h3 className="text-base font-semibold group-hover:underline duration-300">{user?.userName}</h3>
+                  <h3 className="text-base font-semibold duration-300 group-hover:underline">
+                    {user?.userName}
+                  </h3>
                 </Link>
 
                 <div className="ml-10 mt-2 space-y-2">
@@ -208,7 +210,7 @@ const AllUsers = () => {
                         <Link
                           to={`/${affUser?.userName}`}
                           key={affUser?.id}
-                          className="flex items-center gap-2 group"
+                          className="group flex items-center gap-2"
                         >
                           <div className="relative flex-shrink-0">
                             {affUser.avatar ? (
@@ -226,7 +228,7 @@ const AllUsers = () => {
                               className={`absolute bottom-0 right-0 size-1.5 rounded-full border border-white ${affUser.isOnline ? "bg-primary" : "bg-gray-400"}`}
                             ></span>
                           </div>
-                          <h3 className="text-sm font-medium group-hover:underline duration-300">
+                          <h3 className="text-sm font-medium duration-300 group-hover:underline">
                             {affUser?.userName}
                           </h3>
                         </Link>

@@ -24,100 +24,18 @@ const DashboardProjects = () => {
 
   const [getAllProjects, { data: projects, isLoading }] =
     useLazyGetAllProjectsQuery();
-  console.log(projects);
-
-  // const isActiveProject = (project) =>
-  //   project?.projectStatus !== "COMPLETED" &&
-  //   project?.projectStatus !== "CANCELLED" &&
-  //   project?.paymentStatus === "PAID";
-
-  // const activeProjectList = useMemo(
-  //   () => projects?.filter(isActiveProject),
-  //   [projects],
-  // );
 
   const [addDesignerModal, setAddDesignerModal] = useState(false);
 
   const [selectedProjectType, setSelectedProjectType] = useState("");
   const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [designerValue, setDesignerValue] = useState(null);
 
   useEffect(() => {
     if (projectType) {
       setSelectedProjectType(projectType[0]?.name);
     }
   }, [projectType]);
-
-  // const [activeProjectList, setActiveProjectList] = useState([
-  //   {
-  //     id: 1,
-  //     status: "Ongoing",
-  //     price: 30,
-  //     deadline: "2024-09-26T18:11:59Z",
-  //     image: {
-  //       url: "https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D",
-  //       name: "Door Hanger Design",
-  //     },
-  //     client: {
-  //       id: 1,
-  //       isOnline: true,
-  //       name: "Shakiqur Rahman",
-  //       userName: "shake75",
-  //       avatar: "",
-  //     },
-  //   },
-  //   {
-  //     id: 2,
-  //     status: "Revision",
-  //     price: 30,
-  //     deadline: "2024-06-30T14:10:59Z",
-  //     image: {
-  //       url: "https://img-cdn.pixlr.com/image-generator/history/65bb506dcb310754719cf81f/ede935de-1138-4f66-8ed7-44bd16efc709/medium.webp",
-  //       name: "Flyer Design",
-  //     },
-  //     client: {
-  //       id: 2,
-  //       isOnline: false,
-  //       name: "Shake Xpress",
-  //       userName: "shakeXpress",
-  //       avatar:
-  //         "https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D",
-  //     },
-  //   },
-  //   {
-  //     id: 3,
-  //     status: "Dispute",
-  //     price: 30,
-  //     deadline: "2024-09-25T02:51:59Z",
-  //     image: {
-  //       url: "https://img-cdn.pixlr.com/image-generator/history/65bb506dcb310754719cf81f/ede935de-1138-4f66-8ed7-44bd16efc709/medium.webp",
-  //       name: "Flyer Design",
-  //     },
-  //     client: {
-  //       id: 2,
-  //       isOnline: false,
-  //       name: "Shake Xpress",
-  //       userName: "shake75",
-  //       avatar: "",
-  //     },
-  //   },
-  //   {
-  //     id: 4,
-  //     status: "Ongoing",
-  //     price: 30,
-  //     deadline: "2024-09-26T02:51:59Z",
-  //     image: {
-  //       url: "https://img-cdn.pixlr.com/image-generator/history/65bb506dcb310754719cf81f/ede935de-1138-4f66-8ed7-44bd16efc709/medium.webp",
-  //       name: "Flyer Design",
-  //     },
-  //     client: {
-  //       id: 4,
-  //       isOnline: true,
-  //       name: "Shake Xpress",
-  //       userName: "shake75",
-  //       avatar: "",
-  //     },
-  //   },
-  // ]);
 
   const handleProjectTypeChange = (e) => {
     setSelectedProjectType(e.target.value);
@@ -227,8 +145,9 @@ const DashboardProjects = () => {
             }
             const { time, color } = timeStatus || "";
             const letterLogo =
-              !project?.user?.image &&
-              project?.user?.userName?.trim()?.charAt(0)?.toUpperCase() || "";
+              (!project?.user?.image &&
+                project?.user?.userName?.trim()?.charAt(0)?.toUpperCase()) ||
+              "";
             return (
               <Fragment key={idx}>
                 <div className="mb-6 flex min-w-[700px] items-center justify-between gap-4 border bg-lightskyblue p-4 last:mb-0">
@@ -287,17 +206,18 @@ const DashboardProjects = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-6 lg:gap-8">
-                    <button
-                      type="button"
+                    <Link
+                      to={`/order/${project?.projectNumber}`}
                       className="text-sm font-semibold text-primary"
                     >
                       View
-                    </button>
+                    </Link>
                     <button
                       title={project?.designerName}
                       type="button"
                       onClick={() => {
                         setSelectedOrderId(project?.id);
+                        setDesignerValue(project?.designerName);
                         setAddDesignerModal(true);
                       }}
                     >
@@ -317,6 +237,7 @@ const DashboardProjects = () => {
       {addDesignerModal && (
         <AddDesignerModal
           orderId={selectedOrderId}
+          value={designerValue}
           handleClose={setAddDesignerModal}
         />
       )}

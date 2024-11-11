@@ -3,19 +3,19 @@ import toast from "react-hot-toast";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useAddDesignerMutation } from "../../Redux/api/dashboardApiSlice";
 
-const AddDesignerModal = ({ handleClose, orderId }) => {
+const AddDesignerModal = ({ handleClose, orderId, value }) => {
   const [addDesigner] = useAddDesignerMutation();
 
   const modalRef = useRef(null);
   const [form, setForm] = useState({
-    title: "",
+    title: value || "",
   });
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.title) {
+    if (form.title && form.title !== value) {
       try {
         const response = await addDesigner({
           designerName: form.title,
