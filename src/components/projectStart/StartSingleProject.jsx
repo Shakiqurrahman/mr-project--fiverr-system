@@ -101,7 +101,7 @@ const StartSingleProject = ({ item }) => {
       fastDeliveryDuration: extraFastDeliveryDay,
       subTotal: baseAmount,
       totalAmount,
-      projectType: "Category Project",
+      projectType: "CUSTOM",
       projectImage: selectedCategory?.image?.url,
     };
     navigate("/payment", { state: data });

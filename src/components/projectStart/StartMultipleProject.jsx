@@ -207,7 +207,7 @@ const StartMultipleProject = ({ items }) => {
         totalAmount,
         designs: newItems,
         from: "multipleProject",
-        projectType: "M-D Project",
+        projectType: "MD_PROJECT",
         projectImage: multiProjectData.projectImage?.url,
       };
       navigate("/payment", { state: data });
@@ -232,7 +232,7 @@ const StartMultipleProject = ({ items }) => {
         subTotal: choosenItem.subCategory.subAmount,
         totalAmount: choosenItem.subTotal,
         designDbId: choosenItem.id,
-        projectType: "Category Project",
+        projectType: "CUSTOM",
         projectImage: selectedCategory?.image?.url,
         tags: choosenItem.tags,
       };
