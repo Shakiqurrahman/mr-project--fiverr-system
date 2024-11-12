@@ -68,20 +68,21 @@ const PaymentPage = () => {
         parseInt(item.fastDeliveryAmount) || parseInt(item.fastDeliveryPrice),
     }));
 
-    const projectType = designs?.projectType;
+    const projectType =
+      designs?.from === "offerProject" ? "OFFER" : designs?.projectType;
     const projectImage = designs?.projectImage;
 
     let totalQuantity = 0;
-    if (designs?.designs) {
-      totalQuantity = designs?.designs?.reduce(
-        (prev, curr) => prev + parseInt(curr?.quantity),
-        0,
-      );
-    } else {
-      totalQuantity = parseInt(designs?.selectedQuantity);
+    if (designs?.from !== "offerProject") {
+      if (designs?.designs) {
+        totalQuantity = designs?.designs?.reduce(
+          (prev, curr) => prev + parseInt(curr?.quantity),
+          0,
+        );
+      } else {
+        totalQuantity = parseInt(designs?.selectedQuantity);
+      }
     }
-
-    console.log(totalQuantity);
 
     const requirementsArray = state?.requirements?.map((question) => ({
       question,
@@ -98,7 +99,7 @@ const PaymentPage = () => {
       title: state?.title,
       projectType,
       projectImage,
-      totalQuantity,
+      totalQuantity: designs?.from === "offerProject" ? 1 : totalQuantity,
     };
     try {
       const response = await axios.post(
