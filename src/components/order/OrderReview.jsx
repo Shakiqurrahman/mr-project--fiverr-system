@@ -5,7 +5,7 @@ const OrderReview = () => {
   const { user } = useSelector((state) => state.user);
   return (
     <div className="mt-5 border border-gray-200 shadow-btn-shadow">
-      <h1 className="bg-lightskyblue p-4 text-xl font-semibold">
+      <h1 className="bg-lightskyblue p-4 text-lg font-semibold sm:text-xl">
         Client Name&apos;s Review
       </h1>
       <div className="p-4">
@@ -18,7 +18,7 @@ const OrderReview = () => {
             />
           ) : (
             <div className="flex size-10 items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-3xl font-bold text-[#3b3b3b]/50">
-              {user?.userName?.charAt(0)}
+              {user?.userName?.charAt(0).toUpperCase()}
             </div>
           )}
           <h1 className="text-lg font-semibold">{user?.userName}</h1>

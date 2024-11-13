@@ -25,7 +25,7 @@ const OrderReviewForm = () => {
   };
 
   return (
-    <div className="mx-auto mt-5 w-full max-w-[80%]">
+    <div className="mx-auto mt-5 w-full sm:max-w-[80%]">
       <h1 className="text-center text-2xl font-semibold text-primary">
         LEAVE A FEEDBACK
       </h1>

@@ -510,9 +510,9 @@ const OrderChatBox = () => {
               </div>
             )}
             <div
-              className={`${quickResponse ? "h-[140px]" : "h-[40px]"} border-b border-slate-300 p-2`}
+              className={`${quickResponse ? "h-[140px]" : "h-auto"} border-b border-slate-300 p-2`}
             >
-              <div className="flex items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center justify-between gap-3 sm:flex-nowrap">
                 <div className="flex items-center gap-3 font-semibold">
                   Quick Response{" "}
                   <button

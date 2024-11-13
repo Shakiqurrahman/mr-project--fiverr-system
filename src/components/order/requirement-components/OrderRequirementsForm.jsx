@@ -345,7 +345,7 @@ const OrderRequirementsForm = () => {
                 onClick={handleAdminStart}
                 disabled={submitLoading}
                 type="button"
-                className="mx-auto mt-5 flex h-[45px] w-1/3 items-center justify-center rounded-[30px] bg-primary text-base font-semibold text-white disabled:cursor-not-allowed sm:text-lg"
+                className="mx-auto mt-5 flex h-[45px] items-center justify-center rounded-[30px] bg-primary p-2 text-base font-semibold text-white disabled:cursor-not-allowed sm:w-1/3 sm:text-lg"
               >
                 {submitLoading ? (
                   <span className="animate-spin text-xl">

@@ -38,7 +38,7 @@ const OrderTipsForm = () => {
     handleDonation();
   }, []);
   return (
-    <div className="mx-auto mt-5 w-full max-w-[80%]">
+    <div className="mx-auto mt-5 w-full sm:max-w-[80%]">
       <h1 className="text-center text-2xl font-semibold text-primary">
         LEAVE A TIP
       </h1>
@@ -47,7 +47,7 @@ const OrderTipsForm = () => {
         <div className="mt-10 flex w-full border border-solid border-gray-400 text-center font-semibold text-black">
           <button
             value="clicked"
-            className={`w-1/4 border-r border-solid border-gray-400 p-4 px-6 text-lg lg:px-10 ${
+            className={`w-1/4 border-r border-solid border-gray-400 p-4 px-6 text-sm sm:text-lg lg:px-10 ${
               clickBtn === "clicked" ? "bg-primary text-white" : ""
             }`}
             onClick={handleClickBtn}
@@ -56,16 +56,18 @@ const OrderTipsForm = () => {
           </button>
           <button
             value="NotClicked"
-            className={`w-1/4 border-r border-solid border-gray-400 p-4 px-6 text-lg lg:px-10 ${
+            className={`w-1/4 border-r border-solid border-gray-400 p-4 px-6 text-sm sm:text-lg lg:px-10 ${
               clickBtn === "NotClicked" ? "bg-primary text-white" : ""
             }`}
             onClick={handleClickBtn}
           >
             ${tip2}
           </button>
-          <div className="flex w-2/4 items-center justify-between gap-3 px-6">
-            <label className="font-regular text-lg">Custom Tip</label>
-            <div className="flex w-[100px] items-center border-2">
+          <div className="flex w-2/4 items-center justify-between gap-3 px-2 sm:px-6">
+            <label className="font-regular text-xs sm:text-lg">
+              Custom Tip
+            </label>
+            <div className="flex w-auto items-center border-2 sm:w-[100px]">
               <span className="px-3 py-1">$</span>
               <input
                 type="number"

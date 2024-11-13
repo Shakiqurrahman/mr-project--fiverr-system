@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { GiHamburgerMenu } from "react-icons/gi";
+import { IoClose } from "react-icons/io5";
 import { PiWarningCircleFill } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -40,6 +42,7 @@ const Order = () => {
   // All States Here
   const tabButtons = ["ACTIVITY", "REQUIREMENTS", "DETAILS"];
   const [selectedTabButton, setSelectedTabButton] = useState("ACTIVITY");
+  const [openSidePanel, setOpenSidePanel] = useState(false);
 
   // All Side Effects here
 
@@ -95,47 +98,63 @@ const Order = () => {
           <Check className="size-6 !fill-white md:size-10" /> Project Completed{" "}
         </h1>
       )}
-      <div className="flex flex-wrap gap-5 sm:flex-nowrap">
-        <div className="mb-5 w-[calc(100%_-_320px)] shrink">
-          <div className="hidden items-center gap-10 sm:flex">
-            {tabButtons.map((btn, i) => (
-              <button
-                key={i}
-                type="button"
-                className={`relative font-semibold ${selectedTabButton === btn ? "text-primary underline" : ""}`}
-                value={btn}
-                onClick={() => setSelectedTabButton(btn)}
-              >
-                {btn}
-                {btn === "REQUIREMENTS" &&
-                  !projectDetails?.isRequirementsFullFilled && (
-                    <div className="absolute -right-3 -top-2">
-                      <PiWarningCircleFill className="text-primary" />
-                    </div>
-                  )}
-              </button>
-            ))}
+      <div className="relative flex flex-wrap gap-5 sm:flex-nowrap">
+        <div className="mb-5 w-full shrink lg:w-[calc(100%_-_320px)]">
+          <div className="flex items-center justify-between gap-2">
+            <div className="hidden items-center gap-10 sm:flex">
+              {tabButtons.map((btn, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  className={`relative font-semibold ${selectedTabButton === btn ? "text-primary underline" : ""}`}
+                  value={btn}
+                  onClick={() => setSelectedTabButton(btn)}
+                >
+                  {btn}
+                  {btn === "REQUIREMENTS" &&
+                    !projectDetails?.isRequirementsFullFilled && (
+                      <div className="absolute -right-3 -top-2">
+                        <PiWarningCircleFill className="text-primary" />
+                      </div>
+                    )}
+                </button>
+              ))}
+            </div>
+            <select
+              value={selectedTabButton}
+              onChange={(e) => setSelectedTabButton(e.target.value)}
+              className="block w-full border border-gray-300 p-3 font-medium sm:hidden"
+            >
+              {tabButtons.map((btn, i) => (
+                <option key={i} value={btn}>
+                  {btn}{" "}
+                </option>
+              ))}
+            </select>
+            <button
+              className="block lg:hidden"
+              onClick={() => setOpenSidePanel(true)}
+            >
+              <GiHamburgerMenu className="text-xl" />
+            </button>
           </div>
-          <select
-            value={selectedTabButton}
-            onChange={(e) => setSelectedTabButton(e.target.value)}
-            className="block w-full border border-gray-300 p-3 font-medium sm:hidden"
-          >
-            {tabButtons.map((btn, i) => (
-              <option key={i} value={btn}>
-                {btn}{" "}
-              </option>
-            ))}
-          </select>
           <Divider className="my-5 h-px w-full !bg-black" />
           <RenderTabComponent />
         </div>
-        <div className="w-full shrink-0 sm:w-[300px]">
+        <div
+          className={`${openSidePanel ? "absolute right-0 top-0 !block" : ""} hidden w-[300px] shrink-0 bg-white lg:block`}
+        >
+          <button
+            className="absolute right-4 top-4 z-10 block lg:hidden"
+            onClick={() => setOpenSidePanel(false)}
+          >
+            <IoClose className="text-2xl" />
+          </button>
           <OrderSidePanel />
         </div>
       </div>
       {selectedTabButton === "ACTIVITY" && (
-        <div className="w-[calc(100%_-_320px)]">
+        <div className="w-full lg:w-[calc(100%_-_320px)]">
           <OrderReview />
           <OrderReviewForm />
           <OrderTipsForm />
