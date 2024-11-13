@@ -78,7 +78,7 @@ const InboxPage = () => {
         >
           {isAuthorized && (
             <div
-              className={`${toggleBtn ? "block bg-white" : "hidden"} absolute left-0 top-0 z-[10] h-[calc(100%_+_2px)] w-full overflow-hidden rounded-lg md:static md:block md:h-full md:w-1/3 md:rounded-bl-none md:rounded-br-none md:rounded-tr-none md:border-r`}
+              className={`${toggleBtn ? "block bg-white" : "hidden"} absolute left-0 top-0 z-[10] h-full w-full overflow-hidden rounded-lg md:static md:block md:w-1/3 md:rounded-bl-none md:rounded-br-none md:rounded-tr-none md:border-r`}
             >
               <AllConversation closeToggle={setToggleBtn} />
             </div>

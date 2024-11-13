@@ -521,7 +521,7 @@ const ChatBox = ({ openToggle }) => {
     try {
       const res = await deleteAMessage(messageId).unwrap();
       console.log(res);
-      
+
       socket.emit("delete-message", { messageId, userId: user?.id });
       toast.success("Message deleted successfully");
     } catch {
@@ -616,7 +616,7 @@ const ChatBox = ({ openToggle }) => {
   };
 
   return (
-    <div className="h-full">
+    <div className="flex h-full flex-col">
       {/* Header Part */}
       <div className="flex h-[70px] items-center justify-between rounded-tl-lg rounded-tr-lg bg-[#efefef] p-4 md:rounded-tl-none">
         <div className="">
@@ -710,9 +710,7 @@ const ChatBox = ({ openToggle }) => {
         )}
       </div>
       {/* Conversation Field */}
-      <div
-        className={`${replyTo && quickResponse && selectedImages?.length > 0 ? "h-[calc(100%_-_555px)]" : quickResponse && selectedImages?.length > 0 ? "h-[calc(100%_-_505px)]" : replyTo && quickResponse ? "h-[calc(100%_-_400px)]" : quickResponse ? "h-[calc(100%_-_350px)]" : replyTo && selectedImages?.length > 0 ? "h-[calc(100%_-_455px)]" : selectedImages?.length > 0 ? "h-[calc(100%_-_405px)]" : replyTo ? "h-[calc(100%_-_300px)]" : "h-[calc(100%_-_250px)]"} overflow-y-auto p-2 sm:p-5`}
-      >
+      <div className={`h-auto overflow-y-auto p-2 sm:p-5`}>
         {/* All message Container */}
         {/* Each message block */}
 
@@ -903,18 +901,18 @@ const ChatBox = ({ openToggle }) => {
                             <div className="flex items-center gap-3">
                               <img
                                 src={msg?.customOffer.thumbnail}
-                                className="h-[60px] w-[80px] object-cover"
+                                className="w-[40px] object-cover sm:w-[80px]"
                                 alt=""
                               />
-                              <h1 className="text-2xl font-semibold">
+                              <h1 className="text-base font-semibold sm:text-2xl">
                                 {msg?.customOffer.title}
                               </h1>
                             </div>
-                            <span className="shrink-0 px-3 text-3xl font-semibold text-primary">
+                            <span className="shrink-0 text-base font-semibold text-primary sm:px-3 sm:text-3xl">
                               ${msg.customOffer.price}
                             </span>
                           </div>
-                          <div className="p-3">
+                          <div className="p-3 text-sm sm:text-base">
                             <p className="mb-5 mt-2">
                               {msg?.customOffer?.desc}
                             </p>
@@ -931,21 +929,21 @@ const ChatBox = ({ openToggle }) => {
                               {isAdmin ? (
                                 <button
                                   type="button"
-                                  className="block w-full bg-primary p-2 text-center font-semibold text-white"
+                                  className="block w-full bg-primary p-2 text-center text-sm font-semibold text-white sm:text-base"
                                 >
                                   Withdraw Offer
                                 </button>
                               ) : (
-                                <div className="flex gap-3">
+                                <div className="flex flex-wrap gap-3 sm:flex-nowrap">
                                   <button
                                     type="button"
-                                    className="block w-1/2 bg-primary p-2 text-center font-semibold text-white"
+                                    className="block w-full bg-primary p-2 text-center text-sm font-semibold text-white sm:w-1/2 sm:text-base"
                                   >
                                     Accept
                                   </button>
                                   <button
                                     type="button"
-                                    className="block w-1/2 bg-gray-400 p-2 text-center font-semibold text-white"
+                                    className="block w-full bg-gray-400 p-2 text-center text-sm font-semibold text-white sm:w-1/2 sm:text-base"
                                   >
                                     Decline
                                   </button>
@@ -967,13 +965,13 @@ const ChatBox = ({ openToggle }) => {
                             Download All
                           </Link>
                         )}
-                        <div className="grid grid-cols-3 gap-3">
+                        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                           {msg?.attachment.map((att, i) => (
                             <div key={i}>
                               <img
                                 src={att.url}
                                 alt=""
-                                className="h-[180px] w-full object-cover"
+                                className="h-[100px] w-full object-cover sm:h-[180px]"
                               />
                               <a
                                 href={att.url}
@@ -1034,9 +1032,7 @@ const ChatBox = ({ openToggle }) => {
         <div ref={endOfMessagesRef} />
       </div>
       {/* Text Field Part */}
-      <div
-        className={`${replyTo && quickResponse && selectedImages?.length > 0 ? "h-[473px]" : quickResponse && selectedImages?.length > 0 ? "h-[423px]" : replyTo && quickResponse ? "h-[330px]" : quickResponse ? "h-[280px]" : replyTo ? "h-[230px]" : "h-[180px]"} px-3`}
-      >
+      <div className={`mt-auto px-3`}>
         <div className="rounded-t-md border border-b border-slate-300">
           {selectedImages?.length > 0 && (
             <div className="preview-scroll-overflow-x flex gap-2 border-b p-[10px]">
