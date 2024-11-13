@@ -101,10 +101,13 @@ const PaymentPage = () => {
       projectImage,
       totalQuantity: designs?.from === "offerProject" ? 1 : totalQuantity,
     };
+
+    console.log("data checking", data);
+
     try {
       const response = await axios.post(
         `${configApi.api}api/checkout-session`,
-        { data },
+        { data, tags: state?.tags },
       );
 
       const sessionId = response?.data?.data?.id;
