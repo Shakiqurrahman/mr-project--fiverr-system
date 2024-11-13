@@ -379,11 +379,9 @@ const OrderChatBox = () => {
 
   return (
     <>
-      <div className="h-[calc(100%_-_100px)] w-full rounded-lg shadow-btn-shadow">
+      <div className="flex max-h-[2000px] min-h-[800px] w-full flex-col rounded-lg shadow-btn-shadow">
         {/* Conversation Field */}
-        <div
-          className={`${quickResponse && selectedImages?.length > 0 ? "h-[calc(100%_-_423px)]" : quickResponse ? "h-[calc(100%_-_280px)]" : selectedImages?.length > 0 ? "h-[calc(100%_-_321px)]" : "h-[calc(100%_-_180px)]"} overflow-y-auto p-2 sm:p-5`}
-        >
+        <div className={`h-auto overflow-y-auto p-2 sm:p-5`}>
           {/* All message Container */}
           {messages?.map((msg, index) => (
             <div key={index}>
@@ -471,9 +469,7 @@ const OrderChatBox = () => {
           {/* <div ref={endOfMessagesRef} /> */}
         </div>
         {/* Text Field Part */}
-        <div
-          className={`${quickResponse && selectedImages?.length > 0 ? "h-[423px]" : quickResponse ? "h-[280px]" : "h-[180px]"} px-3`}
-        >
+        <div className={`mt-auto px-3`}>
           <div className="rounded-t-md border border-b border-slate-300">
             {selectedImages?.length > 0 && (
               <div className="preview-scroll-overflow-x flex gap-2 border-b p-[10px]">

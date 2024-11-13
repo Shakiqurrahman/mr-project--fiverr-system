@@ -22,12 +22,12 @@ const Order = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { projectNumber } = useParams();
-  
+
   const { data: projectDetails } = useRequirementByProjectNumberQuery({
     projectNumber,
   });
 
-  console.log(projectNumber, projectDetails );
+  console.log(projectNumber, projectDetails);
   const [fetchUserById, { data: clientDetails }] =
     useLazyFetchSingleUserByIdQuery();
 
@@ -50,7 +50,7 @@ const Order = () => {
       });
     }
   }, [fetchUserById, projectDetails]);
-  
+
   useEffect(() => {
     if (projectDetails) {
       if (
@@ -96,7 +96,7 @@ const Order = () => {
         </h1>
       )}
       <div className="flex flex-wrap gap-5 sm:flex-nowrap">
-        <div className="mb-5 max-h-[2000px] min-h-screen w-[calc(100%_-_320px)] shrink">
+        <div className="mb-5 w-[calc(100%_-_320px)] shrink">
           <div className="hidden items-center gap-10 sm:flex">
             {tabButtons.map((btn, i) => (
               <button
