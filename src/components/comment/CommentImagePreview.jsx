@@ -144,7 +144,7 @@ const CommentImagePreview = ({
             <button
               key={index}
               type="button"
-              className="flex h-full w-[150px] flex-col items-center gap-1"
+              className="flex h-full w-[80px] flex-col items-center gap-1"
               onClick={() => setSelectedImage(img)}
             >
               <img
