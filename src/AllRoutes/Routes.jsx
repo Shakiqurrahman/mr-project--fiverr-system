@@ -301,7 +301,7 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: "/order",
+    path: "/order/:projectNumber",
     element: <ChatLayout />,
     children: [
       {

@@ -2,10 +2,12 @@ import { useState } from "react";
 import { FaQuoteLeft, FaQuoteRight } from "react-icons/fa";
 import { IoSearch, IoStar } from "react-icons/io5";
 import { RiArrowRightDoubleFill } from "react-icons/ri";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
+import { setPreviewImage } from "../Redux/features/previewImageSlice";
 import Logo from "../assets/images/MR Logo White.png";
 import Camera from "../assets/images/camera.jpg";
 import LeftArrowIcon from "../assets/images/icons/Left Arrow.svg";
@@ -13,10 +15,16 @@ import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
 import Divider from "./Divider";
 
 function Testimonials() {
+  const dispatch = useDispatch();
   const [sortBtn, setSortBtn] = useState("Most relevant");
 
   const handleSortBtn = (e) => {
     setSortBtn(e.target.value);
+  };
+
+  const handlePreviewImage = (e, url) => {
+    e.preventDefault();
+    dispatch(setPreviewImage(url));
   };
 
   const reviewSetting = {
@@ -260,7 +268,8 @@ function Testimonials() {
                   <img
                     src={Camera}
                     alt=""
-                    className="w-[150px] rounded-xl object-cover"
+                    className="w-[150px] cursor-pointer rounded-xl object-cover"
+                    onClick={(e) => handlePreviewImage(e, Camera)}
                   />
                 )}
               </div>

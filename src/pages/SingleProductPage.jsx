@@ -4,15 +4,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Slider from "react-slick";
 import Swal from "sweetalert2";
+import LeftArrowIcon from "../assets/images/icons/Left Arrow.svg";
+import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
+import Divider from "../components/Divider";
+import RelatedDesigns from "../components/RelatedDesigns";
 import {
   useDeleteDesignByIdMutation,
   useFetchGetUploadQuery,
 } from "../Redux/api/uploadDesignApiSlice";
 import { addToCart, removeFromCart } from "../Redux/features/cartSlice";
-import LeftArrowIcon from "../assets/images/icons/Left Arrow.svg";
-import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
-import Divider from "../components/Divider";
-import RelatedDesigns from "../components/RelatedDesigns";
+import { setPreviewImage } from "../Redux/features/previewImageSlice";
 
 function SingleProductPage() {
   const { slug } = useParams();
@@ -125,6 +126,11 @@ function SingleProductPage() {
     navigate("/project", { state: { items: data } });
   };
 
+  const handlePreviewImage = (e, url) => {
+    e.preventDefault();
+    dispatch(setPreviewImage(url));
+  };
+
   // Determine which tags to show
   const tagsToShow = showAll ? design?.tags : design?.tags?.slice(0, 10);
   return (
@@ -161,7 +167,8 @@ function SingleProductPage() {
               <img
                 src={images[0].url}
                 alt=""
-                className="w-full object-contain"
+                className="w-full cursor-pointer object-cover"
+                onClick={(e) => handlePreviewImage(e, images[0]?.url)}
               />
             ) : (
               <Slider {...settings}>
@@ -170,7 +177,8 @@ function SingleProductPage() {
                     key={i}
                     src={image.url}
                     alt=""
-                    className="w-full object-contain"
+                    className="w-full cursor-pointer object-cover"
+                    onClick={(e) => handlePreviewImage(e, image?.url)}
                   />
                 ))}
               </Slider>

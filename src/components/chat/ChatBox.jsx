@@ -37,6 +37,7 @@ import {
   useSendAMessageMutation,
 } from "../../Redux/api/inboxApiSlice";
 import { setChatData } from "../../Redux/features/chatSlice";
+import { setPreviewImage } from "../../Redux/features/previewImageSlice";
 import { setTypingStatus } from "../../Redux/features/userSlice";
 import useLocalDateTime from "../../hooks/useLocalDateTime";
 import { configApi } from "../../libs/configApi";
@@ -398,6 +399,11 @@ const ChatBox = ({ openToggle }) => {
 
     // Reset the file input to allow re-uploading the same file
     fileInputRef.current.value = null;
+  };
+
+  const handlePreviewImage = (e, url) => {
+    e.preventDefault();
+    dispatch(setPreviewImage(url));
   };
 
   // click outside the box it will be toggled
@@ -837,7 +843,10 @@ const ChatBox = ({ openToggle }) => {
                                     <img
                                       src={att?.url}
                                       alt=""
-                                      className="h-[180px] w-full object-cover"
+                                      className="h-[180px] w-full cursor-pointer object-cover"
+                                      onClick={(e) =>
+                                        handlePreviewImage(e, att?.url)
+                                      }
                                     />
                                     <Link className="mt-2 flex items-center justify-center text-xs">
                                       <BiDownload className="shrink-0 text-lg text-primary" />
@@ -901,8 +910,14 @@ const ChatBox = ({ openToggle }) => {
                             <div className="flex items-center gap-3">
                               <img
                                 src={msg?.customOffer.thumbnail}
-                                className="w-[40px] object-cover sm:w-[80px]"
+                                className="w-[40px] cursor-pointer object-cover sm:w-[80px]"
                                 alt=""
+                                onClick={(e) =>
+                                  handlePreviewImage(
+                                    e,
+                                    msg?.customOffer?.thumbnail,
+                                  )
+                                }
                               />
                               <h1 className="text-sm font-semibold sm:text-2xl">
                                 {msg?.customOffer.title}
@@ -971,7 +986,8 @@ const ChatBox = ({ openToggle }) => {
                               <img
                                 src={att.url}
                                 alt=""
-                                className="h-[100px] w-full object-cover sm:h-[180px]"
+                                className="h-[100px] w-full cursor-pointer object-cover sm:h-[180px]"
+                                onClick={(e) => handlePreviewImage(e, att?.url)}
                               />
                               <a
                                 href={att.url}

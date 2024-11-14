@@ -4,17 +4,18 @@ import toast from "react-hot-toast";
 import { FaEye, FaSpinner } from "react-icons/fa";
 import { ImPlus } from "react-icons/im";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import PreviewImage from "../components/PreviewImage";
 import { configApi } from "../libs/configApi";
 import { useFetchMultiProjectQuery } from "../Redux/api/multiProjectApiSlice";
+import { setPreviewImage } from "../Redux/features/previewImageSlice";
 
 const MultiProject = () => {
+  const dispatch = useDispatch();
   const { data } = useFetchMultiProjectQuery();
   const imageRef = useRef(null);
   const navigate = useNavigate();
   const [submitLoading, setSubmitLoading] = useState(false);
-  const [preview, setPreview] = useState(false);
   const [id, setId] = useState("");
   const [projectTitle, setProjectTitle] = useState("");
   const [projectImage, setProjectImage] = useState(null);
@@ -51,6 +52,10 @@ const MultiProject = () => {
       });
       imageRef.current.value = "";
     }
+  };
+
+  const handleOpenPreviewImage = () => {
+    dispatch(setPreviewImage(projectImage?.url));
   };
 
   const addRequirements = () => {
@@ -159,7 +164,7 @@ const MultiProject = () => {
         <div className="mt-5 bg-lightskyblue">
           <div className="flex items-center justify-between gap-3 bg-primary p-3 text-white">
             <h1>Project Image</h1>
-            <button type="button" onClick={() => setPreview(true)}>
+            <button type="button" onClick={handleOpenPreviewImage}>
               <FaEye className="text-2xl" />
             </button>
           </div>
@@ -237,12 +242,6 @@ const MultiProject = () => {
           </button>
         </div>
       </form>
-      {preview && (
-        <PreviewImage
-          url={projectImage.url}
-          closePreview={() => setPreview(false)}
-        />
-      )}
     </div>
   );
 };

@@ -1,14 +1,17 @@
 import { Fragment, useState } from "react";
 import { FaQuoteLeft, FaQuoteRight } from "react-icons/fa";
 import { IoSearch, IoStar } from "react-icons/io5";
+import { useDispatch } from "react-redux";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 import Camera from "../assets/images/camera.jpg";
 import Logo from "../assets/images/MR Logo White.png";
 import Divider from "../components/Divider";
+import { setPreviewImage } from "../Redux/features/previewImageSlice";
 
 const AllReviews = () => {
+  const dispatch = useDispatch();
   const [sortBtn, setSortBtn] = useState("Most relevant");
 
   const reviews = [
@@ -100,6 +103,10 @@ const AllReviews = () => {
 
   const handleSortBtn = (e) => {
     setSortBtn(e.target.value);
+  };
+  const handlePreviewImage = (e, url) => {
+    e.preventDefault();
+    dispatch(setPreviewImage(url));
   };
   return (
     <div className="max-width">
@@ -281,7 +288,8 @@ const AllReviews = () => {
                     <img
                       src={review.thumbnail}
                       alt=""
-                      className="w-[150px] rounded-xl object-cover"
+                      className="w-[150px] cursor-pointer rounded-xl object-cover"
+                      onClick={(e) => handlePreviewImage(e, review?.thumbnail)}
                     />
                   )}
                 </div>
