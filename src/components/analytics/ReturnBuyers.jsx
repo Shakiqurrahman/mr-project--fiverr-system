@@ -94,23 +94,19 @@ const ReturnBuyers = () => {
         </div>
         <div className="preview-scroll-overflow-x !pb-0">
           <table className="table w-full border-collapse border">
-            {slicedCategoriesData?.length > 0 ? (
-              <thead>
-                <tr className="bg-white">
-                  <th className="w-[50%] border-collapse border border-gray-300 px-3 py-2 text-start font-semibold">
-                    UserName
-                  </th>
-                  <th className="w-[25%] border-collapse border border-gray-300 px-3 py-2 font-semibold">
-                    Projects
-                  </th>
-                  <th className="w-[25%] border-collapse border border-gray-300 px-3 py-2 font-semibold">
-                    Earnings
-                  </th>
-                </tr>
-              </thead>
-            ) : (
-              <p className="bg-white py-4 text-center">No data found!</p>
-            )}
+            <thead>
+              <tr className="bg-white">
+                <th className="w-[50%] border-collapse border border-gray-300 px-3 py-2 text-start font-semibold">
+                  UserName
+                </th>
+                <th className="w-[25%] border-collapse border border-gray-300 px-3 py-2 font-semibold">
+                  Projects
+                </th>
+                <th className="w-[25%] border-collapse border border-gray-300 px-3 py-2 font-semibold">
+                  Earnings
+                </th>
+              </tr>
+            </thead>
             <tbody>
               {slicedCategoriesData?.map((keyword, idx) => (
                 <tr key={idx} className="text-center even:bg-white">
@@ -131,6 +127,9 @@ const ReturnBuyers = () => {
           </table>
         </div>
       </div>
+      {slicedCategoriesData?.length === 0 && (
+        <p className="bg-white py-4 text-center">No data found!</p>
+      )}
       {returnBuyersData.length > 10 && (
         <button
           className="mx-auto mt-5 flex items-center gap-1 rounded-[30px] bg-primary px-3 py-1 text-white"
