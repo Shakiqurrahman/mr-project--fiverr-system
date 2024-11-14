@@ -904,7 +904,7 @@ const ChatBox = ({ openToggle }) => {
                                 className="w-[40px] object-cover sm:w-[80px]"
                                 alt=""
                               />
-                              <h1 className="text-base font-semibold sm:text-2xl">
+                              <h1 className="text-sm font-semibold sm:text-2xl">
                                 {msg?.customOffer.title}
                               </h1>
                             </div>
