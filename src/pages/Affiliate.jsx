@@ -1,20 +1,33 @@
 import { Pagination, PaginationItem } from "@mui/material";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import prevBtn from "../assets/images/icons/Left Arrow.svg";
-import nextBtn from "../assets/images/icons/Right Arrow.svg";
 import cashWithdrawal from "../assets/images/icons/cash-withdrawal.png";
 import creditCard from "../assets/images/icons/credit-card.png";
 import dollerBill from "../assets/images/icons/dollar-bill.png";
+import prevBtn from "../assets/images/icons/Left Arrow.svg";
+import nextBtn from "../assets/images/icons/Right Arrow.svg";
 import PageHeaderWithText from "../components/PageHeaderWithText";
+import {
+  useCreateAffiliateMutation,
+  useDeleteAffiliateMutation,
+  useGetAUserAffiliatesQuery,
+} from "../Redux/api/affiliateApiSlice";
 
 function Affiliate() {
+  const [affLink, setAffLink] = useState("");
   const { user } = useSelector((state) => state.user);
 
-  const copyAffiliateLink = () => {
-    const textToCopy = `https://mahfujurrahm535.com/?aff-${user?.userName}`; // Text to copy
+  const [createAffiliate] = useCreateAffiliateMutation();
+  const [deleteAffiliate] = useDeleteAffiliateMutation();
+
+  const { data: affiliateData } = useGetAUserAffiliatesQuery();
+  console.log(affiliateData);
+
+  const copyAffiliateLink = async () => {
+    const textToCopy = `https://mahfujurrahm535.com/?aff-${user?.userName}`;
     navigator.clipboard
       .writeText(textToCopy)
       .then(() => {
@@ -24,6 +37,39 @@ function Affiliate() {
         toast.error("Failed to copy text");
         console.error("Error copying text: ", err);
       });
+
+    try {
+      const res = await createAffiliate({
+        link: `aff-${user?.userName}`,
+      }).unwrap();
+    } catch (error) {}
+  };
+
+  const createAffiliateHandler = async () => {
+    if (affLink) {
+      try {
+        const res = await createAffiliate({
+          link: `aff-${affLink}`,
+        }).unwrap();
+        toast.success("Affiliate link created successfully!");
+        console.log("Successfully", res);
+      } catch (error) {
+        toast.error("Failed to create affiliate link");
+        console.error("Error creating affiliate link: ", error);
+      }
+    } else {
+      toast.error("Please enter something to generate your link.");
+    }
+    setAffLink("");
+  };
+
+  const deleteAffiliateHandler = async (affLink) => {
+    try {
+      await deleteAffiliate({ affLink, userId: user?.id }).unwrap();
+      toast.success("Affiliate link deleted successfully!");
+    } catch (error) {
+      toast.error("Failed to delete affiliate link");
+    }
   };
   return (
     <>
@@ -46,7 +92,7 @@ function Affiliate() {
                 className="mx-auto h-[40px] w-[40px] lg:h-[60px] lg:w-[60px]"
               />
               <p className=":mt-2">Balance</p>
-              <p className="font-semibold">$00</p>
+              <p className="font-semibold">${affiliateData?.totalEarnings}</p>
             </div>
             <Link className="bg-[#E3E3E3] p-5 text-center">
               <img
@@ -73,12 +119,7 @@ function Affiliate() {
               Affiliate link auto generated
             </h3>
             <div className="mt-3 flex">
-              <input
-                className="flex-shrink-1 w-full border-[2px] p-2 text-sm outline-none"
-                type="text"
-                value={`https://mahfujurrahm535.com/?aff-${user?.userName}`}
-                readOnly
-              />
+              <p className="flex-shrink-1 w-full select-none border-[2px] p-2 text-sm outline-none">{`https://mahfujurrahm535.com/?aff-${user?.userName}`}</p>
               <button
                 className="min-w-[100px] bg-secondary p-2 text-white"
                 onClick={copyAffiliateLink}
@@ -96,9 +137,15 @@ function Affiliate() {
               <input
                 className="flex-shrink-1 w-full border-[2px] p-2 text-sm outline-none"
                 type="text"
+                name="link"
+                value={affLink}
+                onChange={(e) => setAffLink(e.target.value)}
                 placeholder="your-custom-text"
               />
-              <button className="min-w-[100px] bg-[#7C7C7C] p-2 text-white">
+              <button
+                onClick={createAffiliateHandler}
+                className="min-w-[100px] bg-[#7C7C7C] p-2 text-white"
+              >
                 Create
               </button>
             </div>
@@ -106,7 +153,7 @@ function Affiliate() {
               <input
                 className="flex-shrink-1 w-full border-[2px] p-2 text-sm outline-none"
                 type="text"
-                placeholder="https://mahfujurrahman535.com/aff-zl/username/"
+                placeholder="https://mahfujurrahman535.com/?aff-your-custom-text"
               />
               <button className="min-w-[100px] bg-primary p-2 text-white">
                 Copy
@@ -123,50 +170,26 @@ function Affiliate() {
                 <h1 className="w-[18%] sm:w-[15%]">Sales</h1>
                 <h1 className="w-[6%] sm:w-[5%]"></h1>
               </li>
-              <li className="mt-3 flex items-center gap-1 border-b border-gray-500 p-1 text-center text-sm sm:gap-2">
-                <p className="w-[40%] break-words text-start sm:w-[50%]">
-                  https://mahfujurrahman535.com/aff-auto/username/
-                </p>
-                <p className="w-[18%] sm:w-[15%]">8</p>
-                <p className="w-[18%] sm:w-[15%]">1</p>
-                <p className="w-[18%] sm:w-[15%]">0</p>
-                <button className="w-[6%] sm:w-[5%]">
-                  <RiDeleteBin6Line className="text-sm" />
-                </button>
-              </li>
-              <li className="mt-3 flex items-center gap-1 border-b border-gray-500 p-1 text-center text-sm sm:gap-2">
-                <p className="w-[40%] break-words text-start sm:w-[50%]">
-                  https://mahfujurrahman535.com/aff-z3/username/
-                </p>
-                <p className="w-[18%] sm:w-[15%]">5</p>
-                <p className="w-[18%] sm:w-[15%]">0</p>
-                <p className="w-[18%] sm:w-[15%]">0</p>
-                <button className="w-[6%] sm:w-[5%]">
-                  <RiDeleteBin6Line className="text-sm" />
-                </button>
-              </li>
-              <li className="mt-3 flex items-center gap-1 border-b border-gray-500 p-1 text-center text-sm sm:gap-2">
-                <p className="w-[40%] break-words text-start sm:w-[50%]">
-                  https://mahfujurrahman535.com/aff-zN/username/
-                </p>
-                <p className="w-[18%] sm:w-[15%]">15</p>
-                <p className="w-[18%] sm:w-[15%]">5</p>
-                <p className="w-[18%] sm:w-[15%]">0</p>
-                <button className="w-[6%] sm:w-[5%]">
-                  <RiDeleteBin6Line className="text-sm" />
-                </button>
-              </li>
-              <li className="mt-3 flex items-center gap-1 border-b border-gray-500 p-1 text-center text-sm sm:gap-2">
-                <p className="w-[40%] break-words text-start sm:w-[50%]">
-                  https://mahfujurrahman535.com/aff-zl/username/
-                </p>
-                <p className="w-[18%] sm:w-[15%]">4</p>
-                <p className="w-[18%] sm:w-[15%]">0</p>
-                <p className="w-[18%] sm:w-[15%]">0</p>
-                <button className="w-[6%] sm:w-[5%]">
-                  <RiDeleteBin6Line className="text-sm" />
-                </button>
-              </li>
+              {affiliateData?.formattedAffiliates.map((aff, idx) => (
+                <li
+                  key={idx}
+                  className="mt-3 flex items-center gap-1 border-b border-gray-500 p-1 text-center text-sm sm:gap-2"
+                >
+                  <p className="w-[40%] break-words text-start sm:w-[50%]">
+                    {`https://mahfujurrahman535.com/?${aff?.links}`}
+                  </p>
+                  <p className="w-[18%] sm:w-[15%]">{aff?.totalClicks}</p>
+                  <p className="w-[18%] sm:w-[15%]">{aff?.join}</p>
+                  <p className="w-[18%] sm:w-[15%]">{aff?.sales}</p>
+                  <button
+                    className="w-[6%] sm:w-[5%]"
+                    type="button"
+                    onClick={() => deleteAffiliateHandler(aff?.links)}
+                  >
+                    <RiDeleteBin6Line className="text-sm" />
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
 
