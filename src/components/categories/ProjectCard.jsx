@@ -19,6 +19,7 @@ function ProjectCard({
   folder,
   slug,
 }) {
+  const { user } = useSelector((state) => state.user);
   const [openPreview, setOpenPreview] = useState(false);
   const dispatch = useDispatch();
   const { items: cartItems } = useSelector((state) => state.cart);
@@ -30,7 +31,8 @@ function ProjectCard({
   return (
     <>
       <div className="relative h-full px-[5px]">
-        {cart &&
+        {!user?.block_for_chat &&
+          cart &&
           (cartItems.some((item) => item?.designId === design?.designId) ? (
             <button
               type="button"
