@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import persistReducer from "redux-persist/es/persistReducer";
 import persistStore from "redux-persist/es/persistStore";
 import storage from "redux-persist/lib/storage";
+import { affiliateApiSlice } from "./api/affiliateApiSlice";
 import { allUserApiSlice } from "./api/allUserApiSlice";
 import { analyticsApiSlice } from "./api/analyticsApiSlice";
 import { apiSlice } from "./api/apiSlice";
@@ -70,6 +71,7 @@ const store = configureStore({
     previewImage: previewImageSlice,
     [dashboardApiSlice.reducerPath]: dashboardApiSlice.reducer,
     [analyticsApiSlice.reducerPath]: analyticsApiSlice.reducer,
+    [affiliateApiSlice.reducerPath]: affiliateApiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -85,6 +87,7 @@ const store = configureStore({
       orderApiSlice.middleware,
       dashboardApiSlice.middleware,
       analyticsApiSlice.middleware,
+      affiliateApiSlice.middleware,
     ),
 });
 
