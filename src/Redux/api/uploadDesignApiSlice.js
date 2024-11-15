@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { configApi } from "../../libs/configApi";
 import Cookies from "js-cookie";
+import { configApi } from "../../libs/configApi";
 
 export const uploadDesignApiSlice = createApi({
   reducerPath: "uploadDesignApi",
@@ -14,12 +14,28 @@ export const uploadDesignApiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Design"],
+  tagTypes: ["Design", "Uploaded Design"],
   endpoints: (builder) => ({
     fetchGetUpload: builder.query({
       query: () => "upload/get",
       transformResponse: (response) => response?.data,
-      providesTags: ["Design"],
+      providesTags: ["Design", "Uploaded Design"],
+    }),
+    uploadADesign: builder.mutation({
+      query: (data) => ({
+        url: `upload/create`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Uploaded Design"],
+    }),
+    updateADesign: builder.mutation({
+      query: ({ data, designId }) => ({
+        url: `upload/update/${designId}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Uploaded Design"],
     }),
     fetchRelatedTags: builder.query({
       query: () => "upload/get",
@@ -108,4 +124,6 @@ export const {
   useFetchDesignNdIndustryByKeyQuery,
   useDeleteDesignByIdMutation,
   useFetchGetAllFoldersQuery,
+  useUploadADesignMutation,
+  useUpdateADesignMutation,
 } = uploadDesignApiSlice;

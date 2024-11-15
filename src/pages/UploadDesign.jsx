@@ -1,6 +1,7 @@
 import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
 import { useEffect, useMemo, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { FaSpinner } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +12,7 @@ import {
   useFetchIndustriesQuery,
   useFetchRelatedTagsQuery,
   useFetchSubFoldersQuery,
+  useUploadADesignMutation,
 } from "../Redux/api/uploadDesignApiSlice";
 import { fetchCategory } from "../Redux/features/category/categoryApi";
 import Check from "../assets/svg/Check";
@@ -22,6 +24,8 @@ function UploadDesign() {
   const dispatch = useDispatch();
   const { loading, category, error } = useSelector((state) => state.category);
   const [submitLoading, setSubmitLoading] = useState(false);
+
+  const [uploadADesign] = useUploadADesignMutation();
 
   // initial state of form
   const [form, setForm] = useState({
@@ -381,36 +385,45 @@ function UploadDesign() {
   const handleSubmit = async (e) => {
     setSubmitLoading(true);
     e.preventDefault();
-    const imagesPromise = matchingImages?.map(async (file) => {
-      if (file.file) {
-        const formData = new FormData();
-        // formData.append("fileName", file.file);
-        formData.append("files", file.file);
+    const imagesArray = matchingImages?.map((file) => file.file);
 
-        // const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
-        // const uploadUrl = `${configApi.api}upload-image`;
-        const uploadUrl = `${configApi.api}upload-attachment`;
-        try {
-          // setUploading(true);
-          const response = await axios.post(uploadUrl, formData);
-          const name = response.data.data.file.originalName;
-          const imageUrl = response.data.data.file.url;
-
-          return {
-            url: imageUrl,
-            name,
-            thumbnail: file.thumbnail,
-          };
-        } catch (error) {
-          console.error("Error uploading image:", error);
-          // You can use a library like react-toastify to display error messages
-          // toast.error("Failed to upload image");
-        } finally {
-          // setUploading(false);
+    let imagesRes = null;
+    try {
+      const formData = new FormData();
+      // Append each file in the array individually
+      imagesArray.forEach((file) => {
+        formData.append("files", file); // Optionally, you can add a second argument with a filename like so: `formData.append("files", file, file.name)`
+      });
+      console.log("form data", formData);
+      const uploadUrl = `${configApi.api}upload-attachment-optimized`;
+      const response = await axios.post(uploadUrl, formData);
+      if (response.data.success) {
+        if (response.data.data.files) {
+          imagesRes = response.data.data.files.map((file) => ({
+            url: file.optimizedUrl,
+            watermark: file.url,
+            name: file.originalName,
+          }));
+        } else {
+          imagesRes = [
+            {
+              url: response.data.data.file.optimizedUrl,
+              watermark: response.data.data.file.url,
+              name: response.data.data.file.originalName,
+            },
+          ];
         }
       }
-    });
-    const images = await Promise.all(imagesPromise);
+      console.log("Images Response", response);
+    } catch (error) {
+      console.log("image array", error);
+    }
+
+    const images = imagesRes.map((image, index) => ({
+      ...image, // Spread the properties of the image object
+      thumbnail: matchingImages[index]?.thumbnail, // Add the thumbnail property from thumbnailsArray
+    }));
+
     console.log(images);
     if (images) {
       const data = {
@@ -430,12 +443,10 @@ function UploadDesign() {
       };
       console.log(data);
       try {
-        const url = `${configApi.api}upload/create`;
+        const response = await uploadADesign(data).unwrap();
 
-        const response = await axios.post(url, data);
-
-        if (response.data.success) {
-          console.log(response.data);
+        if (response.success) {
+          toast.success("Design Uploaded Successfully!!!");
           navigate("/");
         }
       } catch (error) {

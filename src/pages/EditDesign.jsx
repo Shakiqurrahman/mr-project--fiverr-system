@@ -11,6 +11,7 @@ import {
   useFetchIndustriesQuery,
   useFetchRelatedTagsQuery,
   useFetchSubFoldersQuery,
+  useUpdateADesignMutation,
 } from "../Redux/api/uploadDesignApiSlice";
 import { fetchCategory } from "../Redux/features/category/categoryApi";
 import Check from "../assets/svg/Check";
@@ -23,6 +24,8 @@ function EditDesign() {
   const dispatch = useDispatch();
   const { loading, category } = useSelector((state) => state.category);
   const [submitLoading, setSubmitLoading] = useState(false);
+
+  const [updateADesign] = useUpdateADesignMutation();
 
   useEffect(() => {
     if (state === null) {
@@ -125,6 +128,8 @@ function EditDesign() {
   }, [state?.images]);
   const [matchingImages, setMatchingImages] = useState(prevImages || []);
   // const [errorImg, setErrorImg] = useState(null);
+
+  console.log(prevImages);
 
   const getImagesWithDimensions = (files) => {
     const images = [];
@@ -409,38 +414,48 @@ function EditDesign() {
     const withoutFiles = matchingImages
       .filter((file) => !file.file)
       ?.map(({ value, ...rest }) => rest);
-    const withFiles = matchingImages.filter((file) => file.file);
-    const imagesPromise = withFiles?.map(async (file) => {
-      if (file.file) {
-        const formData = new FormData();
-        // formData.append("image", file.file);
-        formData.append("files", file.file);
-
-        // const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
-        // const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
-        const uploadUrl = `${configApi.api}upload-attachment`;
-        try {
-          // setUploading(true);
-          const response = await axios.post(uploadUrl, formData);
-          const name = response.data.data.file.originalName;
-          const imageUrl = response.data.data.file.url;
-
-          return {
-            url: imageUrl,
-            name,
-            thumbnail: file.thumbnail,
-          };
-        } catch (error) {
-          console.error("Error uploading image:", error);
-          // You can use a library like react-toastify to display error messages
-          // toast.error("Failed to upload image");
-        } finally {
-          // setUploading(false);
+    const withFiles = matchingImages
+      .filter((file) => file.file)
+      .map((file) => file.file);
+    console.log(withFiles, withoutFiles);
+    let withFilesRes = null;
+    try {
+      const formData = new FormData();
+      // Append each file in the array individually
+      withFiles.forEach((file) => {
+        formData.append("files", file); // Optionally, you can add a second argument with a filename like so: `formData.append("files", file, file.name)`
+      });
+      console.log("form data", formData);
+      const uploadUrl = `${configApi.api}upload-attachment-optimized`;
+      const response = await axios.post(uploadUrl, formData);
+      if (response.data.success) {
+        if (response.data.data.files) {
+          withFilesRes = response.data.data.files.map((file) => ({
+            url: file.optimizedUrl,
+            watermark: file.url,
+            name: file.originalName,
+          }));
+        } else {
+          withFilesRes = [
+            {
+              url: response.data.data.file.optimizedUrl,
+              watermark: response.data.data.file.url,
+              name: response.data.data.file.originalName,
+            },
+          ];
         }
       }
-    });
-    const withFileImages = await Promise.all(imagesPromise);
-    const images = [...withoutFiles, ...withFileImages];
+      console.log("Images Response", response);
+    } catch (error) {
+      console.log("image array", error);
+    }
+    const imagesArrWithFiles = withFilesRes.map((image, index) => ({
+      ...image, // Spread the properties of the image object
+      thumbnail: withFiles[index]?.thumbnail, // Add the thumbnail property from thumbnailsArray
+    }));
+    const images = [...withoutFiles, ...imagesArrWithFiles];
+
+    console.log("Full Image array", images);
     if (images) {
       const data = {
         title: form.title,
@@ -458,11 +473,12 @@ function EditDesign() {
         designs,
       };
       try {
-        const url = `${configApi.api}upload/update/${state.designId}`;
+        const response = await updateADesign({
+          data,
+          designId: state?.designId,
+        }).unwrap();
 
-        const response = await axios.put(url, data);
-
-        if (response.data.success) {
+        if (response.success) {
           console.log(response.data);
           navigate(`/design/${state.designId}`);
         }
