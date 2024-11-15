@@ -1,6 +1,7 @@
 import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
 import { useEffect, useMemo, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { FaSpinner } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
@@ -417,7 +418,6 @@ function EditDesign() {
     const withFiles = matchingImages
       .filter((file) => file.file)
       .map((file) => file.file);
-    console.log(withFiles, withoutFiles);
     let withFilesRes = null;
     try {
       const formData = new FormData();
@@ -425,7 +425,6 @@ function EditDesign() {
       withFiles.forEach((file) => {
         formData.append("files", file); // Optionally, you can add a second argument with a filename like so: `formData.append("files", file, file.name)`
       });
-      console.log("form data", formData);
       const uploadUrl = `${configApi.api}upload-attachment-optimized`;
       const response = await axios.post(uploadUrl, formData);
       if (response.data.success) {
@@ -445,7 +444,6 @@ function EditDesign() {
           ];
         }
       }
-      console.log("Images Response", response);
     } catch (error) {
       console.log("image array", error);
     }
@@ -455,7 +453,6 @@ function EditDesign() {
     }));
     const images = [...withoutFiles, ...imagesArrWithFiles];
 
-    console.log("Full Image array", images);
     if (images) {
       const data = {
         title: form.title,
@@ -479,7 +476,7 @@ function EditDesign() {
         }).unwrap();
 
         if (response.success) {
-          console.log(response.data);
+          toast.success("Design Updated Successfully!!!");
           navigate(`/design/${state.designId}`);
         }
       } catch (error) {

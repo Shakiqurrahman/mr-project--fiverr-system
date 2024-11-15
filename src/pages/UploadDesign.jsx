@@ -394,7 +394,6 @@ function UploadDesign() {
       imagesArray.forEach((file) => {
         formData.append("files", file); // Optionally, you can add a second argument with a filename like so: `formData.append("files", file, file.name)`
       });
-      console.log("form data", formData);
       const uploadUrl = `${configApi.api}upload-attachment-optimized`;
       const response = await axios.post(uploadUrl, formData);
       if (response.data.success) {
@@ -414,7 +413,6 @@ function UploadDesign() {
           ];
         }
       }
-      console.log("Images Response", response);
     } catch (error) {
       console.log("image array", error);
     }
@@ -424,7 +422,6 @@ function UploadDesign() {
       thumbnail: matchingImages[index]?.thumbnail, // Add the thumbnail property from thumbnailsArray
     }));
 
-    console.log(images);
     if (images) {
       const data = {
         title: form.title,
@@ -441,7 +438,6 @@ function UploadDesign() {
         industries,
         designs,
       };
-      console.log(data);
       try {
         const response = await uploadADesign(data).unwrap();
 
