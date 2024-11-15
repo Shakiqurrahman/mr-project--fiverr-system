@@ -43,7 +43,7 @@ function Contact() {
       formData.append("files", file);
 
       // const uploadUrl = `${configApi.api}upload-image`;
-      const uploadUrl = `${configApi.api}upload-attachment`;
+      const uploadUrl = `${configApi.api}upload-attachment-optimized`;
 
       const uploadData = {
         name: file.name,
@@ -59,6 +59,7 @@ function Contact() {
       try {
         const response = await axios.post(uploadUrl, formData, {
           onUploadProgress: (data) => {
+            console.log(data);
             const percentage = Math.round((data.loaded / data.total) * 100);
             setMatchingImages((prev) => {
               const newImages = [...prev];
@@ -70,8 +71,8 @@ function Contact() {
         console.log(response);
 
         // Update image data upon successful upload
-        const imageUrl = response.data.data[0].result.url;
-        const fileFormat = response.data.data[0].result.format;
+        const imageUrl = response.data.data.file.optimizedUrl;
+        const fileFormat = response.data.data.file.fileType;
         setMatchingImages((prev) => {
           const newImages = [...prev];
           newImages[index] = {
@@ -137,102 +138,108 @@ function Contact() {
         free to contact us by filling out this form.
       </h1>
 
-      <form
-        onSubmit={handleSubmit}
-        className="mx-auto mt-10 max-w-[800px] rounded-xl bg-lightskyblue p-5"
-      >
-        <input
-          className="mt-5 block w-full border border-solid border-gray-400 p-3 text-base outline-0"
-          type="text"
-          name="name"
-          value={value.name}
-          placeholder="Name"
-          onChange={handleChange}
-        />
-        <input
-          className="mt-5 block w-full border border-solid border-gray-400 p-3 text-base outline-0"
-          type="email"
-          name="email"
-          value={value.email}
-          placeholder="Email"
-          onChange={handleChange}
-        />
-        <input
-          className="mt-5 block w-full border border-solid border-gray-400 p-3 text-base outline-0"
-          type="text"
-          name="link"
-          value={value.link}
-          placeholder="Website/Facebook"
-          onChange={handleChange}
-        />
-        <input
-          name="file"
-          type="file"
-          multiple
-          id="file"
-          hidden
-          ref={fileInputRef} // Attach the ref to the file input
-          onChange={handleFileChange}
-        />
-        <label
-          className="mt-5 flex w-full cursor-pointer items-center justify-between border border-solid border-gray-400 bg-white p-3"
-          htmlFor="file"
+      {user?.block_for_chat ? (
+        <p className="mt-10 text-center text-lg font-semibold text-revision">
+          You are not able to submit a contact form!!!
+        </p>
+      ) : (
+        <form
+          onSubmit={handleSubmit}
+          className="mx-auto mt-10 max-w-[800px] rounded-xl bg-lightskyblue p-5"
         >
-          <span className="text-gray-400">Example design</span>
-          <CgAttachment className="text-gray-400" />
-        </label>
-
-        <div className="preview-scroll-overflow-x mt-5 flex gap-2">
-          {matchingImages.map((image, index) => (
-            <div key={index} className="w-[120px]">
-              <div className="group relative">
-                {image.url ? (
-                  <FilePreview file={image} />
-                ) : (
-                  <div className="flex h-[100px] items-center justify-center bg-lightcream">
-                    <CircleProgressBar
-                      precentage={image.progress}
-                      circleWidth={50}
-                    />
-                  </div>
-                )}
-                {(image?.url || image?.progress === 100) && (
-                  <button
-                    type="button"
-                    className="absolute right-2 top-2 rounded-full bg-black bg-opacity-50 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
-                    onClick={() => handleImageRemove(index)}
-                  >
-                    <RiDeleteBin6Line size={20} />
-                  </button>
-                )}
-              </div>
-              <h1 className="truncate text-xs font-medium" title={image.name}>
-                {image.name}
-              </h1>
-              <span className="text-xs">({formatFileSize(image.size)})</span>
-            </div>
-          ))}
-        </div>
-
-        <textarea
-          name="Message"
-          className="cusotomTextarea mt-5 h-auto min-h-[100px] w-full border border-solid border-gray-400 p-3 text-base outline-none"
-          value={value.Message}
-          onChange={handleChange}
-          placeholder="Message"
-          ref={textarea}
-          onKeyUp={handleKeyUp}
-        ></textarea>
-
-        <div className="mt-5 text-center">
-          <button
-            type="submit"
-            className="scro w-[200px] bg-[#248EDA] p-3 text-[20px] font-medium text-white"
+          <input
+            className="mt-5 block w-full border border-solid border-gray-400 p-3 text-base outline-0"
+            type="text"
+            name="name"
+            value={value.name}
+            placeholder="Name"
+            onChange={handleChange}
+          />
+          <input
+            className="mt-5 block w-full border border-solid border-gray-400 p-3 text-base outline-0"
+            type="email"
+            name="email"
+            value={value.email}
+            placeholder="Email"
+            onChange={handleChange}
+          />
+          <input
+            className="mt-5 block w-full border border-solid border-gray-400 p-3 text-base outline-0"
+            type="text"
+            name="link"
+            value={value.link}
+            placeholder="Website/Facebook"
+            onChange={handleChange}
+          />
+          <input
+            name="file"
+            type="file"
+            multiple
+            id="file"
+            hidden
+            ref={fileInputRef} // Attach the ref to the file input
+            onChange={handleFileChange}
+          />
+          <label
+            className="mt-5 flex w-full cursor-pointer items-center justify-between border border-solid border-gray-400 bg-white p-3"
+            htmlFor="file"
           >
-            SUBMIT
-          </button>
-        </div>
-      </form>
+            <span className="text-gray-400">Example design</span>
+            <CgAttachment className="text-gray-400" />
+          </label>
+
+          <div className="preview-scroll-overflow-x mt-5 flex gap-2">
+            {matchingImages.map((image, index) => (
+              <div key={index} className="w-[120px]">
+                <div className="group relative">
+                  {image.url ? (
+                    <FilePreview file={image} />
+                  ) : (
+                    <div className="flex h-[100px] items-center justify-center bg-lightcream">
+                      <CircleProgressBar
+                        precentage={image.progress}
+                        circleWidth={50}
+                      />
+                    </div>
+                  )}
+                  {(image?.url || image?.progress === 100) && (
+                    <button
+                      type="button"
+                      className="absolute right-2 top-2 rounded-full bg-black bg-opacity-50 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                      onClick={() => handleImageRemove(index)}
+                    >
+                      <RiDeleteBin6Line size={20} />
+                    </button>
+                  )}
+                </div>
+                <h1 className="truncate text-xs font-medium" title={image.name}>
+                  {image.name}
+                </h1>
+                <span className="text-xs">({formatFileSize(image.size)})</span>
+              </div>
+            ))}
+          </div>
+
+          <textarea
+            name="Message"
+            className="cusotomTextarea mt-5 h-auto min-h-[100px] w-full border border-solid border-gray-400 p-3 text-base outline-none"
+            value={value.Message}
+            onChange={handleChange}
+            placeholder="Message"
+            ref={textarea}
+            onKeyUp={handleKeyUp}
+          ></textarea>
+
+          <div className="mt-5 text-center">
+            <button
+              type="submit"
+              className="scro w-[200px] bg-[#248EDA] p-3 text-[20px] font-medium text-white"
+            >
+              SUBMIT
+            </button>
+          </div>
+        </form>
+      )}
     </div>
   );
 }
