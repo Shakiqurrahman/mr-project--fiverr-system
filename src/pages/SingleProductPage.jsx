@@ -4,16 +4,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Slider from "react-slick";
 import Swal from "sweetalert2";
-import LeftArrowIcon from "../assets/images/icons/Left Arrow.svg";
-import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
-import Divider from "../components/Divider";
-import RelatedDesigns from "../components/RelatedDesigns";
 import {
   useDeleteDesignByIdMutation,
   useFetchGetUploadQuery,
 } from "../Redux/api/uploadDesignApiSlice";
 import { addToCart, removeFromCart } from "../Redux/features/cartSlice";
 import { setPreviewImage } from "../Redux/features/previewImageSlice";
+import LeftArrowIcon from "../assets/images/icons/Left Arrow.svg";
+import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
+import Divider from "../components/Divider";
+import RelatedDesigns from "../components/RelatedDesigns";
 
 function SingleProductPage() {
   const { slug } = useParams();
@@ -200,28 +200,38 @@ function SingleProductPage() {
                 <b>Subcategory:</b> {design?.subCategory}
               </li>
             </ul>
-            {cartItems.some((item) => item?.designId === design?.designId) ? (
-              <button
-                className="w-full rounded-[30px] bg-red-800 p-2 font-medium text-white sm:p-3"
-                onClick={() => dispatch(removeFromCart(design.designId))}
-              >
-                REMOVE FROM CART
-              </button>
+            {user?.block_for_chat ? (
+              <p className="text-lg font-medium text-revision">
+                Your are not able to start this project!
+              </p>
             ) : (
-              <button
-                className="w-full rounded-[30px] bg-[#f1592a] p-2 font-medium text-white sm:p-3"
-                onClick={() => dispatch(addToCart(design))}
-              >
-                ADD TO CART
-              </button>
+              <>
+                {cartItems.some(
+                  (item) => item?.designId === design?.designId,
+                ) ? (
+                  <button
+                    className="w-full rounded-[30px] bg-red-800 p-2 font-medium text-white sm:p-3"
+                    onClick={() => dispatch(removeFromCart(design.designId))}
+                  >
+                    REMOVE FROM CART
+                  </button>
+                ) : (
+                  <button
+                    className="w-full rounded-[30px] bg-[#f1592a] p-2 font-medium text-white sm:p-3"
+                    onClick={() => dispatch(addToCart(design))}
+                  >
+                    ADD TO CART
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className="mt-5 w-full rounded-[30px] bg-primary p-2 font-medium text-white sm:p-3"
+                  onClick={handleStartProject}
+                >
+                  PROJECT START
+                </button>
+              </>
             )}
-            <button
-              type="button"
-              className="mt-5 w-full rounded-[30px] bg-primary p-2 font-medium text-white sm:p-3"
-              onClick={handleStartProject}
-            >
-              PROJECT START
-            </button>
           </div>
         </div>
         <div
