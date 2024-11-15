@@ -10,6 +10,7 @@ import {
 } from "chart.js";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
+import { useLazyGetVisitorsByFilterQuery } from "../../../Redux/api/analyticsApiSlice";
 
 ChartJS.register(
   LineElement,
@@ -56,6 +57,11 @@ const VisitorLineChart = ({
   const [newVisitors, setNewVisitors] = useState([]);
   const [returningVisitors, setReturningVisitors] = useState([]);
 
+  const [getAllVisitorsByTime, { data: visitorsData }] =
+    useLazyGetVisitorsByFilterQuery();
+
+  console.log(visitorsData);
+
   const generateLabels = (option) => {
     const currentDate = new Date();
     const labels = [];
@@ -69,9 +75,11 @@ const VisitorLineChart = ({
           const date = new Date(currentDate);
           date.setDate(currentDate.getDate() - i);
 
-          totalVisitors.push(Math.floor(Math.random() * 200));
-          newVisitors.push(Math.floor(Math.random() * 200));
-          returningVisitors.push(Math.floor(Math.random() * 200));
+          totalVisitors.push(Math.floor(visitorsData?.totalVisitors || 0));
+          newVisitors.push(Math.floor(visitorsData?.newVisitors || 0));
+          returningVisitors.push(
+            Math.floor(visitorsData?.ReturningVisitors || 0),
+          );
 
           labels.push(
             date.toLocaleDateString("en-US", {
@@ -88,9 +96,9 @@ const VisitorLineChart = ({
           const date = new Date(currentDate);
           date.setDate(currentDate.getDate() - i);
 
-          totalVisitors.push(Math.floor(Math.random() * 200));
-          newVisitors.push(Math.floor(Math.random() * 200));
-          returningVisitors.push(Math.floor(Math.random() * 200));
+          totalVisitors.push(Math.floor(visitorsData?.totalVisitors || 0));
+          newVisitors.push(Math.floor(visitorsData?.totalVisitors || 0));
+          returningVisitors.push(Math.floor(visitorsData?.totalVisitors || 0));
 
           labels.push(
             date.toLocaleDateString("en-US", {
@@ -119,9 +127,9 @@ const VisitorLineChart = ({
             lastMonth.getMonth(),
             i,
           );
-          totalVisitors.push(Math.floor(Math.random() * 200));
-          newVisitors.push(Math.floor(Math.random() * 200));
-          returningVisitors.push(Math.floor(Math.random() * 200));
+          totalVisitors.push(Math.floor(visitorsData?.totalVisitors || 0));
+          newVisitors.push(Math.floor(visitorsData?.totalVisitors || 0));
+          returningVisitors.push(Math.floor(visitorsData?.totalVisitors || 0));
 
           labels.push(
             date.toLocaleDateString("en-US", {
@@ -146,7 +154,10 @@ const VisitorLineChart = ({
 
   useEffect(() => {
     generateLabels(selectedTimeOption);
-  }, [selectedTimeOption]);
+    if (selectedTimeOption) {
+      getAllVisitorsByTime({ date: selectedTimeOption });
+    }
+  }, [selectedTimeOption, getAllVisitorsByTime]);
 
   const data = {
     labels: labels,
