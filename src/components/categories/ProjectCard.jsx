@@ -9,6 +9,7 @@ import { setPreviewImage } from "../../Redux/features/previewImageSlice";
 
 function ProjectCard({
   thumbnail,
+  watermark,
   thumbnailName,
   title,
   design,
@@ -26,7 +27,7 @@ function ProjectCard({
 
   const handlePreviewImage = (e) => {
     e.preventDefault();
-    dispatch(setPreviewImage(thumbnail));
+    dispatch(setPreviewImage(watermark));
   };
   return (
     <>

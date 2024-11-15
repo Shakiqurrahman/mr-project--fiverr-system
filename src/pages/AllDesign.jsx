@@ -76,6 +76,7 @@ function AllDesign() {
                 cart={true}
                 key={design.id}
                 thumbnail={thumbnail.url}
+                watermark={thumbnail?.watermark}
                 thumbnailName={thumbnail.name}
                 title={design.title}
                 design={design}

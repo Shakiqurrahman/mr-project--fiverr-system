@@ -165,20 +165,20 @@ function SingleProductPage() {
           <div className="w-full md:w-2/3 lg:w-3/4">
             {images?.length === 1 ? (
               <img
-                src={images[0].url}
+                src={images[0].watermark}
                 alt=""
                 className="w-full cursor-pointer object-cover"
-                onClick={(e) => handlePreviewImage(e, images[0]?.url)}
+                onClick={(e) => handlePreviewImage(e, images[0]?.watermark)}
               />
             ) : (
               <Slider {...settings}>
                 {images?.map((image, i) => (
                   <img
                     key={i}
-                    src={image.url}
+                    src={image?.watermark}
                     alt=""
                     className="w-full cursor-pointer object-cover"
-                    onClick={(e) => handlePreviewImage(e, image?.url)}
+                    onClick={(e) => handlePreviewImage(e, image?.watermark)}
                   />
                 ))}
               </Slider>
