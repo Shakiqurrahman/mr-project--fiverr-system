@@ -143,6 +143,19 @@ export const inboxApiSlice = createApi({
       }),
       invalidatesTags: ["availablechatusers"],
     }),
+
+    // custom offer image api slice
+    fetchCustomOfferImage: builder.query({
+      query: () => "image/get",
+      transformResponse: (response) => response?.data?.image,
+    }),
+    updateCustomOfferImage: builder.mutation({
+      query: (data) => ({
+        url: "image/create",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -162,4 +175,6 @@ export const {
   useBlockAUserConversationMutation,
   useArchiveAUserConversationMutation,
   useBookmarkAUserConversationMutation,
+  useFetchCustomOfferImageQuery,
+  useUpdateCustomOfferImageMutation,
 } = inboxApiSlice;

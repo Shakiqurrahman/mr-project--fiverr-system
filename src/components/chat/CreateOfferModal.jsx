@@ -1,11 +1,18 @@
-import { useRef, useState } from "react";
+import axios from "axios";
+import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { ImPlus } from "react-icons/im";
 import { IoIosArrowDown, IoIosArrowUp, IoIosAttach } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
+import {
+  useFetchCustomOfferImageQuery,
+  useSendAMessageMutation,
+  useUpdateCustomOfferImageMutation,
+} from "../../Redux/api/inboxApiSlice";
 import thumbnailDemo from "../../assets/images/project-thumbnail.jpg";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import { useSendAMessageMutation } from "../../Redux/api/inboxApiSlice";
+import { configApi } from "../../libs/configApi";
 
 const CreateOfferModal = ({
   handleClose,
@@ -14,6 +21,8 @@ const CreateOfferModal = ({
   reply,
   setReplyTo,
 }) => {
+  const { data: imageObject } = useFetchCustomOfferImageQuery();
+  const [updateImage] = useUpdateCustomOfferImageMutation();
   const { conversationUser } = useSelector((state) => state.chat);
   const [sendAMessage] = useSendAMessageMutation();
   const { user } = useSelector((state) => state.user);
@@ -25,7 +34,7 @@ const CreateOfferModal = ({
     thumbnail: null,
     title: "",
     deliveryCount: "",
-    deliveryWay: "hours",
+    deliveryWay: "day",
     price: "",
     desc: "",
   });
@@ -37,10 +46,30 @@ const CreateOfferModal = ({
     "",
   ]);
 
-  const handleImageChange = (e) => {
+  useEffect(() => {
+    if (imageObject) {
+      setForm((prev) => ({ ...prev, thumbnail: imageObject.url }));
+    }
+  }, [imageObject]);
+
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    const url = URL.createObjectURL(file);
-    setForm((prev) => ({ ...prev, thumbnail: url }));
+    try {
+      const formData = new FormData();
+      // formData.append("fileName", file.file);
+      formData.append("files", file);
+
+      // const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
+      // const uploadUrl = `${configApi.api}upload-image`;
+      const uploadUrl = `${configApi.api}upload-attachment-optimized`;
+      const res = await axios.post(uploadUrl, formData);
+      if (res?.data?.success) {
+        const url = res.data.data.file.optimizedUrl;
+        setForm((prev) => ({ ...prev, thumbnail: url }));
+      }
+    } catch {
+      toast.error("Image Upload Failed!");
+    }
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -68,6 +97,9 @@ const CreateOfferModal = ({
     const { title, thumbnail, price, deliveryCount, desc } = form;
     e.preventDefault();
     if (values && title && thumbnail && price && deliveryCount && desc) {
+      const imageObj = {
+        url: form.thumbnail,
+      };
       const formData = {
         ...form,
         requirements,
@@ -85,20 +117,25 @@ const CreateOfferModal = ({
           userId: conversationUser,
           ...offerMessage,
         });
-        const res = await sendAMessage({
-          recipientId: conversationUser,
-          ...offerMessage,
-        }).unwrap();
-        console.log(res);
-        setForm({
-          thumbnail: null,
-          title: "",
-          deliveryCount: "",
-          deliveryWay: "hours",
-          price: "",
-          desc: "",
-        });
-        setReplyTo(null);
+        try {
+          await updateImage(imageObj);
+          const res = await sendAMessage({
+            recipientId: conversationUser,
+            ...offerMessage,
+          }).unwrap();
+          console.log(res);
+          setForm({
+            thumbnail: null,
+            title: "",
+            deliveryCount: "",
+            deliveryWay: "day",
+            price: "",
+            desc: "",
+          });
+          setReplyTo(null);
+        } catch (error) {
+          console.log(error);
+        }
       }
 
       handleClose(false);
@@ -165,7 +202,6 @@ const CreateOfferModal = ({
                   onChange={handleChange}
                   className="block p-2 font-semibold outline-none"
                 >
-                  <option value="hours">hours</option>
                   <option value="day">day</option>
                   <option value="days">days</option>
                 </select>
