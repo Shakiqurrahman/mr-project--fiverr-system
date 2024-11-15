@@ -412,46 +412,117 @@ function EditDesign() {
   const handleSubmit = async (e) => {
     setSubmitLoading(true);
     e.preventDefault();
-    const withoutFiles = matchingImages
+    // const withoutFiles = matchingImages
+    //   .filter((file) => !file.file)
+    //   ?.map(({ value, ...rest }) => rest);
+    // const withFiles = matchingImages
+    //   .filter((file) => file.file)
+    //   .map((file) => file.file);
+    // let withFilesRes = null;
+    // try {
+    //   const formData = new FormData();
+    //   // Append each file in the array individually
+    //   withFiles.forEach((file) => {
+    //     formData.append("files", file); // Optionally, you can add a second argument with a filename like so: `formData.append("files", file, file.name)`
+    //   });
+    //   const uploadUrl = `${configApi.api}upload-attachment-optimized`;
+    //   const response = await axios.post(uploadUrl, formData);
+    //   if (response.data.success) {
+    //     if (response.data.data.files) {
+    //       withFilesRes = response.data.data.files.map((file) => ({
+    //         url: file.optimizedUrl,
+    //         watermark: file.url,
+    //         name: file.originalName,
+    //       }));
+    //     } else {
+    //       withFilesRes = [
+    //         {
+    //           url: response.data.data.file.optimizedUrl,
+    //           watermark: response.data.data.file.url,
+    //           name: response.data.data.file.originalName,
+    //         },
+    //       ];
+    //     }
+    //   }
+    // } catch (error) {
+    //   console.log("image array", error);
+    // }
+    // const imagesArrWithFiles = withFilesRes.map((image, index) => ({
+    //   ...image, // Spread the properties of the image object
+    //   thumbnail: withFiles[index]?.thumbnail, // Add the thumbnail property from thumbnailsArray
+    // }));
+    // const images = [...withoutFiles, ...imagesArrWithFiles];
+
+    const imagesToRemove = [];
+    const newImagesToAdd = [];
+
+    const updatedMatchingImages = matchingImages.filter((image) => {
+      return !imagesToRemove.some(
+        (removeImage) => removeImage.name === image.name,
+      );
+    });
+
+    const withoutFiles = updatedMatchingImages
       .filter((file) => !file.file)
       ?.map(({ value, ...rest }) => rest);
-    const withFiles = matchingImages
+
+    const withFiles = updatedMatchingImages
       .filter((file) => file.file)
       .map((file) => file.file);
+
     let withFilesRes = null;
-    try {
-      const formData = new FormData();
-      // Append each file in the array individually
-      withFiles.forEach((file) => {
-        formData.append("files", file); // Optionally, you can add a second argument with a filename like so: `formData.append("files", file, file.name)`
-      });
-      const uploadUrl = `${configApi.api}upload-attachment-optimized`;
-      const response = await axios.post(uploadUrl, formData);
-      if (response.data.success) {
-        if (response.data.data.files) {
-          withFilesRes = response.data.data.files.map((file) => ({
-            url: file.optimizedUrl,
-            watermark: file.url,
-            name: file.originalName,
-          }));
-        } else {
-          withFilesRes = [
-            {
-              url: response.data.data.file.optimizedUrl,
-              watermark: response.data.data.file.url,
-              name: response.data.data.file.originalName,
-            },
-          ];
+    if (withFiles?.length > 0) {
+      try {
+        const formData = new FormData();
+        withFiles.forEach((file) => {
+          formData.append("files", file);
+        });
+        const uploadUrl = `${configApi.api}upload-attachment-optimized`;
+        const response = await axios.post(uploadUrl, formData);
+        if (response.data.success) {
+          if (response.data.data.files) {
+            withFilesRes = response.data.data.files.map((file) => ({
+              url: file.optimizedUrl,
+              watermark: file.url,
+              name: file.originalName,
+            }));
+          } else {
+            withFilesRes = [
+              {
+                url: response.data.data.file.optimizedUrl,
+                watermark: response.data.data.file.url,
+                name: response.data.data.file.originalName,
+              },
+            ];
+          }
         }
+      } catch (error) {
+        console.log("image array", error);
       }
-    } catch (error) {
-      console.log("image array", error);
     }
-    const imagesArrWithFiles = withFilesRes.map((image, index) => ({
-      ...image, // Spread the properties of the image object
-      thumbnail: withFiles[index]?.thumbnail, // Add the thumbnail property from thumbnailsArray
+
+    if (newImagesToAdd.length > 0) {
+      const newImagesWithFiles = newImagesToAdd.map((newImage) => ({
+        url: newImage.optimizedUrl,
+        watermark: newImage.url,
+        name: newImage.originalName,
+        thumbnail: newImage.thumbnail,
+      }));
+
+      withFilesRes = withFilesRes
+        ? [...withFilesRes, ...newImagesWithFiles]
+        : newImagesWithFiles;
+    }
+
+    const imagesArrWithFiles = withFilesRes?.map((image, index) => ({
+      ...image,
+      thumbnail: withFiles[index]?.thumbnail,
     }));
-    const images = [...withoutFiles, ...imagesArrWithFiles];
+
+    const images =
+      imagesArrWithFiles?.length > 0
+        ? [...withoutFiles, ...imagesArrWithFiles]
+        : [...withoutFiles];
 
     if (images) {
       const data = {
