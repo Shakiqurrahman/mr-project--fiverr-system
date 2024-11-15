@@ -34,7 +34,7 @@ const CreateOfferModal = ({
     thumbnail: null,
     title: "",
     deliveryCount: "",
-    deliveryWay: "day",
+    deliveryWay: "hours",
     price: "",
     desc: "",
   });
@@ -128,7 +128,7 @@ const CreateOfferModal = ({
             thumbnail: null,
             title: "",
             deliveryCount: "",
-            deliveryWay: "day",
+            deliveryWay: "hours",
             price: "",
             desc: "",
           });
@@ -202,6 +202,7 @@ const CreateOfferModal = ({
                   onChange={handleChange}
                   className="block p-2 font-semibold outline-none"
                 >
+                  <option value="hours">hours</option>
                   <option value="day">day</option>
                   <option value="days">days</option>
                 </select>

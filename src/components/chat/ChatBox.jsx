@@ -424,6 +424,7 @@ const ChatBox = ({ openToggle }) => {
       isFastDelivery: false,
       projectImage: offerObj?.thumbnail,
       projectType: "CUSTOM",
+      deliveryWay: offerObj?.deliveryWay,
     };
     navigate("/payment", { state: data });
   };
