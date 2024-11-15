@@ -65,6 +65,7 @@ function SignUpForm({ handleClick }) {
   const onSubmit = async (data) => {
     try {
       setLoading(true);
+      const affiliateURL = localStorage.getItem("aff-query") || "";
       const api = `${configApi.api}sign-up`;
 
       const response = await axios.post(api, {
@@ -73,6 +74,7 @@ function SignUpForm({ handleClick }) {
         email: data.email,
         country: data.country,
         password: data.password,
+        affiliate_link: affiliateURL,
       });
 
       if (response.data.success) {
@@ -198,7 +200,7 @@ function SignUpForm({ handleClick }) {
 
         <button
           type="submit"
-          className={`mt-5 mb-1 flex h-[45px] w-full items-center justify-center bg-primary py-2 text-lg font-medium text-white disabled:cursor-not-allowed`}
+          className={`mb-1 mt-5 flex h-[45px] w-full items-center justify-center bg-primary py-2 text-lg font-medium text-white disabled:cursor-not-allowed`}
           disabled={loading}
         >
           {loading ? (

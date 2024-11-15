@@ -1,11 +1,13 @@
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import useSaveAffiliate from "../hooks/useSaveAffiliate";
 import { useFetchUserDataQuery } from "../Redux/api/apiSlice";
 import { logout, setUser } from "../Redux/features/userSlice";
 import { disconnectSocket } from "./socketService";
 
 const AuthWrapper = ({ children }) => {
+  useSaveAffiliate();
   const dispatch = useDispatch();
   const { data: user, error } = useFetchUserDataQuery(null, {
     skip: !Cookies.get("authToken"),
