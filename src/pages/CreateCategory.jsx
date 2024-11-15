@@ -5,15 +5,16 @@ import { FaEye } from "react-icons/fa";
 import { ImPlus } from "react-icons/im";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import PreviewImage from "../components/PreviewImage";
+import { setPreviewImage } from "../Redux/features/previewImageSlice";
 import { configApi } from "../libs/configApi";
 
 // CreateCategory Component
 function CreateCategory() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   // Form State
-  const [preview, setPreview] = useState(false);
   const [form, setForm] = useState({
     categoryName: "",
     categoryImage: {
@@ -82,15 +83,17 @@ function CreateCategory() {
 
     if (file) {
       const formData = new FormData();
-      formData.append("image", file);
+      // formData.append("image", file);
+      formData.append("files", file);
 
-      const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
-      const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+      // const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
+      // const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+      const uploadUrl = `${configApi.api}upload-attachment-optimized`;
 
       try {
         setUploading(true);
         const response = await axios.post(uploadUrl, formData);
-        const imageUrl = response.data.data.url;
+        const imageUrl = response.data.data.file.optimizedUrl;
 
         // Update the form state with the new image URL
         setForm((prevForm) => ({
@@ -115,7 +118,7 @@ function CreateCategory() {
 
   const handleImgPreview = () => {
     if (form.categoryImage.url) {
-      setPreview(true);
+      dispatch(setPreviewImage(form.categoryImage.url));
     }
   };
 
@@ -306,12 +309,6 @@ function CreateCategory() {
           </button>
         </div>
       </form>
-      {preview && (
-        <PreviewImage
-          url={form.categoryImage.url}
-          closePreview={() => setPreview(false)}
-        />
-      )}
     </div>
   );
 }

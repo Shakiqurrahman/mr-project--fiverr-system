@@ -6,12 +6,13 @@ import { FaEye } from "react-icons/fa";
 import { ImPlus } from "react-icons/im";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useUpdateOfferProjectMutation } from "../Redux/api/offerProjectApiSlice";
-import PreviewImage from "../components/PreviewImage";
+import { setPreviewImage } from "../Redux/features/previewImageSlice";
 
 function CreateOfferProject() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const offerProjects = useSelector((state) => state.offerProject.offerProject);
   const [updateOfferProject, { isLoading, error }] =
@@ -22,7 +23,6 @@ function CreateOfferProject() {
   console.log(projectImage);
 
   // Form state
-  const [preview, setPreview] = useState(false);
   const [form, setForm] = useState({
     freeBannerName: offerProjects?.freeDesignName || "",
     offerAmount: offerProjects?.offerAmount || "",
@@ -41,6 +41,10 @@ function CreateOfferProject() {
     const file = e.target.files[0];
     const url = URL.createObjectURL(file);
     setProjectImage({ file: file, name: file.name, url });
+  };
+
+  const handleOpenPreviewImage = () => {
+    dispatch(setPreviewImage(projectImage?.url));
   };
 
   // Design sections state
@@ -277,7 +281,7 @@ function CreateOfferProject() {
         <div className="mt-10 bg-lightskyblue">
           <h1 className="flex items-center justify-between bg-primary p-3 text-white">
             Image{" "}
-            <button type="button" onClick={() => setPreview(true)}>
+            <button type="button" onClick={handleOpenPreviewImage}>
               <FaEye className="text-2xl" />
             </button>
           </h1>
@@ -529,12 +533,6 @@ function CreateOfferProject() {
           </button>
         </div>
       </form>
-      {preview && (
-        <PreviewImage
-          url={projectImage.url}
-          closePreview={() => setPreview(false)}
-        />
-      )}
       {isLoading && (
         <Backdrop
           sx={{
