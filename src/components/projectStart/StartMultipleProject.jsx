@@ -232,7 +232,8 @@ const StartMultipleProject = ({ items }) => {
         subTotal: choosenItem.subCategory.subAmount,
         totalAmount: choosenItem.subTotal,
         designDbId: choosenItem.id,
-        projectType: "CUSTOM",
+        from: "singleProject",
+        projectType: "DIRECT",
         projectImage: selectedCategory?.image?.url,
         tags: choosenItem.tags,
       };

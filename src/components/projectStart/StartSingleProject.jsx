@@ -93,16 +93,15 @@ const StartSingleProject = ({ item }) => {
       ...selectedCategory,
       selectedQuantity,
       title: selectedCategory.categoryName,
-      deliveryDuration: isFastDelivery
-        ? extraFastDeliveryDay
-        : regularDeliveryDay,
+      deliveryDuration: regularDeliveryDay,
       isFastDelivery,
       fastDeliveryAmount: fastDeliveryPrice,
       fastDeliveryDuration: extraFastDeliveryDay,
       subTotal: baseAmount,
       totalAmount,
-      projectType: "CUSTOM",
+      projectType: "DIRECT",
       projectImage: selectedCategory?.image?.url,
+      from: "categoryProject",
     };
     navigate("/payment", { state: data });
   };

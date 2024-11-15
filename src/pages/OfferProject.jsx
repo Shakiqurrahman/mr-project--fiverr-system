@@ -23,6 +23,8 @@ function OfferProject() {
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
+  console.log(state, isFastDelivery);
+
   useEffect(() => {
     // Get the selected categories
     const selectedCategories = categories.filter((item) => item.isSelected);
@@ -176,6 +178,7 @@ function OfferProject() {
       subTotal: state?.offerAmount,
       fastDeliveryDuration: state?.extraFastDelivery,
       fastDeliveryAmount: state?.extraFastDeliveryAmount,
+      deliveryDuration: state?.delivery,
       freeDesign: {
         designName: freeDesign.designName,
         freeSubDesign: updatedFreeDesign,
@@ -183,6 +186,11 @@ function OfferProject() {
       designs: selectedDesigns,
       isFastDelivery,
       from: "offerProject",
+      projectType: "OFFER",
+      selectedQuantity: 1,
+      bulletPoint: state?.bullPoints,
+      requirements: state?.requirements,
+      projectImage: state?.projectImage?.url,
     };
     navigate("/payment", { state: data });
   };

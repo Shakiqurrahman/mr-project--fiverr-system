@@ -119,7 +119,7 @@ const OrderDetails = () => {
                     {item?.category?.categoryName || item?.categoryName}
                   </h1>
                   <p className="text-black/80">
-                    {item?.subCategory.subTitle || item?.subCategory}
+                    {item?.subCategory?.subTitle || item?.subCategory}
                   </p>
                 </div>
                 <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
@@ -144,9 +144,9 @@ const OrderDetails = () => {
                   </div>
                 </div>
               )}
-              {item?.bulletPoints?.length > 0 && (
+              {item?.bulletPoint?.length > 0 && (
                 <ul className="border-b border-gray-300 px-3 py-4">
-                  {item?.bulletPoints?.map((bullet, index) => (
+                  {item?.bulletPoint?.map((bullet, index) => (
                     <li key={index} className="my-1 flex items-center gap-2">
                       <FaCircleCheck className="text-primary" /> {bullet}
                     </li>

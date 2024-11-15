@@ -37,6 +37,10 @@ const PaymentPage = () => {
     ? parseInt(designs.subTotal) + parseInt(designs.fastDeliveryAmount)
     : parseInt(designs.subTotal) || 0;
 
+  const deliveryDuration = fastDelivery
+    ? state?.fastDeliveryDuration
+    : state?.deliveryDuration;
+
   const handleSubmit = (e) => {
     e.preventDefault();
   };
@@ -68,11 +72,10 @@ const PaymentPage = () => {
         parseInt(item.fastDeliveryAmount) || parseInt(item.fastDeliveryPrice),
     }));
 
-    const projectType =
-      designs?.from === "offerProject" ? "OFFER" : designs?.projectType;
+    const projectType = designs?.projectType;
     const projectImage = designs?.projectImage;
 
-    let totalQuantity = 0;
+    let totalQuantity = 1;
     if (designs?.from !== "offerProject") {
       if (designs?.designs) {
         totalQuantity = designs?.designs?.reduce(
@@ -95,11 +98,14 @@ const PaymentPage = () => {
       totalAmount: designs?.totalAmount || totalAmount,
       requirements: requirementsArray,
       bulletPoint: state?.bulletPoint,
-      deliveryDuration: state?.deliveryDuration || state?.duration,
+      deliveryDuration: deliveryDuration || state?.duration,
+      // deliveryDuration: state?.deliveryDuration || state?.duration,
       title: state?.title,
       projectType,
       projectImage,
-      totalQuantity: designs?.from === "offerProject" ? 1 : totalQuantity,
+      totalQuantity: totalQuantity,
+      orderFrom: user?.country,
+      from: state?.from,
     };
 
     console.log("data checking", data);

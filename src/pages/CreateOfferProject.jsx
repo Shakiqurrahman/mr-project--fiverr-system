@@ -8,8 +8,8 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import PreviewImage from "../components/PreviewImage";
 import { useUpdateOfferProjectMutation } from "../Redux/api/offerProjectApiSlice";
+import PreviewImage from "../components/PreviewImage";
 
 function CreateOfferProject() {
   const navigate = useNavigate();
@@ -330,6 +330,16 @@ function CreateOfferProject() {
                   />
                 </small>
               ))}
+              <input
+                type="text"
+                placeholder="Type Here"
+                value={newVariant[form.freeBannerName] || ""}
+                onChange={(e) => handleNewVariantChange(e, form.freeBannerName)}
+                onKeyDown={(e) =>
+                  createFreeVariantEventHandler(e, form.freeBannerName)
+                }
+                className="bg-transparent focus:outline-none"
+              />
             </div>
           </div>
         </div>
