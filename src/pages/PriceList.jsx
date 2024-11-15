@@ -9,13 +9,13 @@ import { IoMdClose } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import Check from "../assets/svg/Check";
-import useOutsideClick from "../hooks/useOutsideClick";
-import { configApi } from "../libs/configApi";
 import {
   deleteCategory,
   fetchCategory,
 } from "../Redux/features/category/categoryApi";
+import Check from "../assets/svg/Check";
+import useOutsideClick from "../hooks/useOutsideClick";
+import { configApi } from "../libs/configApi";
 
 function PriceList() {
   const dispatch = useDispatch();
@@ -214,13 +214,15 @@ function PriceList() {
                         {category.categoryName}
                       </h1>
                     </div>
-                    <Link
-                      to="/project"
-                      state={{ item: category }}
-                      className="rounded-lg bg-primary px-2 py-1 text-center text-xs font-medium text-white sm:px-3 sm:py-2 sm:text-sm"
-                    >
-                      PROJECT START
-                    </Link>
+                    {!user?.block_for_chat && (
+                      <Link
+                        to="/project"
+                        state={{ item: category }}
+                        className="rounded-lg bg-primary px-2 py-1 text-center text-xs font-medium text-white sm:px-3 sm:py-2 sm:text-sm"
+                      >
+                        PROJECT START
+                      </Link>
+                    )}
                   </div>
                   <div
                     className={`md:*:border-b-1 grid items-center border-t-2 *:border-b-2 *:border-solid *:border-gray-300 md:grid-cols-2 md:*:border-e-2`}
