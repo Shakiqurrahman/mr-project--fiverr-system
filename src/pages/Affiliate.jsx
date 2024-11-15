@@ -1,14 +1,30 @@
 import { Pagination, PaginationItem } from "@mui/material";
+import toast from "react-hot-toast";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import prevBtn from "../assets/images/icons/Left Arrow.svg";
+import nextBtn from "../assets/images/icons/Right Arrow.svg";
 import cashWithdrawal from "../assets/images/icons/cash-withdrawal.png";
 import creditCard from "../assets/images/icons/credit-card.png";
 import dollerBill from "../assets/images/icons/dollar-bill.png";
-import prevBtn from "../assets/images/icons/Left Arrow.svg";
-import nextBtn from "../assets/images/icons/Right Arrow.svg";
 import PageHeaderWithText from "../components/PageHeaderWithText";
 
 function Affiliate() {
+  const { user } = useSelector((state) => state.user);
+
+  const copyAffiliateLink = () => {
+    const textToCopy = `https://mahfujurrahm535.com/?aff-${user?.userName}`; // Text to copy
+    navigator.clipboard
+      .writeText(textToCopy)
+      .then(() => {
+        toast.success("Text copied successfully!");
+      })
+      .catch((err) => {
+        toast.error("Failed to copy text");
+        console.error("Error copying text: ", err);
+      });
+  };
   return (
     <>
       <PageHeaderWithText
@@ -60,9 +76,13 @@ function Affiliate() {
               <input
                 className="flex-shrink-1 w-full border-[2px] p-2 text-sm outline-none"
                 type="text"
-                placeholder="https://mahfujurrahman535.com/aff-auto/username/"
+                value={`https://mahfujurrahm535.com/?aff-${user?.userName}`}
+                readOnly
               />
-              <button className="min-w-[100px] bg-secondary p-2 text-white">
+              <button
+                className="min-w-[100px] bg-secondary p-2 text-white"
+                onClick={copyAffiliateLink}
+              >
                 Copy
               </button>
             </div>
@@ -76,7 +96,7 @@ function Affiliate() {
               <input
                 className="flex-shrink-1 w-full border-[2px] p-2 text-sm outline-none"
                 type="text"
-                placeholder="https://mahfujurrahm535.com/"
+                placeholder="your-custom-text"
               />
               <button className="min-w-[100px] bg-[#7C7C7C] p-2 text-white">
                 Create

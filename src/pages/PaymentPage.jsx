@@ -147,31 +147,37 @@ const PaymentPage = () => {
             {state?.from === "offerProject" && (
               <h3 className="text-3xl font-bold">${totalAmount}</h3>
             )}
-            {state?.from === "multipleProject" && (
-              <h3 className="text-3xl font-bold">${designs?.totalAmount}</h3>
+            {(state?.from === "multipleProject" ||
+              state?.from === "customOffer") && (
+              <h3 className="text-3xl font-bold">
+                ${designs?.totalAmount || designs?.subTotal}
+              </h3>
             )}
           </div>
-          {state?.from !== "multipleProject" && (
-            <div className="mt-6 flex flex-col items-center justify-between gap-2 sm:flex-row">
-              {state?.from !== "offerProject" && <p>{designs?.subCategory}</p>}
-              <div className="flex items-center gap-3">
-                <ToggleSwitch
-                  isChecked={fastDelivery}
-                  onToggle={() => setFastDelivery(!fastDelivery)}
-                />
-                <p className="text-sm">
-                  Extra-fast {designs?.fastDeliveryDuration}-day delivery
-                  <span className="text-lg font-semibold text-primary">
-                    {" "}
-                    ${designs?.fastDeliveryAmount}
-                  </span>
-                </p>
+          {state?.from !== "multipleProject" &&
+            state?.from !== "customOffer" && (
+              <div className="mt-6 flex flex-col items-center justify-between gap-2 sm:flex-row">
+                {state?.from !== "offerProject" && (
+                  <p>{designs?.subCategory}</p>
+                )}
+                <div className="flex items-center gap-3">
+                  <ToggleSwitch
+                    isChecked={fastDelivery}
+                    onToggle={() => setFastDelivery(!fastDelivery)}
+                  />
+                  <p className="text-sm">
+                    Extra-fast {designs?.fastDeliveryDuration}-day delivery
+                    <span className="text-lg font-semibold text-primary">
+                      {" "}
+                      ${designs?.fastDeliveryAmount}
+                    </span>
+                  </p>
+                </div>
+                {state?.from !== "offerProject" && (
+                  <h3 className="text-3xl font-bold">${totalAmount}</h3>
+                )}
               </div>
-              {state?.from !== "offerProject" && (
-                <h3 className="text-3xl font-bold">${totalAmount}</h3>
-              )}
-            </div>
-          )}
+            )}
         </div>
 
         {/* Tab Navigation */}
