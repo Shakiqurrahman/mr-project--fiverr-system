@@ -225,6 +225,7 @@ function Designs() {
                 cart={true}
                 key={idx}
                 thumbnail={thumbnail.url}
+                watermark={thumbnail?.watermark}
                 thumbnailName={thumbnail.name}
                 title={design.title}
                 design={design}

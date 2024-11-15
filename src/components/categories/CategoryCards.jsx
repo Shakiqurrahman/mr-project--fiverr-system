@@ -59,6 +59,7 @@ function CategoryCards({ title, path, subCategory = [], titleSlug }) {
                 <ProjectCard
                   key={Math.random()}
                   thumbnail={thumbnail?.url}
+                  watermark={thumbnail?.watermark}
                   thumbnailName={thumbnail?.name}
                   title={design?.title}
                   folder={true}

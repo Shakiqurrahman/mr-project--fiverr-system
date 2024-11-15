@@ -60,6 +60,7 @@ function AllCategory() {
                 folder={true}
                 key={idx}
                 thumbnail={thumbnail?.url}
+                watermark={thumbnail?.watermark}
                 title={design?.title}
                 slug={`/designs/${slug}/${subFolder?.slug}`}
               />
