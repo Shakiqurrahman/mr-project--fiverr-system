@@ -1029,12 +1029,12 @@ const ChatBox = ({ openToggle }) => {
                                 className="mt-2 flex items-center justify-center text-xs"
                               >
                                 <BiDownload className="shrink-0 grow text-lg text-primary" />
-                                <p
+                                <div
                                   className="mx-[2px] max-w-[30%] shrink font-medium md:mx-2 md:max-w-[50%]"
                                   title={att.name}
                                 >
                                   <GenerateName name={att.name} />
-                                </p>
+                                </div>
                                 <span className="shrink-0 grow text-black/50">
                                   ({formatFileSize(att.size)})
                                 </span>

@@ -2,7 +2,6 @@ import React from "react";
 import { SlPicture } from "react-icons/sl";
 
 const PreviewChatFiles = ({ file, handlePreviewImage }) => {
-  console.log(file);
   const isImage = file?.format?.startsWith("image/");
   const renderPreview = () => {
     if (isImage) {
