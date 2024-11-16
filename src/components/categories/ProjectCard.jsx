@@ -60,12 +60,12 @@ function ProjectCard({
           </Link>
         )}
         <Link to={slug} className="block cursor-pointer border bg-white">
-          <div className="relative">
+          <div className="relative" onClick={handlePreviewImage}>
             <img
               src={thumbnail}
               alt=""
-              className="block w-full object-cover"
-              onClick={handlePreviewImage}
+              className="block w-full object-cover pointer-events-none"
+              
             />
           </div>
           <h1 className="px-3 py-2" title={title}>

@@ -39,6 +39,11 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["socialMedia"],
     }),
+
+    searchByDesign: builder.query({
+      query: (searchKey) => `search?searchQuery=${searchKey}`,
+      transformResponse: (response) => response?.data,
+    }),
   }),
 });
 
@@ -46,4 +51,5 @@ export const {
   useFetchUserDataQuery,
   useFetchSocialMediasQuery,
   useUpdateSocialMediasMutation,
+  useLazySearchByDesignQuery,
 } = apiSlice;
