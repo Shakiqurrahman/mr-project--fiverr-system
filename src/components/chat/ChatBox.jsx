@@ -417,18 +417,25 @@ const ChatBox = ({ openToggle }) => {
     const data = {
       title: offerObj?.title,
       selectedQuantity: 1,
-      subTotal: offerObj?.price,
+      subTotal: parseInt(offerObj?.price),
       requirements: offerObj?.requirements,
       image: {
         url: offerObj?.thumbnail,
       },
       from: "customOffer",
-      deliveryDuration: offerObj?.deliveryCount,
+      deliveryDuration:
+        offerObj?.deliveryWay !== "hours"
+          ? parseInt(offerObj?.deliveryCount)
+          : null,
       desc: offerObj?.desc,
       isFastDelivery: false,
       projectImage: offerObj?.thumbnail,
       projectType: "CUSTOM",
       deliveryWay: offerObj?.deliveryWay,
+      durationHours:
+        offerObj?.deliveryWay === "hours"
+          ? parseInt(offerObj?.deliveryCount)
+          : null,
     };
     navigate("/payment", { state: data });
   };

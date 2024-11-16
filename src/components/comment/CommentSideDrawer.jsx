@@ -4,23 +4,26 @@ import { MdEdit, MdReply } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TfiShiftRight } from "react-icons/tfi";
 import { useDispatch, useSelector } from "react-redux";
-import useOutsideClick from "../../hooks/useOutsideClick";
 import {
   deleteComment,
   setHighlight,
   updateAComment,
 } from "../../Redux/features/commentsSlice";
+import { setMessages } from "../../Redux/features/orderSlice";
+import useOutsideClick from "../../hooks/useOutsideClick";
+import { configApi } from "../../libs/configApi";
+import { connectSocket } from "../../libs/socketService";
 import CommentInputBox from "./CommentInputBox";
 import EditCommentBox from "./EditCommentBox";
 import EditReplyBox from "./EditReplyBox";
 import ReplyCommentBox from "./ReplyCommentBox";
 
-const CommentSideDrawer = ({ drawerClose }) => {
+const CommentSideDrawer = ({ close, drawerClose }) => {
   const dispatch = useDispatch();
   const commentRef = useRef(null);
   const commentBoxRef = useRef(null);
 
-  const { user } = useSelector((state) => state.user);
+  const { user, token } = useSelector((state) => state.user);
   const {
     images,
     commentObj,
@@ -30,11 +33,18 @@ const CommentSideDrawer = ({ drawerClose }) => {
   } = useSelector((state) => state.comment);
   const comments = imageDetails?.comments;
 
+  // Checking Admin
+  const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
+
+  // Socket Connection
+  const socket = connectSocket(`${configApi.socket}`, token);
+
   const [commentCollapse, setCommentCollapse] = useState(false);
   const [focusWriteComment, setFocusWriteComment] = useState(false);
   const [showCommentEdit, setShowCommentEdit] = useState(null);
   const [showReplyEdit, setShowReplyEdit] = useState(null);
   const [showCommentReply, setShowCommentReply] = useState(null);
+  const [replyTo, setReplyTo] = useState(null);
 
   /* @TODO: api schema
     {
@@ -86,31 +96,110 @@ const CommentSideDrawer = ({ drawerClose }) => {
   };
 
   // Check for unsubmitted comments and unsubmitted replies
-  const unsubmittedComments = comments?.filter(
-    (c) => !c?.isSubmitted && c.commentId,
-  )?.length;
+  const unsubmittedComments = images
+    ?.map((image) => {
+      return image?.comments?.filter((c) => !c?.isSubmitted && c?.commentId)
+        ?.length;
+    })
+    ?.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
-  const unsubmittedRepliedComments = comments
-    ?.flatMap((c) => c.replies || [])
-    ?.filter((r) => !r?.isSubmitted)?.length;
+  const unsubmittedRepliedComments = images
+    ?.map((image) => {
+      return image?.comments
+        ?.flatMap((c) => c.replies || [])
+        ?.filter((r) => !r?.isSubmitted)?.length;
+    })
+    ?.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
   const totalUnsubmitted = unsubmittedComments + unsubmittedRepliedComments;
-  // dispatch(setUnsubmittedCommentsCount(parseInt(totalUnsubmitted)));
-  console.log("total numbers", totalUnsubmitted);
+
+  // Setup sending message time and date
+  const dates = new Date();
+  const timeAndDate = dates.getTime();
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();
 
-    const updatedComments = comments.map((comment) => ({
-      ...comment,
-      isSubmitted: true,
-      replies: comment?.replies?.map((reply) => ({
-        ...reply,
-        isSubmitted: true,
-      })),
-    }));
-    // setComments(updatedComments);
-    console.log("submitted total comments : ", updatedComments);
+    // const updatedComments = images?.map((image) => {
+    //   return {
+    //     ...image,
+    //     comments: image?.comments.map((comment) => ({
+    //       ...comment,
+    //       isSubmitted: true,
+    //       replies: comment?.replies?.map((reply) => ({
+    //         ...reply,
+    //         isSubmitted: true,
+    //       })),
+    //     })),
+    //   };
+    // });
+
+    const updatedComments = images?.map((image) => {
+      return {
+        ...image,
+        comments: image?.comments.map((comment) => {
+          const updatedComment = {
+            ...comment,
+            isSubmitted: true, // Always set isSubmitted to true for the comment
+          };
+
+          // If the comment's isSubmitted is false, add newComment: true
+          if (comment.isSubmitted === false) {
+            updatedComment.newComment = true;
+          }
+
+          // Handle replies
+          updatedComment.replies = comment?.replies?.map((reply) => {
+            const updatedReply = {
+              ...reply,
+              isSubmitted: true, // Always set isSubmitted to true for the reply
+            };
+
+            // If the parent comment's isSubmitted was false, add newReply: true to the reply
+            if (reply.isSubmitted === false) {
+              updatedReply.newReply = true; // Add newReply if the parent comment's isSubmitted was false
+            }
+
+            return updatedReply;
+          });
+
+          return updatedComment;
+        }),
+      };
+    });
+
+    const submitForm = {
+      messageText: "",
+      senderUserName: user?.userName,
+      userImage: user?.image,
+      attachment: [],
+      additionalOffer: null,
+      extendDeliveryTime: null,
+      deliverProject: null,
+      cancelProject: null,
+      imageComments: updatedComments || [],
+      timeAndDate,
+      replyTo,
+    };
+
+    if (isAdmin) {
+      socket?.emit("order:admin-message", {
+        userId: "671ba677ed05eed5d29efb35",
+        ...submitForm,
+      });
+    } else {
+      socket?.emit("order:user-message", {
+        ...submitForm,
+      });
+    }
+    // Optimistically add the message to local state (before API response)
+    dispatch(
+      setMessages({
+        ...submitForm,
+        recipientId: isAdmin ? "671ba677ed05eed5d29efb35" : "",
+      }),
+    );
+    close(false);
   };
 
   // Ref for comment container

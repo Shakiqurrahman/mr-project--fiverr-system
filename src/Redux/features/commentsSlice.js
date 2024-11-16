@@ -67,8 +67,6 @@ const commentSlice = createSlice({
     },
 
     setCommentsData: (state, action) => {
-      console.log(action.payload);
-
       if (action.payload.markerId) {
         state.imageDetails.comments = state.imageDetails.comments.map((c) => {
           if (c.markerId === action.payload.markerId) {
@@ -99,10 +97,6 @@ const commentSlice = createSlice({
     setHighlight: (state, action) => {
       state.highlight = action.payload;
     },
-
-    // setUnsubmittedCommentsCount: (state, action) => {
-    //   state.unsubmittedCommentsCount = state.unsubmittedCommentsCount + action.payload;
-    // },
   },
 });
 

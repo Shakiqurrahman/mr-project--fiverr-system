@@ -2,14 +2,14 @@ import { useState } from "react";
 import { BiDownload } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import DownArrow from "../../../assets/images/icons/Down Arrow.svg";
-import UpArrow from "../../../assets/images/icons/Upper Arrow.svg";
-import formatFileSize from "../../../libs/formatFileSize";
-import CommentPage from "../../../pages/CommentPage";
 import {
   setImageArray,
   setImageDetails,
 } from "../../../Redux/features/commentsSlice";
+import DownArrow from "../../../assets/images/icons/Down Arrow.svg";
+import UpArrow from "../../../assets/images/icons/Upper Arrow.svg";
+import formatFileSize from "../../../libs/formatFileSize";
+import CommentPage from "../../../pages/CommentPage";
 
 const AttachmentsPreview = ({ images }) => {
   const dispatch = useDispatch();
@@ -96,9 +96,7 @@ const AttachmentsPreview = ({ images }) => {
             </div>
           ))}
       </div>
-      {openCommentBox && (
-        <CommentPage images={images || []} close={setOpenCommentBox} />
-      )}
+      {openCommentBox && <CommentPage close={setOpenCommentBox} />}
     </>
   );
 };

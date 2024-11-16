@@ -438,7 +438,9 @@ const OrderChatBox = () => {
                       <p className="text-sm sm:text-base">{msg?.messageText}</p>
                     </div>
                   )}
-                  {msg?.imageComments?.length > 0 && <CommentsPreview />}
+                  {msg?.imageComments?.length > 0 && (
+                    <CommentsPreview commentedImages={msg?.imageComments} />
+                  )}
                   {msg?.attachment?.length > 0 && (
                     <AttachmentsPreview images={msg?.attachment || []} />
                   )}

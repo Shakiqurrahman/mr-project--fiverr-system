@@ -2,7 +2,7 @@ import { useState } from "react";
 import CommentImagePreview from "../components/comment/CommentImagePreview";
 import CommentSideDrawer from "../components/comment/CommentSideDrawer";
 
-const CommentPage = ({ selected, close }) => {
+const CommentPage = ({ close }) => {
   const [sideDrawer, setSideDrawer] = useState(true);
   return (
     <div className="fixed left-0 top-0 z-[999] flex h-screen w-full flex-wrap overflow-y-auto bg-black/70 md:flex-nowrap">
@@ -16,7 +16,7 @@ const CommentPage = ({ selected, close }) => {
       <div
         className={`w-full ${sideDrawer ? "block" : "hidden"} shrink-0 md:w-[320px]`}
       >
-        <CommentSideDrawer drawerClose={setSideDrawer} />
+        <CommentSideDrawer close={close} drawerClose={setSideDrawer} />
       </div>
     </div>
   );
