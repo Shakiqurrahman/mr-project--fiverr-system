@@ -112,7 +112,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/affiliate",
-        element: <Affiliate />,
+        element: (
+          <PrivateRoute>
+            <Affiliate />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/termsandconditions",

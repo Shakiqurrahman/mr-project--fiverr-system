@@ -1,4 +1,3 @@
-import { Pagination, PaginationItem } from "@mui/material";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -24,7 +23,19 @@ function Affiliate() {
   const [deleteAffiliate] = useDeleteAffiliateMutation();
 
   const { data: affiliateData } = useGetAUserAffiliatesQuery();
-  console.log(affiliateData);
+
+  const handleCopyLink = (link) => {
+    const textToCopy = `https://mahfujurrahm535.com/?${link}`;
+    navigator.clipboard
+      .writeText(textToCopy)
+      .then(() => {
+        toast.success("Text copied successfully!");
+      })
+      .catch((err) => {
+        toast.error("Failed to copy text");
+        console.error("Error copying text: ", err);
+      });
+  };
 
   const copyAffiliateLink = async () => {
     const textToCopy = `https://mahfujurrahm535.com/?aff-${user?.userName}`;
@@ -149,15 +160,20 @@ function Affiliate() {
                 Create
               </button>
             </div>
-            <div className="mt-3 flex">
-              <input
-                className="flex-shrink-1 w-full border-[2px] p-2 text-sm outline-none"
-                type="text"
-                placeholder="https://mahfujurrahman535.com/?aff-your-custom-text"
-              />
-              <button className="min-w-[100px] bg-primary p-2 text-white">
-                Copy
-              </button>
+            <div>
+              {affiliateData?.formattedAffiliates
+                ?.filter((aff) => aff.links !== `aff-${user?.userName}`)
+                .map((aff, index) => (
+                  <div key={index} className="mt-3 flex">
+                    <p className="flex-shrink-1 w-full select-none border-[2px] p-2 text-sm outline-none">{`https://mahfujurrahm535.com/?${aff?.links}`}</p>
+                    <button
+                      className="min-w-[100px] bg-primary p-2 text-white"
+                      onClick={() => handleCopyLink(aff?.links)}
+                    >
+                      Copy
+                    </button>
+                  </div>
+                ))}
             </div>
           </div>
 
@@ -193,7 +209,7 @@ function Affiliate() {
             </ul>
           </div>
 
-          <div className="mt-10 flex justify-center">
+          {/* <div className="mt-10 flex justify-center">
             <Pagination
               count={10}
               renderItem={(item) => (
@@ -206,7 +222,7 @@ function Affiliate() {
                 />
               )}
             />
-          </div>
+          </div> */}
         </div>
         <div className="mt-6 w-full bg-lightskyblue px-8 py-6 lg:w-1/4">
           <h1 className="text-lg font-semibold">Affiliate Program</h1>
