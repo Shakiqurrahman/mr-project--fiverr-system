@@ -20,6 +20,7 @@ function CreateCategory() {
     categoryImage: {
       name: "",
       url: "",
+      watermark: "",
     },
   });
 
@@ -94,6 +95,7 @@ function CreateCategory() {
         setUploading(true);
         const response = await axios.post(uploadUrl, formData);
         const imageUrl = response.data.data.file.optimizedUrl;
+        const watermark = response.data.data.file.url;
 
         // Update the form state with the new image URL
         setForm((prevForm) => ({
@@ -101,6 +103,7 @@ function CreateCategory() {
           categoryImage: {
             name: file.name,
             url: imageUrl,
+            watermark,
           },
         }));
 
