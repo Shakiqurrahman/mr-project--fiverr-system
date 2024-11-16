@@ -1,13 +1,23 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { FaAnglesRight } from "react-icons/fa6";
+import { IoMdReturnLeft } from "react-icons/io";
 import { IoClose, IoSearch } from "react-icons/io5";
+import { MdChevronRight } from "react-icons/md";
+import { Link } from "react-router-dom";
 import useOutsideClick from "../../hooks/useOutsideClick";
+import { useLazySearchByDesignQuery } from "../../Redux/api/apiSlice";
 
 const SearchBox = ({ handleClose }) => {
+  const [searchQuery, { data: searchResult, isLoading }] =
+    useLazySearchByDesignQuery();
+
+  console.log("data", searchResult);
+
   const textRef = useRef(null);
   const searchBoxRef = useRef(null);
   const [textInput, setTextInput] = useState("");
 
-  const handleInput = (e) => {
+  const handleInput = async (e) => {
     setTextInput(e.target.value);
   };
 
@@ -16,11 +26,23 @@ const SearchBox = ({ handleClose }) => {
     textRef.current && textRef.current.focus();
   };
 
+  const handleSearch = useCallback(async () => {
+    if (textInput.length > 2) {
+      await searchQuery(`${textInput}`);
+    }
+  }, [textInput, searchQuery]);
+
   useEffect(() => {
     if (textRef.current) {
       textRef.current.focus();
     }
   }, []);
+
+  useEffect(() => {
+    if (textInput) {
+      handleSearch();
+    }
+  }, [textInput, handleSearch]);
 
   useOutsideClick(searchBoxRef, handleClose);
 
@@ -54,6 +76,34 @@ const SearchBox = ({ handleClose }) => {
           >
             <IoClose className="text-2xl text-gray-400" />
           </button>
+        </div>
+        <div className="mt-3 min-h-[50%] bg-white">
+          {textInput?.length > 0 &&
+            searchResult?.map((res, idx) => {
+              return (
+                <Link
+                  className={`flex items-center justify-between border-t bg-transparent p-4 text-base font-semibold duration-300 hover:bg-lightskyblue`}
+                  to={`/design/${res?.designId}`}
+                  onClick={() => handleClose()}
+                  key={idx}
+                >
+                  <div className="flex items-center gap-3">
+                    <FaAnglesRight />
+                    <div className="flex flex-col">
+                      <h2>{res?.title}</h2>
+                      <div className="flex items-center text-[11px] leading-normal text-gray-500">
+                        <span>design </span>
+                        <MdChevronRight size={15} />
+                        <span> {res?.designId}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <span className="text-gray-500">
+                    <IoMdReturnLeft />
+                  </span>
+                </Link>
+              );
+            })}
         </div>
       </div>
     </div>
