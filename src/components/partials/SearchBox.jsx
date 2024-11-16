@@ -77,12 +77,12 @@ const SearchBox = ({ handleClose }) => {
             <IoClose className="text-2xl text-gray-400" />
           </button>
         </div>
-        <div className="mt-3 min-h-[50%] bg-white">
+        <div className="bg-white">
           {textInput?.length > 0 &&
             searchResult?.map((res, idx) => {
               return (
                 <Link
-                  className={`flex items-center justify-between border-t bg-transparent p-4 text-base font-semibold duration-300 hover:bg-lightskyblue`}
+                  className={`flex items-center justify-between border-t bg-transparent p-4 text-base font-semibold duration-300 first:mt-3 hover:bg-lightskyblue`}
                   to={`/design/${res?.designId}`}
                   onClick={() => handleClose()}
                   key={idx}
