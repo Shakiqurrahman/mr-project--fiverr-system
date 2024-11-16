@@ -7,8 +7,6 @@ const FilePreview = ({ file }) => {
   const isRar = file.format === "application/vnd.rar";
   const isAI = file.format === "application/postscript";
 
-  console.log(file);
-
   const renderPreview = () => {
     if (isImage) {
       return (

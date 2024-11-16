@@ -44,6 +44,8 @@ import { configApi } from "../../libs/configApi";
 import { timeAgoTracker } from "../../libs/timeAgoTracker";
 import CircleProgressBar from "../CircleProgressBar";
 import FilePreview from "../FilePreview";
+import GenerateName from "../GenerateName";
+import PreviewChatFiles from "../PreviewChatFiles";
 
 const ChatBox = ({ openToggle }) => {
   const dispatch = useDispatch();
@@ -326,19 +328,15 @@ const ChatBox = ({ openToggle }) => {
     }, 0);
   };
 
-  // const handleTextChange = (e) => {
-  //   setTextValue(e.target.value);
-  // };
-
-  // Image Preview Controllers
-
-  const getImagesWithDimensions = (files) => {
+  const getImagesWithDimensions = async (files) => {
     const handleImageLoad = async (file, index) => {
       console.log(file);
       const formData = new FormData();
-      formData.append("image", file);
+      // formData.append("image", file);
+      formData.append("files", file);
 
-      const uploadUrl = `${configApi.api}upload-image`;
+      // const uploadUrl = `${configApi.api}upload-image`;
+      const uploadUrl = `${configApi.api}upload-attachment`;
 
       const uploadData = {
         name: file.name,
@@ -354,6 +352,7 @@ const ChatBox = ({ openToggle }) => {
       try {
         const response = await axios.post(uploadUrl, formData, {
           onUploadProgress: (data) => {
+            console.log(data);
             const percentage = Math.round((data.loaded / data.total) * 100);
             setSelectedImages((prev) => {
               const newImages = [...prev];
@@ -362,10 +361,14 @@ const ChatBox = ({ openToggle }) => {
             });
           },
         });
+        console.log(response);
 
         // Update image data upon successful upload
-        const imageUrl = response.data.data[0].result.url;
-        const fileFormat = response.data.data[0].result.format;
+        const imageUrl = response.data.data.file.url.replaceAll(
+          "-watermark-resized",
+          "",
+        );
+        const fileFormat = response.data.data.file.fileType;
         setSelectedImages((prev) => {
           const newImages = [...prev];
           newImages[index] = {
@@ -381,10 +384,11 @@ const ChatBox = ({ openToggle }) => {
       }
     };
 
-    Array.from(files).forEach((file, i) => {
+    // Process files one by one in sequence
+    for (let i = 0; i < files.length; i++) {
       const index = selectedImages?.length + i;
-      handleImageLoad(file, index);
-    }); // Process each file
+      await handleImageLoad(files[i], index); // Wait for each file to finish uploading before starting the next
+    }
   };
 
   const handleChangeSelectedImage = (event) => {
@@ -1015,25 +1019,23 @@ const ChatBox = ({ openToggle }) => {
                         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                           {msg?.attachment.map((att, i) => (
                             <div key={i}>
-                              <img
-                                src={att.url}
-                                alt=""
-                                className="h-[100px] w-full cursor-pointer object-cover sm:h-[180px]"
-                                onClick={(e) => handlePreviewImage(e, att?.url)}
+                              <PreviewChatFiles
+                                file={att}
+                                handlePreviewImage={handlePreviewImage}
                               />
                               <a
                                 href={att.url}
                                 download={att.name}
                                 className="mt-2 flex items-center justify-center text-xs"
                               >
-                                <BiDownload className="shrink-0 text-lg text-primary" />
+                                <BiDownload className="shrink-0 grow text-lg text-primary" />
                                 <p
-                                  className="mx-2 line-clamp-1 font-medium"
+                                  className="mx-[2px] max-w-[30%] shrink font-medium md:mx-2 md:max-w-[50%]"
                                   title={att.name}
                                 >
-                                  {att.name}
+                                  <GenerateName name={att.name} />
                                 </p>
-                                <span className="shrink-0 text-black/50">
+                                <span className="shrink-0 grow text-black/50">
                                   ({formatFileSize(att.size)})
                                 </span>
                               </a>
@@ -1086,7 +1088,7 @@ const ChatBox = ({ openToggle }) => {
             {selectedImages?.length > 0 && (
               <div className="preview-scroll-overflow-x flex gap-2 border-b p-[10px]">
                 {selectedImages?.map((image, index) => (
-                  <div key={index} className="w-[120px]">
+                  <div key={index} className="w-[100px]">
                     <div className="group relative">
                       {image.url ? (
                         <FilePreview file={image} />
