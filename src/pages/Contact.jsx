@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useStartContactForChatMutation } from "../Redux/api/inboxApiSlice";
 import CircleProgressBar from "../components/CircleProgressBar";
 import FilePreview from "../components/FilePreview";
+import GenerateName from "../components/GenerateName";
 import { configApi } from "../libs/configApi";
 import formatFileSize from "../libs/formatFileSize";
 
@@ -35,7 +36,7 @@ function Contact() {
   // const [errorImg, setErrorImg] = useState(null);
   const fileInputRef = useRef(); // Add a ref for the file input
 
-  const getImagesWithDimensions = (files) => {
+  const getImagesWithDimensions = async (files) => {
     const handleImageLoad = async (file, index) => {
       console.log(file);
       const formData = new FormData();
@@ -43,7 +44,7 @@ function Contact() {
       formData.append("files", file);
 
       // const uploadUrl = `${configApi.api}upload-image`;
-      const uploadUrl = `${configApi.api}upload-attachment-optimized`;
+      const uploadUrl = `${configApi.api}upload-attachment`;
 
       const uploadData = {
         name: file.name,
@@ -71,7 +72,10 @@ function Contact() {
         console.log(response);
 
         // Update image data upon successful upload
-        const imageUrl = response.data.data.file.optimizedUrl;
+        const imageUrl = response.data.data.file.url.replaceAll(
+          "-watermark-resized",
+          "",
+        );
         const fileFormat = response.data.data.file.fileType;
         setMatchingImages((prev) => {
           const newImages = [...prev];
@@ -88,15 +92,17 @@ function Contact() {
       }
     };
 
-    Array.from(files).forEach((file, i) => {
+    // Process files one by one in sequence
+    for (let i = 0; i < files.length; i++) {
       const index = matchingImages?.length + i;
-      handleImageLoad(file, index);
-    }); // Process each file
+      await handleImageLoad(files[i], index); // Wait for each file to finish uploading before starting the next
+    }
   };
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
     getImagesWithDimensions(files);
+    event.target.value = "";
   };
 
   const handleImageRemove = (index) => {
@@ -190,12 +196,12 @@ function Contact() {
 
           <div className="preview-scroll-overflow-x mt-5 flex gap-2">
             {matchingImages.map((image, index) => (
-              <div key={index} className="w-[120px]">
+              <div key={index} className="w-[100px]">
                 <div className="group relative">
                   {image.url ? (
                     <FilePreview file={image} />
                   ) : (
-                    <div className="flex h-[100px] items-center justify-center bg-lightcream">
+                    <div className="flex h-[80px] items-center justify-center bg-lightcream">
                       <CircleProgressBar
                         precentage={image.progress}
                         circleWidth={50}
@@ -212,8 +218,8 @@ function Contact() {
                     </button>
                   )}
                 </div>
-                <h1 className="truncate text-xs font-medium" title={image.name}>
-                  {image.name}
+                <h1 className="text-xs font-medium" title={image.name}>
+                  <GenerateName name={image?.name} />
                 </h1>
                 <span className="text-xs">({formatFileSize(image.size)})</span>
               </div>

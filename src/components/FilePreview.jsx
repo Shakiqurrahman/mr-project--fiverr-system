@@ -3,8 +3,11 @@ import FileIcon from "./FileIcon";
 
 const FilePreview = ({ file }) => {
   const isImage = file?.type?.startsWith("image/");
-  const isZip = file.format === "zip";
-  const isRar = file.format === "rar";
+  const isZip = file.format === "application/zip";
+  const isRar = file.format === "application/vnd.rar";
+  const isAI = file.format === "application/postscript";
+
+  console.log(file);
 
   const renderPreview = () => {
     if (isImage) {
@@ -16,28 +19,16 @@ const FilePreview = ({ file }) => {
             maxWidth: "100%",
             maxHeight: "80px",
             height: "100%",
-            objectFit: "contain",
+            objectFit: "cover",
           }}
         />
       );
     } else if (isZip) {
-      return (
-        <div>
-          <FileIcon name={"ZIP"} />
-        </div>
-      );
+      return <FileIcon name={"ZIP"} />;
     } else if (isRar) {
       return <FileIcon name={"RAR"} />;
-    } else if (file.format in { psd: true, ai: true }) {
-      return (
-        <>
-          {file.format === "ai" ? (
-            <FileIcon name={"AI"} />
-          ) : (
-            <FileIcon name={"PSD"} />
-          )}
-        </>
-      );
+    } else if (isAI) {
+      return <FileIcon name={"AI"} />;
     } else {
       return <FileIcon />;
     }
