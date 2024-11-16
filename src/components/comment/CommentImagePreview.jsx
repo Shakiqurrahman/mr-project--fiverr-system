@@ -10,25 +10,24 @@ import {
   setHighlight,
   setImageDetails,
   setMarkersData,
+  updateImageArray,
 } from "../../Redux/features/commentsSlice";
 import formatFileSize from "../../libs/formatFileSize";
 
-const CommentImagePreview = ({
-  selected,
-  imagesArray,
-  close,
-  openDrawer,
-  drawer,
-}) => {
+const CommentImagePreview = ({ selected, close, openDrawer, drawer }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const { imageDetails, highlight } = useSelector((state) => state.comment);
+  const { imageDetails, highlight, images } = useSelector(
+    (state) => state.comment,
+  );
   const comments = imageDetails?.comments;
   console.log("image comments", comments);
   const filteredComments = comments?.filter((c) => c.top);
-  const [images, setImages] = useState(imagesArray || []);
+  // const [images, setImages] = useState(imagesArray || []);
 
-  const [selectedImage, setSelectedImage] = useState(selected || {});
+  console.log("images", images);
+
+  const [selectedImage, setSelectedImage] = useState(imageDetails || {});
 
   const CustomMarker = ({ markerId }) => {
     return (
@@ -59,17 +58,18 @@ const CommentImagePreview = ({
 
   useEffect(() => {
     if (imageDetails) {
-      setImages((prev) =>
-        prev.map((img) => {
-          if (img.imageId === imageDetails.imageId) {
-            return imageDetails;
-          } else {
-            return img;
-          }
-        }),
-      );
+      dispatch(updateImageArray(imageDetails));
+      // setImages((prev) =>
+      //   prev.map((img) => {
+      //     if (img.imageId === imageDetails.imageId) {
+      //       return imageDetails;
+      //     } else {
+      //       return img;
+      //     }
+      //   }),
+      // );
     }
-  }, [imageDetails]);
+  }, [imageDetails, dispatch]);
 
   const multiple = images.length > 1;
 

@@ -1,18 +1,22 @@
 import { useState } from "react";
 import { BiDownload } from "react-icons/bi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import DownArrow from "../../../assets/images/icons/Down Arrow.svg";
 import UpArrow from "../../../assets/images/icons/Upper Arrow.svg";
 import formatFileSize from "../../../libs/formatFileSize";
 import CommentPage from "../../../pages/CommentPage";
+import {
+  setImageArray,
+  setImageDetails,
+} from "../../../Redux/features/commentsSlice";
 
 const AttachmentsPreview = ({ images }) => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const [expand, setExpand] = useState(false);
 
   const [openCommentBox, setOpenCommentBox] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
 
   // handle download all button
   const handleDownloadAll = (files) => {
@@ -28,7 +32,8 @@ const AttachmentsPreview = ({ images }) => {
 
   const handleOpenComment = (att) => {
     setOpenCommentBox(true);
-    setSelectedImage(att);
+    dispatch(setImageDetails(att));
+    dispatch(setImageArray(images));
   };
 
   console.log(images);
@@ -92,11 +97,7 @@ const AttachmentsPreview = ({ images }) => {
           ))}
       </div>
       {openCommentBox && (
-        <CommentPage
-          selected={selectedImage}
-          images={images || []}
-          close={setOpenCommentBox}
-        />
+        <CommentPage images={images || []} close={setOpenCommentBox} />
       )}
     </>
   );

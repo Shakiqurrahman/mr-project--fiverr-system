@@ -8,7 +8,6 @@ import useOutsideClick from "../../hooks/useOutsideClick";
 import {
   deleteComment,
   setHighlight,
-  setUnsubmittedCommentsCount,
   updateAComment,
 } from "../../Redux/features/commentsSlice";
 import CommentInputBox from "./CommentInputBox";
@@ -16,14 +15,19 @@ import EditCommentBox from "./EditCommentBox";
 import EditReplyBox from "./EditReplyBox";
 import ReplyCommentBox from "./ReplyCommentBox";
 
-const CommentSideDrawer = ({ drawerClose, images }) => {
+const CommentSideDrawer = ({ drawerClose }) => {
   const dispatch = useDispatch();
   const commentRef = useRef(null);
   const commentBoxRef = useRef(null);
 
   const { user } = useSelector((state) => state.user);
-  const { commentObj, imageDetails, highlight, unsubmittedCommentsCount } =
-    useSelector((state) => state.comment);
+  const {
+    images,
+    commentObj,
+    imageDetails,
+    highlight,
+    unsubmittedCommentsCount,
+  } = useSelector((state) => state.comment);
   const comments = imageDetails?.comments;
 
   const [commentCollapse, setCommentCollapse] = useState(false);
@@ -90,7 +94,7 @@ const CommentSideDrawer = ({ drawerClose, images }) => {
     ?.flatMap((c) => c.replies || [])
     ?.filter((r) => !r?.isSubmitted)?.length;
 
-  const totalUnsubmitted = (unsubmittedComments + unsubmittedRepliedComments);
+  const totalUnsubmitted = unsubmittedComments + unsubmittedRepliedComments;
   // dispatch(setUnsubmittedCommentsCount(parseInt(totalUnsubmitted)));
   console.log("total numbers", totalUnsubmitted);
 
@@ -215,7 +219,7 @@ const CommentSideDrawer = ({ drawerClose, images }) => {
                               </p>
                             )}
                             {comment?.markerId && (
-                              <p className="ms-auto size-2 rounded-full bg-primary"></p>
+                              <p className="ms-auto size-2 rounded-full bg-revision"></p>
                             )}
                           </div>
                           <p className="text-sm font-medium text-gray-500">

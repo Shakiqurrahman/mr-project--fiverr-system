@@ -3,12 +3,28 @@ import { createSlice } from "@reduxjs/toolkit";
 const commentSlice = createSlice({
   name: "comment",
   initialState: {
+    images: [],
     commentObj: null,
     imageDetails: null,
     highlight: null,
     unsubmittedCommentsCount: 0,
   },
   reducers: {
+    setImageArray: (state, action) => {
+      state.images = action.payload;
+    },
+
+    updateImageArray: (state, action) => {
+      const imageDetails = action.payload;
+      state.images = state.images.map((img) => {
+        if (img.imageId === imageDetails.imageId) {
+          return imageDetails;
+        } else {
+          return img;
+        }
+      });
+    },
+
     setCommentObj: (state, action) => {
       state.commentObj = action.payload;
     },
@@ -91,6 +107,8 @@ const commentSlice = createSlice({
 });
 
 export const {
+  setImageArray,
+  updateImageArray,
   setCommentObj,
   setMarkersData,
   setCommentsData,
