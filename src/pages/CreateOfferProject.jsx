@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useUpdateOfferProjectMutation } from "../Redux/api/offerProjectApiSlice";
 import { setPreviewImage } from "../Redux/features/previewImageSlice";
+import { configApi } from "../libs/configApi";
 
 function CreateOfferProject() {
   const dispatch = useDispatch();
@@ -211,19 +212,23 @@ function CreateOfferProject() {
     const imageRes = async () => {
       if (projectImage.file) {
         const formData = new FormData();
-        formData.append("image", projectImage.file);
+        // formData.append("image", projectImage.file);
+        formData.append("files", projectImage.file);
 
-        const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
-        const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+        // const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
+        // const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+        const uploadUrl = `${configApi.api}upload-attachment-optimized`;
         try {
           const response = await axios.post(uploadUrl, formData);
           console.log(response);
-          const name = response.data.data.thumb.filename;
-          const imageUrl = response.data.data.url;
-          setProjectImage({ name, url: imageUrl });
+          const name = response.data.data.file.originalName;
+          const imageUrl = response.data.data.file.optimizedUrl;
+          const watermark = response.data.data.file.url;
+          setProjectImage({ name, url: imageUrl, watermark });
           return {
             url: imageUrl,
             name,
+            watermark,
           };
         } catch (error) {
           console.error("Error uploading image:", error);
