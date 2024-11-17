@@ -29,6 +29,12 @@ export const dashboardApiSlice = createApi({
       providesTags: ["designer"],
     }),
 
+    getProjectsBySearch: builder.query({
+      query: ({ searchText }) => `find-order?userName=${searchText}`,
+      transformResponse: (response) => response?.data,
+      providesTags: ["designer"],
+    }),
+
     addDesigner: builder.mutation({
       query: ({ designerName, orderId }) => ({
         url: `find-order/update-designer-name/${orderId}`,
@@ -55,6 +61,7 @@ export const dashboardApiSlice = createApi({
 export const {
   useAllProjectStatusQuery,
   useLazyGetAllProjectsQuery,
+  useLazyGetProjectsBySearchQuery,
   useGetProjectsStatsQuery,
   useAddDesignerMutation,
   useLazyGetProjectsStatsQuery,
