@@ -28,8 +28,6 @@ const DashboardProjects = () => {
     searchFor,
   } = useSelector((state) => state.dashboard);
 
-  console.log("projectsData", projectsData);
-
   const { data: projectType, isLoading: isStatusLoading } =
     useAllProjectStatusQuery();
 
