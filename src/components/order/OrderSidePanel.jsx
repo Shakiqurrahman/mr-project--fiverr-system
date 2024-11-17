@@ -42,16 +42,19 @@ const OrderSidePanel = () => {
       </div>
 
       {/* cancel project button  */}
-      {isAdmin && (
-        <div>
-          <button
-            onClick={() => setOpenCancelModal(true)}
-            className="w-full bg-lightskyblue py-3 text-center font-semibold text-black shadow-btn-shadow duration-300 hover:bg-revision/70 hover:text-white"
-          >
-            Cancel Project
-          </button>
-        </div>
-      )}
+      {projectDetails?.projectStatus !== "Completed" &&
+        projectDetails?.projectStatus !== "Canceled" &&
+        isAdmin && (
+          <div>
+            <button
+              onClick={() => setOpenCancelModal(true)}
+              className="w-full bg-lightskyblue py-3 text-center font-semibold text-black shadow-btn-shadow duration-300 hover:bg-revision/70 hover:text-white"
+            >
+              Cancel Project
+            </button>
+          </div>
+        )}
+
       {openCancelModal && (
         <CancelProjectModal handleClose={setOpenCancelModal} />
       )}
