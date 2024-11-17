@@ -43,6 +43,12 @@ export const dashboardApiSlice = createApi({
         `find-order/order-count?timeFilter=${timeFilter}`,
       transformResponse: (response) => response?.data,
     }),
+
+    getAllDiffUsersByFilter: builder.query({
+      query: ({ timeFilter }) =>
+        `find-order/users-status?timeFilter=${timeFilter}`,
+      transformResponse: (response) => response?.data,
+    }),
   }),
 });
 
@@ -52,4 +58,5 @@ export const {
   useGetProjectsStatsQuery,
   useAddDesignerMutation,
   useLazyGetProjectsStatsQuery,
+  getAllDiffUsersByFilter,
 } = dashboardApiSlice;
