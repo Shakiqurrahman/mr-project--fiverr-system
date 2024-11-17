@@ -9,7 +9,6 @@ import {
 } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
-import shortid from "shortid";
 import {
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
@@ -113,22 +112,25 @@ const OrderDeliveryForm = ({ handleClose }) => {
   };
 
   // Image Preview Controllers
-  const getImagesWithDimensions = (files) => {
+
+  const getImagesWithDimensions = async (files) => {
     const handleImageLoad = async (file, index) => {
       console.log(file);
       const formData = new FormData();
-      formData.append("image", file);
+      // formData.append("image", file);
+      formData.append("files", file);
 
-      const uploadUrl = `${configApi.api}upload-image`;
+      // const uploadUrl = `${configApi.api}upload-image`;
+      const uploadUrl = `${configApi.api}upload-attachment`;
 
       const uploadData = {
-        imageId: shortid.generate(),
         name: file.name,
         size: file.size,
         progress: 0,
         url: null,
         type: file.type,
         format: null,
+        watermark: null,
       };
 
       setSelectedImages((prev) => [...prev, uploadData]); // Add the new upload
@@ -136,6 +138,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
       try {
         const response = await axios.post(uploadUrl, formData, {
           onUploadProgress: (data) => {
+            console.log(data);
             const percentage = Math.round((data.loaded / data.total) * 100);
             setSelectedImages((prev) => {
               const newImages = [...prev];
@@ -144,10 +147,17 @@ const OrderDeliveryForm = ({ handleClose }) => {
             });
           },
         });
+        console.log(response);
 
         // Update image data upon successful upload
-        const imageUrl = response.data.data[0].result.url;
-        const fileFormat = response.data.data[0].result.format;
+        const imageUrl = response.data.data.file.url.replaceAll(
+          "-watermark-resized",
+          "",
+        );
+        const watermarkUrl = response.data.data.file.url;
+
+        const fileFormat = response.data.data.file.fileType;
+
         setSelectedImages((prev) => {
           const newImages = [...prev];
           newImages[index] = {
@@ -155,6 +165,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
             url: imageUrl,
             progress: 100,
             format: fileFormat,
+            watermark: watermarkUrl,
           }; // Set URL and progress to 100%
           return newImages;
         });
@@ -163,10 +174,11 @@ const OrderDeliveryForm = ({ handleClose }) => {
       }
     };
 
-    Array.from(files).forEach((file, i) => {
+    // Process files one by one in sequence
+    for (let i = 0; i < files.length; i++) {
       const index = selectedImages?.length + i;
-      handleImageLoad(file, index);
-    }); // Process each file
+      await handleImageLoad(files[i], index); // Wait for each file to finish uploading before starting the next
+    }
   };
 
   const handleChangeSelectedImage = (event) => {
@@ -181,9 +193,9 @@ const OrderDeliveryForm = ({ handleClose }) => {
     const file = Array.from(e.target.files)[0];
 
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append("files", file);
 
-    const uploadUrl = `${configApi.api}upload-image`;
+    const uploadUrl = `${configApi.api}upload-attachment-optimized`;
 
     const uploadData = {
       name: file.name,
@@ -192,6 +204,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
       url: null,
       type: file.type,
       format: null,
+      watermark: null,
     };
 
     setThumbnailImage(uploadData); // Add the new upload
@@ -208,24 +221,19 @@ const OrderDeliveryForm = ({ handleClose }) => {
       });
 
       // Update image data upon successful upload
-      const imageUrl = response.data.data[0].result.url;
-      const fileFormat = response.data.data[0].result.format;
+      const imageUrl = response.data.data.file.optimizedUrl;
+      const watermarkUrl = response.data.data.file.url;
+      const fileFormat = response.data.data.file.fileType;
       setThumbnailImage((prev) => ({
         ...prev,
         url: imageUrl,
         progress: 100,
         format: fileFormat,
+        watermark: watermarkUrl,
       }));
     } catch (error) {
       console.error("Error uploading image:", error);
     }
-
-    // const fileUrl = URL.createObjectURL(file);
-    // setThumbnailImage({
-    //   name: file.name,
-    //   url: fileUrl,
-    //   size: file.size,
-    // });
 
     thumbnailInputRef.current.value = "";
   };

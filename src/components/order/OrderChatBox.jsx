@@ -165,62 +165,6 @@ const OrderChatBox = () => {
   };
 
   // Image Preview Controllers
-  // const getImagesWithDimensions = (files) => {
-  //   setIsImageUploading(true);
-  //   const handleImageLoad = async (file, index) => {
-  //     console.log(file);
-  //     const formData = new FormData();
-  //     formData.append("image", file);
-
-  //     const uploadUrl = `${configApi.api}upload-image`;
-
-  //     const uploadData = {
-  //       name: file.name,
-  //       size: file.size,
-  //       progress: 0,
-  //       url: null,
-  //       type: file.type,
-  //       format: null,
-  //     };
-
-  //     setSelectedImages((prev) => [...prev, uploadData]); // Add the new upload
-
-  //     try {
-  //       const response = await axios.post(uploadUrl, formData, {
-  //         onUploadProgress: (data) => {
-  //           const percentage = Math.round((data.loaded / data.total) * 100);
-  //           setSelectedImages((prev) => {
-  //             const newImages = [...prev];
-  //             newImages[index].progress = percentage; // Update progress
-  //             return newImages;
-  //           });
-  //         },
-  //       });
-
-  //       // Update image data upon successful upload
-  //       const imageUrl = response.data.data[0].result.url;
-  //       const fileFormat = response.data.data[0].result.format;
-  //       setSelectedImages((prev) => {
-  //         const newImages = [...prev];
-  //         newImages[index] = {
-  //           ...newImages[index],
-  //           url: imageUrl,
-  //           progress: 100,
-  //           format: fileFormat,
-  //         }; // Set URL and progress to 100%
-  //         return newImages;
-  //       });
-  //     } catch (error) {
-  //       console.error("Error uploading image:", error);
-  //     }
-  //     setIsImageUploading(false);
-  //   };
-
-  //   Array.from(files).forEach((file, i) => {
-  //     const index = selectedImages?.length + i;
-  //     handleImageLoad(file, index);
-  //   }); // Process each file
-  // };
   const getImagesWithDimensions = async (files) => {
     const handleImageLoad = async (file, index) => {
       console.log(file);
