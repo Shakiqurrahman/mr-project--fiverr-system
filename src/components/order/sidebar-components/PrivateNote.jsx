@@ -36,12 +36,15 @@ const PrivateNote = () => {
     <div className="bg-lightskyblue p-3">
       <div className="flex items-center justify-between gap-1">
         <h1 className="text-lg font-semibold">Private Note</h1>
-        <button
-          onClick={() => setAddNoteModal(true)}
-          className="text-lg font-semibold text-primary duration-300 hover:underline"
-        >
-          Add New
-        </button>
+        {projectDetails?.projectStatus !== "Completed" &&
+          projectDetails?.projectStatus !== "Canceled" && (
+            <button
+              onClick={() => setAddNoteModal(true)}
+              className="text-lg font-semibold text-primary duration-300 hover:underline"
+            >
+              Add New
+            </button>
+          )}
       </div>
       <div className="mb-1 mt-5 space-y-4">
         {notes?.map((note, idx) => (
@@ -49,20 +52,23 @@ const PrivateNote = () => {
             <h2 className="text-base" title={note?.content?.note}>
               {note?.content?.title}
             </h2>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setEditNoteModal(note)}
-                className="text-base text-gray-500"
-              >
-                <LiaEdit />
-              </button>
-              <button
-                onClick={() => handleDeleteNote(note?.orderId, note?.id)}
-                className="text-base text-gray-500"
-              >
-                <RiDeleteBinLine />
-              </button>
-            </div>
+            {projectDetails?.projectStatus !== "Completed" &&
+              projectDetails?.projectStatus !== "Canceled" && (
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setEditNoteModal(note)}
+                    className="text-base text-gray-500"
+                  >
+                    <LiaEdit />
+                  </button>
+                  <button
+                    onClick={() => handleDeleteNote(note?.orderId, note?.id)}
+                    className="text-base text-gray-500"
+                  >
+                    <RiDeleteBinLine />
+                  </button>
+                </div>
+              )}
           </div>
         ))}
       </div>
