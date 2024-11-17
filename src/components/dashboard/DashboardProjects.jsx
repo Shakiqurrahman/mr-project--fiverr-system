@@ -9,16 +9,25 @@ import {
 } from "date-fns";
 import React, { Fragment, useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import ComputerIcon from "../../assets/svg/ComputerIcon";
 import {
   useAllProjectStatusQuery,
   useLazyGetAllProjectsQuery,
 } from "../../Redux/api/dashboardApiSlice";
+import { setDashboardProjects } from "../../Redux/features/dashboardSlice";
 import { getStatusText } from "../customer-profile/StatusText";
 import AddDesignerModal from "./AddDesignerModal";
 
 const DashboardProjects = () => {
+  const dispatch = useDispatch();
+  const {
+    searchText,
+    dashboardProjects: projectsData,
+    searchFor,
+  } = useSelector((state) => state.dashboard);
+
   const { data: projectType, isLoading: isStatusLoading } =
     useAllProjectStatusQuery();
 
@@ -50,6 +59,12 @@ const DashboardProjects = () => {
       getAllProjects({ status: selectedProjectType?.split(" ")[0] });
     }
   }, [selectedProjectType, getAllProjects]);
+
+  useEffect(() => {
+    if (projects && !searchText) {
+      dispatch(setDashboardProjects(projects));
+    }
+  }, [projects, searchText]);
 
   // Function to get time status
   const getTimeStatus = (deadline) => {
@@ -112,33 +127,41 @@ const DashboardProjects = () => {
 
   return (
     <>
-      <div className="mb-6 flex flex-col items-center justify-between gap-2 border p-4 sm:flex-row md:flex-wrap">
-        <h1 className="text-nowrap text-lg font-bold text-primary sm:text-xl">
-          {filteredSelectedProject?.name} - {filteredSelectedProject?.quantity}{" "}
-          ($
-          {filteredSelectedProject?.totalPrice})
-        </h1>
-        <select
-          className="border p-1 px-2 font-semibold outline-none"
-          name="projectType"
-          id="projectType"
-          onChange={handleProjectTypeChange}
-          disabled={isStatusLoading}
-        >
-          {projectType?.map((type, idx) => (
-            <option key={idx} value={type?.name}>
-              {type?.name} ({type?.quantity})
-            </option>
-          ))}
-        </select>
-      </div>
+      {searchFor && searchText ? (
+        <div className="mb-6 border p-4 sm:flex-row md:flex-wrap">
+          <h1 className="text-nowrap text-lg font-bold text-primary sm:text-xl">
+            {` Searched for "${searchText}" projects`}
+          </h1>
+        </div>
+      ) : (
+        <div className="mb-6 flex flex-col items-center justify-between gap-2 border p-4 sm:flex-row md:flex-wrap">
+          <h1 className="text-nowrap text-lg font-bold text-primary sm:text-xl">
+            {filteredSelectedProject?.name} -{" "}
+            {filteredSelectedProject?.quantity} ($
+            {filteredSelectedProject?.totalPrice})
+          </h1>
+          <select
+            className="border p-1 px-2 font-semibold outline-none"
+            name="projectType"
+            id="projectType"
+            onChange={handleProjectTypeChange}
+            disabled={isStatusLoading}
+          >
+            {projectType?.map((type, idx) => (
+              <option key={idx} value={type?.name}>
+                {type?.name} ({type?.quantity})
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
       <div className="dashboard-overflow-x">
         {isLoading ? (
           <div className="max-width flex h-[200px] items-center justify-center text-primary">
             <AiOutlineLoading3Quarters className="animate-spin text-4xl" />
           </div>
-        ) : projects?.length > 0 ? (
-          projects?.map((project, idx) => {
+        ) : projectsData?.length > 0 ? (
+          projectsData?.map((project, idx) => {
             let timeStatus;
             if (project?.deliveryDate) {
               timeStatus = getTimeStatus(project?.deliveryDate || "");

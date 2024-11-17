@@ -13,7 +13,7 @@ const AllTimeStats = () => {
     },
     {
       id: 3,
-      name: "Last 3 Month",
+      name: "Last 3 Months",
     },
     {
       id: 4,

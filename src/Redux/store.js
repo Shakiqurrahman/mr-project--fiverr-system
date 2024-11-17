@@ -16,6 +16,7 @@ import cartSlice from "./features/cartSlice";
 import categorySlice from "./features/category/categorySlice";
 import chatSlice from "./features/chatSlice";
 import commentSlice from "./features/commentsSlice";
+import dashboardSlice from "./features/dashboardSlice";
 import offerProjectSlice from "./features/offerProjectSlice";
 import orderSlice from "./features/orderSlice";
 import passwordVisibilitySlice from "./features/passwordVisibilitySlice";
@@ -69,6 +70,7 @@ const store = configureStore({
     comment: commentSlice,
     order: orderSlice,
     previewImage: previewImageSlice,
+    dashboard: dashboardSlice,
     [dashboardApiSlice.reducerPath]: dashboardApiSlice.reducer,
     [analyticsApiSlice.reducerPath]: analyticsApiSlice.reducer,
     [affiliateApiSlice.reducerPath]: affiliateApiSlice.reducer,
