@@ -26,20 +26,32 @@ const CommentsPreview = ({ commentedImages }) => {
     return hasNewComment || hasNewReply;
   });
 
+  const totalNewComments =
+    filteredImages
+      ?.map((img) => img.comments.filter((c) => c.newComment).length)
+      .reduce((accumulator, currentValue) => accumulator + currentValue, 0) +
+    filteredImages
+      ?.map((img) =>
+        img.comments
+          .map((c) => c.replies.filter((r) => r.newReply).length)
+          .reduce((accumulator, currentValue) => accumulator + currentValue, 0),
+      )
+      .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
   console.log("filteredImages", filteredImages);
 
   const handleOpenCommentBox = (imgObj) => {
+    console.log("image object", imgObj);
+    const image = { ...imgObj, newComment: false };
     setOpenCommentBox(true);
-    dispatch(setImageDetails(imgObj));
+    dispatch(setImageDetails(image));
     dispatch(setImageArray(commentedImages));
   };
 
   return (
     <>
       <div className="mt-3">
-        <h1 className="font-medium">
-          {filteredImages?.length} Comments added.
-        </h1>
+        <h1 className="font-medium">{totalNewComments} Comments added.</h1>
         {filteredImages.map((img, index) => (
           <div key={index} className="mt-3 flex items-start gap-3">
             <img
@@ -52,7 +64,15 @@ const CommentsPreview = ({ commentedImages }) => {
                 className="text-sm font-semibold text-primary"
                 onClick={() => handleOpenCommentBox(img)}
               >
-                View {img?.comments?.length} Comment
+                View{" "}
+                {img?.comments?.filter((c) => c.newComment).length +
+                  img?.comments
+                    ?.map((c) => c.replies.filter((r) => r.newReply).length)
+                    .reduce(
+                      (accumulator, currentValue) => accumulator + currentValue,
+                      0,
+                    )}{" "}
+                Comment
               </button>
               <p className="text-sm">{img.name}</p>
             </div>

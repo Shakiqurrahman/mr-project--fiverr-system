@@ -165,14 +165,71 @@ const OrderChatBox = () => {
   };
 
   // Image Preview Controllers
-  const getImagesWithDimensions = (files) => {
-    setIsImageUploading(true);
+  // const getImagesWithDimensions = (files) => {
+  //   setIsImageUploading(true);
+  //   const handleImageLoad = async (file, index) => {
+  //     console.log(file);
+  //     const formData = new FormData();
+  //     formData.append("image", file);
+
+  //     const uploadUrl = `${configApi.api}upload-image`;
+
+  //     const uploadData = {
+  //       name: file.name,
+  //       size: file.size,
+  //       progress: 0,
+  //       url: null,
+  //       type: file.type,
+  //       format: null,
+  //     };
+
+  //     setSelectedImages((prev) => [...prev, uploadData]); // Add the new upload
+
+  //     try {
+  //       const response = await axios.post(uploadUrl, formData, {
+  //         onUploadProgress: (data) => {
+  //           const percentage = Math.round((data.loaded / data.total) * 100);
+  //           setSelectedImages((prev) => {
+  //             const newImages = [...prev];
+  //             newImages[index].progress = percentage; // Update progress
+  //             return newImages;
+  //           });
+  //         },
+  //       });
+
+  //       // Update image data upon successful upload
+  //       const imageUrl = response.data.data[0].result.url;
+  //       const fileFormat = response.data.data[0].result.format;
+  //       setSelectedImages((prev) => {
+  //         const newImages = [...prev];
+  //         newImages[index] = {
+  //           ...newImages[index],
+  //           url: imageUrl,
+  //           progress: 100,
+  //           format: fileFormat,
+  //         }; // Set URL and progress to 100%
+  //         return newImages;
+  //       });
+  //     } catch (error) {
+  //       console.error("Error uploading image:", error);
+  //     }
+  //     setIsImageUploading(false);
+  //   };
+
+  //   Array.from(files).forEach((file, i) => {
+  //     const index = selectedImages?.length + i;
+  //     handleImageLoad(file, index);
+  //   }); // Process each file
+  // };
+  const getImagesWithDimensions = async (files) => {
     const handleImageLoad = async (file, index) => {
       console.log(file);
       const formData = new FormData();
-      formData.append("image", file);
+      // formData.append("image", file);
+      formData.append("files", file);
 
-      const uploadUrl = `${configApi.api}upload-image`;
+      // const uploadUrl = `${configApi.api}upload-image`;
+      const uploadUrl = `${configApi.api}upload-attachment`;
 
       const uploadData = {
         name: file.name,
@@ -188,6 +245,7 @@ const OrderChatBox = () => {
       try {
         const response = await axios.post(uploadUrl, formData, {
           onUploadProgress: (data) => {
+            console.log(data);
             const percentage = Math.round((data.loaded / data.total) * 100);
             setSelectedImages((prev) => {
               const newImages = [...prev];
@@ -196,10 +254,14 @@ const OrderChatBox = () => {
             });
           },
         });
+        console.log(response);
 
         // Update image data upon successful upload
-        const imageUrl = response.data.data[0].result.url;
-        const fileFormat = response.data.data[0].result.format;
+        const imageUrl = response.data.data.file.url.replaceAll(
+          "-watermark-resized",
+          "",
+        );
+        const fileFormat = response.data.data.file.fileType;
         setSelectedImages((prev) => {
           const newImages = [...prev];
           newImages[index] = {
@@ -213,13 +275,13 @@ const OrderChatBox = () => {
       } catch (error) {
         console.error("Error uploading image:", error);
       }
-      setIsImageUploading(false);
     };
 
-    Array.from(files).forEach((file, i) => {
+    // Process files one by one in sequence
+    for (let i = 0; i < files.length; i++) {
       const index = selectedImages?.length + i;
-      handleImageLoad(file, index);
-    }); // Process each file
+      await handleImageLoad(files[i], index); // Wait for each file to finish uploading before starting the next
+    }
   };
 
   const handleChangeSelectedImage = (event) => {
@@ -288,21 +350,6 @@ const OrderChatBox = () => {
   // handler for Submitting/Send a Message
   const handleSubmitMessage = async (e) => {
     e.preventDefault();
-
-    // const submitForm = {
-    //   text: "hello",
-    // };
-
-    // if (isAdmin) {
-    //   socket?.emit("order:admin-message", {
-    //     userId: "671ba677ed05eed5d29efb35",
-    //     ...submitForm,
-    //   })
-    // } else {
-    //   socket?.emit("order:user-message", {
-    //     ...submitForm,
-    //   })
-    // }
 
     if (textValue || selectedImages.length > 0) {
       const attachments = selectedImages?.map((img) => ({
@@ -442,7 +489,7 @@ const OrderChatBox = () => {
                     <CommentsPreview commentedImages={msg?.imageComments} />
                   )}
                   {msg?.attachment?.length > 0 && (
-                    <AttachmentsPreview images={msg?.attachment || []} />
+                    <AttachmentsPreview files={msg?.attachment || []} />
                   )}
                   {msg?.additionalOffer && (
                     <AdditionalOfferPreview

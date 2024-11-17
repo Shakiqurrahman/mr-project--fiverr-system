@@ -32,6 +32,7 @@ const EditReplyBox = ({
       ...replyObj,
       replyText: e.target.value,
       isSubmitted: false,
+      newReply: true,
     });
   };
 

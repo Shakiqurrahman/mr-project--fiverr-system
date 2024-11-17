@@ -120,51 +120,19 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
   const handleCommentSubmit = (e) => {
     e.preventDefault();
 
-    // const updatedComments = images?.map((image) => {
-    //   return {
-    //     ...image,
-    //     comments: image?.comments.map((comment) => ({
-    //       ...comment,
-    //       isSubmitted: true,
-    //       replies: comment?.replies?.map((reply) => ({
-    //         ...reply,
-    //         isSubmitted: true,
-    //       })),
-    //     })),
-    //   };
-    // });
-
     const updatedComments = images?.map((image) => {
       return {
         ...image,
-        comments: image?.comments.map((comment) => {
-          const updatedComment = {
-            ...comment,
-            isSubmitted: true, // Always set isSubmitted to true for the comment
-          };
-
-          // If the comment's isSubmitted is false, add newComment: true
-          if (comment.isSubmitted === false) {
-            updatedComment.newComment = true;
-          }
-
-          // Handle replies
-          updatedComment.replies = comment?.replies?.map((reply) => {
-            const updatedReply = {
-              ...reply,
-              isSubmitted: true, // Always set isSubmitted to true for the reply
-            };
-
-            // If the parent comment's isSubmitted was false, add newReply: true to the reply
-            if (reply.isSubmitted === false) {
-              updatedReply.newReply = true; // Add newReply if the parent comment's isSubmitted was false
-            }
-
-            return updatedReply;
-          });
-
-          return updatedComment;
-        }),
+        comments: image?.comments.map((comment) => ({
+          ...comment,
+          isSubmitted: true,
+          newComment: comment.isSubmitted ? false : true,
+          replies: comment?.replies?.map((reply) => ({
+            ...reply,
+            isSubmitted: true,
+            newReply: reply.isSubmitted ? false : true,
+          })),
+        })),
       };
     });
 

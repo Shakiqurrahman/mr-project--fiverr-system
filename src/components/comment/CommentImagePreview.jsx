@@ -21,7 +21,6 @@ const CommentImagePreview = ({ selected, close, openDrawer, drawer }) => {
     (state) => state.comment,
   );
   const comments = imageDetails?.comments;
-  console.log("image comments", comments);
   const filteredComments = comments?.filter((c) => c.top);
   // const [images, setImages] = useState(imagesArray || []);
 

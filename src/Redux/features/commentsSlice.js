@@ -11,7 +11,19 @@ const commentSlice = createSlice({
   },
   reducers: {
     setImageArray: (state, action) => {
-      state.images = action.payload;
+      const images = action.payload.map((image) => ({
+        ...image,
+        comments: image.comments.map((comment) => ({
+          ...comment,
+          newComment: false,
+          replies: comment.replies.map((reply) => ({
+            ...reply,
+            newReply: false,
+          })),
+        })),
+      }));
+      console.log("new Comments", images);
+      state.images = images;
     },
 
     updateImageArray: (state, action) => {
@@ -67,6 +79,9 @@ const commentSlice = createSlice({
     },
 
     setCommentsData: (state, action) => {
+      const details = state.imageDetails;
+      console.log("image details", details);
+      console.log("image action", action.payload);
       if (action.payload.markerId) {
         state.imageDetails.comments = state.imageDetails.comments.map((c) => {
           if (c.markerId === action.payload.markerId) {
