@@ -6,11 +6,14 @@ import RightArrowIcon from "../../../assets/images/icons/Right Arrow.svg";
 
 import { useState } from "react";
 import { BiDownload } from "react-icons/bi";
+import { useSelector } from "react-redux";
 import formatFileSize from "../../../libs/formatFileSize";
 import CommentPage from "../../../pages/CommentPage";
 import Divider from "../../Divider";
 
 const OrderDeliveryPreview = ({ data }) => {
+  const { projectDetails } = useSelector((state) => state.order);
+
   const [openCommentBox, setOpenCommentBox] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -87,6 +90,8 @@ const OrderDeliveryPreview = ({ data }) => {
     setSelectedImage(att);
   };
 
+  console.log("delivery files", data);
+
   return (
     <>
       <div className="mt-5 flex items-start gap-3">
@@ -94,77 +99,106 @@ const OrderDeliveryPreview = ({ data }) => {
           <h1 className="mb-2 text-lg font-semibold">Preview Image</h1>
           <div>
             <Slider {...settings}>
-              {data?.attachments?.map((att, index) => (
-                <div key={index} className="w-full">
-                  <img
-                    onClick={() => handleOpenComment(att)}
-                    src={att?.url}
-                    alt={att?.name}
-                    className="block w-full cursor-pointer object-cover"
-                  />
-                  <div className="mb-10 mt-4 text-center">
-                    <a
-                      href={att?.url}
-                      download={att?.name}
-                      target="_blank"
-                      className="rounded-[30px] border border-gray-400 px-5 py-2 text-lg font-medium text-black/50"
-                    >
-                      Download
-                    </a>
+              {data?.attachments
+                ?.filter((file) => file?.format?.startsWith("image/"))
+                ?.map((att, index) => (
+                  <div key={index} className="w-full">
+                    <img
+                      // onClick={() => handleOpenComment(att)}
+                      src={
+                        projectDetails?.projectStatus === "Completed"
+                          ? att?.url
+                          : att?.watermark
+                      }
+                      alt={att?.name}
+                      className="pointer-events-none block w-full object-cover"
+                    />
+                    <div className="mb-10 mt-4 text-center">
+                      <a
+                        href={
+                          projectDetails?.projectStatus === "Completed"
+                            ? att?.url
+                            : att?.watermark
+                        }
+                        download={att?.name}
+                        target="_blank"
+                        className="rounded-[30px] border border-gray-400 px-5 py-2 text-lg font-medium text-black/50"
+                      >
+                        Download
+                      </a>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </Slider>
           </div>
-          <div className="flex gap-3">
-            <button
-              type="button"
-              className="w-1/2 rounded-[30px] bg-primary p-2 text-center font-semibold text-white"
-              onClick={() => handleDownloadZip(data?.attachments)}
-            >
-              Zip Download
-            </button>
-            <button
-              type="button"
-              className="w-1/2 rounded-[30px] bg-revision p-2 text-center font-semibold text-white"
-              onClick={() => handleDownloadAll(data?.attachments)}
-            >
-              Individual Download
-            </button>
-          </div>
-          <div className="mt-10">
-            <p>
-              The watermark will no longer show after accepting the delivery
-              file. Please accept your final file first, then download the
-              files.
-            </p>
-            <div className="my-10 flex justify-center gap-5">
+          {projectDetails?.projectStatus === "Completed" && (
+            <div className="flex gap-3">
               <button
                 type="button"
-                className="rounded-[30px] bg-primary px-10 py-2 text-center font-semibold text-white"
+                className="w-1/2 rounded-[30px] bg-primary p-2 text-center font-semibold text-white"
+                onClick={() => handleDownloadZip(data?.attachments)}
               >
-                Accept
+                Zip Download
               </button>
               <button
                 type="button"
-                className="rounded-[30px] bg-revision px-10 py-2 text-center font-semibold text-white"
+                className="w-1/2 rounded-[30px] bg-revision p-2 text-center font-semibold text-white"
+                onClick={() => handleDownloadAll(data?.attachments)}
               >
-                Revision
+                Individual Download
               </button>
             </div>
-          </div>
+          )}
+          {projectDetails?.projectStatus !== "Completed" &&
+            projectDetails?.projectStatus !== "Canceled" && (
+              <div className="">
+                <p>
+                  The watermark will no longer show after accepting the delivery
+                  file. Please accept your final file first, then download the
+                  files.
+                </p>
+                <div className="my-10 flex justify-center gap-5">
+                  <button
+                    type="button"
+                    className="rounded-[30px] bg-primary px-10 py-2 text-center font-semibold text-white"
+                  >
+                    Accept
+                  </button>
+                  <button
+                    type="button"
+                    className="rounded-[30px] bg-revision px-10 py-2 text-center font-semibold text-white"
+                  >
+                    Revision
+                  </button>
+                </div>
+              </div>
+            )}
         </div>
         <div className="w-1/3">
-          <h1 className="mb-2 ms-6 text-lg font-semibold">Final Files</h1>
+          <h1
+            className={`mb-2 ${projectDetails?.projectStatus === "Completed" ? "ms-6" : ""} text-lg font-semibold`}
+          >
+            Final Files
+          </h1>
           <div>
             {data?.thumbnailImage && (
               <>
                 <a
-                  href={data?.thumbnailImage?.url}
-                  download={data?.thumbnailImage?.name}
+                  href={
+                    projectDetails?.projectStatus === "Completed"
+                      ? data?.thumbnailImage?.url
+                      : undefined
+                  }
+                  download={
+                    projectDetails?.projectStatus === "Completed"
+                      ? data?.thumbnailImage?.name
+                      : undefined
+                  }
                   className="flex items-start gap-2 text-sm"
                 >
-                  <BiDownload className="shrink-0 text-lg text-primary" />
+                  {projectDetails?.projectStatus === "Completed" && (
+                    <BiDownload className="shrink-0 text-lg text-primary" />
+                  )}
                   <p>
                     {data?.thumbnailImage?.name}{" "}
                     <span className="text-black/50">
@@ -179,11 +213,21 @@ const OrderDeliveryPreview = ({ data }) => {
               data?.attachments?.map((att, index) => (
                 <a
                   key={index}
-                  href={att?.url}
-                  download={att?.name}
+                  href={
+                    projectDetails?.projectStatus === "Completed"
+                      ? att?.url
+                      : undefined
+                  }
+                  download={
+                    projectDetails?.projectStatus === "Completed"
+                      ? att?.name
+                      : undefined
+                  }
                   className="flex items-start gap-2 text-sm"
                 >
-                  <BiDownload className="shrink-0 text-lg text-primary" />
+                  {projectDetails?.projectStatus === "Completed" && (
+                    <BiDownload className="shrink-0 text-lg text-primary" />
+                  )}
                   <p>
                     {att?.name}{" "}
                     <span className="text-black/50">
