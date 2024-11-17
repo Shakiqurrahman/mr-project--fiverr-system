@@ -101,9 +101,7 @@ const PaymentPage = () => {
       deliveryDuration: designs?.deliveryWay
         ? null
         : deliveryDuration || state?.duration,
-      durationHours: designs?.deliveryWay
-        ? state?.deliveryDuration || state?.duration
-        : null,
+      durationHours: designs?.deliveryWay ? designs?.durationHours : null,
       title: state?.title,
       projectType,
       projectImage,

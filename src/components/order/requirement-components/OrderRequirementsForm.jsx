@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { FaSpinner } from "react-icons/fa6";
 import { IoMdAttach } from "react-icons/io";
@@ -6,8 +7,11 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import shortid from "shortid";
 import { useUpdateRequirementMutation } from "../../../Redux/api/orderApiSlice";
+import { configApi } from "../../../libs/configApi";
 import formatFileSize from "../../../libs/formatFileSize";
+import CircleProgressBar from "../../CircleProgressBar";
 import Divider from "../../Divider";
+import FilePreview from "../../FilePreview";
 import EmojiPicker from "../../chat/EmojiPicker";
 
 const OrderRequirementsForm = () => {
@@ -100,34 +104,112 @@ const OrderRequirementsForm = () => {
   };
 
   // Image Preview Controllers
-  const getImagesWithDimensions = (files, id) => {
-    const images = [];
 
-    const handleImageLoad = (file) => {
-      images.push({
-        file: file,
-        url: URL.createObjectURL(file),
-      });
-      if (images.length === files.length) {
+  const getImagesWithDimensions = async (files, id) => {
+    const handleImageLoad = async (file, index) => {
+      console.log("file", file);
+
+      // Create FormData and append the file
+      const formData = new FormData();
+      formData.append("files", file); // Ensure you're appending files correctly
+
+      const uploadUrl = `${configApi.api}upload-attachment`;
+
+      const uploadData = {
+        name: file.name,
+        size: file.size,
+        progress: 0,
+        url: null,
+        type: file.type,
+        format: null,
+      };
+
+      // Update state with new file attachments
+      setRequirements((prev) =>
+        prev.map((item) => {
+          if (item.id === id) {
+            return {
+              ...item,
+              attachments: item.attachments
+                ? [...item.attachments, uploadData]
+                : [uploadData],
+            };
+          } else {
+            return item;
+          }
+        }),
+      );
+
+      try {
+        const response = await axios.post(uploadUrl, formData, {
+          onUploadProgress: (data) => {
+            console.log(data);
+            const percentage = Math.round((data.loaded / data.total) * 100);
+
+            // Update progress state
+            setRequirements((prev) =>
+              prev.map((item) => {
+                if (item.id === id) {
+                  return {
+                    ...item,
+                    attachments: item.attachments.map(
+                      (attachment, attachmentIndex) => {
+                        if (attachmentIndex === index) {
+                          return { ...attachment, progress: percentage };
+                        }
+                        return attachment;
+                      },
+                    ),
+                  };
+                }
+                return item;
+              }),
+            );
+          },
+        });
+
+        // Extract and update image URL and format after successful upload
+        const imageUrl = response.data.data.file.url.replaceAll(
+          "-watermark-resized",
+          "",
+        );
+        const fileFormat = response.data.data.file.fileType;
+
         setRequirements((prev) =>
           prev.map((item) => {
             if (item.id === id) {
               return {
                 ...item,
-                attachments: item?.attachments
-                  ? [...item.attachments, ...images]
-                  : images,
+                attachments: item.attachments.map(
+                  (attachment, attachmentIndex) => {
+                    if (attachmentIndex === index) {
+                      return {
+                        ...attachment,
+                        url: imageUrl,
+                        progress: 100,
+                        format: fileFormat,
+                      };
+                    }
+                    return attachment;
+                  },
+                ),
               };
-            } else {
-              return item;
             }
+            return item;
           }),
         );
+      } catch (error) {
+        console.error("Error uploading image:", error);
       }
     };
 
+    // Process files one by one in sequence
     for (let i = 0; i < files.length; i++) {
-      handleImageLoad(files[i]);
+      const selectedImages = requirements?.find(
+        (req) => req.id === id,
+      )?.attachments;
+      const index = selectedImages ? selectedImages.length + i : i; // Track index correctly
+      await handleImageLoad(files[i], index); // Wait for each file to finish uploading before starting the next
     }
   };
 
@@ -267,27 +349,35 @@ const OrderRequirementsForm = () => {
                     <div className="preview-scroll-overflow-x mt-4 flex gap-4">
                       {item.attachments?.map((att, idx) => (
                         <div key={idx} className="w-[120px] shrink-0">
-                          <div className="relative">
-                            <img
-                              className={`h-[80px] w-full object-contain`}
-                              src={att.url}
-                            />
-                            <button
-                              type="button"
-                              className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
-                              onClick={() => handleImageRemove(idx, item.id)}
-                            >
-                              <RiDeleteBin6Line size={15} />
-                            </button>
+                          <div className="group relative">
+                            {att?.url ? (
+                              <FilePreview file={att} />
+                            ) : (
+                              <div className="flex h-[80px] w-full items-center justify-center bg-lightcream">
+                                <CircleProgressBar
+                                  precentage={att?.progress}
+                                  circleWidth={50}
+                                />
+                              </div>
+                            )}
+                            {(att?.url || att?.progress === 100) && (
+                              <button
+                                type="button"
+                                className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
+                                onClick={() => handleImageRemove(att)}
+                              >
+                                <RiDeleteBin6Line size={20} />
+                              </button>
+                            )}
                           </div>
                           <h1
                             className="truncate text-xs font-medium"
-                            title={att.file.name}
+                            title={att?.name}
                           >
-                            {att.file.name}
+                            {att?.name}
                           </h1>
                           <span className="text-xs">
-                            ({formatFileSize(att.file.size)})
+                            ({formatFileSize(att?.size)})
                           </span>
                         </div>
                       ))}

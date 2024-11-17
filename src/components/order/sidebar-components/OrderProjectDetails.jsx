@@ -68,8 +68,12 @@ const OrderProjectDetails = () => {
         <li className="my-2 flex items-center justify-between gap-3 text-base">
           Duration{" "}
           <b className="text-base">
-            {projectDetails?.duration}{" "}
-            {parseInt(projectDetails?.duration) > 1 ? "Days" : "Day"}
+            {projectDetails?.duration || projectDetails?.durationHours}{" "}
+            {parseInt(projectDetails?.durationHours)
+              ? "Hours"
+              : parseInt(projectDetails?.duration) > 1
+                ? "Days"
+                : "Day"}
           </b>
         </li>
         <li className="my-2 flex items-center justify-between gap-3 text-base">
