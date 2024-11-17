@@ -9,6 +9,7 @@ import {
 } from "date-fns";
 import React from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { Link } from "react-router-dom";
 import { getStatusText } from "./StatusText";
 
 const ActiveProjects = ({ activeProjects, isActiveProjectsLoading }) => {
@@ -80,13 +81,14 @@ const ActiveProjects = ({ activeProjects, isActiveProjectsLoading }) => {
       ) : activeProjects?.length > 0 ? (
         activeProjects?.map((project) => {
           let timeStatus;
-            if (project?.deliveryDate) {
-              timeStatus = getTimeStatus(project?.deliveryDate || "");
-            }
-            const { time, color } = timeStatus || "";
+          if (project?.deliveryDate) {
+            timeStatus = getTimeStatus(project?.deliveryDate || "");
+          }
+          const { time, color } = timeStatus || "";
           return (
-            <div
-              className="rounded-lg border border-gray-300 p-2 shadow-sm lg:p-4"
+            <Link
+              to={`/order/${project?.projectNumber}`}
+              className="block rounded-lg border border-gray-300 p-2 shadow-sm lg:p-4"
               key={project?.id}
             >
               <div className="flex items-center gap-3">
@@ -114,7 +116,7 @@ const ActiveProjects = ({ activeProjects, isActiveProjectsLoading }) => {
                   {getStatusText(project?.projectStatus)}
                 </p>
               </div>
-            </div>
+            </Link>
           );
         })
       ) : (

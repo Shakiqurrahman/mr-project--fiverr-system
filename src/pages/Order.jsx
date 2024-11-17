@@ -164,7 +164,11 @@ const Order = () => {
         projectDetails?.projectStatus === "Completed" && (
           <div className="w-full lg:w-[calc(100%_-_320px)]">
             <OrderReview />
-            <OrderReviewForm />
+            {projectDetails?.review?.length === 0 && user?.role === "USER" ? (
+              <OrderReviewForm />
+            ) : projectDetails?.review?.length === 1 && isAdmin ? (
+              <OrderReviewForm />
+            ) : null}
             <OrderTipsForm />
             {user?.role === "USER" ? (
               <p className="mt-5 text-center text-lg font-semibold">
