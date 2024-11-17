@@ -98,8 +98,12 @@ const PaymentPage = () => {
       totalAmount: designs?.totalAmount || totalAmount,
       requirements: requirementsArray,
       bulletPoint: state?.bulletPoint,
-      deliveryDuration: deliveryDuration || state?.duration,
-      // deliveryDuration: state?.deliveryDuration || state?.duration,
+      deliveryDuration: designs?.deliveryWay
+        ? null
+        : deliveryDuration || state?.duration,
+      durationHours: designs?.deliveryWay
+        ? state?.deliveryDuration || state?.duration
+        : null,
       title: state?.title,
       projectType,
       projectImage,
