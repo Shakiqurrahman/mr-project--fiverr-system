@@ -165,14 +165,15 @@ const OrderChatBox = () => {
   };
 
   // Image Preview Controllers
-  const getImagesWithDimensions = (files) => {
-    setIsImageUploading(true);
+  const getImagesWithDimensions = async (files) => {
     const handleImageLoad = async (file, index) => {
       console.log(file);
       const formData = new FormData();
-      formData.append("image", file);
+      // formData.append("image", file);
+      formData.append("files", file);
 
-      const uploadUrl = `${configApi.api}upload-image`;
+      // const uploadUrl = `${configApi.api}upload-image`;
+      const uploadUrl = `${configApi.api}upload-attachment`;
 
       const uploadData = {
         name: file.name,
@@ -188,6 +189,7 @@ const OrderChatBox = () => {
       try {
         const response = await axios.post(uploadUrl, formData, {
           onUploadProgress: (data) => {
+            console.log(data);
             const percentage = Math.round((data.loaded / data.total) * 100);
             setSelectedImages((prev) => {
               const newImages = [...prev];
@@ -196,10 +198,14 @@ const OrderChatBox = () => {
             });
           },
         });
+        console.log(response);
 
         // Update image data upon successful upload
-        const imageUrl = response.data.data[0].result.url;
-        const fileFormat = response.data.data[0].result.format;
+        const imageUrl = response.data.data.file.url.replaceAll(
+          "-watermark-resized",
+          "",
+        );
+        const fileFormat = response.data.data.file.fileType;
         setSelectedImages((prev) => {
           const newImages = [...prev];
           newImages[index] = {
@@ -213,13 +219,13 @@ const OrderChatBox = () => {
       } catch (error) {
         console.error("Error uploading image:", error);
       }
-      setIsImageUploading(false);
     };
 
-    Array.from(files).forEach((file, i) => {
+    // Process files one by one in sequence
+    for (let i = 0; i < files.length; i++) {
       const index = selectedImages?.length + i;
-      handleImageLoad(file, index);
-    }); // Process each file
+      await handleImageLoad(files[i], index); // Wait for each file to finish uploading before starting the next
+    }
   };
 
   const handleChangeSelectedImage = (event) => {
@@ -288,21 +294,6 @@ const OrderChatBox = () => {
   // handler for Submitting/Send a Message
   const handleSubmitMessage = async (e) => {
     e.preventDefault();
-
-    // const submitForm = {
-    //   text: "hello",
-    // };
-
-    // if (isAdmin) {
-    //   socket?.emit("order:admin-message", {
-    //     userId: "671ba677ed05eed5d29efb35",
-    //     ...submitForm,
-    //   })
-    // } else {
-    //   socket?.emit("order:user-message", {
-    //     ...submitForm,
-    //   })
-    // }
 
     if (textValue || selectedImages.length > 0) {
       const attachments = selectedImages?.map((img) => ({
@@ -442,7 +433,7 @@ const OrderChatBox = () => {
                     <CommentsPreview commentedImages={msg?.imageComments} />
                   )}
                   {msg?.attachment?.length > 0 && (
-                    <AttachmentsPreview images={msg?.attachment || []} />
+                    <AttachmentsPreview files={msg?.attachment || []} />
                   )}
                   {msg?.additionalOffer && (
                     <AdditionalOfferPreview
@@ -471,173 +462,178 @@ const OrderChatBox = () => {
           {/* <div ref={endOfMessagesRef} /> */}
         </div>
         {/* Text Field Part */}
-        <div className={`mt-auto px-3`}>
-          <div className="rounded-t-md border border-b border-slate-300">
-            {selectedImages?.length > 0 && (
-              <div className="preview-scroll-overflow-x flex gap-2 border-b p-[10px]">
-                {selectedImages?.map((image, index) => (
-                  <div key={index} className="w-[120px]">
-                    <div className="group relative">
-                      {image?.url ? (
-                        <FilePreview file={image} />
-                      ) : (
-                        <div className="flex h-[80px] w-full items-center justify-center bg-lightcream">
-                          <CircleProgressBar
-                            precentage={image?.progress}
-                            circleWidth={50}
-                          />
+        {projectDetails?.projectStatus !== "Completed" &&
+          projectDetails?.projectStatus !== "Canceled" && (
+            <div className={`mt-auto px-3`}>
+              <div className="rounded-t-md border border-b border-slate-300">
+                {selectedImages?.length > 0 && (
+                  <div className="preview-scroll-overflow-x flex gap-2 border-b p-[10px]">
+                    {selectedImages?.map((image, index) => (
+                      <div key={index} className="w-[120px]">
+                        <div className="group relative">
+                          {image?.url ? (
+                            <FilePreview file={image} />
+                          ) : (
+                            <div className="flex h-[80px] w-full items-center justify-center bg-lightcream">
+                              <CircleProgressBar
+                                precentage={image?.progress}
+                                circleWidth={50}
+                              />
+                            </div>
+                          )}
+                          {(image?.url || image?.progress === 100) && (
+                            <button
+                              type="button"
+                              className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
+                              onClick={() => handleImageRemove(index)}
+                            >
+                              <RiDeleteBin6Line size={20} />
+                            </button>
+                          )}
                         </div>
-                      )}
-                      {(image?.url || image?.progress === 100) && (
-                        <button
-                          type="button"
-                          className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
-                          onClick={() => handleImageRemove(index)}
+                        <h1
+                          className="truncate text-xs font-medium"
+                          title={image?.name}
                         >
-                          <RiDeleteBin6Line size={20} />
-                        </button>
-                      )}
-                    </div>
-                    <h1
-                      className="truncate text-xs font-medium"
-                      title={image?.name}
-                    >
-                      {image?.name}
-                    </h1>
-                    <span className="text-xs">
-                      ({formatFileSize(image?.size)})
-                    </span>
+                          {image?.name}
+                        </h1>
+                        <span className="text-xs">
+                          ({formatFileSize(image?.size)})
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            )}
-            <div
-              className={`${quickResponse ? "h-[140px]" : "h-auto"} border-b border-slate-300 p-2`}
-            >
-              <div className="flex flex-wrap items-center justify-between gap-3 sm:flex-nowrap">
-                <div className="flex items-center gap-3 font-semibold">
-                  Quick Response{" "}
-                  <button
-                    type="button"
-                    className="bg-transparent"
-                    onClick={() => updateItem("quickResponse", !quickResponse)}
-                  >
-                    {quickResponse ? (
-                      <IoIosArrowDown className="text-xl text-primary" />
-                    ) : (
-                      <IoIosArrowUp className="text-xl text-primary" />
-                    )}
-                  </button>
-                </div>
-                <div className="flex items-center gap-3 text-xs font-medium">
-                  <p>Local time: 07:13 PM, Nov 7, 2024</p>
-                  <Divider className="h-4 w-px !bg-black" />
-                  <p>Last seen 23 hours ago</p>
-                </div>
-              </div>
-              <div
-                className={`${quickResponse ? "block" : "hidden"} flex h-[100px] flex-wrap items-start gap-3 overflow-y-auto py-2`}
-              >
-                {quickMsgs?.map((msg, i) => (
+                )}
+                <div
+                  className={`${quickResponse ? "h-[140px]" : "h-auto"} border-b border-slate-300 p-2`}
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-3 sm:flex-nowrap">
+                    <div className="flex items-center gap-3 font-semibold">
+                      Quick Response{" "}
+                      <button
+                        type="button"
+                        className="bg-transparent"
+                        onClick={() =>
+                          updateItem("quickResponse", !quickResponse)
+                        }
+                      >
+                        {quickResponse ? (
+                          <IoIosArrowDown className="text-xl text-primary" />
+                        ) : (
+                          <IoIosArrowUp className="text-xl text-primary" />
+                        )}
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-3 text-xs font-medium">
+                      <p>Local time: 07:13 PM, Nov 7, 2024</p>
+                      <Divider className="h-4 w-px !bg-black" />
+                      <p>Last seen 23 hours ago</p>
+                    </div>
+                  </div>
                   <div
-                    key={i}
-                    className="relative flex items-center gap-2 border border-gray-400 px-2 py-1 text-xs hover:bg-primary/10"
+                    className={`${quickResponse ? "block" : "hidden"} flex h-[100px] flex-wrap items-start gap-3 overflow-y-auto py-2`}
                   >
-                    <button
-                      type="button"
-                      value={msg?.description}
-                      onClick={handleChangeQuickMsg}
-                    >
-                      {msg?.title}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleQuickMsgs(msg?.id)}
-                    >
-                      <IoIosArrowDown className="text-base text-gray-400" />
-                    </button>
-                    {qucikMsgBtnController === msg?.id && (
+                    {quickMsgs?.map((msg, i) => (
                       <div
-                        className="absolute top-full z-10 rounded-lg border border-solid bg-white py-2 text-center *:block *:p-[5px_15px]"
-                        ref={menuRef}
+                        key={i}
+                        className="relative flex items-center gap-2 border border-gray-400 px-2 py-1 text-xs hover:bg-primary/10"
                       >
                         <button
                           type="button"
-                          className="w-full text-xs hover:bg-gray-200"
-                          onClick={() => setOpenEditMsgModal(msg)}
+                          value={msg?.description}
+                          onClick={handleChangeQuickMsg}
                         >
-                          Edit
+                          {msg?.title}
                         </button>
                         <button
                           type="button"
-                          onClick={() => handleDeleteQuickMsg(msg?.id)}
-                          className="w-full text-xs hover:bg-gray-200"
+                          onClick={() => handleQuickMsgs(msg?.id)}
                         >
-                          Delete
+                          <IoIosArrowDown className="text-base text-gray-400" />
                         </button>
+                        {qucikMsgBtnController === msg?.id && (
+                          <div
+                            className="absolute top-full z-10 rounded-lg border border-solid bg-white py-2 text-center *:block *:p-[5px_15px]"
+                            ref={menuRef}
+                          >
+                            <button
+                              type="button"
+                              className="w-full text-xs hover:bg-gray-200"
+                              onClick={() => setOpenEditMsgModal(msg)}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteQuickMsg(msg?.id)}
+                              className="w-full text-xs hover:bg-gray-200"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        )}
                       </div>
+                    ))}
+                    <div className="flex items-center gap-2 border border-gray-400 px-2 py-1 text-xs hover:bg-primary/10">
+                      <button
+                        type="button"
+                        onClick={() => setOpenAddMsgModal(true)}
+                      >
+                        + Add New
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <textarea
+                  name=""
+                  className="block h-[90px] w-full resize-none p-3 outline-none"
+                  placeholder="Type a message..."
+                  ref={textareaRef}
+                  value={textValue}
+                  onChange={handleTextChange}
+                ></textarea>
+                <div className="flex h-[50px] items-center justify-between border-t border-slate-300">
+                  <div className="flex items-center gap-[2px] pl-1 sm:gap-3 sm:pl-3">
+                    <EmojiPicker
+                      onEmojiSelect={handleEmojiSelect}
+                      style={{ transform: "translateX(-5%)" }}
+                    />
+                    <Divider className={"h-[30px] w-px !bg-gray-400"} />
+                    <div>
+                      <input
+                        type="file"
+                        multiple
+                        id="select-images"
+                        hidden
+                        onChange={handleChangeSelectedImage}
+                        ref={fileInputRef}
+                      />
+                      <label htmlFor="select-images" className="cursor-pointer">
+                        <IoIosAttach className="text-2xl" />
+                      </label>
+                    </div>
+                    {isAdmin && (
+                      <button
+                        type="button"
+                        className="bg-lightskyblue px-2 py-2 text-xs font-medium sm:text-sm"
+                        onClick={() => setOpenOfferModal(true)}
+                      >
+                        Create an Offer
+                      </button>
                     )}
                   </div>
-                ))}
-                <div className="flex items-center gap-2 border border-gray-400 px-2 py-1 text-xs hover:bg-primary/10">
                   <button
+                    disabled={isImageUploading}
                     type="button"
-                    onClick={() => setOpenAddMsgModal(true)}
+                    className="flex h-full w-[100px] items-center justify-center bg-primary text-sm font-semibold text-white disabled:bg-primary/50 sm:w-[120px] sm:text-base"
+                    onClick={handleSubmitMessage}
                   >
-                    + Add New
+                    Send
                   </button>
                 </div>
               </div>
             </div>
-            <textarea
-              name=""
-              className="block h-[90px] w-full resize-none p-3 outline-none"
-              placeholder="Type a message..."
-              ref={textareaRef}
-              value={textValue}
-              onChange={handleTextChange}
-            ></textarea>
-            <div className="flex h-[50px] items-center justify-between border-t border-slate-300">
-              <div className="flex items-center gap-[2px] pl-1 sm:gap-3 sm:pl-3">
-                <EmojiPicker
-                  onEmojiSelect={handleEmojiSelect}
-                  style={{ transform: "translateX(-5%)" }}
-                />
-                <Divider className={"h-[30px] w-px !bg-gray-400"} />
-                <div>
-                  <input
-                    type="file"
-                    multiple
-                    id="select-images"
-                    hidden
-                    onChange={handleChangeSelectedImage}
-                    ref={fileInputRef}
-                  />
-                  <label htmlFor="select-images" className="cursor-pointer">
-                    <IoIosAttach className="text-2xl" />
-                  </label>
-                </div>
-                {isAdmin && (
-                  <button
-                    type="button"
-                    className="bg-lightskyblue px-2 py-2 text-xs font-medium sm:text-sm"
-                    onClick={() => setOpenOfferModal(true)}
-                  >
-                    Create an Offer
-                  </button>
-                )}
-              </div>
-              <button
-                disabled={isImageUploading}
-                type="button"
-                className="flex h-full w-[100px] items-center justify-center bg-primary text-sm font-semibold text-white disabled:bg-primary/50 sm:w-[120px] sm:text-base"
-                onClick={handleSubmitMessage}
-              >
-                Send
-              </button>
-            </div>
-          </div>
-        </div>
+          )}
         {/* Here all the modals components */}
         {openEditMsgModal && (
           <EditQuickMsgModal
@@ -656,21 +652,22 @@ const OrderChatBox = () => {
           />
         )}
       </div>
-      {projectDetails?.projectStatus !== "Completed" && (
-        <p className="my-5 text-center">
-          View conversation with{" "}
-          {isAdmin ? (
-            <Link to={`/inbox`} className="font-semibold text-primary">
-              {clientDetails?.userName}
-            </Link>
-          ) : (
-            <Link to={`/inbox`} className="font-semibold text-primary">
-              mahfujurrahm535
-            </Link>
-          )}{" "}
-          in your inbox
-        </p>
-      )}
+      {projectDetails?.projectStatus !== "Completed" &&
+        projectDetails?.projectStatus !== "Canceled" && (
+          <p className="my-5 text-center">
+            View conversation with{" "}
+            {isAdmin ? (
+              <Link to={`/inbox`} className="font-semibold text-primary">
+                {clientDetails?.userName}
+              </Link>
+            ) : (
+              <Link to={`/inbox`} className="font-semibold text-primary">
+                mahfujurrahm535
+              </Link>
+            )}{" "}
+            in your inbox
+          </p>
+        )}
     </>
   );
 };

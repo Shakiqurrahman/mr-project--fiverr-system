@@ -35,6 +35,7 @@ const EditCommentBox = ({
       ...commentObj,
       commentText: e.target.value,
       isSubmitted: false,
+      newComment: true,
     });
   };
 

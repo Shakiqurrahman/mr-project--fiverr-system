@@ -10,8 +10,9 @@ import DownArrow from "../../../assets/images/icons/Down Arrow.svg";
 import UpArrow from "../../../assets/images/icons/Upper Arrow.svg";
 import formatFileSize from "../../../libs/formatFileSize";
 import CommentPage from "../../../pages/CommentPage";
+import PreviewChatFiles from "../../PreviewChatFiles";
 
-const AttachmentsPreview = ({ images }) => {
+const AttachmentsPreview = ({ files }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const [expand, setExpand] = useState(false);
@@ -19,8 +20,8 @@ const AttachmentsPreview = ({ images }) => {
   const [openCommentBox, setOpenCommentBox] = useState(false);
 
   // handle download all button
-  const handleDownloadAll = (files) => {
-    files.forEach((file) => {
+  const handleDownloadAll = (downloadFiles) => {
+    downloadFiles.forEach((file) => {
       const link = document.createElement("a");
       link.href = file.url; // Ensure this points to the file's URL
       link.setAttribute("download", file.name); // Set the filename
@@ -31,17 +32,20 @@ const AttachmentsPreview = ({ images }) => {
   };
 
   const handleOpenComment = (att) => {
+    const getOnlyImages = files.filter((file) =>
+      file?.format?.startsWith("image/"),
+    );
     setOpenCommentBox(true);
     dispatch(setImageDetails(att));
-    dispatch(setImageArray(images));
+    dispatch(setImageArray(getOnlyImages));
   };
 
-  console.log(images);
+  console.log(files);
 
   return (
     <>
       <div className="relative mt-3">
-        {images?.length > 3 && (
+        {files?.length > 3 && (
           <Link
             className="font-medium text-primary"
             onClick={() => handleDownloadAll()}
@@ -50,13 +54,17 @@ const AttachmentsPreview = ({ images }) => {
           </Link>
         )}
         <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
-          {images?.map((att, index) => (
+          {files?.map((att, index) => (
             <div key={index}>
-              <img
+              {/* <img
                 onClick={() => handleOpenComment(att)}
                 src={att?.url}
                 alt={att?.name}
                 className="h-[100px] w-full cursor-pointer object-cover sm:h-[150px]"
+              /> */}
+              <PreviewChatFiles
+                file={att}
+                handlePreviewImage={() => handleOpenComment(att)}
               />
               <a
                 href={att?.url}
@@ -75,7 +83,7 @@ const AttachmentsPreview = ({ images }) => {
             </div>
           ))}
         </div>
-        {images?.length >= 8 &&
+        {files?.length >= 8 &&
           (!expand ? (
             <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
               <button

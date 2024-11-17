@@ -35,6 +35,7 @@ const CommentInputBox = ({ focusWriteComment, setFocusWriteComment }) => {
             ...restComment,
             commentId: shortid.generate(),
             isSubmitted: false,
+            newComment: true,
             commentText,
             userId: user?.id,
             senderImage: user?.image,
@@ -43,11 +44,11 @@ const CommentInputBox = ({ focusWriteComment, setFocusWriteComment }) => {
           }),
         );
       } else {
-        console.log("else");
         dispatch(
           setCommentsData({
             commentId: shortid.generate(),
             isSubmitted: false,
+            newComment: true,
             commentText,
             userId: user?.id,
             senderImage: user?.image,

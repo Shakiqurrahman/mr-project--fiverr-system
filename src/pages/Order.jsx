@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoClose } from "react-icons/io5";
+import { MdOutlineDoNotDisturbAlt } from "react-icons/md";
 import { PiWarningCircleFill } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -98,6 +99,12 @@ const Order = () => {
           <Check className="size-6 !fill-white md:size-10" /> Project Completed{" "}
         </h1>
       )}
+      {projectDetails?.projectStatus === "Canceled" && (
+        <h1 className="mx-auto mb-10 flex w-full items-center justify-center gap-3 rounded-[30px] bg-canceled px-5 py-2 text-xl font-semibold text-white sm:w-1/2 md:text-3xl">
+          <MdOutlineDoNotDisturbAlt className="size-6 !text-white md:size-10" />
+          Project Canceled{" "}
+        </h1>
+      )}
       <div className="relative flex flex-wrap gap-5 sm:flex-nowrap">
         <div className="mb-5 w-full shrink lg:w-[calc(100%_-_320px)]">
           <div className="flex items-center justify-between gap-2">
@@ -153,31 +160,29 @@ const Order = () => {
           <OrderSidePanel />
         </div>
       </div>
-      {selectedTabButton === "ACTIVITY" && (
-        <div className="w-full lg:w-[calc(100%_-_320px)]">
-          <OrderReview />
-          <OrderReviewForm />
-          <OrderTipsForm />
-          {user?.role === "USER" &&
-          projectDetails?.projectStatus === "Completed" ? (
-            <p className="mt-5 text-center text-lg font-semibold">
-              Your project is complete. If you need to contact the seller,{" "}
-              <Link to={"/inbox"} className="text-primary underline">
-                Go to Inbox
-              </Link>
-            </p>
-          ) : (
-            projectDetails?.projectStatus === "Completed" && (
+      {selectedTabButton === "ACTIVITY" &&
+        projectDetails?.projectStatus === "Completed" && (
+          <div className="w-full lg:w-[calc(100%_-_320px)]">
+            <OrderReview />
+            <OrderReviewForm />
+            <OrderTipsForm />
+            {user?.role === "USER" ? (
+              <p className="mt-5 text-center text-lg font-semibold">
+                Your project is complete. If you need to contact the seller,{" "}
+                <Link to={"/inbox"} className="text-primary underline">
+                  Go to Inbox
+                </Link>
+              </p>
+            ) : (
               <p className="mt-5 text-center text-lg font-semibold">
                 Your project is complete. If you need to contact the buyer,{" "}
                 <Link to={"/inbox"} className="text-primary underline">
                   Go to Inbox
                 </Link>
               </p>
-            )
-          )}
-        </div>
-      )}
+            )}
+          </div>
+        )}
     </div>
   );
 };

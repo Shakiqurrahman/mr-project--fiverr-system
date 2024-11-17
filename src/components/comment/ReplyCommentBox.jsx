@@ -34,6 +34,7 @@ const ReplyCommentBox = ({
             senderImage: user?.userImage,
             replyText: commentText,
             isSubmitted: false,
+            newReply: true,
           },
         ],
       };
