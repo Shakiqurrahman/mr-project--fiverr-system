@@ -9,9 +9,23 @@ import AuthWrapper from "./libs/AuthWrapper";
 import { configApi } from "./libs/configApi";
 function App() {
   useEffect(() => {
-    const url = `${configApi.api}analytics/visitors/`;
-    axios.get(url);
+    const countVisitor = async () => {
+      const hasCounted = sessionStorage.getItem("hasVisited");
+
+      if (!hasCounted) {
+        try {
+          const url = `${configApi.api}analytics/visitors/`;
+          await axios.get(url);
+          sessionStorage.setItem("hasVisited", "true");
+        } catch (error) {
+          return;
+        }
+      }
+    };
+
+    countVisitor();
   }, []);
+
   return (
     <Provider store={store}>
       <AuthWrapper>

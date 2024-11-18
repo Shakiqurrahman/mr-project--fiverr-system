@@ -14,7 +14,7 @@ export const orderApiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ["requirements", "notes"],
+  tagTypes: ["requirements", "notes", "messages"],
   endpoints: (builder) => ({
     requirementByProjectNumber: builder.query({
       query: ({ projectNumber }) => `find-order?projectNumber=${projectNumber}`,
@@ -91,6 +91,42 @@ export const orderApiSlice = createApi({
       }),
       invalidatesTags: ["requirements"],
     }),
+
+    // Order Message api's
+    sendAOrderMessage: builder.mutation({
+      query: (newMessage) => ({
+        url: "order-message/send",
+        method: "POST",
+        body: newMessage,
+      }),
+      invalidatesTags: ["messages"],
+    }),
+
+    sendAOrderMessageReply: builder.mutation({
+      query: (newMessage) => ({
+        url: "order-message/reply",
+        method: "POST",
+        body: newMessage,
+      }),
+      invalidatesTags: ["messages"],
+    }),
+
+    deleteAOrderMessage: builder.mutation({
+      query: (messageId) => ({
+        url: `order-message/${messageId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["messages"],
+    }),
+
+    updateAOrderMessage: builder.mutation({
+      query: (updatedBody) => ({
+        url: `order-message/update`,
+        method: "PUT",
+        body: updatedBody,
+      }),
+      invalidatesTags: ["messages"],
+    }),
   }),
 });
 
@@ -106,4 +142,8 @@ export const {
   useLazyGetNoteDataQuery,
   useGetAllAdminReviewsQuery,
   useCreateAReviewMutation,
+  useSendAOrderMessageMutation,
+  useSendAOrderMessageReplyMutation,
+  useDeleteAOrderMessageMutation,
+  useUpdateAOrderMessageMutation,
 } = orderApiSlice;
