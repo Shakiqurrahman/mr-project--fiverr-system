@@ -10,7 +10,6 @@ import { setPreviewImage } from "../../Redux/features/previewImageSlice";
 function ProjectCard({
   thumbnail,
   watermark,
-  thumbnailName,
   title,
   design,
   clientLogo,
@@ -64,18 +63,27 @@ function ProjectCard({
             <img
               src={thumbnail}
               alt=""
-              className="block w-full object-cover pointer-events-none"
-              
+              className="pointer-events-none block w-full object-cover"
             />
           </div>
           <h1 className="px-3 py-2" title={title}>
             <span className="line-clamp-2">{title}</span>
           </h1>
         </Link>
-        {clientLogo && (
+        {clientName && (
           <div className="mt-3 flex items-center justify-between px-3">
             <div className="flex items-center gap-1">
-              <img src={clientLogo} alt="" className="h-[25px] w-[25px]" />
+              {clientLogo ? (
+                <img
+                  src={clientLogo}
+                  alt=""
+                  className="size-[25px] rounded-full object-cover"
+                />
+              ) : (
+                <div className="flex size-[25px] items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-lg font-bold text-[#3b3b3b]/50">
+                  {clientName?.charAt(0)?.toUpperCase()}
+                </div>
+              )}
               <Link className="text-sm font-semibold">{clientName}</Link>
             </div>
             <span className="text-xs">{timeStamp}</span>

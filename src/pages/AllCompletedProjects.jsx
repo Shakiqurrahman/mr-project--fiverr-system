@@ -1,34 +1,70 @@
 import { Pagination, PaginationItem, Stack } from "@mui/material";
+import { useEffect, useState } from "react";
 import prevBtn from "../assets/images/icons/Left Arrow.svg";
 import nextBtn from "../assets/images/icons/Right Arrow.svg";
-import logo from "../assets/images/MR Logo White.png";
-import thumbnail from "../assets/images/project-thumbnail.jpg";
 import ProjectCard from "../components/categories/ProjectCard";
+import { useGetAllProjectsQuery } from "../Redux/api/dashboardApiSlice";
 
 function AllCompletedProjects() {
-  const data = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-  ];
+  const { data } = useGetAllProjectsQuery({ status: "Completed" });
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [completedProjects, setCompletedProjects] = useState([]);
+
+  useEffect(() => {
+    if (data) {
+      setCompletedProjects(data);
+    }
+  }, [data]);
+
+  // Pagination related work
+  const limit = 20;
+  const totalPages = Math.ceil(completedProjects?.length / limit) || 0;
+  const startIndex = (currentPage - 1) * limit;
+  const currentPageData = completedProjects?.slice(
+    startIndex,
+    startIndex + limit,
+  );
+  console.log(completedProjects);
   return (
     <>
       <div className="max-width">
         <h1 className="my-10 text-center text-xl font-semibold md:text-3xl">
           Completed Projects
         </h1>
-        <div className="grid grid-cols-1 gap-x-3 gap-y-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {data.map(() => (
-            <ProjectCard
-              key={Math.random()}
-              thumbnail={thumbnail}
-              clientLogo={logo}
-              title={"Pressure and Soft Washing Door Hanger Design"}
-              clientName={"clientname"}
-              timeStamp={"5 days ago"}
-            />
-          ))}
-        </div>
+        {completedProjects?.length > 0 && (
+          <div className="grid grid-cols-1 gap-x-3 gap-y-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {currentPageData?.map((project, index) => (
+              <ProjectCard
+                key={index}
+                thumbnail={project?.projectImage}
+                clientLogo={project?.user?.image}
+                title={project?.projectName}
+                clientName={project?.user?.userName}
+                timeStamp={"5 days ago"}
+              />
+            ))}
+          </div>
+        )}
+        {completedProjects?.length > 20 && (
+          <div className="mt-10 flex justify-center">
+            <Stack spacing={2}>
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={(_, page) => setCurrentPage(page)}
+                renderItem={(item) => (
+                  <PaginationItem
+                    slots={{ previous: prevBtnIcon, next: nextBtnIcon }}
+                    {...item}
+                  />
+                )}
+              />
+            </Stack>
+          </div>
+        )}
 
-        <div className="mt-10 flex justify-center">
+        {/* <div className="mt-10 flex justify-center">
           <Stack spacing={2}>
             <Pagination
               count={10}
@@ -40,7 +76,7 @@ function AllCompletedProjects() {
               )}
             />
           </Stack>
-        </div>
+        </div> */}
       </div>
     </>
   );

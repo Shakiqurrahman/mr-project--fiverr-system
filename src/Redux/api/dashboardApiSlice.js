@@ -65,5 +65,6 @@ export const {
   useGetProjectsStatsQuery,
   useAddDesignerMutation,
   useLazyGetProjectsStatsQuery,
+  useGetAllProjectsQuery,
   getAllDiffUsersByFilter,
 } = dashboardApiSlice;

@@ -1,60 +1,22 @@
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
-import logo from "../assets/images/MR Logo White.png";
+import { useGetAllProjectsQuery } from "../Redux/api/dashboardApiSlice";
 import LeftArrowIcon from "../assets/images/icons/Left Arrow.svg";
 import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
-import thumbnail from "../assets/images/project-thumbnail.jpg";
 import CategoryLayout from "./categories/CategoryLayout";
 import ProjectCard from "./categories/ProjectCard";
 
 function CompletedProject() {
-  const categories = [
-    {
-      thumbnail,
-      clientLogo: logo,
-      title: "Pressure and Soft Washing Door Hanger Design",
-      clientName: "clientname",
-      timeStamp: "5 days ago",
-    },
-    {
-      thumbnail,
-      clientLogo: logo,
-      title:
-        "Pressure and Soft Washing Door Hanger Design Pressure and Soft Washing Door Hanger Design",
-      clientName: "clientname",
-      timeStamp: "5 days ago",
-    },
-    {
-      thumbnail,
-      clientLogo: logo,
-      title: "Pressure and Soft Washing Door Hanger Design",
-      clientName: "clientname",
-      timeStamp: "5 days ago",
-    },
-    {
-      thumbnail,
-      clientLogo: logo,
-      title: "Pressure and Soft Washing Door Hanger Design",
-      clientName: "clientname",
-      timeStamp: "5 days ago",
-    },
-    {
-      thumbnail,
-      clientLogo: logo,
-      title: "Pressure and Soft Washing Door Hanger Design",
-      clientName: "clientname",
-      timeStamp: "5 days ago",
-    },
-  ];
+  const { data } = useGetAllProjectsQuery({ status: "Completed" });
   const settings = {
     dots: false,
-    infinite: categories?.length > 4 ? true : false,
+    infinite: data?.length > 4 ? true : false,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
-    arrows: categories?.length > 4 ? true : false,
-    autoplay: true,
+    arrows: data?.length > 4 ? true : false,
+    autoplay: data?.length > 4 ? true : false,
     autoplaySpeed: 2000,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
@@ -91,20 +53,25 @@ function CompletedProject() {
         title={"Completed Projects"}
         path={"/all-completed-projects"}
       >
-        <div>
-          <Slider {...settings}>
-            {categories.map((category) => (
-              <ProjectCard
-                key={Math.random()}
-                thumbnail={category.thumbnail}
-                clientLogo={category.clientLogo}
-                title={category.title}
-                clientName={category.clientName}
-                timeStamp={category.timeStamp}
-              />
-            ))}
-          </Slider>
-        </div>
+        {data?.length > 0 ? (
+          <div>
+            <Slider {...settings}>
+              {data?.map((project, index) => (
+                <ProjectCard
+                  key={index}
+                  thumbnail={project?.projectImage}
+                  watermark={project?.projectImage}
+                  clientLogo={project?.user?.image}
+                  title={project?.projectName}
+                  clientName={project?.user?.userName}
+                  timeStamp={"5 days ago"}
+                />
+              ))}
+            </Slider>
+          </div>
+        ) : (
+          <div>No Completed Projects yet!</div>
+        )}
       </CategoryLayout>
     </div>
   );
