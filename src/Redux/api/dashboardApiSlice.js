@@ -70,7 +70,7 @@ export const {
   useGetProjectsStatsQuery,
   useAddDesignerMutation,
   useLazyGetProjectsStatsQuery,
+  useLazyGetAllDiffUsersByFilterQuery,
   useGetAllProjectsQuery,
-  getAllDiffUsersByFilter,
   useGetMahfujurDetailsQuery,
 } = dashboardApiSlice;

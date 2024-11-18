@@ -11,8 +11,6 @@ const SearchBox = ({ handleClose }) => {
   const [searchQuery, { data: searchResult, isLoading }] =
     useLazySearchByDesignQuery();
 
-  console.log("data", searchResult);
-
   const textRef = useRef(null);
   const searchBoxRef = useRef(null);
   const [textInput, setTextInput] = useState("");
