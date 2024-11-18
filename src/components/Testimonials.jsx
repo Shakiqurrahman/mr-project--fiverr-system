@@ -154,7 +154,7 @@ function Testimonials() {
   )?.length;
 
   // stars
-  const roundedStars = Math.round(adminInfo?.Avg_Rating);
+  const flooredStars = Math.floor(adminInfo?.Avg_Rating);
   return (
     <div className="max-width">
       <div className="relative mt-20 bg-[#E7F4FC] p-5 pt-0">
@@ -172,7 +172,7 @@ function Testimonials() {
               Average {adminInfo?.Avg_Rating}
             </h3>
             <div className="flex items-center gap-2 text-lg text-primary sm:text-2xl">
-              {Array.from({ length: roundedStars })?.map((_, index) => (
+              {Array.from({ length: flooredStars })?.map((_, index) => (
                 <IoStar key={index} />
               ))}
             </div>
