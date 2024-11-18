@@ -1,11 +1,12 @@
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import useOutsideClick from "../../../hooks/useOutsideClick";
 import { setMessages } from "../../../Redux/features/orderSlice";
+import useOutsideClick from "../../../hooks/useOutsideClick";
 
 const AdditionalOfferModal = ({ handleClose, onOfferSubmit }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state?.user);
+  const { projectDetails } = useSelector((state) => state?.order);
 
   // Checking Admin
   const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
@@ -45,7 +46,7 @@ const AdditionalOfferModal = ({ handleClose, onOfferSubmit }) => {
 
     if (isAdmin) {
       onOfferSubmit?.emit("order:admin-message", {
-        userId: "671ba677ed05eed5d29efb35",
+        userId: projectDetails?.userId,
         ...submitForm,
       });
     } else {
@@ -57,7 +58,7 @@ const AdditionalOfferModal = ({ handleClose, onOfferSubmit }) => {
     dispatch(
       setMessages({
         ...submitForm,
-        recipientId: isAdmin ? "671ba677ed05eed5d29efb35" : "",
+        recipientId: isAdmin ? projectDetails?.userId : "",
       }),
     );
 

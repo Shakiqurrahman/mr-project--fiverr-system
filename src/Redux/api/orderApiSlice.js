@@ -102,6 +102,11 @@ export const orderApiSlice = createApi({
       invalidatesTags: ["messages"],
     }),
 
+    getOrderUserMessages: builder.query({
+      query: (userId) => `order-message/get?userId=${userId}`,
+      transformResponse: (response) => response?.data,
+    }),
+
     sendAOrderMessageReply: builder.mutation({
       query: (newMessage) => ({
         url: "order-message/reply",
@@ -146,4 +151,5 @@ export const {
   useSendAOrderMessageReplyMutation,
   useDeleteAOrderMessageMutation,
   useUpdateAOrderMessageMutation,
+  useGetOrderUserMessagesQuery,
 } = orderApiSlice;

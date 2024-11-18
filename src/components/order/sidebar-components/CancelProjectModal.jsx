@@ -1,14 +1,15 @@
 import React, { useRef, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
+import { setMessages } from "../../../Redux/features/orderSlice";
 import useOutsideClick from "../../../hooks/useOutsideClick";
 import { configApi } from "../../../libs/configApi";
 import { connectSocket } from "../../../libs/socketService";
-import { setMessages } from "../../../Redux/features/orderSlice";
 
 const CancelProjectModal = ({ handleClose }) => {
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state?.user);
+  const { projectDetails } = useSelector((state) => state?.order);
 
   // Socket Connection
   const socket = connectSocket(`${configApi.socket}`, token);
@@ -56,7 +57,7 @@ const CancelProjectModal = ({ handleClose }) => {
 
     if (isAdmin) {
       socket?.emit("order:admin-message", {
-        userId: "671ba677ed05eed5d29efb35",
+        userId: projectDetails?.userId,
         ...submitForm,
       });
     } else {
@@ -68,7 +69,7 @@ const CancelProjectModal = ({ handleClose }) => {
     dispatch(
       setMessages({
         ...submitForm,
-        recipientId: isAdmin ? "671ba677ed05eed5d29efb35" : "",
+        recipientId: isAdmin ? projectDetails?.userId : "",
       }),
     );
 

@@ -28,6 +28,7 @@ import EditQuickMsgModal from "../chat/EditQuickMsgModal";
 const OrderDeliveryForm = ({ handleClose }) => {
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.user);
+  const { projectDetails } = useSelector((state) => state.order);
   // All reference states here
   const textareaRef = useRef(null);
   const menuRef = useRef(null);
@@ -288,7 +289,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
 
       if (isAdmin) {
         socket?.emit("order:admin-message", {
-          userId: "671ba677ed05eed5d29efb35",
+          userId: projectDetails?.userId,
           ...submitForm,
         });
       } else {
@@ -300,7 +301,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
       dispatch(
         setMessages({
           ...submitForm,
-          recipientId: isAdmin ? "671ba677ed05eed5d29efb35" : "",
+          recipientId: isAdmin ? projectDetails?.userId : "",
         }),
       );
 

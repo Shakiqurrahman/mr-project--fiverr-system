@@ -64,22 +64,35 @@ const OrderDeliveryPreview = ({ data }) => {
         settings: {
           slidesToShow: 3,
           slidesToScroll: 1,
+          arrows: true,
+          // autoplay: true,
+          autoplaySpeed: 2000,
+          nextArrow: <NextArrow />,
+          prevArrow: <PrevArrow />,
         },
       },
       {
         breakpoint: 768,
         settings: {
-          arrows: false,
           slidesToShow: 2,
           slidesToScroll: 1,
+          arrows: true,
+          // autoplay: true,
+          autoplaySpeed: 2000,
+          nextArrow: <NextArrow />,
+          prevArrow: <PrevArrow />,
         },
       },
       {
         breakpoint: 576,
         settings: {
-          arrows: false,
           slidesToShow: 2,
           slidesToScroll: 1,
+          arrows: true,
+          // autoplay: true,
+          autoplaySpeed: 2000,
+          nextArrow: <NextArrow />,
+          prevArrow: <PrevArrow />,
         },
       },
     ],
@@ -94,8 +107,8 @@ const OrderDeliveryPreview = ({ data }) => {
 
   return (
     <>
-      <div className="mt-5 flex items-start gap-3">
-        <div className="w-2/3">
+      <div className="mt-5 flex flex-wrap-reverse items-start gap-3 xl:flex-nowrap">
+        <div className="w-full shrink-0 xl:w-2/3">
           <h1 className="mb-2 text-lg font-semibold">Preview Image</h1>
           <div>
             <Slider {...settings}>
@@ -113,7 +126,7 @@ const OrderDeliveryPreview = ({ data }) => {
                       alt={att?.name}
                       className="pointer-events-none block w-full object-cover"
                     />
-                    <div className="mb-10 mt-4 text-center">
+                    <div className="mt-4 text-center">
                       <a
                         href={
                           projectDetails?.projectStatus === "Completed"
@@ -122,7 +135,7 @@ const OrderDeliveryPreview = ({ data }) => {
                         }
                         download={att?.name}
                         target="_blank"
-                        className="rounded-[30px] border border-gray-400 px-5 py-2 text-lg font-medium text-black/50"
+                        className="inline-block rounded-[30px] border border-gray-400 px-5 py-2 text-lg font-medium text-black/50"
                       >
                         Download
                       </a>
@@ -151,7 +164,7 @@ const OrderDeliveryPreview = ({ data }) => {
           )}
           {projectDetails?.projectStatus !== "Completed" &&
             projectDetails?.projectStatus !== "Canceled" && (
-              <div className="">
+              <div className="mt-3 xl:mt-0">
                 <p>
                   The watermark will no longer show after accepting the delivery
                   file. Please accept your final file first, then download the
@@ -174,7 +187,7 @@ const OrderDeliveryPreview = ({ data }) => {
               </div>
             )}
         </div>
-        <div className="w-1/3">
+        <div className="w-full shrink-0 xl:w-1/3">
           <h1
             className={`mb-2 ${projectDetails?.projectStatus === "Completed" ? "ms-6" : ""} text-lg font-semibold`}
           >
@@ -194,7 +207,7 @@ const OrderDeliveryPreview = ({ data }) => {
                       ? data?.thumbnailImage?.name
                       : undefined
                   }
-                  className="flex items-start gap-2 text-sm"
+                  className="flex flex-wrap items-start gap-2 text-sm"
                 >
                   {projectDetails?.projectStatus === "Completed" && (
                     <BiDownload className="shrink-0 text-lg text-primary" />
@@ -223,7 +236,7 @@ const OrderDeliveryPreview = ({ data }) => {
                       ? att?.name
                       : undefined
                   }
-                  className="flex items-start gap-2 text-sm"
+                  className="flex flex-wrap items-start gap-2 text-sm"
                 >
                   {projectDetails?.projectStatus === "Completed" && (
                     <BiDownload className="shrink-0 text-lg text-primary" />

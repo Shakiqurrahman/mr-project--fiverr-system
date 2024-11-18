@@ -365,12 +365,10 @@ function Testimonials() {
                   </div>
                   {review?.isThumbnail && (
                     <img
-                      src={review?.isThumbnail}
+                      src={review?.thumbnail}
                       alt=""
                       className="w-[150px] cursor-pointer rounded-xl object-cover"
-                      onClick={(e) =>
-                        handlePreviewImage(e, review?.isThumbnail)
-                      }
+                      onClick={(e) => handlePreviewImage(e, review?.thumbnail)}
                     />
                   )}
                 </div>

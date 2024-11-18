@@ -214,28 +214,28 @@ const StartMultipleProject = ({ items }) => {
     } else if (choosenItems?.length === 1) {
       const choosenItem = choosenItems[0];
       console.log("choosen item", choosenItem);
-      const selectedCategory = choosenItem.category;
+      const selectedCategory = choosenItem?.category;
       const data = {
         ...selectedCategory,
-        subCategory: choosenItem.subCategory.subTitle,
-        selectedQuantity: choosenItem.quantity,
-        title: choosenItem.category.categoryName,
-        designTitle: choosenItem.title,
-        designId: choosenItem.designId,
-        designImage: choosenItem.designImage,
-        deliveryDuration: choosenItem.isFastDelivery
-          ? choosenItem.fastDeliveryDays
-          : choosenItem.regularDeliveryDays,
-        isFastDelivery: choosenItem.isFastDelivery,
-        fastDeliveryAmount: choosenItem.fastDeliveryPrice,
-        fastDeliveryDuration: choosenItem.fastDeliveryDays,
-        subTotal: choosenItem.subCategory.subAmount,
-        totalAmount: choosenItem.subTotal,
-        designDbId: choosenItem.id,
+        subCategory: choosenItem?.subCategory?.subTitle,
+        selectedQuantity: choosenItem?.quantity,
+        title: choosenItem?.category?.categoryName,
+        designTitle: choosenItem?.title,
+        designId: choosenItem?.designId,
+        designImage: choosenItem?.designImage,
+        deliveryDuration: choosenItem?.isFastDelivery
+          ? choosenItem?.fastDeliveryDays
+          : choosenItem?.regularDeliveryDays,
+        isFastDelivery: choosenItem?.isFastDelivery,
+        fastDeliveryAmount: choosenItem?.fastDeliveryPrice,
+        fastDeliveryDuration: choosenItem?.fastDeliveryDays,
+        subTotal: choosenItem?.subCategory?.subAmount,
+        totalAmount: choosenItem?.subTotal,
+        designDbId: choosenItem?.id,
         from: "singleProject",
         projectType: "DIRECT",
         projectImage: selectedCategory?.image?.url,
-        tags: choosenItem.tags,
+        tags: choosenItem?.tags,
       };
       navigate("/payment", { state: data });
     }

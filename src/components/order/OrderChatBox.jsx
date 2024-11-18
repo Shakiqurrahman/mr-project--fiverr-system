@@ -22,6 +22,7 @@ import EmojiPicker from "../chat/EmojiPicker";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import shortid from "shortid";
+import { useSendAOrderMessageMutation } from "../../Redux/api/orderApiSlice";
 import { setMessages } from "../../Redux/features/orderSlice";
 import CircleProgressBar from "../CircleProgressBar";
 import FilePreview from "../FilePreview";
@@ -38,6 +39,7 @@ const OrderChatBox = () => {
   // Redux query imports here
   const { data: quickMsgs } = useFetchQuickResMsgQuery();
   const [deleteQuickResMsg] = useDeleteQuickResMsgMutation();
+  const [sendAOrderMessage] = useSendAOrderMessageMutation();
 
   const { user, token } = useSelector((state) => state.user);
   const { projectDetails, clientDetails } = useSelector((state) => state.order);
@@ -115,15 +117,10 @@ const OrderChatBox = () => {
   }, [socket]);
   // }, [conversationUser, isAdmin, socket, messages, dispatch, user]);
 
-  // useEffect(
-  //   () => {
-  //     // Inital Scroll to last message
-  //     endOfMessagesRef.current?.scrollIntoView();
-  //   },
-  //   [
-  //     /*messages*/
-  //   ],
-  // );
+  useEffect(() => {
+    // Inital Scroll to last message
+    endOfMessagesRef.current?.scrollIntoView();
+  }, [messages]);
 
   // click outside the box it will be toggled
   useOutsideClick(menuRef, () => setQucikMsgBtnController(null));
@@ -321,7 +318,7 @@ const OrderChatBox = () => {
 
       if (isAdmin) {
         socket?.emit("order:admin-message", {
-          userId: "671ba677ed05eed5d29efb35",
+          userId: projectDetails?.userId,
           ...submitForm,
         });
       } else {
@@ -334,7 +331,7 @@ const OrderChatBox = () => {
       dispatch(
         setMessages({
           ...submitForm,
-          recipientId: isAdmin ? "671ba677ed05eed5d29efb35" : "",
+          recipientId: isAdmin ? projectDetails?.userId : "",
         }),
       );
 
@@ -344,27 +341,27 @@ const OrderChatBox = () => {
       setReplyTo(null);
       fileInputRef.current.value = null;
 
-      // try {
-      //   const res = await sendAMessage({
-      //     recipientId: isAdmin ? conversationUser : null,
-      //     ...submitForm,
-      //   }).unwrap();
+      try {
+        const res = await sendAOrderMessage({
+          recipientId: isAdmin ? projectDetails?.userId : null,
+          ...submitForm,
+        }).unwrap();
 
-      //   // setMessages((prev) => prev.map((msg) =>
-      //   //   msg?.messageText === submitForm?.messageText ? res?.data : msg
-      //   // ));
+        // setMessages((prev) => prev.map((msg) =>
+        //   msg?.messageText === submitForm?.messageText ? res?.data : msg
+        // ));
 
-      //   // Reset the file input value
-      //   if (fileInputRef.current) {
-      //     fileInputRef.current.value = "";
-      //   }
-      // } catch (error) {
-      //   // Rollback the optimistic update on failure
-      //   setMessages((prev) =>
-      //     prev.filter((msg) => msg?.messageText !== submitForm?.messageText),
-      //   );
-      //   console.error("Failed to send message:", error);
-      // }
+        // Reset the file input value
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+      } catch (error) {
+        // Rollback the optimistic update on failure
+        setMessages((prev) =>
+          prev.filter((msg) => msg?.messageText !== submitForm?.messageText),
+        );
+        console.error("Failed to send message:", error);
+      }
     }
   };
 
@@ -459,7 +456,7 @@ const OrderChatBox = () => {
               </div>
             </div>
           ))}
-          {/* <div ref={endOfMessagesRef} /> */}
+          <div ref={endOfMessagesRef} />
         </div>
         {/* Text Field Part */}
         {projectDetails?.projectStatus !== "Completed" &&

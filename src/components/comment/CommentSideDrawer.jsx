@@ -24,6 +24,7 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
   const commentBoxRef = useRef(null);
 
   const { user, token } = useSelector((state) => state.user);
+  const { projectDetails } = useSelector((state) => state.order);
   const {
     images,
     commentObj,
@@ -152,7 +153,7 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
 
     if (isAdmin) {
       socket?.emit("order:admin-message", {
-        userId: "671ba677ed05eed5d29efb35",
+        userId: projectDetails?.userId,
         ...submitForm,
       });
     } else {
@@ -164,7 +165,7 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
     dispatch(
       setMessages({
         ...submitForm,
-        recipientId: isAdmin ? "671ba677ed05eed5d29efb35" : "",
+        recipientId: isAdmin ? projectDetails?.userId : "",
       }),
     );
     close(false);
