@@ -430,7 +430,7 @@ function Profile({ user = {}, slug }) {
 
       {/* projects  */}
       <div className="flex-1">
-        {user?.role === "USER" && (
+        {user?.role === "USER" && slug === loggedUser?.userName && (
           <div className="flex justify-around gap-4">
             <h2
               className={`cursor-pointer text-lg font-semibold sm:text-xl ${
@@ -451,13 +451,17 @@ function Profile({ user = {}, slug }) {
           </div>
         )}
         {/* activeProject */}
-        {user?.role === "USER" && activeTab === "active" && (
-          <ActiveProjects activeProjects={filteredActiveProjects} />
-        )}
+        {user?.role === "USER" &&
+          activeTab === "active" &&
+          slug === loggedUser?.userName && (
+            <ActiveProjects activeProjects={filteredActiveProjects} />
+          )}
         {/* completedProjects */}
-        {user?.role === "USER" && activeTab === "completed" && (
-          <CompletedProjects completedProjects={filteredCompletedProjects} />
-        )}
+        {user?.role === "USER" &&
+          activeTab === "completed" &&
+          slug === loggedUser?.userName && (
+            <CompletedProjects completedProjects={filteredCompletedProjects} />
+          )}
         {/* All Reviews  */}
         <AllReviews user={user} />
       </div>
