@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useLazyGetAllDiffUsersByFilterQuery } from "../../Redux/api/dashboardApiSlice";
+import { setOnlineUsers } from "../../Redux/features/userSlice";
+import { configApi } from "../../libs/configApi";
+import { connectSocket } from "../../libs/socketService";
 
 const AllUsers = () => {
+  const dispatch = useDispatch();
+  const { onlineUsers, token } = useSelector((state) => state.user);
   const clientData = [
     {
       id: 1,
@@ -150,6 +156,19 @@ const AllUsers = () => {
 
   console.log("filterred", filteredUsers);
 
+  const socket = connectSocket(`${configApi.socket}`, token);
+  // all avaliable users
+  useEffect(() => {
+    socket?.emit("view-online-users");
+    socket?.on("online-users", (onlineUsers) => {
+      dispatch(setOnlineUsers(onlineUsers));
+    });
+  }, [socket, dispatch]);
+
+  const isUserOnline = (userId) => {
+    return onlineUsers.some((onlineUser) => onlineUser?.userId === userId);
+  };
+
   return (
     <div className="mt-6 bg-lightskyblue p-4">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-primary pb-2">
@@ -207,7 +226,7 @@ const AllUsers = () => {
                       </div>
                     )}
                     <span
-                      className={`absolute bottom-0 right-0.5 size-2 rounded-full border border-white ${user?.isOnline ? "bg-primary" : "bg-gray-400"}`}
+                      className={`absolute bottom-0 right-0.5 size-2 rounded-full border border-white ${isUserOnline(user?.id) ? "bg-primary" : "bg-gray-400"}`}
                     ></span>
                   </div>
                   <h3 className="text-base font-semibold duration-300 group-hover:underline">
