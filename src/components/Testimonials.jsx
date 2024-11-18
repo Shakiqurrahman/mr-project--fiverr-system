@@ -152,6 +152,9 @@ function Testimonials() {
   const fiveStarReviews = reviews?.filter(
     (review) => review?.rating === 5,
   )?.length;
+
+  // stars
+  const roundedStars = Math.round(adminInfo?.Avg_Rating);
   return (
     <div className="max-width">
       <div className="relative mt-20 bg-[#E7F4FC] p-5 pt-0">
@@ -169,11 +172,9 @@ function Testimonials() {
               Average {adminInfo?.Avg_Rating}
             </h3>
             <div className="flex items-center gap-2 text-lg text-primary sm:text-2xl">
-              {adminInfo?.Avg_Rating >= 1 && <IoStar />}
-              {adminInfo?.Avg_Rating >= 2 && <IoStar />}
-              {adminInfo?.Avg_Rating >= 3 && <IoStar />}
-              {adminInfo?.Avg_Rating >= 4 && <IoStar />}
-              {adminInfo?.Avg_Rating >= 4.5 && <IoStar />}
+              {Array.from({ length: roundedStars })?.map((_, index) => (
+                <IoStar key={index} />
+              ))}
             </div>
           </div>
         </div>
