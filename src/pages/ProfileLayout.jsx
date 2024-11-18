@@ -12,7 +12,7 @@ const ProfileLayout = () => {
   });
   const user = usersData?.find(
     (user) =>
-      user.userName.toLowerCase().trim() === userName.toLowerCase().trim(),
+      user?.userName.toLowerCase().trim() === userName?.toLowerCase().trim(),
   );
 
   useEffect(() => {

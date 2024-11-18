@@ -30,7 +30,7 @@ export const dashboardApiSlice = createApi({
     }),
 
     getProjectsBySearch: builder.query({
-      query: ({ searchText }) => `find-order?userName=${searchText}`,
+      query: ({ searchText }) => `find-order?search=${searchText}`,
       transformResponse: (response) => response?.data,
       providesTags: ["designer"],
     }),
@@ -55,6 +55,11 @@ export const dashboardApiSlice = createApi({
         `find-order/users-status?timeFilter=${timeFilter}`,
       transformResponse: (response) => response?.data,
     }),
+
+    getMahfujurDetails: builder.query({
+      query: () => `profile-indicator`,
+      transformResponse: (response) => response?.data,
+    }),
   }),
 });
 
@@ -67,4 +72,5 @@ export const {
   useLazyGetProjectsStatsQuery,
   useGetAllProjectsQuery,
   getAllDiffUsersByFilter,
+  useGetMahfujurDetailsQuery,
 } = dashboardApiSlice;

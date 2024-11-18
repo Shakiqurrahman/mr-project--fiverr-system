@@ -12,16 +12,20 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import ComputerIcon from "../../assets/svg/ComputerIcon";
+import { configApi } from "../../libs/configApi";
+import { connectSocket } from "../../libs/socketService";
 import {
   useAllProjectStatusQuery,
   useLazyGetAllProjectsQuery,
 } from "../../Redux/api/dashboardApiSlice";
 import { setDashboardProjects } from "../../Redux/features/dashboardSlice";
+import { setOnlineUsers } from "../../Redux/features/userSlice";
 import { getStatusText } from "../customer-profile/StatusText";
 import AddDesignerModal from "./AddDesignerModal";
 
 const DashboardProjects = () => {
   const dispatch = useDispatch();
+  const { onlineUsers, token } = useSelector((state) => state.user);
   const {
     searchText,
     dashboardProjects: projectsData,
@@ -65,6 +69,19 @@ const DashboardProjects = () => {
       dispatch(setDashboardProjects(projects));
     }
   }, [projects, searchText]);
+
+  const socket = connectSocket(`${configApi.socket}`, token);
+  // all avaliable users
+  useEffect(() => {
+    socket?.emit("view-online-users");
+    socket?.on("online-users", (onlineUsers) => {
+      dispatch(setOnlineUsers(onlineUsers));
+    });
+  }, [socket, dispatch]);
+
+  const isUserOnline = (userId) => {
+    return onlineUsers.some((onlineUser) => onlineUser.userId === userId);
+  };
 
   // Function to get time status
   const getTimeStatus = (deadline) => {
@@ -197,7 +214,7 @@ const DashboardProjects = () => {
                           </div>
                         )}
                         <span
-                          className={`absolute bottom-0 right-1 size-2 rounded-full border border-white ${project?.user?.isOnline ? "bg-primary" : "bg-gray-400"}`}
+                          className={`absolute bottom-0 right-1 size-2 rounded-full border border-white ${isUserOnline(project?.user?.id) ? "bg-primary" : "bg-gray-400"}`}
                         ></span>
                       </div>
                       <h2
