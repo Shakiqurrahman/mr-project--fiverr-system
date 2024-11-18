@@ -78,6 +78,21 @@ export const orderApiSlice = createApi({
       providesTags: ["notes"],
     }),
 
+    // order review api's
+    getAllAdminReviews: builder.query({
+      query: () => "review/get-all-admin-reviews",
+      transformResponse: (response) => response?.data,
+    }),
+    createAReview: builder.mutation({
+      query: (reviewData) => ({
+        url: "review/create",
+        method: "POST",
+        body: reviewData,
+      }),
+      invalidatesTags: ["requirements"],
+    }),
+
+    // Order Message api's
     sendAOrderMessage: builder.mutation({
       query: (newMessage) => ({
         url: "order-message/send",
@@ -125,6 +140,8 @@ export const {
   useUpdateNoteMutation,
   useDeleteNoteByIdMutation,
   useLazyGetNoteDataQuery,
+  useGetAllAdminReviewsQuery,
+  useCreateAReviewMutation,
   useSendAOrderMessageMutation,
   useSendAOrderMessageReplyMutation,
   useDeleteAOrderMessageMutation,

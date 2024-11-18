@@ -92,6 +92,14 @@ const Order = () => {
     }
   };
 
+  const clientReview = projectDetails?.review?.find(
+    (r) => r.senderType === "CLIENT",
+  );
+  const adminReview = projectDetails?.review?.find(
+    (r) => r.senderType === "OWNER",
+  );
+  console.log("admin review", adminReview);
+
   return (
     <div className="max-width my-10">
       {projectDetails?.projectStatus === "Completed" && (
@@ -163,13 +171,20 @@ const Order = () => {
       {selectedTabButton === "ACTIVITY" &&
         projectDetails?.projectStatus === "Completed" && (
           <div className="w-full lg:w-[calc(100%_-_320px)]">
-            <OrderReview />
+            {clientReview && isAdmin && (
+              <OrderReview reviewDetails={clientReview} />
+            )}
+            {adminReview && user?.role === "USER" && (
+              <OrderReview reviewDetails={adminReview} />
+            )}
             {projectDetails?.review?.length === 0 && user?.role === "USER" ? (
               <OrderReviewForm />
             ) : projectDetails?.review?.length === 1 && isAdmin ? (
               <OrderReviewForm />
             ) : null}
-            <OrderTipsForm />
+            {clientReview &&
+              user?.role === "USER" &&
+              !projectDetails?.projectTips && <OrderTipsForm />}
             {user?.role === "USER" ? (
               <p className="mt-5 text-center text-lg font-semibold">
                 Your project is complete. If you need to contact the seller,{" "}

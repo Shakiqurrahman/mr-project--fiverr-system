@@ -20,11 +20,13 @@ const OrderSidePanel = () => {
   return (
     <div>
       {/* Delivery Timer */}
-      {projectDetails?.isRequirementsFullFilled && (
-        <div className="mb-5 shadow-btn-shadow">
-          <DeliveryTimer />
-        </div>
-      )}
+      {projectDetails?.isRequirementsFullFilled &&
+        projectDetails?.projectStatus !== "Completed" &&
+        projectDetails?.projectStatus !== "Canceled" && (
+          <div className="mb-5 shadow-btn-shadow">
+            <DeliveryTimer />
+          </div>
+        )}
 
       {/* Project Details */}
       <div className="mb-5 shadow-btn-shadow">

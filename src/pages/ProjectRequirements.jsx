@@ -33,7 +33,7 @@ const ProjectRequirements = () => {
   const [updateRequirementHandler] = useUpdateRequirementMutation();
   console.log(projectDetails);
   const navigate = useNavigate();
-  const fileInputRef = useRef(null);
+  const fileInputsRef = useRef([]);
   const textareasRef = useRef([]);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [requirements, setRequirements] = useState(null);
@@ -147,8 +147,6 @@ const ProjectRequirements = () => {
 
   const getImagesWithDimensions = async (files, id) => {
     const handleImageLoad = async (file, index) => {
-      console.log("file", file);
-
       // Create FormData and append the file
       const formData = new FormData();
       formData.append("files", file); // Ensure you're appending files correctly
@@ -183,7 +181,6 @@ const ProjectRequirements = () => {
       try {
         const response = await axios.post(uploadUrl, formData, {
           onUploadProgress: (data) => {
-            console.log(data);
             const percentage = Math.round((data.loaded / data.total) * 100);
 
             // Update progress state
@@ -254,6 +251,7 @@ const ProjectRequirements = () => {
   };
 
   const handleChangeSelectedImage = (event, id) => {
+    console.log(event, id);
     const files = Array.from(event.target.files);
     getImagesWithDimensions(files, id);
   };
@@ -273,7 +271,7 @@ const ProjectRequirements = () => {
     );
 
     // Reset the file input to allow re-uploading the same file
-    fileInputRef.current.value = null;
+    fileInputsRef.current[id].value = null;
   };
 
   const handleSubmit = async (e) => {
@@ -360,7 +358,7 @@ const ProjectRequirements = () => {
                           type="file"
                           id={i}
                           hidden
-                          ref={fileInputRef}
+                          ref={(el) => (fileInputsRef.current[item.id] = el)}
                           onChange={(e) =>
                             handleChangeSelectedImage(e, item.id)
                           }
@@ -391,7 +389,7 @@ const ProjectRequirements = () => {
                               <button
                                 type="button"
                                 className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
-                                onClick={() => handleImageRemove(att)}
+                                onClick={() => handleImageRemove(idx, item.id)}
                               >
                                 <RiDeleteBin6Line size={20} />
                               </button>

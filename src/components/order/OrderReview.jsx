@@ -1,44 +1,45 @@
 import { IoStar } from "react-icons/io5";
-import { useSelector } from "react-redux";
+import adminLogo from "../../assets/images/MR Logo Icon.png";
+import { timeAgoTracker } from "../../libs/timeAgoTracker";
 
-const OrderReview = () => {
-  const { user } = useSelector((state) => state.user);
+const OrderReview = ({ reviewDetails }) => {
+  const isAdmin = reviewDetails?.senderType === "OWNER";
   return (
     <div className="mt-5 border border-gray-200 shadow-btn-shadow">
       <h1 className="bg-lightskyblue p-4 text-lg font-semibold sm:text-xl">
-        Client Name&apos;s Review
+        {isAdmin ? "Marfujurrahm535" : reviewDetails?.sender?.fullName}&apos;s
+        Review
       </h1>
       <div className="p-4">
         <div className="flex items-center gap-3">
-          {user?.image ? (
+          {isAdmin || reviewDetails?.sender?.image ? (
             <img
-              src={user?.image}
+              src={isAdmin ? adminLogo : reviewDetails?.sender?.image}
               alt=""
               className="size-10 rounded-full object-cover"
             />
           ) : (
             <div className="flex size-10 items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-3xl font-bold text-[#3b3b3b]/50">
-              {user?.userName?.charAt(0).toUpperCase()}
+              {reviewDetails?.sender?.userName?.charAt(0).toUpperCase()}
             </div>
           )}
-          <h1 className="text-lg font-semibold">{user?.userName}</h1>
+          <h1 className="text-lg font-semibold">
+            {isAdmin ? "mahfujurrahm535" : reviewDetails?.sender?.userName}
+          </h1>
         </div>
-        <p className="my-5">
-          Great experience! Great buyer!! Thank you very much!!! Great
-          experience! Great buyer!! Thank you very much!!! Great experience!
-          Great buyer!! Thank you
-        </p>
+        <p className="my-5">{reviewDetails?.message}</p>
         <div className="flex items-center gap-2 text-lg font-semibold">
-          5{" "}
+          {reviewDetails?.rating}{" "}
           <div className="flex justify-center gap-2 text-lg text-[#C8E3F6] md:text-2xl">
-            <IoStar className="text-primary" />
-            <IoStar className="text-primary" />
-            <IoStar className="text-primary" />
-            <IoStar className="text-primary" />
-            <IoStar className="text-primary" />
+            {Array.from(
+              { length: reviewDetails?.rating },
+              (_, index) => index + 1,
+            )?.map((_, i) => (
+              <IoStar key={i} className="text-primary" />
+            ))}
           </div>
           <span className="ms-3 text-sm font-medium text-black/50">
-            5 hours ago
+            {timeAgoTracker(reviewDetails?.createdAt)}
           </span>
         </div>
       </div>
