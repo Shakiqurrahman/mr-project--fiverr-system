@@ -25,7 +25,6 @@ function AllCompletedProjects() {
     startIndex,
     startIndex + limit,
   );
-  console.log(completedProjects);
   return (
     <>
       <div className="max-width">

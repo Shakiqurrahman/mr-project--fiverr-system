@@ -80,7 +80,7 @@ export const orderApiSlice = createApi({
 
     // order review api's
     getAllAdminReviews: builder.query({
-      query: () => "review/get-all-admin-reviews",
+      query: () => "review/get-all-owner-reviews",
       transformResponse: (response) => response?.data,
     }),
     createAReview: builder.mutation({
