@@ -124,15 +124,16 @@ function SetupProfile({ from_profile }) {
 
     if (file) {
       const formData = new FormData();
-      formData.append("image", file);
+      formData.append("files", file);
 
-      const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
-      const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+      // const apiKey = "7a4a20aea9e7d64e24c6e75b2972ff00";
+      // const uploadUrl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+      const uploadUrl = `${configApi.api}upload-attachment-optimized`;
 
       try {
         setUploading(true);
         const response = await axios.post(uploadUrl, formData);
-        const imageUrl = response.data.data.url;
+        const imageUrl = response.data.data.file.optimizedUrl;
         setForm((prevForm) => ({ ...prevForm, image: imageUrl }));
         localStorage.setItem("profileData", JSON.stringify(form));
       } catch (error) {
