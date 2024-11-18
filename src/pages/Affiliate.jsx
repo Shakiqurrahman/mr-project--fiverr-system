@@ -192,7 +192,7 @@ function Affiliate() {
                   className="mt-3 flex items-center gap-1 border-b border-gray-500 p-1 text-center text-sm sm:gap-2"
                 >
                   <p className="w-[40%] break-words text-start sm:w-[50%]">
-                    {`https://mahfujurrahman535.com/?${aff?.links}`}
+                    {`https://mahfujurrahm535.com/?${aff?.links}`}
                   </p>
                   <p className="w-[18%] sm:w-[15%]">{aff?.totalClicks}</p>
                   <p className="w-[18%] sm:w-[15%]">{aff?.join}</p>

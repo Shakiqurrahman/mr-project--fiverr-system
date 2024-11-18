@@ -34,6 +34,11 @@ export const analyticsApiSlice = createApi({
       query: ({ date }) => `analytics/visitors/total?timeFilter=${date}`,
       transformResponse: (response) => response.data,
     }),
+
+    getTopKeywordsByFilter: builder.query({
+      query: ({ date }) => `analytics/top-keyword?timeFilter=${date}/order`,
+      transformResponse: (response) => response.data,
+    }),
   }),
 });
 
