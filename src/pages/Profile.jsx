@@ -225,7 +225,10 @@ function Profile({ user = {}, slug }) {
             <div className="flex justify-between gap-1 text-sm">
               <span>Last Visited</span>
               {lastSeen ? (
-                <p className="font-semibold">{lastSeen}</p>
+                // <p className="font-semibold">{lastSeen}</p>
+                <p className="font-semibold">
+                  {isUserOnline(user?.id) ? "Online" : lastSeen}
+                </p>
               ) : (
                 <p className="font-semibold">
                   {isUserOnline(user?.id) ? "Online" : "Offline"}

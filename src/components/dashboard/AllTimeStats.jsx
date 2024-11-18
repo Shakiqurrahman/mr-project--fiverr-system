@@ -36,7 +36,7 @@ const AllTimeStats = () => {
     statsType[0]?.name || 0,
   );
 
-  const [getStatus, { data: stats }] = useLazyGetProjectsStatsQuery();  
+  const [getStatus, { data: stats }] = useLazyGetProjectsStatsQuery();
 
   const handleStatsTypeChange = (e) => {
     setSelectedStatsType(e.target.value);
@@ -82,7 +82,9 @@ const AllTimeStats = () => {
           </div>
           <div className="flex flex-wrap justify-between gap-1 text-sm">
             <span>Cancelled Projects</span>
-            <p className="font-semibold">{stats?.canceledOrders} (${stats?.totalCancelledAmount})</p>
+            <p className="font-semibold">
+              {stats?.canceledOrders} (${stats?.totalCancelledAmount})
+            </p>
           </div>
           <div className="flex flex-wrap justify-between gap-1 text-sm">
             <span>Avg. Selling Price</span>
