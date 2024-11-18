@@ -16,8 +16,6 @@ const SearchBox = () => {
   const [getProjectsBySearch, { data: searchingProjects, isLoading, isError }] =
     useLazyGetProjectsBySearchQuery();
 
-  console.log("searchingProjects", searchingProjects);
-
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchText) {

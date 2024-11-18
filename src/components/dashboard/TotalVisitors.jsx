@@ -49,8 +49,6 @@ const TotalVisitors = () => {
   const [getVisitorsByFilter, { data: VisitorsData }] =
     useLazyGetVisitorsByFilterQuery();
 
-  console.log(VisitorsData);
-
   const [selectedFilterType, setSelectedFilterType] = useState(
     filterType[0]?.name || "",
   );

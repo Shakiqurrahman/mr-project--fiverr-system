@@ -1,52 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useLazyGetAllDiffUsersByFilterQuery } from "../../Redux/api/dashboardApiSlice";
 
 const AllUsers = () => {
-  const filterType = [
-    {
-      id: 1,
-      name: "Today",
-    },
-    {
-      id: 2,
-      name: "Last 7 Days",
-    },
-    {
-      id: 3,
-      name: "This Month",
-    },
-    {
-      id: 4,
-      name: "Last Month",
-    },
-    {
-      id: 5,
-      name: "Last 3 Months",
-    },
-    {
-      id: 5,
-      name: "Last 6 Months",
-    },
-    {
-      id: 6,
-      name: "This Year",
-    },
-    {
-      id: 7,
-      name: parseInt(new Date().getFullYear()) - 1,
-    },
-    {
-      id: 8,
-      name: parseInt(new Date().getFullYear()) - 2,
-    },
-    {
-      id: 9,
-      name: "All Times",
-    },
-  ];
-
-  const usersType = ["Returning", "New", "Affiliate"];
-
   const clientData = [
     {
       id: 1,
@@ -108,6 +64,54 @@ const AllUsers = () => {
     },
   ];
 
+  const filterType = [
+    {
+      id: 1,
+      name: "Today",
+    },
+    {
+      id: 2,
+      name: "Last 7 Days",
+    },
+    {
+      id: 3,
+      name: "This Month",
+    },
+    {
+      id: 4,
+      name: "Last Month",
+    },
+    {
+      id: 5,
+      name: "Last 3 Months",
+    },
+    {
+      id: 5,
+      name: "Last 6 Months",
+    },
+    {
+      id: 6,
+      name: "This Year",
+    },
+    {
+      id: 7,
+      name: parseInt(new Date().getFullYear()) - 1,
+    },
+    {
+      id: 8,
+      name: parseInt(new Date().getFullYear()) - 2,
+    },
+    {
+      id: 9,
+      name: "All Times",
+    },
+  ];
+
+  const usersType = ["Returning", "New", "Affiliate"];
+
+  const [getAllUsers, { data: usersData }] =
+    useLazyGetAllDiffUsersByFilterQuery();
+
   const [selectedFilterType, setSelectedFilterType] = useState(
     filterType[0]?.name || "",
   );
@@ -123,18 +127,29 @@ const AllUsers = () => {
     setSelectedUsersType(e.target.value);
   };
 
-  const filteredUsers = clientData?.filter((client) => {
+  useEffect(() => {
+    if (selectedFilterType) {
+      getAllUsers({ timeFilter: selectedFilterType });
+    }
+  }, [selectedFilterType, getAllUsers]);
+
+  const filteredUsersData = (data) => {
     switch (selectedUsersType) {
       case "Returning":
-        return client.userType === "Returning";
+        return data?.returning;
       case "New":
-        return client.userType === "New";
+        return data?.newUser;
       case "Affiliate":
-        return client.isAffiliate === true;
+        return data?.affiliate;
       default:
-        return true;
+        return data?.returning;
     }
-  });
+  };
+
+  const filteredUsers = filteredUsersData(usersData);
+
+  console.log("filterred", filteredUsers);
+
   return (
     <div className="mt-6 bg-lightskyblue p-4">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-primary pb-2">
@@ -145,7 +160,7 @@ const AllUsers = () => {
           className="border p-1 px-2 text-sm font-medium outline-none"
           onChange={handleStatsTypeChange}
         >
-          {filterType.map((type, idx) => (
+          {filterType?.map((type, idx) => (
             <option key={idx} value={type?.name}>
               {type?.name}
             </option>
@@ -154,7 +169,7 @@ const AllUsers = () => {
       </div>
 
       {/* user type button  */}
-      <div className="flex flex-wrap sm:flex-nowrap justify-between gap-3">
+      <div className="flex flex-wrap justify-between gap-3 sm:flex-nowrap">
         {usersType.map((type, idx) => (
           <button
             key={idx}
@@ -169,10 +184,10 @@ const AllUsers = () => {
 
       {/* all users */}
       <div className="mt-6 space-y-4">
-        {filteredUsers.length > 0 ? (
-          filteredUsers.map((user) => {
+        {filteredUsers?.length > 0 ? (
+          filteredUsers?.map((user) => {
             const letterLogo =
-              !user.avatar && user?.userName.trim().charAt(0).toUpperCase();
+              !user?.image && user?.userName?.trim().charAt(0).toUpperCase();
             return (
               <div key={user?.id}>
                 <Link
@@ -180,10 +195,10 @@ const AllUsers = () => {
                   className="group flex items-center gap-2"
                 >
                   <div className="relative flex-shrink-0">
-                    {user.avatar ? (
+                    {user?.image ? (
                       <img
-                        src={user?.avatar}
-                        alt={user?.name}
+                        src={user?.image}
+                        alt={user?.fullName}
                         className="size-8 rounded-full border object-cover"
                       />
                     ) : (
@@ -192,7 +207,7 @@ const AllUsers = () => {
                       </div>
                     )}
                     <span
-                      className={`absolute bottom-0 right-0.5 size-2 rounded-full border border-white ${user.isOnline ? "bg-primary" : "bg-gray-400"}`}
+                      className={`absolute bottom-0 right-0.5 size-2 rounded-full border border-white ${user?.isOnline ? "bg-primary" : "bg-gray-400"}`}
                     ></span>
                   </div>
                   <h3 className="text-base font-semibold duration-300 group-hover:underline">
