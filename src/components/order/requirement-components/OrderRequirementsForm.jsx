@@ -21,7 +21,7 @@ const OrderRequirementsForm = () => {
   // Checking Admin
   const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
 
-  const fileInputRef = useRef(null);
+  const fileInputsRef = useRef([]);
   const textareasRef = useRef([]);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [requirements, setRequirements] = useState([]);
@@ -233,7 +233,7 @@ const OrderRequirementsForm = () => {
     );
 
     // Reset the file input to allow re-uploading the same file
-    fileInputRef.current.value = null;
+    fileInputsRef.current[id].value = null;
   };
 
   const handleAdminStart = async (e) => {
@@ -333,7 +333,7 @@ const OrderRequirementsForm = () => {
                           type="file"
                           id={i}
                           hidden
-                          ref={fileInputRef}
+                          ref={(el) => (fileInputsRef.current[item.id] = el)}
                           onChange={(e) =>
                             handleChangeSelectedImage(e, item.id)
                           }
@@ -364,7 +364,7 @@ const OrderRequirementsForm = () => {
                               <button
                                 type="button"
                                 className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
-                                onClick={() => handleImageRemove(att)}
+                                onClick={() => handleImageRemove(idx, item.id)}
                               >
                                 <RiDeleteBin6Line size={20} />
                               </button>

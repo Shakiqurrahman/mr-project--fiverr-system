@@ -77,6 +77,20 @@ export const orderApiSlice = createApi({
       transformResponse: (response) => response?.data,
       providesTags: ["notes"],
     }),
+
+    // order review api's
+    getAllAdminReviews: builder.query({
+      query: () => "review/get-all-admin-reviews",
+      transformResponse: (response) => response?.data,
+    }),
+    createAReview: builder.mutation({
+      query: (reviewData) => ({
+        url: "review/create",
+        method: "POST",
+        body: reviewData,
+      }),
+      invalidatesTags: ["requirements"],
+    }),
   }),
 });
 
@@ -90,4 +104,6 @@ export const {
   useUpdateNoteMutation,
   useDeleteNoteByIdMutation,
   useLazyGetNoteDataQuery,
+  useGetAllAdminReviewsQuery,
+  useCreateAReviewMutation,
 } = orderApiSlice;

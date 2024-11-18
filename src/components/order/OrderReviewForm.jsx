@@ -2,11 +2,17 @@ import { Rating } from "@mui/material";
 import { useState } from "react";
 import { GiCheckMark } from "react-icons/gi";
 import { IoStarOutline, IoStarSharp } from "react-icons/io5";
+import { useSelector } from "react-redux";
 import Image from "../../assets/images/project-thumbnail.jpg";
+import { useCreateAReviewMutation } from "../../Redux/api/orderApiSlice";
 import Divider from "../Divider";
 
 const OrderReviewForm = () => {
-  const [thumbnail, setThumbnail] = useState(true);
+  const [submitReview] = useCreateAReviewMutation();
+  const { projectDetails } = useSelector((state) => state.order);
+  console.log(projectDetails);
+
+  const [isThumbnail, setIsThumbnail] = useState(true);
   const [value, setValue] = useState(0);
   const [text, setText] = useState("");
 
@@ -14,14 +20,23 @@ const OrderReviewForm = () => {
     setText(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = {
-      isThumbnail: thumbnail,
-      stars: value,
-      text,
-    };
-    console.log(data);
+    if (text && value) {
+      const data = {
+        orderId: projectDetails?.id,
+        thumbnail: Image,
+        isThumbnail: isThumbnail,
+        rating: value,
+        message: text,
+      };
+      try {
+        const res = await submitReview(data).unwrap();
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   return (
@@ -63,8 +78,8 @@ const OrderReviewForm = () => {
             className="is-checked peer"
             name="thumbnail"
             id="thumbnail"
-            checked={thumbnail}
-            onChange={() => setThumbnail(!thumbnail)}
+            checked={isThumbnail}
+            onChange={() => setIsThumbnail(!isThumbnail)}
             hidden
           />
           <label

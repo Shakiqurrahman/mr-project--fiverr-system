@@ -11,6 +11,7 @@ import { inboxApiSlice } from "./api/inboxApiSlice";
 import { multiProjectApiSlice } from "./api/multiProjectApiSlice";
 import { offerProjectApiSlice } from "./api/offerProjectApiSlice";
 import { orderApiSlice } from "./api/orderApiSlice";
+import { reviewApiSlice } from "./api/reviewApiSlice";
 import { uploadDesignApiSlice } from "./api/uploadDesignApiSlice";
 import cartSlice from "./features/cartSlice";
 import categorySlice from "./features/category/categorySlice";
@@ -74,6 +75,7 @@ const store = configureStore({
     [dashboardApiSlice.reducerPath]: dashboardApiSlice.reducer,
     [analyticsApiSlice.reducerPath]: analyticsApiSlice.reducer,
     [affiliateApiSlice.reducerPath]: affiliateApiSlice.reducer,
+    [reviewApiSlice.reducerPath]: reviewApiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -90,6 +92,7 @@ const store = configureStore({
       dashboardApiSlice.middleware,
       analyticsApiSlice.middleware,
       affiliateApiSlice.middleware,
+      reviewApiSlice.middleware,
     ),
 });
 

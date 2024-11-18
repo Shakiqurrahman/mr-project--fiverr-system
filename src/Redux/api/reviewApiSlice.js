@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { configApi } from "../../libs/configApi";
 import Cookies from "js-cookie";
+import { configApi } from "../../libs/configApi";
 
 export const reviewApiSlice = createApi({
   reducerPath: "reviewApi",
@@ -14,23 +14,22 @@ export const reviewApiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ["review"],
+  tagTypes: ["review", "requirements"],
   endpoints: (builder) => ({
-    getAllAdminReviews: builder.query({
-      query: () => "review/get-all-admin-reviews",
-      transformResponse: (response) => response?.data,
-      providesTags: ["review"],
-    }),
-    createAReview: builder.mutation({
-      query: (reviewData) => ({
-        url: "review/create",
-        method: "POST",
-        body: reviewData,
-      }),
-      invalidatesTags: ["review"],
-    }),
+    // getAllAdminReviews: builder.query({
+    //   query: () => "review/get-all-admin-reviews",
+    //   transformResponse: (response) => response?.data,
+    //   providesTags: ["review"],
+    // }),
+    // createAReview: builder.mutation({
+    //   query: (reviewData) => ({
+    //     url: "review/create",
+    //     method: "POST",
+    //     body: reviewData,
+    //   }),
+    //   invalidatesTags: ["review", "requirements"],
+    // }),
   }),
 });
 
-export const { useGetAllAdminReviewsQuery, useCreateAReviewMutation } =
-  reviewApiSlice;
+export const { useGe } = reviewApiSlice;
