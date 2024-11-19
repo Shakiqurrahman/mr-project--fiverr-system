@@ -25,7 +25,10 @@ import ProfileInfo from "../components/customer-profile/ProfileInfo";
 import { configApi } from "../libs/configApi";
 import { connectSocket } from "../libs/socketService";
 import { timeAgoTracker } from "../libs/timeAgoTracker";
-import { useLazyGetAllMessagesQuery } from "../Redux/api/inboxApiSlice";
+import {
+  useLazyGetAllMessagesQuery,
+  useSendMessageFromProfileMutation,
+} from "../Redux/api/inboxApiSlice";
 import { useUsersAllProjectsQuery } from "../Redux/api/orderApiSlice";
 import { setChatData, setConversationUser } from "../Redux/features/chatSlice";
 import { setOnlineUsers, setUser } from "../Redux/features/userSlice";
@@ -54,6 +57,7 @@ function Profile({ user = {}, slug }) {
     () => usersProjects?.filter(isCompletedProject),
     [usersProjects],
   );
+  const [sendMessageFromProfile] = useSendMessageFromProfileMutation();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -159,6 +163,11 @@ function Profile({ user = {}, slug }) {
     triggerGetAllMessages({
       receiverId: id,
     });
+    try {
+      sendMessageFromProfile({ userId: id }).unwrap();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

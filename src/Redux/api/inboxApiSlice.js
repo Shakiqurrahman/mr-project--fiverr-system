@@ -156,6 +156,15 @@ export const inboxApiSlice = createApi({
         body: data,
       }),
     }),
+
+    // send message from profile
+    sendMessageFromProfile: builder.mutation({
+      query: ({ userId }) => ({
+        url: `sendMessageForChat/${userId}`,
+        method: "POST",
+        // body: data,
+      }),
+    }),
   }),
 });
 
@@ -177,4 +186,5 @@ export const {
   useBookmarkAUserConversationMutation,
   useFetchCustomOfferImageQuery,
   useUpdateCustomOfferImageMutation,
+  useSendMessageFromProfileMutation,
 } = inboxApiSlice;
