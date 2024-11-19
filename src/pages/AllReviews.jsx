@@ -1,64 +1,22 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { FaQuoteLeft, FaQuoteRight } from "react-icons/fa";
 import { IoSearch, IoStar } from "react-icons/io5";
 import { useDispatch } from "react-redux";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
-import Camera from "../assets/images/camera.jpg";
-import Logo from "../assets/images/MR Logo White.png";
-import Divider from "../components/Divider";
+import { useGetMahfujurDetailsQuery } from "../Redux/api/dashboardApiSlice";
+import { useGetAllAdminReviewsQuery } from "../Redux/api/orderApiSlice";
 import { setPreviewImage } from "../Redux/features/previewImageSlice";
+import Divider from "../components/Divider";
+import { timeAgoTracker } from "../libs/timeAgoTracker";
 
 const AllReviews = () => {
+  const { data: adminInfo } = useGetMahfujurDetailsQuery();
+  const { data } = useGetAllAdminReviewsQuery();
   const dispatch = useDispatch();
   const [sortBtn, setSortBtn] = useState("Most relevant");
-
-  const reviews = [
-    {
-      id: 1,
-      reviewText:
-        "Top class service, Very nice, and responds very fast. He had two days to finish but finished in one day. I 100% coming back to him in future. He is the real deal. HE IS AMAZING!!!",
-      thumbnail: Camera,
-      user: {
-        userName: "gurserveksingh",
-        image: Logo,
-        country: "United States",
-      },
-    },
-    {
-      id: 2,
-      reviewText:
-        "Top class service, Very nice, and responds very fast. He had two days to finish but finished in one day. I 100% coming back to him in future. He is the real deal. HE IS AMAZING!!!",
-      thumbnail: Camera,
-      user: {
-        userName: "gurserveksingh",
-        image: Logo,
-        country: "United States",
-      },
-    },
-    {
-      id: 3,
-      reviewText:
-        "Top class service, Very nice, and responds very fast. He had two days to finish but finished in one day. I 100% coming back to him in future. He is the real deal. HE IS AMAZING!!!",
-      user: {
-        userName: "gurserveksingh",
-        image: Logo,
-        country: "United States",
-      },
-    },
-    {
-      id: 4,
-      reviewText:
-        "Top class service, Very nice, and responds very fast. He had two days to finish but finished in one day. I 100% coming back to him in future. He is the real deal. HE IS AMAZING!!!",
-      thumbnail: Camera,
-      user: {
-        userName: "gurserveksingh",
-        image: Logo,
-        country: "United States",
-      },
-    },
-  ];
+  const [reviews, setReviews] = useState([]);
 
   const reviewSetting = {
     dots: false,
@@ -101,6 +59,47 @@ const AllReviews = () => {
     ],
   };
 
+  useEffect(() => {
+    if (data) {
+      setReviews(data);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    // List of attractive words
+    const attractiveWords = [
+      "amazing",
+      "exceeded",
+      "fantastic",
+      "highly recommended",
+      "loved",
+    ];
+    if (sortBtn === "Delivery images" && data) {
+      const filterReviews = data?.filter((r) => r.isThumbnail);
+      setReviews(filterReviews);
+    }
+    if (sortBtn === "Most recent" && data) {
+      //   const filterReviews = () => {
+      // const mostRecentDate = new Date(Math.max(...reviews.map(r => new Date(r.date))));
+
+      // First, filter by most recent (e.g., within the last 7 days)
+      // const recentReviews = reviews.filter(r => new Date(r.date) >= new Date(mostRecentDate.setDate(mostRecentDate.getDate() - 7)));
+
+      // Then, filter by attractive words
+      const attractiveReviews = data?.filter((review) =>
+        attractiveWords?.some((word) =>
+          review?.message?.toLowerCase().includes(word.toLowerCase()),
+        ),
+      );
+
+      // Update the state with the filtered reviews
+      setReviews(attractiveReviews);
+    }
+    if (sortBtn === "Most relevant" && data) {
+      setReviews(data);
+    }
+  }, [sortBtn, data]);
+
   const handleSortBtn = (e) => {
     setSortBtn(e.target.value);
   };
@@ -108,6 +107,28 @@ const AllReviews = () => {
     e.preventDefault();
     dispatch(setPreviewImage(url));
   };
+
+  const oneStarReviews = reviews?.filter(
+    (review) => review?.rating === 1,
+  )?.length;
+  const twoStarReviews = reviews?.filter(
+    (review) => review?.rating === 2,
+  )?.length;
+  const threeStarReviews = reviews?.filter(
+    (review) => review?.rating === 3,
+  )?.length;
+  const fourStarReviews = reviews?.filter(
+    (review) => review?.rating === 4,
+  )?.length;
+  const fiveStarReviews = reviews?.filter(
+    (review) => review?.rating === 5,
+  )?.length;
+
+  // stars
+  const flooredStars = Math.floor(adminInfo?.Avg_Rating);
+
+  const imageAttachedReviewsLength = data?.filter((r) => r.isThumbnail)?.length;
+
   return (
     <div className="max-width">
       <div className="relative mt-20 rounded-lg bg-[#E7F4FC] p-5 pt-0">
@@ -117,15 +138,17 @@ const AllReviews = () => {
           </h1>
         </div>
         <div className="mb-10 flex flex-col items-center justify-between sm:flex-row">
-          <h3 className="text-lg font-semibold sm:text-2xl">31 Reviews</h3>
+          <h3 className="text-lg font-semibold sm:text-2xl">
+            {reviews?.length} Reviews
+          </h3>
           <div className="flex items-center gap-3">
-            <h3 className="text-lg font-medium sm:text-2xl">Average 4.9</h3>
+            <h3 className="text-lg font-medium sm:text-2xl">
+              Average {adminInfo?.Avg_Rating?.toFixed(1)}
+            </h3>
             <div className="flex items-center gap-2 text-lg text-primary sm:text-2xl">
-              <IoStar />
-              <IoStar />
-              <IoStar />
-              <IoStar />
-              <IoStar />
+              {Array.from({ length: flooredStars })?.map((_, index) => (
+                <IoStar key={index} />
+              ))}
             </div>
           </div>
         </div>
@@ -141,7 +164,10 @@ const AllReviews = () => {
                   <IoStar />
                   <IoStar />
                 </div>
-                <span className="text-lg sm:text-2xl">(00)</span>
+                <span className="text-lg sm:text-2xl">
+                  ({oneStarReviews < 10 ? "0" + oneStarReviews : oneStarReviews}
+                  )
+                </span>
               </div>
             </div>
             <div className="px-2 lg:pr-4">
@@ -154,7 +180,10 @@ const AllReviews = () => {
                   <IoStar />
                   <IoStar />
                 </div>
-                <span className="text-lg sm:text-2xl">(01)</span>
+                <span className="text-lg sm:text-2xl">
+                  ({twoStarReviews < 10 ? "0" + twoStarReviews : twoStarReviews}
+                  )
+                </span>
               </div>
             </div>
             <div className="px-2 lg:pr-4">
@@ -167,7 +196,13 @@ const AllReviews = () => {
                   <IoStar />
                   <IoStar />
                 </div>
-                <span className="text-lg sm:text-2xl">(04)</span>
+                <span className="text-lg sm:text-2xl">
+                  (
+                  {threeStarReviews < 10
+                    ? "0" + threeStarReviews
+                    : threeStarReviews}
+                  )
+                </span>
               </div>
             </div>
             <div className="px-2 lg:pr-4">
@@ -180,7 +215,13 @@ const AllReviews = () => {
                   <IoStar className="text-primary" />
                   <IoStar />
                 </div>
-                <span className="text-lg sm:text-2xl">(02)</span>
+                <span className="text-lg sm:text-2xl">
+                  (
+                  {fourStarReviews < 10
+                    ? "0" + fourStarReviews
+                    : fourStarReviews}
+                  )
+                </span>
               </div>
             </div>
             <div className="px-2 lg:pr-0">
@@ -193,7 +234,13 @@ const AllReviews = () => {
                   <IoStar className="text-primary" />
                   <IoStar className="text-primary" />
                 </div>
-                <span className="text-lg sm:text-2xl">(24)</span>
+                <span className="text-lg sm:text-2xl">
+                  (
+                  {fiveStarReviews < 10
+                    ? "0" + fiveStarReviews
+                    : fiveStarReviews}
+                  )
+                </span>
               </div>
             </div>
           </Slider>
@@ -227,7 +274,11 @@ const AllReviews = () => {
               type="button"
               className={`sortingBtn rounded border border-transparent p-1 text-xs font-medium sm:px-3 sm:py-2 lg:order-none lg:text-lg ${sortBtn === "Delivery images" ? "active" : ""}`}
             >
-              Delivery images (23)
+              Delivery images (
+              {imageAttachedReviewsLength < 10
+                ? "0" + imageAttachedReviewsLength
+                : imageAttachedReviewsLength}
+              )
             </button>
           </div>
           <form className="flex w-full items-stretch rounded bg-white md:w-1/4">
@@ -243,50 +294,57 @@ const AllReviews = () => {
             </button>
           </form>
         </div>
-        {reviews.map((review) => (
-          <Fragment key={review.id}>
+        {reviews?.map((review, index) => (
+          <Fragment key={index}>
             <Divider className="my-5 h-px w-full !bg-black/30 sm:my-10" />
             <div className="mb-5">
               <div className="">
-                <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:items-start">
+                <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <p className="text-center text-base leading-[40px] sm:text-start md:text-lg">
                       <span>
                         <FaQuoteLeft className="mb-3 mr-1 inline text-xs text-red-500" />
                       </span>
-                      {review.reviewText}
+                      {review?.message}
                       <span>
                         <FaQuoteRight className="mb-3 ml-1 inline text-xs text-red-500" />
                       </span>
                     </p>
                     <div className="mt-5 flex flex-col items-center gap-2 sm:gap-4 lg:flex-row">
-                      <img
-                        src={review.user.image}
-                        alt=""
-                        className="h-[30px] w-[30px] rounded-full sm:h-[40px] sm:w-[40px]"
-                      />
+                      {review?.sender?.image ? (
+                        <img
+                          src={review?.sender?.image}
+                          alt=""
+                          className="size-[30px] rounded-full sm:size-[40px]"
+                        />
+                      ) : (
+                        <div className="flex size-[30px] items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-3xl font-bold text-[#3b3b3b]/50 sm:size-[40px]">
+                          {review?.sender?.userName?.charAt(0)?.toUpperCase()}
+                        </div>
+                      )}
                       <h1 className="text-base font-semibold md:text-xl">
-                        {review.user.userName}
+                        {review?.sender?.userName}
                       </h1>
                       <div className="ml-0 flex justify-center gap-2 text-lg text-[#C8E3F6] md:text-2xl lg:ml-3">
-                        <IoStar className="text-primary" />
-                        <IoStar className="text-primary" />
-                        <IoStar className="text-primary" />
-                        <IoStar className="text-primary" />
-                        <IoStar className="text-primary" />
+                        {Array.from(
+                          { length: review?.rating },
+                          (_, index) => index + 1,
+                        )?.map((_, i) => (
+                          <IoStar key={i} className="text-primary" />
+                        ))}
                       </div>
                       <p className="ml-0 text-base md:text-lg lg:ml-3">
-                        {review.user.country}
+                        {review?.sender?.country}
                       </p>
                       <p className="mt-2 text-xs md:text-base lg:mt-0">
-                        5 days ago
+                        {timeAgoTracker(review?.createdAt)}
                       </p>
                     </div>
                   </div>
 
-                  {review.thumbnail && (
+                  {review?.isThumbnail && (
                     <img
-                      src={review.thumbnail}
+                      src={review?.thumbnail}
                       alt=""
                       className="w-[150px] cursor-pointer rounded-xl object-cover"
                       onClick={(e) => handlePreviewImage(e, review?.thumbnail)}
