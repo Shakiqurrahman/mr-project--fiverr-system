@@ -1,12 +1,14 @@
 import React, { useRef, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-import { setMessages } from "../../../Redux/features/orderSlice";
 import useOutsideClick from "../../../hooks/useOutsideClick";
 import { configApi } from "../../../libs/configApi";
 import { connectSocket } from "../../../libs/socketService";
+import { useSendAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
+import { setMessages } from "../../../Redux/features/orderSlice";
 
 const ExtendDeliveryModal = ({ handleClose }) => {
+  const [sendAOrderMessage] = useSendAOrderMessageMutation();
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.user);
   const { projectDetails } = useSelector((state) => state.order);
@@ -37,7 +39,7 @@ const ExtendDeliveryModal = ({ handleClose }) => {
   const dates = new Date();
   const timeAndDate = dates.getTime();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data =
       extendType === "requestByMe"
@@ -56,6 +58,7 @@ const ExtendDeliveryModal = ({ handleClose }) => {
       imageComments: [],
       timeAndDate,
       // replyTo,
+      projectNumber: projectDetails?.projectNumber,
     };
 
     if (isAdmin) {
@@ -78,6 +81,17 @@ const ExtendDeliveryModal = ({ handleClose }) => {
 
     // onNoteSubmit(form);
     handleClose(false);
+
+    try {
+      const res = await sendAOrderMessage({
+        recipientId: isAdmin ? projectDetails?.userId : null,
+        ...submitForm,
+      }).unwrap();
+
+      // setReplyTo(null);
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    }
   };
 
   useOutsideClick(modalRef, () => handleClose(false));

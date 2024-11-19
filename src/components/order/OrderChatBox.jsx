@@ -22,8 +22,15 @@ import EmojiPicker from "../chat/EmojiPicker";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import shortid from "shortid";
-import { useSendAOrderMessageMutation } from "../../Redux/api/orderApiSlice";
-import { setMessages } from "../../Redux/features/orderSlice";
+import {
+  useLazyGetOrderUserMessagesQuery,
+  useSendAOrderMessageMutation,
+} from "../../Redux/api/orderApiSlice";
+import {
+  rollbackMessages,
+  setMessages,
+  updateMessagesByUser,
+} from "../../Redux/features/orderSlice";
 import CircleProgressBar from "../CircleProgressBar";
 import FilePreview from "../FilePreview";
 import AdditionalOfferModal from "./chatbox-components/AdditionalOfferModal";
@@ -35,6 +42,8 @@ import ExtendingDeliveryPreview from "./chatbox-components/ExtendingDeliveryPrev
 import OrderDeliveryPreview from "./chatbox-components/OrderDeliveryPreview";
 
 const OrderChatBox = () => {
+  const [getAllUserMessages, { data: allUserMessages }] =
+    useLazyGetOrderUserMessagesQuery();
   const dispatch = useDispatch();
   // Redux query imports here
   const { data: quickMsgs } = useFetchQuickResMsgQuery();
@@ -116,6 +125,18 @@ const OrderChatBox = () => {
     };
   }, [socket]);
   // }, [conversationUser, isAdmin, socket, messages, dispatch, user]);
+  // get all messages of user from db
+  useEffect(() => {
+    if (projectDetails) {
+      getAllUserMessages(projectDetails?.userId);
+    }
+  }, [projectDetails, getAllUserMessages]);
+
+  useEffect(() => {
+    if (allUserMessages) {
+      dispatch(updateMessagesByUser(allUserMessages));
+    }
+  }, [allUserMessages]);
 
   useEffect(() => {
     // Inital Scroll to last message
@@ -314,6 +335,7 @@ const OrderChatBox = () => {
         imageComments: [],
         timeAndDate,
         replyTo,
+        projectNumber: projectDetails?.projectNumber,
       };
 
       if (isAdmin) {
@@ -357,9 +379,10 @@ const OrderChatBox = () => {
         }
       } catch (error) {
         // Rollback the optimistic update on failure
-        setMessages((prev) =>
-          prev.filter((msg) => msg?.messageText !== submitForm?.messageText),
-        );
+        // setMessages((prev) =>
+        //   prev.filter((msg) => msg?.messageText !== submitForm?.messageText),
+        // );
+        dispatch(rollbackMessages(submitForm?.messageText));
         console.error("Failed to send message:", error);
       }
     }

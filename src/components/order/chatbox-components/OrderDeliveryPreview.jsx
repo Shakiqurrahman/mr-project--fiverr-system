@@ -103,91 +103,65 @@ const OrderDeliveryPreview = ({ data }) => {
     setSelectedImage(att);
   };
 
+  const foundImages =
+    data?.attachments?.filter((file) => file?.format?.startsWith("image/"))
+      .length > 0;
+
   console.log("delivery files", data);
 
   return (
     <>
-      <div className="mt-5 flex flex-wrap-reverse items-start gap-3 xl:flex-nowrap">
-        <div className="w-full shrink-0 xl:w-2/3">
-          <h1 className="mb-2 text-lg font-semibold">Preview Image</h1>
-          <div>
-            <Slider {...settings}>
-              {data?.attachments
-                ?.filter((file) => file?.format?.startsWith("image/"))
-                ?.map((att, index) => (
-                  <div key={index} className="w-full">
-                    <img
-                      // onClick={() => handleOpenComment(att)}
-                      src={
-                        projectDetails?.projectStatus === "Completed"
-                          ? att?.url
-                          : att?.watermark
-                      }
-                      alt={att?.name}
-                      className="pointer-events-none block w-full object-cover"
-                    />
-                    <div className="mt-4 text-center">
-                      <a
-                        href={
-                          projectDetails?.projectStatus === "Completed"
-                            ? att?.url
-                            : att?.watermark
-                        }
-                        download={att?.name}
-                        target="_blank"
-                        className="inline-block rounded-[30px] border border-gray-400 px-5 py-2 text-lg font-medium text-black/50"
-                      >
-                        Download
-                      </a>
-                    </div>
-                  </div>
-                ))}
-            </Slider>
-          </div>
-          {projectDetails?.projectStatus === "Completed" && (
-            <div className="flex gap-3">
-              <button
-                type="button"
-                className="w-1/2 rounded-[30px] bg-primary p-2 text-center font-semibold text-white"
-                onClick={() => handleDownloadZip(data?.attachments)}
-              >
-                Zip Download
-              </button>
-              <button
-                type="button"
-                className="w-1/2 rounded-[30px] bg-revision p-2 text-center font-semibold text-white"
-                onClick={() => handleDownloadAll(data?.attachments)}
-              >
-                Individual Download
-              </button>
-            </div>
-          )}
-          {projectDetails?.projectStatus !== "Completed" &&
-            projectDetails?.projectStatus !== "Canceled" && (
-              <div className="mt-3 xl:mt-0">
-                <p>
-                  The watermark will no longer show after accepting the delivery
-                  file. Please accept your final file first, then download the
-                  files.
-                </p>
-                <div className="my-10 flex justify-center gap-5">
-                  <button
-                    type="button"
-                    className="rounded-[30px] bg-primary px-10 py-2 text-center font-semibold text-white"
-                  >
-                    Accept
-                  </button>
-                  <button
-                    type="button"
-                    className="rounded-[30px] bg-revision px-10 py-2 text-center font-semibold text-white"
-                  >
-                    Revision
-                  </button>
-                </div>
+      <div
+        className={`mt-5 flex ${!foundImages ? "flex-wrap-reverse" : "flex-wrap-reverse xl:flex-nowrap"} items-start gap-3`}
+      >
+        <div
+          className={`${!foundImages ? "w-full" : "w-full shrink-0 xl:w-2/3"}`}
+        >
+          {foundImages && (
+            <>
+              <h1 className="mb-2 text-lg font-semibold">Preview Image</h1>
+              <div>
+                <Slider {...settings}>
+                  {data?.attachments
+                    ?.filter((file) => file?.format?.startsWith("image/"))
+                    ?.map((att, index) => (
+                      <div key={index} className="w-full">
+                        <img
+                          // onClick={() => handleOpenComment(att)}
+                          src={
+                            projectDetails?.projectStatus === "Completed"
+                              ? att?.url
+                              : att?.watermark
+                          }
+                          alt={att?.name}
+                          className="pointer-events-none block w-full object-cover"
+                        />
+                        <div className="mt-4 text-center">
+                          <a
+                            href={
+                              projectDetails?.projectStatus === "Completed"
+                                ? att?.url
+                                : att?.watermark
+                            }
+                            download={att?.name}
+                            target="_blank"
+                            className="inline-block rounded-[30px] border border-gray-400 px-5 py-2 text-lg font-medium text-black/50"
+                          >
+                            Download
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                </Slider>
               </div>
-            )}
+            </>
+          )}
         </div>
-        <div className="w-full shrink-0 xl:w-1/3">
+        <div
+          className={
+            foundImages ? "w-full shrink-0 xl:w-1/3" : "w-full shrink-0"
+          }
+        >
           <h1
             className={`mb-2 ${projectDetails?.projectStatus === "Completed" ? "ms-6" : ""} text-lg font-semibold`}
           >
@@ -252,6 +226,60 @@ const OrderDeliveryPreview = ({ data }) => {
           </div>
         </div>
       </div>
+      {projectDetails?.projectStatus === "Completed" && (
+        <div
+          className={
+            foundImages ? "flex w-full gap-3 xl:w-2/3" : "flex w-full gap-3"
+          }
+        >
+          <button
+            type="button"
+            className="w-1/2 rounded-[30px] bg-primary p-2 text-center font-semibold text-white"
+            onClick={() => handleDownloadZip(data?.attachments)}
+          >
+            Zip Download
+          </button>
+          <button
+            type="button"
+            className="w-1/2 rounded-[30px] bg-revision p-2 text-center font-semibold text-white"
+            onClick={() => handleDownloadAll(data?.attachments)}
+          >
+            Individual Download
+          </button>
+        </div>
+      )}
+      {projectDetails?.projectStatus !== "Completed" &&
+        projectDetails?.projectStatus !== "Canceled" && (
+          <div
+            className={
+              foundImages
+                ? "mt-3 w-full xl:mt-0 xl:w-2/3"
+                : "mt-3 w-full xl:mt-0"
+            }
+          >
+            <p>
+              {foundImages
+                ? `The watermark will no longer show after accepting the delivery
+              file. Please accept your final file first, then download the
+              files.`
+                : `To get the files download link please accept your final file first, then download the files.`}
+            </p>
+            <div className="my-10 flex justify-center gap-5">
+              <button
+                type="button"
+                className="rounded-[30px] bg-primary px-10 py-2 text-center font-semibold text-white"
+              >
+                Accept
+              </button>
+              <button
+                type="button"
+                className="rounded-[30px] bg-revision px-10 py-2 text-center font-semibold text-white"
+              >
+                Revision
+              </button>
+            </div>
+          </div>
+        )}
       {openCommentBox && (
         <CommentPage
           selected={selectedImage}

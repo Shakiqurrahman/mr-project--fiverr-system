@@ -1,9 +1,11 @@
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setMessages } from "../../../Redux/features/orderSlice";
 import useOutsideClick from "../../../hooks/useOutsideClick";
+import { useSendAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
+import { setMessages } from "../../../Redux/features/orderSlice";
 
 const AdditionalOfferModal = ({ handleClose, onOfferSubmit }) => {
+  const [sendAOrderMessage] = useSendAOrderMessageMutation();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state?.user);
   const { projectDetails } = useSelector((state) => state?.order);
@@ -27,7 +29,7 @@ const AdditionalOfferModal = ({ handleClose, onOfferSubmit }) => {
   const dates = new Date();
   const timeAndDate = dates.getTime();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const submitForm = {
@@ -42,6 +44,7 @@ const AdditionalOfferModal = ({ handleClose, onOfferSubmit }) => {
       imageComments: [],
       timeAndDate,
       // replyTo,
+      projectNumber: projectDetails?.projectNumber,
     };
 
     if (isAdmin) {
@@ -62,13 +65,22 @@ const AdditionalOfferModal = ({ handleClose, onOfferSubmit }) => {
       }),
     );
 
-    setForm({
-      text: "",
-      price: "",
-      duration: "",
-    });
-    // setReplyTo(null);
     handleClose(false);
+    try {
+      const res = await sendAOrderMessage({
+        recipientId: isAdmin ? projectDetails?.userId : null,
+        ...submitForm,
+      }).unwrap();
+
+      setForm({
+        text: "",
+        price: "",
+        duration: "",
+      });
+      // setReplyTo(null);
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    }
   };
 
   useOutsideClick(formRef, () => handleClose(false));

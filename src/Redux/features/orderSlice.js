@@ -11,6 +11,14 @@ const orderSlice = createSlice({
     setMessages: (state, action) => {
       state.messages.push(action.payload);
     },
+    rollbackMessages: (state, action) => {
+      state.messages = state.messages.map((prev) =>
+        prev.filter((msg) => msg?.messageText !== action.payload),
+      );
+    },
+    updateMessagesByUser: (state, action) => {
+      state.messages = action.payload;
+    },
     setProjectDetails: (state, action) => {
       state.projectDetails = action.payload;
     },
@@ -20,7 +28,12 @@ const orderSlice = createSlice({
   },
 });
 
-export const { setMessages, setClientDetails, setProjectDetails } =
-  orderSlice.actions;
+export const {
+  setMessages,
+  setClientDetails,
+  setProjectDetails,
+  rollbackMessages,
+  updateMessagesByUser,
+} = orderSlice.actions;
 
 export default orderSlice.reducer;

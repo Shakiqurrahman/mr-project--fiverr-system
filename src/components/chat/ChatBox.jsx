@@ -655,6 +655,8 @@ const ChatBox = ({ openToggle }) => {
     return onlineUsers.some((onlineUser) => onlineUser?.userId === userId);
   };
 
+  console.log("Messages", messages);
+
   return (
     <div className="flex h-full flex-col">
       {/* Header Part */}
@@ -866,74 +868,83 @@ const ChatBox = ({ openToggle }) => {
                           </span>{" "}
                           {msg.contactForm.website}
                         </p>
-                        <p className="my-1">
-                          <span className="font-semibold">Example design:</span>
-                        </p>
-                        {msg.attachment && msg.attachment.length > 0 && (
-                          <div className="relative mt-2">
-                            {msg?.contactForm?.exampleDesign?.length > 3 && (
-                              <Link className="mb-2 inline-block text-sm font-medium text-primary">
-                                Download All
-                              </Link>
-                            )}
-                            <div className="grid grid-cols-3 gap-3">
-                              {msg?.contactForm?.exampleDesign?.map(
-                                (att, i) => (
-                                  <div key={i}>
-                                    <img
+                        {msg?.contactForm?.exampleDesign?.length > 0 && (
+                          <p className="my-1">
+                            <span className="font-semibold">
+                              Example design:
+                            </span>
+                          </p>
+                        )}
+                        {msg?.contactForm &&
+                          msg?.contactForm?.exampleDesign?.length > 0 && (
+                            <div className="relative mt-2">
+                              {msg?.contactForm?.exampleDesign?.length > 3 && (
+                                <Link className="mb-2 inline-block text-sm font-medium text-primary">
+                                  Download All
+                                </Link>
+                              )}
+                              <div className="grid grid-cols-3 gap-3">
+                                {msg?.contactForm?.exampleDesign?.map(
+                                  (att, i) => (
+                                    <div key={i}>
+                                      {/* <img
                                       src={att?.url}
                                       alt=""
                                       className="h-[180px] w-full cursor-pointer object-cover"
                                       onClick={(e) =>
                                         handlePreviewImage(e, att?.url)
                                       }
-                                    />
-                                    <Link className="mt-2 flex items-center justify-center text-xs">
-                                      <BiDownload className="shrink-0 text-lg text-primary" />
-                                      <p
-                                        className="mx-2 line-clamp-1 font-medium"
-                                        title={att?.name}
-                                      >
-                                        {att?.name}
-                                      </p>
-                                      <span className="shrink-0 text-black/50">
-                                        ({formatFileSize(att?.size)})
-                                      </span>
-                                    </Link>
+                                    /> */}
+                                      <PreviewChatFiles
+                                        file={att}
+                                        handlePreviewImage={handlePreviewImage}
+                                      />
+                                      <Link className="mt-2 flex items-center justify-center text-xs">
+                                        <BiDownload className="shrink-0 text-lg text-primary" />
+                                        <p
+                                          className="mx-2 line-clamp-1 font-medium"
+                                          title={att?.name}
+                                        >
+                                          {att?.name}
+                                        </p>
+                                        <span className="shrink-0 text-black/50">
+                                          ({formatFileSize(att?.size)})
+                                        </span>
+                                      </Link>
+                                    </div>
+                                  ),
+                                )}
+                              </div>
+                              {msg?.contactForm?.exampleDesign?.length >= 6 &&
+                                (!expand ? (
+                                  <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
+                                    <button
+                                      className="rounded-full border bg-white"
+                                      onClick={() => setExpand(!expand)}
+                                    >
+                                      <img
+                                        src={DownArrow}
+                                        alt=""
+                                        className="h-[50px] w-[50px]"
+                                      />
+                                    </button>
                                   </div>
-                                ),
-                              )}
+                                ) : (
+                                  <div className="relative z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-5">
+                                    <button
+                                      className="rounded-full border bg-white"
+                                      onClick={() => setExpand(!expand)}
+                                    >
+                                      <img
+                                        src={UpArrow}
+                                        alt=""
+                                        className="h-[50px] w-[50px]"
+                                      />
+                                    </button>
+                                  </div>
+                                ))}
                             </div>
-                            {msg?.contactForm?.exampleDesign?.length >= 6 &&
-                              (!expand ? (
-                                <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
-                                  <button
-                                    className="rounded-full border bg-white"
-                                    onClick={() => setExpand(!expand)}
-                                  >
-                                    <img
-                                      src={DownArrow}
-                                      alt=""
-                                      className="h-[50px] w-[50px]"
-                                    />
-                                  </button>
-                                </div>
-                              ) : (
-                                <div className="relative z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-5">
-                                  <button
-                                    className="rounded-full border bg-white"
-                                    onClick={() => setExpand(!expand)}
-                                  >
-                                    <img
-                                      src={UpArrow}
-                                      alt=""
-                                      className="h-[50px] w-[50px]"
-                                    />
-                                  </button>
-                                </div>
-                              ))}
-                          </div>
-                        )}
+                          )}
 
                         <p className="mt-5">
                           <span className="font-semibold">Message: </span>{" "}

@@ -152,4 +152,5 @@ export const {
   useDeleteAOrderMessageMutation,
   useUpdateAOrderMessageMutation,
   useGetOrderUserMessagesQuery,
+  useLazyGetOrderUserMessagesQuery,
 } = orderApiSlice;

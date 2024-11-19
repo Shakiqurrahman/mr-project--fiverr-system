@@ -13,6 +13,7 @@ import {
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
 } from "../../Redux/api/inboxApiSlice";
+import { useSendAOrderMessageMutation } from "../../Redux/api/orderApiSlice";
 import { setMessages } from "../../Redux/features/orderSlice";
 import { useLocalStorageObject } from "../../hooks/useLocalStorageObject";
 import useOutsideClick from "../../hooks/useOutsideClick";
@@ -26,6 +27,7 @@ import AddQuickMsgModal from "../chat/AddQuickMsgModal";
 import EditQuickMsgModal from "../chat/EditQuickMsgModal";
 
 const OrderDeliveryForm = ({ handleClose }) => {
+  const [sendAOrderMessage] = useSendAOrderMessageMutation();
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.user);
   const { projectDetails } = useSelector((state) => state.order);
@@ -266,7 +268,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
   const timeAndDate = dates.getTime();
 
   //   submitting form data
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (textValue.length <= 5000 && selectedImages && thumbnailImage) {
       const formData = {
@@ -285,6 +287,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
         imageComments: [],
         timeAndDate,
         // replyTo,
+        projectNumber: projectDetails?.projectNumber,
       };
 
       if (isAdmin) {
@@ -304,6 +307,17 @@ const OrderDeliveryForm = ({ handleClose }) => {
           recipientId: isAdmin ? projectDetails?.userId : "",
         }),
       );
+
+      try {
+        const res = await sendAOrderMessage({
+          recipientId: isAdmin ? projectDetails?.userId : null,
+          ...submitForm,
+        }).unwrap();
+
+        // setReplyTo(null);
+      } catch (error) {
+        console.error("Failed to send message:", error);
+      }
 
       const resetStorage = {
         messageText: "",

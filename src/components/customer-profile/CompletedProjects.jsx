@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { getStatusText } from "./StatusText";
 
 const CompletedProjects = ({ completedProjects }) => {
@@ -7,8 +8,9 @@ const CompletedProjects = ({ completedProjects }) => {
       {completedProjects?.length > 0 ? (
         completedProjects?.map((project) => {
           return (
-            <div
-              className="rounded-lg border border-gray-300 p-2 shadow-sm lg:p-4"
+            <Link
+              to={`/order/${project?.projectNumber}`}
+              className="block rounded-lg border border-gray-300 p-2 shadow-sm lg:p-4"
               key={project?.id}
             >
               <div className="flex items-center gap-3">
@@ -32,7 +34,7 @@ const CompletedProjects = ({ completedProjects }) => {
                   {getStatusText(project?.projectStatus)}
                 </p>
               </div>
-            </div>
+            </Link>
           );
         })
       ) : (
