@@ -248,12 +248,14 @@ function SingleProductPage() {
               {tag}
             </button>
           ))}
-          <button
-            className="rounded-[30px] bg-[#ffefef] px-2 py-1 text-sm font-medium duration-300 hover:bg-secondary hover:text-white sm:px-4 sm:py-2 sm:text-base"
-            onClick={handleToggle}
-          >
-            {showAll ? "Show Less" : "See All"}
-          </button>
+          {design?.tags?.length > 10 && (
+            <button
+              className="rounded-[30px] bg-[#ffefef] px-2 py-1 text-sm font-medium duration-300 hover:bg-secondary hover:text-white sm:px-4 sm:py-2 sm:text-base"
+              onClick={handleToggle}
+            >
+              {showAll ? "Show Less" : "See All"}
+            </button>
+          )}
         </div>
       </div>
       <RelatedDesigns items={relatedDesigns} />
