@@ -155,6 +155,9 @@ function Testimonials() {
 
   // stars
   const flooredStars = Math.floor(adminInfo?.Avg_Rating);
+
+  const imageAttachedReviewsLength = data?.filter((r) => r.isThumbnail)?.length;
+
   return (
     <div className="max-width">
       <div className="relative mt-20 bg-[#E7F4FC] p-5 pt-0">
@@ -169,7 +172,7 @@ function Testimonials() {
           </h3>
           <div className="flex items-center gap-3">
             <h3 className="text-lg font-medium sm:text-2xl">
-              Average {adminInfo?.Avg_Rating}
+              Average {adminInfo?.Avg_Rating?.toFixed(1)}
             </h3>
             <div className="flex items-center gap-2 text-lg text-primary sm:text-2xl">
               {Array.from({ length: flooredStars })?.map((_, index) => (
@@ -300,7 +303,11 @@ function Testimonials() {
               type="button"
               className={`sortingBtn rounded border border-transparent p-1 text-xs font-medium sm:px-3 sm:py-2 lg:order-none lg:text-lg ${sortBtn === "Delivery images" ? "active" : ""}`}
             >
-              Delivery images (23)
+              Delivery images (
+              {imageAttachedReviewsLength < 10
+                ? "0" + imageAttachedReviewsLength
+                : imageAttachedReviewsLength}
+              )
             </button>
           </div>
           <form className="flex w-full items-stretch rounded bg-white md:w-1/4">

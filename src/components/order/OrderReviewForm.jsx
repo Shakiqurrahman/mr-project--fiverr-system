@@ -1,10 +1,10 @@
 import { Rating } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GiCheckMark } from "react-icons/gi";
 import { IoStarOutline, IoStarSharp } from "react-icons/io5";
 import { useSelector } from "react-redux";
-import Image from "../../assets/images/project-thumbnail.jpg";
 import { useCreateAReviewMutation } from "../../Redux/api/orderApiSlice";
+import Image from "../../assets/images/project-thumbnail.jpg";
 import Divider from "../Divider";
 
 const OrderReviewForm = () => {
@@ -16,6 +16,15 @@ const OrderReviewForm = () => {
   const [isThumbnail, setIsThumbnail] = useState(true);
   const [value, setValue] = useState(0);
   const [text, setText] = useState("");
+
+  useEffect(() => {
+    if (projectDetails) {
+      const getThumbnailTrueOrFalse = projectDetails?.review?.find(
+        (r) => r?.senderType === "CLIENT",
+      );
+      setIsThumbnail(getThumbnailTrueOrFalse?.isThumbnail || true);
+    }
+  }, [projectDetails]);
 
   const handleText = (e) => {
     setText(e.target.value);
