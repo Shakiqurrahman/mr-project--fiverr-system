@@ -204,11 +204,11 @@ const AllUsers = () => {
       {/* all users */}
       <div className="mt-6 space-y-4">
         {filteredUsers?.length > 0 ? (
-          filteredUsers?.map((user) => {
+          filteredUsers?.map((user, idx) => {
             const letterLogo =
               !user?.image && user?.userName?.trim().charAt(0).toUpperCase();
             return (
-              <div key={user?.id}>
+              <div key={idx}>
                 <Link
                   to={`/${user?.userName}`}
                   className="group flex items-center gap-2"
@@ -236,14 +236,14 @@ const AllUsers = () => {
 
                 <div className="ml-10 mt-2 space-y-2">
                   {user?.isAffiliate &&
-                    user?.affiliateUsers.map((affUser) => {
+                    user?.affiliateUsers?.map((affUser, idx) => {
                       const letterLogo =
                         !affUser.avatar &&
                         affUser?.userName.trim().charAt(0).toUpperCase();
                       return (
                         <Link
                           to={`/${affUser?.userName}`}
-                          key={affUser?.id}
+                          key={idx}
                           className="group flex items-center gap-2"
                         >
                           <div className="relative flex-shrink-0">

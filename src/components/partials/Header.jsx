@@ -57,7 +57,8 @@ function Header() {
   useSyncCart();
   return (
     <>
-      <header className="sticky top-0 z-[99]">
+      {/* <header className="sticky top-0 z-[99]"> */}
+      <header className="relative">
         <div className="z-10 bg-[#121212]">
           <div className="max-width flex h-16 items-center justify-between sm:h-20">
             <Link to="/">
