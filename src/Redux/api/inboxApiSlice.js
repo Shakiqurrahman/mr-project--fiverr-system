@@ -164,6 +164,7 @@ export const inboxApiSlice = createApi({
         method: "POST",
         // body: data,
       }),
+      invalidatesTags: ["getAllMessages", "availablechatusers"],
     }),
   }),
 });
