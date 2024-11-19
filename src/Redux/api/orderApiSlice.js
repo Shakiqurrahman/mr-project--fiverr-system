@@ -132,6 +132,15 @@ export const orderApiSlice = createApi({
       }),
       invalidatesTags: ["messages"],
     }),
+
+    cancelOrderProject: builder.mutation({
+      query: ({ orderId, orderMessageId }) => ({
+        url: `cancel-order`,
+        method: "POST",
+        body: { orderId, orderMessageId },
+      }),
+      invalidatesTags: ["messages"],
+    }),
   }),
 });
 
@@ -153,4 +162,5 @@ export const {
   useUpdateAOrderMessageMutation,
   useGetOrderUserMessagesQuery,
   useLazyGetOrderUserMessagesQuery,
+  useCancelOrderProjectMutation,
 } = orderApiSlice;
