@@ -9,6 +9,7 @@ import Divider from "../Divider";
 
 const OrderReviewForm = () => {
   const [submitReview] = useCreateAReviewMutation();
+  const { user } = useSelector((state) => state.user);
   const { projectDetails } = useSelector((state) => state.order);
   console.log(projectDetails);
 
@@ -29,6 +30,7 @@ const OrderReviewForm = () => {
         isThumbnail: isThumbnail,
         rating: value,
         message: text,
+        userName: user?.role === "USER" ? null : projectDetails?.user?.userName,
       };
       try {
         const res = await submitReview(data).unwrap();
