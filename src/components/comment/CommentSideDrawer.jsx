@@ -149,6 +149,7 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
       imageComments: updatedComments || [],
       timeAndDate,
       replyTo,
+      projectNumber: projectDetails?.projectNumber,
     };
 
     if (isAdmin) {

@@ -73,6 +73,7 @@ const AllReviews = () => {
       "fantastic",
       "highly recommended",
       "loved",
+      "very",
     ];
     if (sortBtn === "Delivery images" && data) {
       const filterReviews = data?.filter((r) => r.isThumbnail);

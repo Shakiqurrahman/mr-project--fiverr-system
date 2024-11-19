@@ -3,17 +3,17 @@ import toast from "react-hot-toast";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import cashWithdrawal from "../assets/images/icons/cash-withdrawal.png";
-import creditCard from "../assets/images/icons/credit-card.png";
-import dollerBill from "../assets/images/icons/dollar-bill.png";
-import prevBtn from "../assets/images/icons/Left Arrow.svg";
-import nextBtn from "../assets/images/icons/Right Arrow.svg";
-import PageHeaderWithText from "../components/PageHeaderWithText";
 import {
   useCreateAffiliateMutation,
   useDeleteAffiliateMutation,
   useGetAUserAffiliatesQuery,
 } from "../Redux/api/affiliateApiSlice";
+import prevBtn from "../assets/images/icons/Left Arrow.svg";
+import nextBtn from "../assets/images/icons/Right Arrow.svg";
+import cashWithdrawal from "../assets/images/icons/cash-withdrawal.png";
+import creditCard from "../assets/images/icons/credit-card.png";
+import dollerBill from "../assets/images/icons/dollar-bill.png";
+import PageHeaderWithText from "../components/PageHeaderWithText";
 
 function Affiliate() {
   const [affLink, setAffLink] = useState("");
@@ -186,26 +186,28 @@ function Affiliate() {
                 <h1 className="w-[18%] sm:w-[15%]">Sales</h1>
                 <h1 className="w-[6%] sm:w-[5%]"></h1>
               </li>
-              {affiliateData?.formattedAffiliates.map((aff, idx) => (
-                <li
-                  key={idx}
-                  className="mt-3 flex items-center gap-1 border-b border-gray-500 p-1 text-center text-sm sm:gap-2"
-                >
-                  <p className="w-[40%] break-words text-start sm:w-[50%]">
-                    {`https://mahfujurrahm535.com/?${aff?.links}`}
-                  </p>
-                  <p className="w-[18%] sm:w-[15%]">{aff?.totalClicks}</p>
-                  <p className="w-[18%] sm:w-[15%]">{aff?.join}</p>
-                  <p className="w-[18%] sm:w-[15%]">{aff?.sales}</p>
-                  <button
-                    className="w-[6%] sm:w-[5%]"
-                    type="button"
-                    onClick={() => deleteAffiliateHandler(aff?.links)}
+              {affiliateData?.formattedAffiliates
+                .map((aff, idx) => (
+                  <li
+                    key={idx}
+                    className="mt-3 flex items-center gap-1 border-b border-gray-500 p-1 text-center text-sm sm:gap-2"
                   >
-                    <RiDeleteBin6Line className="text-sm" />
-                  </button>
-                </li>
-              ))}
+                    <p className="w-[40%] break-words text-start sm:w-[50%]">
+                      {`https://mahfujurrahm535.com/?${aff?.links}`}
+                    </p>
+                    <p className="w-[18%] sm:w-[15%]">{aff?.totalClicks}</p>
+                    <p className="w-[18%] sm:w-[15%]">{aff?.join}</p>
+                    <p className="w-[18%] sm:w-[15%]">{aff?.sales}</p>
+                    <button
+                      className="w-[6%] sm:w-[5%]"
+                      type="button"
+                      onClick={() => deleteAffiliateHandler(aff?.links)}
+                    >
+                      <RiDeleteBin6Line className="text-sm" />
+                    </button>
+                  </li>
+                ))
+                .reverse()}
             </ul>
           </div>
 

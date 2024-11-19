@@ -103,7 +103,8 @@ export const orderApiSlice = createApi({
     }),
 
     getOrderUserMessages: builder.query({
-      query: (userId) => `order-message/get?userId=${userId}`,
+      query: ({ userId, projectNumber }) =>
+        `order-message/get?userId=${userId}&projectNumber=${projectNumber}`,
       transformResponse: (response) => response?.data,
     }),
 
