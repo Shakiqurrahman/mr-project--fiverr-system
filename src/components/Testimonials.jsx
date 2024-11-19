@@ -169,7 +169,7 @@ function Testimonials() {
           </h3>
           <div className="flex items-center gap-3">
             <h3 className="text-lg font-medium sm:text-2xl">
-              Average {adminInfo?.Avg_Rating}
+              Average {adminInfo?.Avg_Rating?.toFixed(1)}
             </h3>
             <div className="flex items-center gap-2 text-lg text-primary sm:text-2xl">
               {Array.from({ length: flooredStars })?.map((_, index) => (

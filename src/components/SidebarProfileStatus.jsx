@@ -16,7 +16,7 @@ function SidebarProfileStatus() {
       </span>
       <p className="text-sm">Avg. Rating</p>
       <span className="mb-3 block text-lg font-semibold">
-        {data?.Avg_Rating}
+        {data?.Avg_Rating?.toFixed(1)}
       </span>
       <p className="text-sm">On-Time Delivery</p>
       <span className="mb-3 block text-lg font-semibold">100%</span>
