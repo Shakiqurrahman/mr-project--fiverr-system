@@ -12,8 +12,8 @@ const orderSlice = createSlice({
       state.messages.push(action.payload);
     },
     rollbackMessages: (state, action) => {
-      state.messages = state.messages.map((prev) =>
-        prev.filter((msg) => msg?.messageText !== action.payload),
+      state.messages = state?.messages?.map((prev) =>
+        prev?.filter((msg) => msg?.messageText !== action.payload),
       );
     },
     updateMessagesByUser: (state, action) => {

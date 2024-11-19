@@ -128,7 +128,10 @@ const OrderChatBox = () => {
   // get all messages of user from db
   useEffect(() => {
     if (projectDetails) {
-      getAllUserMessages(projectDetails?.userId);
+      getAllUserMessages({
+        userId: user?.id,
+        projectNumber: projectDetails?.projectNumber,
+      });
     }
   }, [projectDetails, getAllUserMessages]);
 
@@ -394,91 +397,95 @@ const OrderChatBox = () => {
         {/* Conversation Field */}
         <div className={`h-auto overflow-y-auto p-2 sm:p-5`}>
           {/* All message Container */}
-          {messages?.map((msg, index) => (
-            <div key={index}>
-              {/* Final Delivery or First Delivery Attempt Text */}
-              {msg?.deliverProject && (
-                <div className="mt-10 text-center">
-                  <h1 className="text-xl font-semibold text-primary">
-                    FINAL DELIVERY
-                  </h1>
-                  <p className="mx-auto mb-10 mt-2 w-3/4">
-                    If you don&apos;t accept this delivery, this project will
-                    automatically completed within the next 48 hours.
-                  </p>
-                </div>
-              )}
-              {/* A conversation message Ui */}
-              <div className="group mt-3 flex items-start gap-3 px-3">
-                <div className="flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[#ffefef]">
-                  {msg?.userImage ? (
-                    <img
-                      src={msg?.userImage}
-                      alt=""
-                      className="size-full rounded-full object-cover"
-                    />
-                  ) : (
-                    <div className="text-xl font-bold text-[#7c7c7c]/50">
-                      {msg?.senderUserName?.charAt(0)?.toUpperCase()}
-                    </div>
-                  )}
-                </div>
-                <div className="grow">
-                  <div className="mt-1 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <h1 className="text-sm font-semibold sm:text-base">
-                        {msg?.senderUserName}
-                      </h1>
-                      <p className="text-[10px] text-black/50 sm:text-xs">
-                        {renderMessageDate(parseInt(msg?.timeAndDate))},{" "}
-                        {renderMessageTime(parseInt(msg?.timeAndDate))}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-3 text-black/50 opacity-0 group-hover:opacity-100">
-                      <button type="button">
-                        <BsFillReplyFill className="text-xl" />
-                      </button>
-                      <button type="button">
-                        <FaTrashAlt />
-                      </button>
-                    </div>
+          {messages
+            ?.filter((m) => m?.projectNumber === projectDetails?.projectNumber)
+            ?.map((msg, index) => (
+              <div key={index}>
+                {/* Final Delivery or First Delivery Attempt Text */}
+                {msg?.deliverProject && (
+                  <div className="mt-10 text-center">
+                    <h1 className="text-xl font-semibold text-primary">
+                      FINAL DELIVERY
+                    </h1>
+                    <p className="mx-auto mb-10 mt-2 w-3/4">
+                      If you don&apos;t accept this delivery, this project will
+                      automatically completed within the next 48 hours.
+                    </p>
                   </div>
-                  {/* Here is the message text to preview */}
-                  {msg?.messageText && (
-                    <div className="mt-1 w-11/12">
-                      <p className="text-sm sm:text-base">{msg?.messageText}</p>
-                    </div>
-                  )}
-                  {msg?.imageComments?.length > 0 && (
-                    <CommentsPreview commentedImages={msg?.imageComments} />
-                  )}
-                  {msg?.attachment?.length > 0 && (
-                    <AttachmentsPreview files={msg?.attachment || []} />
-                  )}
-                  {msg?.additionalOffer && (
-                    <AdditionalOfferPreview
-                      value={msg?.additionalOffer || {}}
-                    />
-                  )}
-                  {msg?.deliverProject && (
-                    <OrderDeliveryPreview data={msg?.deliverProject || {}} />
-                  )}
-                  {msg?.extendDeliveryTime && (
-                    <ExtendingDeliveryPreview
-                      value={msg?.extendDeliveryTime || {}}
-                    />
-                  )}
-                  {msg?.cancelProject && (
-                    <div className="mt-8">
-                      <CancellingProjectPreview
-                        value={msg?.cancelProject || {}}
+                )}
+                {/* A conversation message Ui */}
+                <div className="group mt-3 flex items-start gap-3 px-3">
+                  <div className="flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[#ffefef]">
+                    {msg?.userImage ? (
+                      <img
+                        src={msg?.userImage}
+                        alt=""
+                        className="size-full rounded-full object-cover"
                       />
+                    ) : (
+                      <div className="text-xl font-bold text-[#7c7c7c]/50">
+                        {msg?.senderUserName?.charAt(0)?.toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                  <div className="grow">
+                    <div className="mt-1 flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <h1 className="text-sm font-semibold sm:text-base">
+                          {msg?.senderUserName}
+                        </h1>
+                        <p className="text-[10px] text-black/50 sm:text-xs">
+                          {renderMessageDate(parseInt(msg?.timeAndDate))},{" "}
+                          {renderMessageTime(parseInt(msg?.timeAndDate))}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-3 text-black/50 opacity-0 group-hover:opacity-100">
+                        <button type="button">
+                          <BsFillReplyFill className="text-xl" />
+                        </button>
+                        <button type="button">
+                          <FaTrashAlt />
+                        </button>
+                      </div>
                     </div>
-                  )}
+                    {/* Here is the message text to preview */}
+                    {msg?.messageText && (
+                      <div className="mt-1 w-11/12">
+                        <p className="text-sm sm:text-base">
+                          {msg?.messageText}
+                        </p>
+                      </div>
+                    )}
+                    {msg?.imageComments?.length > 0 && (
+                      <CommentsPreview commentedImages={msg?.imageComments} />
+                    )}
+                    {msg?.attachment?.length > 0 && (
+                      <AttachmentsPreview files={msg?.attachment || []} />
+                    )}
+                    {msg?.additionalOffer && (
+                      <AdditionalOfferPreview
+                        value={msg?.additionalOffer || {}}
+                      />
+                    )}
+                    {msg?.deliverProject && (
+                      <OrderDeliveryPreview data={msg?.deliverProject || {}} />
+                    )}
+                    {msg?.extendDeliveryTime && (
+                      <ExtendingDeliveryPreview
+                        value={msg?.extendDeliveryTime || {}}
+                      />
+                    )}
+                    {msg?.cancelProject && (
+                      <div className="mt-8">
+                        <CancellingProjectPreview
+                          value={msg?.cancelProject || {}}
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
           <div ref={endOfMessagesRef} />
         </div>
         {/* Text Field Part */}
