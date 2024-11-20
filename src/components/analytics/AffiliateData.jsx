@@ -8,85 +8,7 @@ const AffiliateData = () => {
   const [expend, setExpend] = useState(false);
   const [selectedFilterOption, setSelectedFilterOption] = useState("Earnings");
   const [selectedTimeOption, setSelectedTimeOption] = useState("Last 30 Days");
-  const [affiliateData, setAffiliateData] = useState([
-    {
-      id: 1,
-      user: "username123456",
-      sender: "username123456",
-      projects: 2,
-      earning: 60,
-    },
-    {
-      id: 2,
-      user: "username111",
-      sender: "username111",
-      projects: 0,
-      earning: 0,
-    },
-    {
-      id: 3,
-      user: "username121",
-      sender: "username121",
-      projects: 3,
-      earning: 120,
-    },
-    {
-      id: 4,
-      user: "username1331",
-      sender: "username1331",
-      projects: 0,
-      earning: 0,
-    },
-    {
-      id: 5,
-      user: "username11",
-      sender: "username11",
-      projects: 1,
-      earning: 30,
-    },
-    {
-      id: 6,
-      user: "username1736",
-      sender: "username1736",
-      projects: 0,
-      earning: 0,
-    },
-    {
-      id: 7,
-      user: "username13645",
-      sender: "username13645",
-      projects: 0,
-      earning: 0,
-    },
-    {
-      id: 8,
-      user: "username1958",
-      sender: "username1958",
-      projects: 2,
-      earning: 40,
-    },
-    {
-      id: 9,
-      user: "username132543",
-      sender: "username132543",
-      projects: 3,
-      earning: 75,
-    },
-    {
-      id: 10,
-      user: "username112221",
-      sender: "username112221",
-      projects: 1,
-      earning: 25,
-    },
-    {
-      id: 11,
-      user: "username123456",
-      sender: "username123456",
-      projects: 1,
-      earning: 25,
-    },
-  ]);
+  const [affiliateData, setAffiliateData] = useState([]);
 
   const [getAllAffiliates, { data: affiliatesData, isLoading }] =
     useLazyGetAllAffiliatesQuery();
@@ -119,6 +41,19 @@ const AffiliateData = () => {
   };
 
   useEffect(() => {
+    if (affiliatesData) {
+      const data = affiliatesData?.map((item) => ({
+        joinedUsers: item?.joinedUsers?.map((join) => ({
+          ...join,
+          affiliateOwner: item?.affiliateOwner,
+        })),
+      }));
+      const flattenData = data?.map((entry) => entry?.joinedUsers).flat();
+      setAffiliateData(flattenData);
+    }
+  }, [affiliatesData]);
+
+  useEffect(() => {
     const sortedData = sortAffiliateData(selectedFilterOption);
     setAffiliateData(sortedData);
   }, [selectedFilterOption]);
@@ -132,10 +67,12 @@ const AffiliateData = () => {
     }
   }, [selectedTimeOption, getAllAffiliates, selectedFilterOption]);
 
-  const slicedKeywordData =
-    affiliatesData?.length > 10 && !expend
-      ? affiliatesData?.slice(0, 10)
-      : affiliatesData;
+  const slicedAffiliateData =
+    affiliateData?.length > 10 && !expend
+      ? affiliateData?.slice(0, 10)
+      : affiliateData;
+
+  console.log("slicedAffiliateData", slicedAffiliateData);
   return (
     <>
       <div className="border border-gray-300 bg-lightcream">
@@ -185,23 +122,21 @@ const AffiliateData = () => {
               </tr>
             </thead>
             <tbody>
-              {slicedKeywordData?.map((keyword, idx) => (
+              {slicedAffiliateData?.map((item, idx) => (
                 <tr key={idx} className="text-center even:bg-white">
                   <td className="border-collapse border border-gray-300 px-3 py-2 text-start">
-                    <Link to={`/${keyword?.joinedUsers[0]?.userName}`}>
-                      {keyword?.joinedUsers[0]?.userName}
-                    </Link>
+                    <Link to={`/${item?.userName}`}>{item?.userName}</Link>
                   </td>
                   <td className="border-collapse border border-gray-300 px-3 py-2 text-start">
-                    <Link to={`/${keyword?.affiliateOwner?.userName}`}>
-                      {keyword?.affiliateOwner?.userName}
+                    <Link to={`/${item?.affiliateOwner?.userName}`}>
+                      {item?.affiliateOwner?.userName}
                     </Link>
                   </td>
                   <td className="border-collapse border border-gray-300 px-3 py-2">
-                    {keyword.projects}
+                    {item?.totalOrders}
                   </td>
                   <td className="border-collapse border border-gray-300 px-3 py-2">
-                    ${keyword?.amount}
+                    ${item?.totalAmount}
                   </td>
                 </tr>
               ))}

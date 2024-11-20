@@ -51,9 +51,9 @@ const OrderChatBox = () => {
   const [sendAOrderMessage] = useSendAOrderMessageMutation();
 
   const { user, token } = useSelector((state) => state.user);
-  const { projectDetails, clientDetails } = useSelector((state) => state.order);
-
-  const { messages } = useSelector((state) => state.order);
+  const { projectDetails, clientDetails, messages } = useSelector(
+    (state) => state.order,
+  );
 
   // Checking Admin
   const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
@@ -141,10 +141,10 @@ const OrderChatBox = () => {
     }
   }, [allUserMessages]);
 
-  useEffect(() => {
-    // Inital Scroll to last message
-    endOfMessagesRef.current?.scrollIntoView();
-  }, [messages]);
+  // useEffect(() => {
+  //   // Inital Scroll to last message
+  //   endOfMessagesRef.current?.scrollIntoView();
+  // }, [messages]);
 
   // click outside the box it will be toggled
   useOutsideClick(menuRef, () => setQucikMsgBtnController(null));
