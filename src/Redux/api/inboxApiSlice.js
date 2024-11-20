@@ -166,6 +166,15 @@ export const inboxApiSlice = createApi({
       }),
       invalidatesTags: ["getAllMessages", "availablechatusers"],
     }),
+
+    // send message from profile
+    updateUnseenMessage: builder.mutation({
+      query: ({ userId }) => ({
+        url: `seen/update/${userId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["getAllMessages", "availablechatusers"],
+    }),
   }),
 });
 
@@ -188,4 +197,5 @@ export const {
   useFetchCustomOfferImageQuery,
   useUpdateCustomOfferImageMutation,
   useSendMessageFromProfileMutation,
+  useUpdateUnseenMessageMutation,
 } = inboxApiSlice;

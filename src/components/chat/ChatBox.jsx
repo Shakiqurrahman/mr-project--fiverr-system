@@ -35,6 +35,7 @@ import {
   useGetAdminAllMessagesQuery,
   useGetAvailableChatUsersQuery,
   useSendAMessageMutation,
+  useUpdateUnseenMessageMutation,
 } from "../../Redux/api/inboxApiSlice";
 import {
   setChatData,
@@ -69,6 +70,9 @@ const ChatBox = ({ openToggle }) => {
   const [{ quickResponse }, updateItem] = useLocalStorageObject("utils", {
     quickResponse: false,
   });
+
+  const [unseenMessageHandler] = useUpdateUnseenMessageMutation();
+
   const { user, token, onlineUsers, typingStatus } = useSelector(
     (state) => state.user,
   );
@@ -659,6 +663,15 @@ const ChatBox = ({ openToggle }) => {
   };
 
   console.log("Messages", messages);
+
+  // message unseen to seen
+  useEffect(() => {
+    if (conversationUser || messages) {
+      unseenMessageHandler({
+        userId: conversationUser,
+      });
+    }
+  }, [conversationUser, messages]);
 
   return (
     <div className="flex h-full flex-col">

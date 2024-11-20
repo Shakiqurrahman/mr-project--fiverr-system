@@ -156,7 +156,7 @@ const AllConversation = ({ closeToggle }) => {
             return (
               <div
                 key={chat?.id}
-                className={`flex cursor-pointer items-center justify-between border-b p-4 hover:bg-lightcream/50 ${chat?.id === conversationUser && "bg-lightcream/50"}`}
+                className={`flex cursor-pointer items-center justify-between gap-2 border-b p-4 hover:bg-lightcream/50 ${chat?.id === conversationUser && "bg-lightcream/50"}`}
                 onClick={() => handleChatOpen(chat?.id, chat?.userName)}
               >
                 <div className="flex flex-shrink-0 items-center gap-4">
@@ -191,20 +191,21 @@ const AllConversation = ({ closeToggle }) => {
                       </span>
                     </p>
                     <p
-                      className={`${chat?.unreadMessages > 0 && "font-bold"} text-sm`}
+                      title={chat?.lastmessageinfo?.messageText}
+                      className={`${chat?.lastmessageinfo?.totalUnseenMessage > 0 && "font-bold"} max-w-[180px] truncate text-[12px] sm:max-w-[250px] md:max-w-[80px] lg:max-w-[150px]`}
                     >
-                      {chat?.lastMessage}
+                      {chat?.lastmessageinfo?.messageText}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="flex flex-col items-end gap-1">
                     <p className="text-[12px] text-gray-500">
-                      {formatTimeAgo(chat?.lastMessageTime || 0)}
+                      {formatTimeAgo(chat?.lastmessageinfo?.createdAt)}
                     </p>
-                    {chat?.unreadMessages > 0 && (
+                    {chat?.lastmessageinfo?.totalUnseenMessage > 0 && (
                       <span className="size-6 rounded-full bg-primary text-center text-[10px] leading-[24px] text-white">
-                        {chat?.unreadMessages}
+                        {chat?.lastmessageinfo?.totalUnseenMessage}
                       </span>
                     )}
                   </div>
