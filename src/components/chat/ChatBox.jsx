@@ -36,7 +36,10 @@ import {
   useGetAvailableChatUsersQuery,
   useSendAMessageMutation,
 } from "../../Redux/api/inboxApiSlice";
-import { setChatData } from "../../Redux/features/chatSlice";
+import {
+  setChatData,
+  setConversationUser,
+} from "../../Redux/features/chatSlice";
 import { setPreviewImage } from "../../Redux/features/previewImageSlice";
 import { setTypingStatus } from "../../Redux/features/userSlice";
 import useLocalDateTime from "../../hooks/useLocalDateTime";
@@ -706,9 +709,9 @@ const ChatBox = ({ openToggle }) => {
                   <button
                     type="button"
                     className="w-full text-xs hover:bg-gray-200"
-                    // onClick={() => setOpenEditMsgModal(msg)}
+                    onClick={() => dispatch(setConversationUser(null))}
                   >
-                    Read/Unread
+                    Unread
                   </button>
                   <button
                     type="button"
