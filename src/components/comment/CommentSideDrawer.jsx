@@ -4,6 +4,7 @@ import { MdEdit, MdReply } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TfiShiftRight } from "react-icons/tfi";
 import { useDispatch, useSelector } from "react-redux";
+import { useSendAOrderMessageMutation } from "../../Redux/api/orderApiSlice";
 import {
   deleteComment,
   setHighlight,
@@ -19,6 +20,7 @@ import EditReplyBox from "./EditReplyBox";
 import ReplyCommentBox from "./ReplyCommentBox";
 
 const CommentSideDrawer = ({ close, drawerClose }) => {
+  const [sendAOrderMessage] = useSendAOrderMessageMutation();
   const dispatch = useDispatch();
   const commentRef = useRef(null);
   const commentBoxRef = useRef(null);
@@ -118,7 +120,7 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
   const dates = new Date();
   const timeAndDate = dates.getTime();
 
-  const handleCommentSubmit = (e) => {
+  const handleCommentSubmit = async (e) => {
     e.preventDefault();
 
     const updatedComments = images?.map((image) => {
@@ -170,6 +172,14 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
       }),
     );
     close(false);
+    try {
+      const res = await sendAOrderMessage({
+        recipientId: isAdmin ? projectDetails?.userId : null,
+        ...submitForm,
+      }).unwrap();
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    }
   };
 
   // Ref for comment container

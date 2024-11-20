@@ -26,6 +26,8 @@ const OrderRequirementsForm = () => {
   const [submitLoading, setSubmitLoading] = useState(false);
   const [requirements, setRequirements] = useState([]);
   const [isOrderStartByAdmin, setIsOrderStartByAdmin] = useState(false);
+  const [uploadFilesLength, setUploadFilesLength] = useState([]);
+
   // Initial stage Update requirements state
   useEffect(() => {
     if (!projectDetails?.isRequirementsFullFilled) {
@@ -216,6 +218,10 @@ const OrderRequirementsForm = () => {
   const handleChangeSelectedImage = (event, id) => {
     const files = Array.from(event.target.files);
     getImagesWithDimensions(files, id);
+    setUploadFilesLength([
+      ...uploadFilesLength,
+      fileInputsRef.current[id].files.length,
+    ]);
   };
 
   const handleImageRemove = (index, id) => {
@@ -346,42 +352,52 @@ const OrderRequirementsForm = () => {
                     </div>
                   </div>
                   {item.attachments.length > 0 && (
-                    <div className="preview-scroll-overflow-x mt-4 flex gap-4">
-                      {item.attachments?.map((att, idx) => (
-                        <div key={idx} className="w-[120px] shrink-0">
-                          <div className="group relative">
-                            {att?.url ? (
-                              <FilePreview file={att} />
-                            ) : (
-                              <div className="flex h-[80px] w-full items-center justify-center bg-lightcream">
-                                <CircleProgressBar
-                                  precentage={att?.progress}
-                                  circleWidth={50}
-                                />
-                              </div>
-                            )}
-                            {(att?.url || att?.progress === 100) && (
-                              <button
-                                type="button"
-                                className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
-                                onClick={() => handleImageRemove(idx, item.id)}
-                              >
-                                <RiDeleteBin6Line size={20} />
-                              </button>
-                            )}
+                    <>
+                      {uploadFilesLength[i] !== item?.attachments?.length && (
+                        <p className="mt-4 text-xs">
+                          Uploaded {item?.attachments?.length}/
+                          {uploadFilesLength[i]}
+                        </p>
+                      )}
+                      <div className="preview-scroll-overflow-x mt-4 flex gap-4">
+                        {item.attachments?.map((att, idx) => (
+                          <div key={idx} className="w-[120px] shrink-0">
+                            <div className="group relative">
+                              {att?.url ? (
+                                <FilePreview file={att} />
+                              ) : (
+                                <div className="flex h-[80px] w-full items-center justify-center bg-lightcream">
+                                  <CircleProgressBar
+                                    precentage={att?.progress}
+                                    circleWidth={50}
+                                  />
+                                </div>
+                              )}
+                              {(att?.url || att?.progress === 100) && (
+                                <button
+                                  type="button"
+                                  className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
+                                  onClick={() =>
+                                    handleImageRemove(idx, item.id)
+                                  }
+                                >
+                                  <RiDeleteBin6Line size={20} />
+                                </button>
+                              )}
+                            </div>
+                            <h1
+                              className="truncate text-xs font-medium"
+                              title={att?.name}
+                            >
+                              {att?.name}
+                            </h1>
+                            <span className="text-xs">
+                              ({formatFileSize(att?.size)})
+                            </span>
                           </div>
-                          <h1
-                            className="truncate text-xs font-medium"
-                            title={att?.name}
-                          >
-                            {att?.name}
-                          </h1>
-                          <span className="text-xs">
-                            ({formatFileSize(att?.size)})
-                          </span>
-                        </div>
-                      ))}
-                    </div>
+                        ))}
+                      </div>
+                    </>
                   )}
                 </div>
               ))}

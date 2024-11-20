@@ -12,8 +12,8 @@ const CommentPage = ({ close }) => {
         className={`h-auto ${
           projectDetails?.projectStatus !== "Completed" &&
           projectDetails?.projectStatus !== "Canceled"
-            ? "w-full md:h-full md:w-[calc(100%_-_320px)]"
-            : "w-full"
+            ? `${sideDrawer ? "w-full md:h-full md:w-[calc(100%_-_320px)]" : "w-full"}`
+            : `w-full`
         }`}
       >
         <CommentImagePreview
