@@ -31,12 +31,8 @@ function Industries() {
   const [designKeywords, setDesignKeywords] = useState([]);
   const [industryKeywords, setIndustryKeywords] = useState([]);
 
-  const sortingOptions = [
-    "Default Designs",
-    "Newest Designs",
-    "Oldest Designs",
-  ];
-  const [sortedBy, setSortedBy] = useState("DefaultDesigns");
+  const sortingOptions = ["Newest Designs", "Oldest Designs"];
+  const [sortedBy, setSortedBy] = useState("NewestDesigns");
 
   const [selectedValue, setSelectedValue] = useState(null);
   const [industrySelectedValue, setIndustrySelectedValue] = useState(
