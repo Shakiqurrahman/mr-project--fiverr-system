@@ -20,7 +20,7 @@ import { IoSearch } from "react-icons/io5";
 import {
   setOpenNotificationDrawer,
   setOpenNotifications,
-} from "../../Redux/features/userSlice";
+} from "../../Redux/features/utilSlice";
 import useSyncCart from "../../hooks/useSyncCart";
 import NotificationModal from "../Notifications/NotificationModal";
 import InboxDrawerModal from "../chat/InboxDrawerModal";
@@ -28,10 +28,12 @@ import SearchBox from "./SearchBox";
 
 function Header() {
   const dispatch = useDispatch();
-  const { user, openNotifications, openNotificationDrawer } = useSelector(
-    (state) => state.user,
+  const { openNotifications, openNotificationDrawer } = useSelector(
+    (state) => state.utils,
   );
+  const { user } = useSelector((state) => state.user);
   const { items: cartItems } = useSelector((state) => state.cart);
+
   const [activeMenu, setActiveMenu] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [openInboxDrawer, setOpenInboxDrawer] = useState(false);

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import {
   setOpenNotificationDrawer,
   setOpenNotifications,
-} from "../../Redux/features/userSlice";
+} from "../../Redux/features/utilSlice";
 
 const SitemapTopBar = () => {
   const dispatch = useDispatch();

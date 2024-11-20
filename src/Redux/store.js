@@ -23,6 +23,7 @@ import orderSlice from "./features/orderSlice";
 import passwordVisibilitySlice from "./features/passwordVisibilitySlice";
 import previewImageSlice from "./features/previewImageSlice";
 import userSlice from "./features/userSlice";
+import utilSlice from "./features/utilSlice";
 
 // Persist configs
 const userPersistConfig = {
@@ -72,6 +73,7 @@ const store = configureStore({
     order: orderSlice,
     previewImage: previewImageSlice,
     dashboard: dashboardSlice,
+    utils: utilSlice,
     [dashboardApiSlice.reducerPath]: dashboardApiSlice.reducer,
     [analyticsApiSlice.reducerPath]: analyticsApiSlice.reducer,
     [affiliateApiSlice.reducerPath]: affiliateApiSlice.reducer,

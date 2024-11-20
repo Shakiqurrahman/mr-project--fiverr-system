@@ -11,8 +11,6 @@ const userSlice = createSlice({
     onlineUsers: [],
     lastSeen: null,
     typingStatus: "",
-    openNotifications: false,
-    openNotificationDrawer: false,
   },
   reducers: {
     setToken: (state, action) => {
@@ -36,13 +34,6 @@ const userSlice = createSlice({
       state.typingStatus = action.payload;
     },
 
-    setOpenNotifications: (state, action) => {
-      state.openNotifications = action.payload;
-    },
-    setOpenNotificationDrawer: (state, action) => {
-      state.openNotificationDrawer = action.payload;
-    },
-
     logout: (state) => {
       state.user = null;
       state.token = null;
@@ -53,13 +44,6 @@ const userSlice = createSlice({
   },
 });
 
-export const {
-  setUser,
-  setOnlineUsers,
-  setLastSeen,
-  setTypingStatus,
-  logout,
-  setOpenNotifications,
-  setOpenNotificationDrawer
-} = userSlice.actions;
+export const { setUser, setOnlineUsers, setLastSeen, setTypingStatus, logout } =
+  userSlice.actions;
 export default userSlice.reducer;
