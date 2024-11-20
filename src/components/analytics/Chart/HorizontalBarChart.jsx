@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const getFilterTimes = () => {
   const currentYear = new Date().getFullYear();
@@ -15,14 +15,31 @@ const getFilterTimes = () => {
   ];
 };
 
-const HorizontalBarChart = ({ data, title, color, filter }) => {
+const HorizontalBarChart = ({ data, title, color, filter, handler }) => {
   const [filterTimes, setFilterTimes] = useState(getFilterTimes());
   const [selectedTimeOption, setSelectedTimeOption] = useState(
     getFilterTimes()[1],
   );
+
+  useEffect(() => {
+    if (handler) {
+      if (selectedTimeOption) {
+        handler({
+          timeFilter: selectedTimeOption,
+        });
+      }
+    }
+  }, [selectedTimeOption]);
+
   // Extract category names and values
-  const categories = Object.keys(data);
-  const values = Object.values(data);
+  const categories = Object.keys(data || {});
+  const values = Object.values(data || {});
+
+  const datasArray = categories
+    .map((name, index) =>
+      values[index] !== 0 ? { value: values[index], category: name } : null,
+    )
+    .filter(Boolean);
 
   // Default color mapping
   const defaultColorMapping = {
@@ -44,11 +61,14 @@ const HorizontalBarChart = ({ data, title, color, filter }) => {
   const colorMapping = { ...defaultColorMapping, ...color };
 
   // Calculate the total value
-  const totalValue = values.reduce((sum, value) => sum + value, 0);
+  const totalValue = datasArray.reduce((sum, item) => sum + item.value, 0);
 
   // Calculate percentages for each part
-  const percentages = values.map((value) => {
-    return totalValue > 0 ? (value / totalValue) * 100 : 0;
+  const barData = datasArray.map((item) => {
+    return {
+      ...item,
+      percentage: totalValue > 0 ? (item.value / totalValue) * 100 : 0,
+    };
   });
 
   // State to track the hovered index
@@ -97,16 +117,18 @@ const HorizontalBarChart = ({ data, title, color, filter }) => {
         <div className="mb-5 flex w-full items-center">
           <div className="relative w-full flex-1">
             <div className="flex rounded-[20px] bg-white p-1">
-              {percentages.map((percentage, index) => {
+              {barData?.length === 0 && (
+                <p className="mx-auto mt-2">No Data Found!</p>
+              )}
+              {barData?.map((item, index) => {
                 return (
                   <div
                     key={index}
                     className={`flex h-6 transition-opacity duration-200 first:rounded-l-[20px] last:rounded-r-[20px]`}
                     style={{
                       // left: `${leftOffset}%`,
-                      width: `${percentage}%`,
-                      backgroundColor:
-                        colorMapping[categories[index]] || "#ccc",
+                      width: `${item?.percentage}%`,
+                      backgroundColor: colorMapping[item?.category] || "#ccc",
                       cursor: "pointer",
                     }}
                     onMouseEnter={() => setHoveredIndex(index)}
@@ -118,26 +140,25 @@ const HorizontalBarChart = ({ data, title, color, filter }) => {
                         hoveredIndex === index ? "opacity-100" : "opacity-0"
                       }`}
                     >
-                      {percentage.toFixed(1)}%
+                      {item?.percentage.toFixed(1)}%
                     </span>
                   </div>
                 );
               })}
             </div>
             <div className="absolute left-1 top-[-5px] z-[-2] flex h-[calc(100%_+_10px)] w-[calc(100%_-_8px)]">
-              {percentages.map((percentage, index) => {
-                const leftOffset = percentages
+              {barData?.map((item, index) => {
+                const leftOffset = barData
                   .slice(0, index)
-                  .reduce((sum, pct) => sum + pct, 0);
+                  .reduce((sum, pct) => sum + pct?.percentage, 0);
                 return (
                   <div
                     key={index}
                     className={`asbolute top-0 h-full transition-opacity duration-200 first:rounded-l-[20px] last:rounded-r-[20px]`}
                     style={{
                       left: `calc(${leftOffset}% - 5px)`,
-                      width: `${percentage}%`,
-                      backgroundColor:
-                        colorMapping[categories[index]] || "#ccc",
+                      width: `${item?.percentage}%`,
+                      backgroundColor: colorMapping[item?.category] || "#ccc",
                       cursor: "pointer",
                     }}
                   ></div>
@@ -145,19 +166,18 @@ const HorizontalBarChart = ({ data, title, color, filter }) => {
               })}
             </div>
             <div className="absolute left-[-5px] top-[-5px] z-[-3] flex h-[calc(100%_+_10px)] w-[calc(100%_+_10px)]">
-              {percentages.map((percentage, index) => {
-                const leftOffset = percentages
+              {barData?.map((item, index) => {
+                const leftOffset = barData
                   .slice(0, index)
-                  .reduce((sum, pct) => sum + pct, 0);
+                  .reduce((sum, pct) => sum + pct?.percentage, 0);
                 return (
                   <div
                     key={index}
                     className={`asbolute top-0 h-full transition-opacity duration-200 first:rounded-l-[20px] last:rounded-r-[20px]`}
                     style={{
                       left: `calc(${leftOffset}% - 5px)`,
-                      width: `${percentage}%`,
-                      backgroundColor:
-                        colorMapping[categories[index]] || "#ccc",
+                      width: `${item?.percentage}%`,
+                      backgroundColor: colorMapping[item?.category] || "#ccc",
                       cursor: "pointer",
                     }}
                   ></div>

@@ -1,4 +1,9 @@
 import { useState } from "react";
+import {
+  useGetActiveProjectsAnalyticsQuery,
+  useLazyGetFinishProjectsAnalyticsQuery,
+  useLazyGetProjectBuyersAnalyticsQuery,
+} from "../../Redux/api/analyticsApiSlice";
 import HorizontalBarChart from "./Chart/HorizontalBarChart";
 import ProjectLineChart from "./Chart/ProjectLineChart";
 
@@ -26,27 +31,19 @@ const ProjectDetailsData = () => {
     getFilterTimes()[1],
   );
 
-  // Progress bar Stats
-  const activeProjectsData = {
-    revision: 2300,
-    ongoing: 2150,
-    waiting: 1200,
-    delivered: 3000,
-  };
-  const finishedProjectData = {
-    completed: 2100,
-    cancelled: 250,
-  };
+  const { data: activeProjectsData } = useGetActiveProjectsAnalyticsQuery();
+  const [getFinishedProject, { data: finishedProjectData }] =
+    useLazyGetFinishProjectsAnalyticsQuery();
+  const [getProjectsBuyer, { data: ProjectBuyersData }] =
+    useLazyGetProjectBuyersAnalyticsQuery();
+
   const ProjectOptionsData = {
     custom: 250,
     direct: 100,
     offer: 100,
     "M-D Project": 80,
   };
-  const ProjectBuyersData = {
-    "New Buyers": 39,
-    "Repeat Buyers": 34,
-  };
+
   const avgSellingData = {
     custom: 250,
     direct: 100,
@@ -118,6 +115,7 @@ const ProjectDetailsData = () => {
         <HorizontalBarChart
           data={finishedProjectData}
           title={"Finished Projects"}
+          handler={getFinishedProject}
           filter={true}
         />
         <HorizontalBarChart
@@ -128,6 +126,7 @@ const ProjectDetailsData = () => {
         <HorizontalBarChart
           data={ProjectBuyersData}
           title={"Project Buyers"}
+          handler={getProjectsBuyer}
           filter={true}
         />
         <HorizontalBarChart
