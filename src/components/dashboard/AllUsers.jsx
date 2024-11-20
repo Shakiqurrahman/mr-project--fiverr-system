@@ -260,7 +260,7 @@ const AllUsers = () => {
                               </div>
                             )}
                             <span
-                              className={`absolute bottom-0 right-0 size-1.5 rounded-full border border-white ${affUser?.isOnline ? "bg-primary" : "bg-gray-400"}`}
+                              className={`absolute bottom-0 right-0 size-1.5 rounded-full border border-white ${isUserOnline(affUser?.user?.id) ? "bg-primary" : "bg-gray-400"}`}
                             ></span>
                           </div>
                           <h3 className="text-sm font-medium duration-300 group-hover:underline">
