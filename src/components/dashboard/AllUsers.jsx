@@ -154,8 +154,6 @@ const AllUsers = () => {
 
   const filteredUsers = filteredUsersData(usersData);
 
-  console.log("filterred", filteredUsers);
-
   const socket = connectSocket(`${configApi.socket}`, token);
   // all avaliable users
   useEffect(() => {
@@ -207,50 +205,53 @@ const AllUsers = () => {
           filteredUsers?.map((user, idx) => {
             const letterLogo =
               !user?.image && user?.userName?.trim().charAt(0).toUpperCase();
+            const letterLogo2 =
+              !user?.user?.image &&
+              user?.user?.userName?.trim().charAt(0).toUpperCase();
             return (
               <div key={idx}>
                 <Link
-                  to={`/${user?.userName}`}
+                  to={`/${user?.userName || user?.user?.userName}`}
                   className="group flex items-center gap-2"
                 >
                   <div className="relative flex-shrink-0">
-                    {user?.image ? (
+                    {user?.image || user?.user?.image ? (
                       <img
-                        src={user?.image}
-                        alt={user?.fullName}
+                        src={user?.image || user?.user?.image}
+                        alt={user?.fullName || user?.user?.fullName}
                         className="size-8 rounded-full border object-cover"
                       />
                     ) : (
                       <div className="flex size-8 items-center justify-center rounded-full border bg-gray-200 object-cover text-xl font-bold text-[#3b3b3b]/50">
-                        {letterLogo}
+                        {letterLogo || letterLogo2}
                       </div>
                     )}
                     <span
-                      className={`absolute bottom-0 right-0.5 size-2 rounded-full border border-white ${isUserOnline(user?.id) ? "bg-primary" : "bg-gray-400"}`}
+                      className={`absolute bottom-0 right-0.5 size-2 rounded-full border border-white ${isUserOnline(user?.id || user?.user?.id) ? "bg-primary" : "bg-gray-400"}`}
                     ></span>
                   </div>
                   <h3 className="text-base font-semibold duration-300 group-hover:underline">
-                    {user?.userName}
+                    {user?.userName || user?.user?.userName}
                   </h3>
                 </Link>
 
                 <div className="ml-10 mt-2 space-y-2">
-                  {user?.isAffiliate &&
-                    user?.affiliateUsers?.map((affUser, idx) => {
+                  {user?.AffiliateJoin?.length > 0 &&
+                    user?.AffiliateJoin?.map((affUser, idx) => {
                       const letterLogo =
-                        !affUser.avatar &&
-                        affUser?.userName.trim().charAt(0).toUpperCase();
+                        !affUser?.user?.image &&
+                        affUser?.user?.userName.trim().charAt(0).toUpperCase();
                       return (
                         <Link
-                          to={`/${affUser?.userName}`}
+                          to={`/${affUser?.user?.userName}`}
                           key={idx}
                           className="group flex items-center gap-2"
                         >
                           <div className="relative flex-shrink-0">
-                            {affUser.avatar ? (
+                            {affUser?.user?.image ? (
                               <img
-                                src={affUser?.avatar}
-                                alt={affUser?.name}
+                                src={affUser?.user?.image}
+                                alt={affUser?.user?.fullName}
                                 className="size-5 rounded-full border object-cover"
                               />
                             ) : (
@@ -259,11 +260,11 @@ const AllUsers = () => {
                               </div>
                             )}
                             <span
-                              className={`absolute bottom-0 right-0 size-1.5 rounded-full border border-white ${affUser.isOnline ? "bg-primary" : "bg-gray-400"}`}
+                              className={`absolute bottom-0 right-0 size-1.5 rounded-full border border-white ${isUserOnline(affUser?.user?.id) ? "bg-primary" : "bg-gray-400"}`}
                             ></span>
                           </div>
                           <h3 className="text-sm font-medium duration-300 group-hover:underline">
-                            {affUser?.userName}
+                            {affUser?.user?.userName}
                           </h3>
                         </Link>
                       );

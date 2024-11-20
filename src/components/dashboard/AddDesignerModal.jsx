@@ -15,14 +15,12 @@ const AddDesignerModal = ({ handleClose, orderId, value }) => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.title && form.title !== value) {
+    if (form.title !== value) {
       try {
         const response = await addDesigner({
           designerName: form.title,
           orderId,
         });
-        console.log(response);
-
         if (response?.data?.success) {
           toast.success("Designer added successfully!");
         }
