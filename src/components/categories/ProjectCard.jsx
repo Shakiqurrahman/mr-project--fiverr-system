@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { FaFolderOpen } from "react-icons/fa6";
 import { GiShoppingCart } from "react-icons/gi";
 import { MdClose } from "react-icons/md";
@@ -9,6 +8,7 @@ import { setPreviewImage } from "../../Redux/features/previewImageSlice";
 
 function ProjectCard({
   thumbnail,
+  thumbnailName,
   watermark,
   title,
   design,
@@ -20,7 +20,6 @@ function ProjectCard({
   slug,
 }) {
   const { user } = useSelector((state) => state.user);
-  const [openPreview, setOpenPreview] = useState(false);
   const dispatch = useDispatch();
   const { items: cartItems } = useSelector((state) => state.cart);
 
@@ -60,7 +59,11 @@ function ProjectCard({
         )}
         <Link to={slug} className="block cursor-pointer border bg-white">
           {clientName ? (
-            <div className="relative" onClick={handlePreviewImage}>
+            <div
+              className="relative"
+              onClick={handlePreviewImage}
+              title={thumbnailName ? thumbnailName : ""}
+            >
               <img
                 src={thumbnail}
                 alt=""
@@ -68,7 +71,10 @@ function ProjectCard({
               />
             </div>
           ) : (
-            <div className="relative">
+            <div
+              className="relative"
+              title={thumbnailName ? thumbnailName : ""}
+            >
               <img
                 src={thumbnail}
                 alt=""
