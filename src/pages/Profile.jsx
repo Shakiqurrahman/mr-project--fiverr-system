@@ -17,6 +17,17 @@ import { FaXTwitter } from "react-icons/fa6";
 import { LiaEditSolid } from "react-icons/lia";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  useLazyGetAllMessagesQuery,
+  useSendMessageFromProfileMutation,
+} from "../Redux/api/inboxApiSlice";
+import {
+  useGetAUserReviewsQuery,
+  useGetAllAdminReviewsQuery,
+  useUsersAllProjectsQuery,
+} from "../Redux/api/orderApiSlice";
+import { setChatData, setConversationUser } from "../Redux/features/chatSlice";
+import { setOnlineUsers, setUser } from "../Redux/features/userSlice";
 import Nextdoor from "../assets/svg/Nextdoor";
 import ActiveProjects from "../components/customer-profile/ActiveProjects";
 import AllReviews from "../components/customer-profile/AllReviews";
@@ -25,18 +36,20 @@ import ProfileInfo from "../components/customer-profile/ProfileInfo";
 import { configApi } from "../libs/configApi";
 import { connectSocket } from "../libs/socketService";
 import { timeAgoTracker } from "../libs/timeAgoTracker";
-import {
-  useLazyGetAllMessagesQuery,
-  useSendMessageFromProfileMutation,
-} from "../Redux/api/inboxApiSlice";
-import { useUsersAllProjectsQuery } from "../Redux/api/orderApiSlice";
-import { setChatData, setConversationUser } from "../Redux/features/chatSlice";
-import { setOnlineUsers, setUser } from "../Redux/features/userSlice";
 
 function Profile({ user = {}, slug }) {
   const { data: usersProjects } = useUsersAllProjectsQuery({
     userId: user?.id,
   });
+
+  const { data: adminReview } = useGetAllAdminReviewsQuery();
+  const { data: userReview } = useGetAUserReviewsQuery({
+    userName: user?.userName,
+  });
+
+  const [userReviews, setUserReviews] = useState([]);
+
+  console.log("user reviews", userReviews);
 
   //functions for filtering projects
   const isActiveProject = (project) =>
@@ -76,6 +89,14 @@ function Profile({ user = {}, slug }) {
     // Update the state when the user prop changes
     setDescription(user?.description || "");
   }, [user]);
+
+  useEffect(() => {
+    if (user?.role === "USER" && userReview) {
+      setUserReviews(userReview);
+    } else if (user?.role !== "USER" && adminReview) {
+      setUserReviews(adminReview);
+    }
+  }, [user, userReview, adminReview]);
 
   // for user creating date making readable and formatted
   const date = new Date(user?.createdAt);
@@ -475,7 +496,7 @@ function Profile({ user = {}, slug }) {
             <CompletedProjects completedProjects={filteredCompletedProjects} />
           )}
         {/* All Reviews  */}
-        <AllReviews user={user} />
+        <AllReviews user={user} allReviews={userReviews} />
       </div>
     </section>
   );

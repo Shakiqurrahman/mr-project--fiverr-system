@@ -83,6 +83,10 @@ export const orderApiSlice = createApi({
       query: () => "review/get-all-owner-reviews",
       transformResponse: (response) => response?.data,
     }),
+    getAUserReviews: builder.query({
+      query: ({ userName }) => `review/${userName}`,
+      transformResponse: (response) => response?.data,
+    }),
     createAReview: builder.mutation({
       query: (reviewData) => ({
         url: "review/create",
@@ -164,4 +168,5 @@ export const {
   useGetOrderUserMessagesQuery,
   useLazyGetOrderUserMessagesQuery,
   useCancelOrderProjectMutation,
+  useGetAUserReviewsQuery,
 } = orderApiSlice;
