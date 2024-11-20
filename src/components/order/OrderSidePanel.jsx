@@ -18,7 +18,7 @@ const OrderSidePanel = () => {
 
   const [openCancelModal, setOpenCancelModal] = useState(false);
   return (
-    <div>
+    <div className="sticky top-0">
       {/* Delivery Timer */}
       {projectDetails?.isRequirementsFullFilled &&
         projectDetails?.projectStatus !== "Completed" &&

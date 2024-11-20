@@ -115,7 +115,7 @@ const Order = () => {
             Project Canceled{" "}
           </h1>
         )}
-        <div className="relative flex flex-wrap gap-5 sm:flex-nowrap">
+        <div className="flex flex-wrap gap-5 sm:flex-nowrap">
           <div className="mb-5 w-full shrink lg:w-[calc(100%_-_320px)]">
             <div className="flex items-center justify-between gap-2">
               <div className="hidden items-center gap-10 sm:flex">
@@ -157,6 +157,43 @@ const Order = () => {
             </div>
             <Divider className="my-5 h-px w-full !bg-black" />
             <RenderTabComponent />
+            {selectedTabButton === "ACTIVITY" &&
+              projectDetails?.projectStatus === "Completed" && (
+                <div className="w-full">
+                  {clientReview && isAdmin && (
+                    <OrderReview reviewDetails={clientReview} />
+                  )}
+                  {adminReview && user?.role === "USER" && (
+                    <OrderReview reviewDetails={adminReview} />
+                  )}
+                  {projectDetails?.review?.length === 0 &&
+                  user?.role === "USER" ? (
+                    <OrderReviewForm />
+                  ) : projectDetails?.review?.length === 1 && isAdmin ? (
+                    <OrderReviewForm />
+                  ) : null}
+                  {user?.role === "USER" && !projectDetails?.projectTips && (
+                    <OrderTipsForm />
+                  )}
+                  {user?.role === "USER" ? (
+                    <p className="mt-5 text-center text-lg font-semibold">
+                      Your project is complete. If you need to contact the
+                      seller,{" "}
+                      <Link to={"/inbox"} className="text-primary underline">
+                        Go to Inbox
+                      </Link>
+                    </p>
+                  ) : (
+                    <p className="mt-5 text-center text-lg font-semibold">
+                      Your project is complete. If you need to contact the
+                      buyer,{" "}
+                      <Link to={"/inbox"} className="text-primary underline">
+                        Go to Inbox
+                      </Link>
+                    </p>
+                  )}
+                </div>
+              )}
           </div>
           <div
             className={`${openSidePanel ? "absolute right-0 top-0 !block" : ""} hidden w-[300px] shrink-0 bg-white lg:block`}
@@ -170,40 +207,6 @@ const Order = () => {
             <OrderSidePanel />
           </div>
         </div>
-        {selectedTabButton === "ACTIVITY" &&
-          projectDetails?.projectStatus === "Completed" && (
-            <div className="w-full lg:w-[calc(100%_-_320px)]">
-              {clientReview && isAdmin && (
-                <OrderReview reviewDetails={clientReview} />
-              )}
-              {adminReview && user?.role === "USER" && (
-                <OrderReview reviewDetails={adminReview} />
-              )}
-              {projectDetails?.review?.length === 0 && user?.role === "USER" ? (
-                <OrderReviewForm />
-              ) : projectDetails?.review?.length === 1 && isAdmin ? (
-                <OrderReviewForm />
-              ) : null}
-              {user?.role === "USER" && !projectDetails?.projectTips && (
-                <OrderTipsForm />
-              )}
-              {user?.role === "USER" ? (
-                <p className="mt-5 text-center text-lg font-semibold">
-                  Your project is complete. If you need to contact the seller,{" "}
-                  <Link to={"/inbox"} className="text-primary underline">
-                    Go to Inbox
-                  </Link>
-                </p>
-              ) : (
-                <p className="mt-5 text-center text-lg font-semibold">
-                  Your project is complete. If you need to contact the buyer,{" "}
-                  <Link to={"/inbox"} className="text-primary underline">
-                    Go to Inbox
-                  </Link>
-                </p>
-              )}
-            </div>
-          )}
       </div>
     )
   );
