@@ -184,9 +184,9 @@ const Order = () => {
               ) : projectDetails?.review?.length === 1 && isAdmin ? (
                 <OrderReviewForm />
               ) : null}
-              {clientReview &&
-                user?.role === "USER" &&
-                !projectDetails?.projectTips && <OrderTipsForm />}
+              {user?.role === "USER" && !projectDetails?.projectTips && (
+                <OrderTipsForm />
+              )}
               {user?.role === "USER" ? (
                 <p className="mt-5 text-center text-lg font-semibold">
                   Your project is complete. If you need to contact the seller,{" "}
