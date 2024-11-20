@@ -59,13 +59,23 @@ function ProjectCard({
           </Link>
         )}
         <Link to={slug} className="block cursor-pointer border bg-white">
-          <div className="relative" onClick={handlePreviewImage}>
-            <img
-              src={thumbnail}
-              alt=""
-              className="pointer-events-none block w-full object-cover"
-            />
-          </div>
+          {clientName ? (
+            <div className="relative" onClick={handlePreviewImage}>
+              <img
+                src={thumbnail}
+                alt=""
+                className="pointer-events-none block w-full object-cover"
+              />
+            </div>
+          ) : (
+            <div className="relative">
+              <img
+                src={thumbnail}
+                alt=""
+                className="pointer-events-none block w-full object-cover"
+              />
+            </div>
+          )}
           <h1 className="px-3 py-2" title={title}>
             <span className="line-clamp-2">{title}</span>
           </h1>
