@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import DownArrow from "../../assets/svg/DownArrow";
 import UpArrow from "../../assets/svg/UpArrow";
+import { useLazyGetAllAffiliatesQuery } from "../../Redux/api/affiliateApiSlice";
 
 const AffiliateData = () => {
   const [expend, setExpend] = useState(false);
@@ -87,6 +88,11 @@ const AffiliateData = () => {
     },
   ]);
 
+  const [getAllAffiliates, { data: affiliatesData, isLoading }] =
+    useLazyGetAllAffiliatesQuery();
+
+  console.log(affiliatesData, "aff");
+
   const lastYear = new Date().getFullYear() - 1;
   const twoYearsAgo = new Date().getFullYear() - 2;
 
@@ -106,8 +112,6 @@ const AffiliateData = () => {
 
   const sortAffiliateData = (option) => {
     return [...affiliateData].sort((a, b) => {
-      if (option === "Impressions") return b.impressions - a.impressions;
-      if (option === "Clicks") return b.clicks - a.clicks;
       if (option === "Projects") return b.projects - a.projects;
       if (option === "Earnings") return b.earning - a.earning;
       return 0;
@@ -119,23 +123,32 @@ const AffiliateData = () => {
     setAffiliateData(sortedData);
   }, [selectedFilterOption]);
 
+  useEffect(() => {
+    if (selectedTimeOption) {
+      getAllAffiliates({
+        timeFilter: selectedTimeOption,
+        keywordFilter: selectedFilterOption,
+      });
+    }
+  }, [selectedTimeOption, getAllAffiliates, selectedFilterOption]);
+
   const slicedKeywordData =
-    affiliateData.length > 10 && !expend
-      ? affiliateData.slice(0, 10)
-      : affiliateData;
+    affiliatesData?.length > 10 && !expend
+      ? affiliatesData?.slice(0, 10)
+      : affiliatesData;
   return (
     <>
       <div className="border border-gray-300 bg-lightcream">
         <div className="flex flex-wrap items-center gap-5 p-3">
           <h1 className="grow text-base font-semibold text-primary sm:text-lg">
-            Top Keywords
+            Affiliate
           </h1>
           <select
             value={selectedFilterOption}
             onChange={(e) => setSelectedFilterOption(e.target.value)}
             className="shrink-0 border px-2 py-1 text-sm outline-none sm:text-base"
           >
-            {keywordFilterOptions.map((key, i) => (
+            {keywordFilterOptions?.map((key, i) => (
               <option value={key} key={i}>
                 {key}
               </option>
@@ -146,7 +159,7 @@ const AffiliateData = () => {
             onChange={(e) => setSelectedTimeOption(e.target.value)}
             className="shrink-0 border px-2 py-1 text-sm outline-none sm:text-base"
           >
-            {filterTimes.map((key, i) => (
+            {filterTimes?.map((key, i) => (
               <option value={key} key={i}>
                 {key}
               </option>
@@ -172,19 +185,23 @@ const AffiliateData = () => {
               </tr>
             </thead>
             <tbody>
-              {slicedKeywordData.map((keyword) => (
-                <tr key={keyword.id} className="text-center even:bg-white">
+              {slicedKeywordData?.map((keyword, idx) => (
+                <tr key={idx} className="text-center even:bg-white">
                   <td className="border-collapse border border-gray-300 px-3 py-2 text-start">
-                    <Link to={`/${keyword.user}`}>{keyword.user}</Link>
+                    <Link to={`/${keyword?.joinedUsers[0]?.userName}`}>
+                      {keyword?.joinedUsers[0]?.userName}
+                    </Link>
                   </td>
                   <td className="border-collapse border border-gray-300 px-3 py-2 text-start">
-                    <Link to={`/${keyword.sender}`}>{keyword.sender}</Link>
+                    <Link to={`/${keyword?.affiliateOwner?.userName}`}>
+                      {keyword?.affiliateOwner?.userName}
+                    </Link>
                   </td>
                   <td className="border-collapse border border-gray-300 px-3 py-2">
                     {keyword.projects}
                   </td>
                   <td className="border-collapse border border-gray-300 px-3 py-2">
-                    ${keyword.earning}
+                    ${keyword?.amount}
                   </td>
                 </tr>
               ))}

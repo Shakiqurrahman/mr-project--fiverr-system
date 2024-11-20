@@ -17,7 +17,8 @@ export const affiliateApiSlice = createApi({
   tagTypes: ["affiliate"],
   endpoints: (builder) => ({
     getAllAffiliates: builder.query({
-      query: () => `affiliate/all`,
+      query: ({ keywordFilter, timeFilter }) =>
+        `affiliate/all?keywordFilter=${keywordFilter}&timeFilter=${timeFilter}`,
       transformResponse: (response) => response.data,
     }),
 
@@ -47,7 +48,7 @@ export const affiliateApiSlice = createApi({
 });
 
 export const {
-  useGetAllAffiliatesQuery,
+  useLazyGetAllAffiliatesQuery,
   useGetAUserAffiliatesQuery,
   useCreateAffiliateMutation,
   useDeleteAffiliateMutation,
