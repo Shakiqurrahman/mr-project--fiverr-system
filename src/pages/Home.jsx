@@ -5,8 +5,14 @@ import HomeActivityCards from "../components/HomeActivityCards";
 import HomeKeywords from "../components/HomeKeywords";
 import SocialMediaLinks from "../components/SocialMediaLinks";
 import Testimonials from "../components/Testimonials";
+import { useGetAllProjectsQuery } from "../Redux/api/dashboardApiSlice";
+import { useGetAllAdminReviewsQuery } from "../Redux/api/orderApiSlice";
 
 function Home() {
+  const { data: reviews } = useGetAllAdminReviewsQuery();
+  const { data: completedProjects } = useGetAllProjectsQuery({
+    status: "Completed",
+  });
   return (
     <>
       {/* hero section */}
@@ -32,10 +38,10 @@ function Home() {
       <HomeActivityCards />
 
       {/* Completed Project Card section */}
-      <CompletedProject />
+      {completedProjects?.length > 0 && <CompletedProject />}
 
       {/* Testimonial section */}
-      <Testimonials />
+      {reviews?.length > 0 && <Testimonials />}
 
       {/* Social Media Section  */}
       <SocialMediaLinks />
