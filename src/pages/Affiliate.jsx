@@ -82,6 +82,11 @@ function Affiliate() {
       toast.error("Failed to delete affiliate link");
     }
   };
+
+  const autoGenerateLinkData = affiliateData?.formattedAffiliates?.find(
+    (link) => link?.links === `aff-${user?.userName}`,
+  );
+  console.log(autoGenerateLinkData);
   return (
     <>
       <PageHeaderWithText
@@ -186,7 +191,33 @@ function Affiliate() {
                 <h1 className="w-[18%] sm:w-[15%]">Sales</h1>
                 <h1 className="w-[6%] sm:w-[5%]"></h1>
               </li>
+              {autoGenerateLinkData && (
+                <li className="mt-3 flex items-center gap-1 border-b border-gray-500 p-1 text-center text-sm sm:gap-2">
+                  <p className="w-[40%] break-words text-start sm:w-[50%]">
+                    {`https://mahfujurrahm535.com/?${autoGenerateLinkData?.links}`}
+                  </p>
+                  <p className="w-[18%] sm:w-[15%]">
+                    {autoGenerateLinkData?.totalClicks}
+                  </p>
+                  <p className="w-[18%] sm:w-[15%]">
+                    {autoGenerateLinkData?.join}
+                  </p>
+                  <p className="w-[18%] sm:w-[15%]">
+                    {autoGenerateLinkData?.sales}
+                  </p>
+                  <button
+                    className="w-[6%] sm:w-[5%]"
+                    type="button"
+                    onClick={() =>
+                      deleteAffiliateHandler(autoGenerateLinkData?.links)
+                    }
+                  >
+                    <RiDeleteBin6Line className="text-sm" />
+                  </button>
+                </li>
+              )}
               {affiliateData?.formattedAffiliates
+                ?.filter((link) => link?.links !== `aff-${user?.userName}`)
                 .map((aff, idx) => (
                   <li
                     key={idx}

@@ -77,7 +77,6 @@ function AllDesign() {
                 key={design.id}
                 thumbnail={thumbnail.url}
                 watermark={thumbnail?.watermark}
-                thumbnailName={thumbnail.name}
                 title={design.title}
                 design={design}
                 slug={`/design/${design?.designId}`}

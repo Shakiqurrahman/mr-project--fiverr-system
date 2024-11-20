@@ -17,7 +17,6 @@ function AllCategory() {
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
   const { categories, isLoading } = useGetCategory();
-  console.log(categories);
 
   const selectedCategory = (categories || []).find(
     (data) => data.slug === slug,
@@ -60,8 +59,9 @@ function AllCategory() {
                 folder={true}
                 key={idx}
                 thumbnail={thumbnail?.url}
+                thumbnailName={design?.title}
                 watermark={thumbnail?.watermark}
-                title={design?.title}
+                title={subFolder?.subFolder}
                 slug={`/designs/${slug}/${subFolder?.slug}`}
               />
             );

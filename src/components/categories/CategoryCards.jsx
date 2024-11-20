@@ -6,6 +6,7 @@ import RightArrowIcon from "../../assets/images/icons/Right Arrow.svg";
 import CategoryLayout from "./CategoryLayout";
 import ProjectCard from "./ProjectCard";
 function CategoryCards({ title, path, subCategory = [], titleSlug }) {
+  console.log("subCategory", subCategory);
   const settings = {
     dots: false,
     infinite: subCategory?.length > 3 ? true : false,
@@ -60,8 +61,8 @@ function CategoryCards({ title, path, subCategory = [], titleSlug }) {
                   key={Math.random()}
                   thumbnail={thumbnail?.url}
                   watermark={thumbnail?.watermark}
-                  thumbnailName={thumbnail?.name}
-                  title={design?.title}
+                  thumbnailName={design?.title}
+                  title={category?.subFolder}
                   folder={true}
                   slug={`/designs/${titleSlug}/${category?.slug}`}
                 />

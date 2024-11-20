@@ -28,12 +28,8 @@ function Designs() {
   const [designs, setDesigns] = useState([]);
   const [designKeywords, setDesignKeywords] = useState([]);
   const [industryKeywords, setIndustryKeywords] = useState([]);
-  const sortingOptions = [
-    "Default Designs",
-    "Newest Designs",
-    "Oldest Designs",
-  ];
-  const [sortedBy, setSortedBy] = useState("DefaultDesigns");
+  const sortingOptions = ["Newest Designs", "Oldest Designs"];
+  const [sortedBy, setSortedBy] = useState("NewestDesigns");
 
   const [selectedValue, setSelectedValue] = useState(state || null);
   const [industrySelectedValue, setIndustrySelectedValue] = useState(null);
