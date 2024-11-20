@@ -40,12 +40,22 @@ export const analyticsApiSlice = createApi({
       transformResponse: (response) => response.data,
     }),
 
-    getActiveProjects: builder.query({
-      query: ({ date }) => `analytics/top-keyword?timeFilter=${date}/order`,
+    getActiveProjectsAnalytics: builder.query({
+      query: () => `analytics/project-details/active-project`,
       transformResponse: (response) => response.data,
     }),
 
-    
+    getFinishProjectsAnalytics: builder.query({
+      query: ({ timeFilter }) =>
+        `analytics/project-details/finished-projects?timeFilter=${timeFilter}`,
+      transformResponse: (response) => response.data,
+    }),
+
+    getProjectBuyersAnalytics: builder.query({
+      query: ({ timeFilter }) =>
+        `analytics/project-details/project-buyers?timeFilter=${timeFilter}`,
+      transformResponse: (response) => response.data,
+    }),
   }),
 });
 
@@ -54,4 +64,7 @@ export const {
   useGetWordlDominationDataQuery,
   useGetAllVisitorsQuery,
   useLazyGetVisitorsByFilterQuery,
+  useGetActiveProjectsAnalyticsQuery,
+  useLazyGetFinishProjectsAnalyticsQuery,
+  useLazyGetProjectBuyersAnalyticsQuery,
 } = analyticsApiSlice;
