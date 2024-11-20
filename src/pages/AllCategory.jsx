@@ -17,7 +17,6 @@ function AllCategory() {
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
   const { categories, isLoading } = useGetCategory();
-  console.log(categories);
 
   const selectedCategory = (categories || []).find(
     (data) => data.slug === slug,
