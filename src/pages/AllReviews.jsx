@@ -17,6 +17,7 @@ const AllReviews = () => {
   const dispatch = useDispatch();
   const [sortBtn, setSortBtn] = useState("Most relevant");
   const [reviews, setReviews] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const reviewSetting = {
     dots: false,
@@ -180,9 +181,22 @@ const AllReviews = () => {
   const handleSortBtn = (e) => {
     setSortBtn(e.target.value);
   };
+
   const handlePreviewImage = (e, url) => {
     e.preventDefault();
     dispatch(setPreviewImage(url));
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    // Filter reviews based on the search query (userName field)
+    const filteredReviews = data?.filter((reviewObj) =>
+      reviewObj.sender?.userName
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase()),
+    );
+
+    setReviews(filteredReviews);
   };
 
   const oneStarReviews = reviews?.filter(
@@ -362,9 +376,12 @@ const AllReviews = () => {
             <input
               type="search"
               className="block w-full rounded px-3 py-2 outline-none"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
             <button
               type="submit"
+              onClick={handleSearch}
               className="block shrink-0 rounded bg-primary px-3 py-2 text-base text-white sm:p-2 sm:text-2xl"
             >
               <IoSearch />
