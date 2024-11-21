@@ -4,7 +4,7 @@ const GenerateName = ({ name }) => {
   const extension = "." + name?.split(".").pop();
 
   // Remove the last occurrence of the extension
-  const nameWithoutExtName = name.replace(new RegExp(`${extension}$`), "");
+  const nameWithoutExtName = name?.replace(new RegExp(`${extension}$`), "");
 
   return (
     <div className="flex items-center">
