@@ -8,16 +8,16 @@ import {
   useDeleteAffiliateMutation,
   useGetAUserAffiliatesQuery,
 } from "../Redux/api/affiliateApiSlice";
-import prevBtn from "../assets/images/icons/Left Arrow.svg";
-import nextBtn from "../assets/images/icons/Right Arrow.svg";
 import cashWithdrawal from "../assets/images/icons/cash-withdrawal.png";
 import creditCard from "../assets/images/icons/credit-card.png";
 import dollerBill from "../assets/images/icons/dollar-bill.png";
 import PageHeaderWithText from "../components/PageHeaderWithText";
+import WithdrawRequestModal from "../components/WithdrawRequestModal";
 
 function Affiliate() {
   const [affLink, setAffLink] = useState("");
   const { user } = useSelector((state) => state.user);
+  const [openWithdrawModal, setOpenWithdrawModal] = useState(false);
 
   const [createAffiliate] = useCreateAffiliateMutation();
   const [deleteAffiliate] = useDeleteAffiliateMutation();
@@ -108,9 +108,14 @@ function Affiliate() {
                 className="mx-auto h-[40px] w-[40px] lg:h-[60px] lg:w-[60px]"
               />
               <p className=":mt-2">Balance</p>
-              <p className="font-semibold">${affiliateData?.totalEarnings}</p>
+              <p className="font-semibold">
+                ${affiliateData?.totalEarnings || 0}
+              </p>
             </div>
-            <Link className="bg-[#E3E3E3] p-5 text-center">
+            <Link
+              to="/affiliate/payment-method"
+              className="bg-[#E3E3E3] p-5 text-center"
+            >
               <img
                 src={creditCard}
                 alt="Money Icon"
@@ -119,7 +124,10 @@ function Affiliate() {
               <p className="mt-2">Payment </p>
               <p className="font-semibold">Method</p>
             </Link>
-            <Link className="bg-[#DCEEFA] p-5 text-center">
+            <button
+              onClick={() => setOpenWithdrawModal(true)}
+              className="bg-[#DCEEFA] p-5 text-center"
+            >
               <img
                 src={cashWithdrawal}
                 alt="Money Icon"
@@ -127,7 +135,12 @@ function Affiliate() {
               />
               <p className="mt-2 text-center">Withdraw </p>
               <p className="text-center font-semibold">Request</p>
-            </Link>
+            </button>
+            {openWithdrawModal && (
+              <WithdrawRequestModal
+                handleClose={() => setOpenWithdrawModal()}
+              />
+            )}
           </div>
 
           <div className="mt-10">
@@ -293,11 +306,11 @@ function Affiliate() {
   );
 }
 
-const prevBtnIcon = () => {
-  return <img src={prevBtn} alt="" className="h-8 w-8 rounded-full" />;
-};
-const nextBtnIcon = () => {
-  return <img src={nextBtn} alt="" className="h-8 w-8 rounded-full" />;
-};
+// const prevBtnIcon = () => {
+//   return <img src={prevBtn} alt="" className="h-8 w-8 rounded-full" />;
+// };
+// const nextBtnIcon = () => {
+//   return <img src={nextBtn} alt="" className="h-8 w-8 rounded-full" />;
+// };
 
 export default Affiliate;
