@@ -549,6 +549,7 @@ const OrderChatBox = () => {
                     )}
                     {msg?.additionalOffer && (
                       <AdditionalOfferPreview
+                        messageObj={msg}
                         value={msg?.additionalOffer || {}}
                       />
                     )}
