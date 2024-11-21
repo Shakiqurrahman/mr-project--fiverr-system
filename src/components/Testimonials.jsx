@@ -22,6 +22,7 @@ function Testimonials() {
   const dispatch = useDispatch();
   const [sortBtn, setSortBtn] = useState("Most relevant");
   const [reviews, setReviews] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   console.log(adminInfo);
 
@@ -115,24 +116,31 @@ function Testimonials() {
       setReviews(filterReviews);
     }
     if (sortBtn === "Most recent" && data) {
-      //   const filterReviews = () => {
-      // const mostRecentDate = new Date(Math.max(...reviews.map(r => new Date(r.date))));
-
-      // First, filter by most recent (e.g., within the last 7 days)
-      // const recentReviews = reviews.filter(r => new Date(r.date) >= new Date(mostRecentDate.setDate(mostRecentDate.getDate() - 7)));
-
-      // Then, filter by attractive words
-      const attractiveReviews = data?.filter((review) =>
-        attractiveWords?.some((word) =>
-          review?.message?.toLowerCase().includes(word.toLowerCase()),
-        ),
-      );
-
-      // Update the state with the filtered reviews
-      setReviews(attractiveReviews);
+      setReviews(data);
     }
     if (sortBtn === "Most relevant" && data) {
-      setReviews(data);
+      // Separate relevant and non-relevant reviews
+      const relevantReviews = [];
+      const nonRelevantReviews = [];
+
+      data?.forEach((reviewObj) => {
+        const isRelevant = attractiveWords.some((word) =>
+          reviewObj?.message?.toLowerCase().includes(word.toLowerCase()),
+        );
+
+        // Push to the respective arrays
+        if (isRelevant) {
+          relevantReviews.push(reviewObj);
+        } else {
+          nonRelevantReviews.push(reviewObj);
+        }
+      });
+
+      // Concatenate the relevant reviews first, followed by non-relevant ones
+      const reorderedReviews = [...relevantReviews, ...nonRelevantReviews];
+
+      // Update the reviews state with the reordered array
+      setReviews(reorderedReviews);
     }
   }, [sortBtn, data]);
 
@@ -143,6 +151,18 @@ function Testimonials() {
   const handlePreviewImage = (e, url) => {
     e.preventDefault();
     dispatch(setPreviewImage(url));
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    // Filter reviews based on the search query (userName field)
+    const filteredReviews = data?.filter((reviewObj) =>
+      reviewObj.sender?.userName
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase()),
+    );
+
+    setReviews(filteredReviews);
   };
 
   const reviewSetting = {
@@ -384,9 +404,12 @@ function Testimonials() {
             <input
               type="search"
               className="block w-full rounded px-3 py-2 outline-none"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
             <button
               type="submit"
+              onClick={handleSearch}
               className="block shrink-0 rounded bg-primary px-3 py-2 text-base text-white sm:p-2 sm:text-2xl"
             >
               <IoSearch />
