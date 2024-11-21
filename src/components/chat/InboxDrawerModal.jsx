@@ -3,6 +3,8 @@ import { FaRegEnvelope } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import useOutsideClick from "../../hooks/useOutsideClick";
+import { configApi } from "../../libs/configApi";
+import { connectSocket } from "../../libs/socketService";
 import { formatTimeAgo } from "../../libs/timeFormatter";
 import {
   useGetAvailableChatUsersQuery,
@@ -12,11 +14,13 @@ import {
   setChatData,
   setConversationUser,
 } from "../../Redux/features/chatSlice";
+import { setOnlineUsers } from "../../Redux/features/userSlice";
 
 const InboxDrawerModal = ({ close }) => {
+  const { onlineUsers, token } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: availableUsers } = useGetAvailableChatUsersQuery();
+  const { data: availableUsers, isLoading } = useGetAvailableChatUsersQuery();
   const { user } = useSelector((state) => state.user);
   const wrapperRef = useRef(null);
 
@@ -46,6 +50,19 @@ const InboxDrawerModal = ({ close }) => {
     (prev, curr) => prev + curr?.lastmessageinfo?.totalUnseenMessage,
     0,
   );
+
+  const socket = connectSocket(`${configApi.socket}`, token);
+  // all avaliable users
+  useEffect(() => {
+    socket?.emit("view-online-users");
+    socket?.on("online-users", (onlineUsers) => {
+      dispatch(setOnlineUsers(onlineUsers));
+    });
+  }, [socket, dispatch]);
+
+  const isUserOnline = (userId) => {
+    return onlineUsers?.some((onlineUser) => onlineUser?.userId === userId);
+  };
   useOutsideClick(wrapperRef, () => close(false));
   return (
     <div
@@ -67,44 +84,50 @@ const InboxDrawerModal = ({ close }) => {
         </Link>
       </div>
       <div className="max-h-[400px] overflow-y-auto">
-        {availableUsers?.map((msg, index) => (
-          <Link
-            key={index}
-            onClick={(e) => handleMessageButton(e, msg?.id)}
-            className="flex items-start gap-3 border-b px-4 pb-2 pt-4 text-[#3b3b3b]"
-          >
-            <div className="relative size-14 shrink-0 rounded-full">
-              {msg?.image ? (
-                <img
-                  src={msg?.image}
-                  className="size-full rounded-full object-cover"
-                />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center rounded-full bg-gray-200 text-2xl font-bold text-[#3b3b3b]/50">
-                  {msg?.userName?.charAt(0).toUpperCase()}
-                </div>
-              )}
-              <div
-                className={`absolute bottom-0 right-0 size-4 rounded-full border-[3px] border-white bg-gray-400`}
-              ></div>
-            </div>
-            <div>
-              <h1 className="font-bold">{msg?.userName}</h1>
-              <p className="line-clamp-2 font-medium">
-                {user?.userName === msg?.userName && "Me: "}{" "}
-                {msg?.lastmessageinfo?.customOffer
-                  ? `${msg?.userName} just sent you a new Custom Offer.`
-                  : msg?.lastmessageinfo?.attachments?.length > 0 &&
-                      !msg?.lastmessageinfo?.messageText
-                    ? `${msg?.userName} just sent you some attachments.`
-                    : msg?.lastmessageinfo?.messageText}
-              </p>
-              <span className="mt-3 block text-xs font-semibold text-[#3b3b3b]/50">
-                {formatTimeAgo(msg?.lastmessageinfo?.createdAt)}
-              </span>
-            </div>
-          </Link>
-        ))}
+        {isLoading ? (
+          <p className="p-4 text-center">Loading...</p>
+        ) : availableUsers.length > 0 ? (
+          availableUsers?.map((msg, index) => (
+            <Link
+              key={index}
+              onClick={(e) => handleMessageButton(e, msg?.id)}
+              className="flex items-start gap-3 border-b px-4 pb-2 pt-4 text-[#3b3b3b]"
+            >
+              <div className="relative size-14 shrink-0 rounded-full">
+                {msg?.image ? (
+                  <img
+                    src={msg?.image}
+                    className="size-full rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center rounded-full bg-gray-200 text-2xl font-bold text-[#3b3b3b]/50">
+                    {msg?.userName?.charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <div
+                  className={`absolute bottom-0 right-0 size-4 rounded-full border-[3px] border-white bg-gray-400 ${isUserOnline(msg?.id) ? "bg-primary" : "bg-gray-400"}`}
+                ></div>
+              </div>
+              <div>
+                <h1 className="font-bold">{msg?.userName}</h1>
+                <p className="line-clamp-2 font-medium">
+                  {user?.userName === msg?.userName && "Me: "}{" "}
+                  {msg?.lastmessageinfo?.customOffer
+                    ? `${msg?.userName} just sent you a new Custom Offer.`
+                    : msg?.lastmessageinfo?.attachments?.length > 0 &&
+                        !msg?.lastmessageinfo?.messageText
+                      ? `${msg?.userName} just sent you some attachments.`
+                      : msg?.lastmessageinfo?.messageText}
+                </p>
+                <span className="mt-3 block text-xs font-semibold text-[#3b3b3b]/50">
+                  {formatTimeAgo(msg?.lastmessageinfo?.createdAt)}
+                </span>
+              </div>
+            </Link>
+          ))
+        ) : (
+          <p className="p-4 text-center">No chats found!</p>
+        )}
       </div>
     </div>
   );
