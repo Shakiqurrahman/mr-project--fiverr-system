@@ -1,11 +1,11 @@
 import React, { useRef, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
+import { useSendAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
+import { setMessages } from "../../../Redux/features/orderSlice";
 import useOutsideClick from "../../../hooks/useOutsideClick";
 import { configApi } from "../../../libs/configApi";
 import { connectSocket } from "../../../libs/socketService";
-import { useSendAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
-import { setMessages } from "../../../Redux/features/orderSlice";
 
 const ExtendDeliveryModal = ({ handleClose }) => {
   const [sendAOrderMessage] = useSendAOrderMessageMutation();
@@ -44,8 +44,8 @@ const ExtendDeliveryModal = ({ handleClose }) => {
     e.preventDefault();
     const data =
       extendType === "requestByMe"
-        ? { ...form, extendType }
-        : { ...form, extendType, amount };
+        ? { ...form, extendType, isAccepted: false, isRejected: false }
+        : { ...form, extendType, amount, isAccepted: false, isRejected: false };
 
     const submitForm = {
       messageText: "",

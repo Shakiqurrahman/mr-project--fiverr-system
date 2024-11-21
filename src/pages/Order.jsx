@@ -116,7 +116,7 @@ const Order = () => {
           </h1>
         )}
         <div className="relative flex flex-wrap gap-5 sm:flex-nowrap">
-          <div className="mb-5 w-full shrink lg:w-[calc(100%_-_320px)]">
+          <div className="mb-5 w-full shrink pt-3 lg:w-[calc(100%_-_320px)]">
             <div className="flex items-center justify-between gap-2">
               <div className="hidden items-center gap-10 sm:flex">
                 {tabButtons.map((btn, i) => (

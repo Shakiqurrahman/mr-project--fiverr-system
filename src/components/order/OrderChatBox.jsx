@@ -430,10 +430,13 @@ const OrderChatBox = () => {
   };
 
   // handle delete a order message
-  const handleDeleteAMessage = async (e, messageId) => {
+  const handleDeleteAMessage = async (e, commonKey, projectNumber) => {
     e.preventDefault();
     try {
-      const res = await deleteAOrderMessage(messageId).unwrap();
+      const res = await deleteAOrderMessage({
+        commonKey,
+        projectNumber,
+      }).unwrap();
       console.log(res);
 
       // socket.emit("delete-message", { messageId, userId: user?.id });
@@ -517,7 +520,13 @@ const OrderChatBox = () => {
                         {visibility[msg?.id] && msg?.senderId === user?.id && (
                           <button
                             type="button"
-                            onClick={(e) => handleDeleteAMessage(e, msg?.id)}
+                            onClick={(e) =>
+                              handleDeleteAMessage(
+                                e,
+                                msg?.commonKey,
+                                msg?.projectNumber,
+                              )
+                            }
                           >
                             <FaTrashAlt />
                           </button>
@@ -540,20 +549,26 @@ const OrderChatBox = () => {
                     )}
                     {msg?.additionalOffer && (
                       <AdditionalOfferPreview
+                        messageObj={msg}
                         value={msg?.additionalOffer || {}}
                       />
                     )}
                     {msg?.deliverProject && (
-                      <OrderDeliveryPreview data={msg?.deliverProject || {}} />
+                      <OrderDeliveryPreview
+                        messageObj={msg}
+                        data={msg?.deliverProject || {}}
+                      />
                     )}
                     {msg?.extendDeliveryTime && (
                       <ExtendingDeliveryPreview
+                        messageObj={msg}
                         value={msg?.extendDeliveryTime || {}}
                       />
                     )}
                     {msg?.cancelProject && (
                       <div className="mt-8">
                         <CancellingProjectPreview
+                          messageObj={msg}
                           value={msg?.cancelProject || {}}
                         />
                       </div>

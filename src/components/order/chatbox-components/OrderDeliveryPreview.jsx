@@ -6,12 +6,15 @@ import RightArrowIcon from "../../../assets/images/icons/Right Arrow.svg";
 
 import { useState } from "react";
 import { BiDownload } from "react-icons/bi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setPreviewImage } from "../../../Redux/features/previewImageSlice";
 import formatFileSize from "../../../libs/formatFileSize";
 import CommentPage from "../../../pages/CommentPage";
 import Divider from "../../Divider";
 
 const OrderDeliveryPreview = ({ data }) => {
+  const dispatch = useDispatch();
+
   const { projectDetails } = useSelector((state) => state.order);
 
   const [openCommentBox, setOpenCommentBox] = useState(false);
@@ -103,6 +106,12 @@ const OrderDeliveryPreview = ({ data }) => {
     setSelectedImage(att);
   };
 
+  const handlePreviewImage = (e, url) => {
+    e.preventDefault();
+    console.log(url);
+    dispatch(setPreviewImage(url));
+  };
+
   const foundImages =
     data?.attachments?.filter((file) => file?.format?.startsWith("image/"))
       .length > 0;
@@ -127,14 +136,21 @@ const OrderDeliveryPreview = ({ data }) => {
                     ?.map((att, index) => (
                       <div key={index} className="w-full">
                         <img
-                          // onClick={() => handleOpenComment(att)}
+                          onClick={(e) =>
+                            handlePreviewImage(
+                              e,
+                              projectDetails?.projectStatus === "Completed"
+                                ? att?.url
+                                : att?.watermark,
+                            )
+                          }
                           src={
                             projectDetails?.projectStatus === "Completed"
                               ? att?.url
                               : att?.watermark
                           }
                           alt={att?.name}
-                          className="pointer-events-none block w-full object-cover"
+                          className="block w-full cursor-pointer object-cover"
                         />
                         <div className="mt-4 text-center">
                           <a
@@ -193,7 +209,9 @@ const OrderDeliveryPreview = ({ data }) => {
                     </span>
                   </p>
                 </a>
-                <Divider className="my-5 ms-6 h-px w-[50px] !bg-black" />
+                <Divider
+                  className={`my-5 ${projectDetails?.projectStatus === "Completed" ? "ms-6" : ""} h-px w-[50px] !bg-black`}
+                />
               </>
             )}
             {data?.attachments?.length > 0 &&
@@ -296,7 +314,7 @@ function NextArrow({ onClick }) {
   return (
     <div
       onClick={onClick}
-      className="slick-arrow absolute right-0 top-[35%] z-10 flex h-[35px] w-[35px] translate-y-[35%] cursor-pointer items-center justify-center rounded-full border before:content-none"
+      className="slick-arrow absolute right-0 top-[35%] z-[2] flex h-[35px] w-[35px] translate-y-[35%] cursor-pointer items-center justify-center rounded-full border before:content-none"
     >
       <img src={RightArrowIcon} alt="" />
     </div>
@@ -307,7 +325,7 @@ function PrevArrow({ onClick }) {
   return (
     <div
       onClick={onClick}
-      className="slick-arrow absolute left-0 top-[35%] z-10 flex h-[35px] w-[35px] translate-y-[35%] cursor-pointer items-center justify-center rounded-full border before:content-none"
+      className="slick-arrow absolute left-0 top-[35%] z-[2] flex h-[35px] w-[35px] translate-y-[35%] cursor-pointer items-center justify-center rounded-full border before:content-none"
     >
       <img src={LeftArrowIcon} alt="" />
     </div>
