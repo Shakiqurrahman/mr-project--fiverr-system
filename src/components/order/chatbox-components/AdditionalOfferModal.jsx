@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import useOutsideClick from "../../../hooks/useOutsideClick";
 import { useSendAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
 import { setMessages } from "../../../Redux/features/orderSlice";
+import useOutsideClick from "../../../hooks/useOutsideClick";
 
 const AdditionalOfferModal = ({ handleClose, onOfferSubmit }) => {
   const [sendAOrderMessage] = useSendAOrderMessageMutation();
@@ -19,6 +19,9 @@ const AdditionalOfferModal = ({ handleClose, onOfferSubmit }) => {
     text: "",
     price: "",
     duration: "",
+    isWithdrawn: false,
+    isAccepted: false,
+    isRejected: false,
   });
 
   const handleChange = (e) => {

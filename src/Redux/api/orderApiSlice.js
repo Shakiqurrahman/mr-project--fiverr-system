@@ -110,6 +110,7 @@ export const orderApiSlice = createApi({
       query: ({ userId, projectNumber }) =>
         `order-message/get?userId=${userId}&projectNumber=${projectNumber}`,
       transformResponse: (response) => response?.data,
+      providesTags: ["messages"],
     }),
 
     sendAOrderMessageReply: builder.mutation({
@@ -122,8 +123,8 @@ export const orderApiSlice = createApi({
     }),
 
     deleteAOrderMessage: builder.mutation({
-      query: (messageId) => ({
-        url: `order-message/${messageId}`,
+      query: ({ commonKey, projectNumber }) => ({
+        url: `order-message/${commonKey}/${projectNumber}`,
         method: "DELETE",
       }),
       invalidatesTags: ["messages"],

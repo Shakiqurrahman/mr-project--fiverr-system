@@ -193,7 +193,9 @@ const OrderDeliveryPreview = ({ data }) => {
                     </span>
                   </p>
                 </a>
-                <Divider className="my-5 ms-6 h-px w-[50px] !bg-black" />
+                <Divider
+                  className={`my-5 ${projectDetails?.projectStatus === "Completed" ? "ms-6" : ""} h-px w-[50px] !bg-black`}
+                />
               </>
             )}
             {data?.attachments?.length > 0 &&
