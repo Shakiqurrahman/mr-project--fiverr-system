@@ -479,6 +479,12 @@ const OrderChatBox = () => {
     setReplyTo(replyObj);
   };
 
+  // generate replied to function
+  const generateRepliedTo = (msg) => {
+    const replyObj = msg?.replyTo;
+    return `${user?.userName === replyObj.replyMsgUserName ? "You" : replyObj.replyUserName === "yourself" ? replyObj.replySenderUserName : "mahfujurrahm535"}`;
+  };
+
   console.log(replyTo, "reply");
 
   return (
@@ -504,6 +510,14 @@ const OrderChatBox = () => {
                   </div>
                 )}
                 {/* A conversation message Ui */}
+                {msg?.replyTo && (
+                  <div className="mt-2 border-s-2 border-primary bg-gray-50 px-3 py-1">
+                    <h1 className="text-xs font-semibold text-primary">
+                      {generateRepliedTo(msg)}
+                    </h1>
+                    <p className="text-sm">{msg?.replyTo?.replyText}</p>
+                  </div>
+                )}
                 <div className="group mt-3 flex items-start gap-3 px-3">
                   <div className="flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[#ffefef]">
                     {msg?.userImage && msg?.isFromAdmin === "USER" ? (
