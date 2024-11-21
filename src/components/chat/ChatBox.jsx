@@ -145,6 +145,8 @@ const ChatBox = ({ openToggle }) => {
 
         // setMessages((prevMessages) => [...prevMessages, msg]);
       }
+      console.log('msg seeing all',msg);
+      
       let filter = msg.userId === conversationUser && msg;
       if (isAdmin && filter) {
         // setMessages((prev) => [...prev, filter]);
@@ -567,12 +569,12 @@ const ChatBox = ({ openToggle }) => {
   };
 
   // for deleting a single message
-  const handleDeleteAMessage = async (messageId) => {
+  const handleDeleteAMessage = async (commonKey) => {
     try {
-      const res = await deleteAMessage(messageId).unwrap();
+      const res = await deleteAMessage(commonKey).unwrap();
       console.log(res);
 
-      socket.emit("delete-message", { messageId, userId: user?.id });
+      socket.emit("delete-message", { commonKey, userId: user?.id });
       toast.success("Message deleted successfully");
     } catch {
       toast.error("Failed to delete message");
@@ -674,6 +676,8 @@ const ChatBox = ({ openToggle }) => {
     }
   }, [conversationUser, messages]);
 
+  console.log(messages);
+  
   return (
     <div className="flex h-full flex-col">
       {/* Header Part */}
@@ -851,7 +855,7 @@ const ChatBox = ({ openToggle }) => {
                             msg?.senderId === user?.id && (
                               <button
                                 type="button"
-                                onClick={() => handleDeleteAMessage(msg?.id)}
+                                onClick={() => handleDeleteAMessage(msg?.commonkey)}
                               >
                                 <FaTrashAlt />
                               </button>
