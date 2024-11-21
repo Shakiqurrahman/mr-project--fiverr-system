@@ -55,7 +55,7 @@ const AllConversation = ({ closeToggle }) => {
     switch (selectedOption) {
       case "unread":
         filteredChats = filteredChats?.filter(
-          (chat) => chat.unreadMessages > 0,
+          (chat) => chat?.lastmessageinfo?.totalUnseenMessage > 0,
         );
         break;
       case "starred":
@@ -152,8 +152,8 @@ const AllConversation = ({ closeToggle }) => {
       <div className="chat-scrollbar flex-1 overflow-y-auto">
         {filteredChatList?.length > 0 ? (
           filteredChatList?.map((chat) => {
-            const isOnline = onlineUsers.some(
-              (user) => user.userId === chat.id,
+            const isOnline = onlineUsers?.some(
+              (user) => user?.userId === chat?.id,
             );
             return (
               <div
