@@ -142,6 +142,12 @@ const OrderChatBox = () => {
     }
   }, [allUserMessages]);
 
+  useEffect(() => {
+    if (selectedImages?.length === uploadFilesLength) {
+      setUploadFilesLength(0);
+    }
+  }, [selectedImages?.length]);
+
   // useEffect(() => {
   //   // Inital Scroll to last message
   //   endOfMessagesRef.current?.scrollIntoView();
@@ -497,11 +503,12 @@ const OrderChatBox = () => {
               <div className="rounded-t-md border border-b border-slate-300">
                 {selectedImages?.length > 0 && (
                   <>
-                    {selectedImages?.length !== uploadFilesLength && (
-                      <p className="p-3 pb-0 text-xs">
-                        Uploaded {selectedImages?.length}/{uploadFilesLength}
-                      </p>
-                    )}
+                    {selectedImages?.length !== uploadFilesLength &&
+                      uploadFilesLength > 0 && (
+                        <p className="p-3 pb-0 text-xs">
+                          Uploaded {selectedImages?.length}/{uploadFilesLength}
+                        </p>
+                      )}
                     <div className="preview-scroll-overflow-x flex gap-2 border-b p-[10px]">
                       {selectedImages?.map((image, index) => (
                         <div key={index} className="w-[120px]">
