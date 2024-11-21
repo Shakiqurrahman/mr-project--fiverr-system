@@ -89,6 +89,7 @@ const ChatBox = ({ openToggle }) => {
   const menuRef = useRef(null);
   const fileInputRef = useRef(null);
   const [selectedImages, setSelectedImages] = useState([]);
+  const [uploadedFilesLength, setUploadedFilesLength] = useState(0);
   const [qucikMsgBtnController, setQucikMsgBtnController] = useState(null);
   const [openAddMsgModal, setOpenAddMsgModal] = useState(false);
   const [openEditMsgModal, setOpenEditMsgModal] = useState(null);
@@ -194,6 +195,12 @@ const ChatBox = ({ openToggle }) => {
     // Inital Scroll to last message
     endOfMessagesRef.current?.scrollIntoView();
   }, [messages]);
+
+  useEffect(() => {
+    if (selectedImages?.length === uploadedFilesLength) {
+      setUploadedFilesLength(0);
+    }
+  }, [selectedImages?.length]);
 
   useEffect(() => {
     const checkVisibility = () => {
@@ -401,6 +408,7 @@ const ChatBox = ({ openToggle }) => {
   const handleChangeSelectedImage = (event) => {
     const files = Array.from(event.target.files);
     getImagesWithDimensions(files);
+    setUploadedFilesLength(files?.length);
   };
 
   const handleImageRemove = (index) => {
@@ -1120,42 +1128,50 @@ const ChatBox = ({ openToggle }) => {
         <div className={`mt-auto px-3`}>
           <div className="rounded-t-md border border-b border-slate-300">
             {selectedImages?.length > 0 && (
-              <div className="preview-scroll-overflow-x flex gap-2 border-b p-[10px]">
-                {selectedImages?.map((image, index) => (
-                  <div key={index} className="w-[100px]">
-                    <div className="group relative">
-                      {image.url ? (
-                        <FilePreview file={image} />
-                      ) : (
-                        <div className="flex h-[80px] items-center justify-center bg-lightcream">
-                          <CircleProgressBar
-                            precentage={image.progress}
-                            circleWidth={50}
-                          />
-                        </div>
-                      )}
-                      {(image?.url || image?.progress === 100) && (
-                        <button
-                          type="button"
-                          className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
-                          onClick={() => handleImageRemove(index)}
-                        >
-                          <RiDeleteBin6Line size={20} />
-                        </button>
-                      )}
+              <>
+                {selectedImages?.length !== uploadedFilesLength &&
+                  uploadedFilesLength > 0 && (
+                    <p className="p-3 pb-0 text-xs">
+                      Uploaded {selectedImages?.length}/{uploadedFilesLength}
+                    </p>
+                  )}
+                <div className="preview-scroll-overflow-x flex gap-2 border-b p-[10px]">
+                  {selectedImages?.map((image, index) => (
+                    <div key={index} className="w-[100px]">
+                      <div className="group relative">
+                        {image.url ? (
+                          <FilePreview file={image} />
+                        ) : (
+                          <div className="flex h-[80px] items-center justify-center bg-lightcream">
+                            <CircleProgressBar
+                              precentage={image.progress}
+                              circleWidth={50}
+                            />
+                          </div>
+                        )}
+                        {(image?.url || image?.progress === 100) && (
+                          <button
+                            type="button"
+                            className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
+                            onClick={() => handleImageRemove(index)}
+                          >
+                            <RiDeleteBin6Line size={20} />
+                          </button>
+                        )}
+                      </div>
+                      <h1
+                        className="truncate text-xs font-medium"
+                        title={image.name}
+                      >
+                        {image.name}
+                      </h1>
+                      <span className="text-xs">
+                        ({formatFileSize(image.size)})
+                      </span>
                     </div>
-                    <h1
-                      className="truncate text-xs font-medium"
-                      title={image.name}
-                    >
-                      {image.name}
-                    </h1>
-                    <span className="text-xs">
-                      ({formatFileSize(image.size)})
-                    </span>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              </>
             )}
             <div
               className={`${quickResponse ? "h-[140px]" : "h-[40px]"} border-b border-slate-300 p-2`}

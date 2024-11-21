@@ -198,7 +198,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
     const formData = new FormData();
     formData.append("files", file);
 
-    const uploadUrl = `${configApi.api}upload-attachment-optimized`;
+    const uploadUrl = `${configApi.api}upload-attachment`;
 
     const uploadData = {
       name: file.name,
@@ -224,7 +224,10 @@ const OrderDeliveryForm = ({ handleClose }) => {
       });
 
       // Update image data upon successful upload
-      const imageUrl = response.data.data.file.optimizedUrl;
+      const imageUrl = response.data.data.file.url.replaceAll(
+        "-watermark-resized",
+        "",
+      );
       const watermarkUrl = response.data.data.file.url;
       const fileFormat = response.data.data.file.fileType;
       setThumbnailImage((prev) => ({

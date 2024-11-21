@@ -1,69 +1,51 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { FaRegEnvelope } from "react-icons/fa";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import thumbnail from "../../assets/images/MR Logo White.png";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import useOutsideClick from "../../hooks/useOutsideClick";
+import { formatTimeAgo } from "../../libs/timeFormatter";
+import {
+  useGetAvailableChatUsersQuery,
+  useLazyGetAllMessagesQuery,
+} from "../../Redux/api/inboxApiSlice";
+import {
+  setChatData,
+  setConversationUser,
+} from "../../Redux/features/chatSlice";
 
 const InboxDrawerModal = ({ close }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { data: availableUsers } = useGetAvailableChatUsersQuery();
   const { user } = useSelector((state) => state.user);
   const wrapperRef = useRef(null);
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      userImage: "",
-      senderUserName: "atdservices23",
-      messageText: "Double side door hanger $20= Print ready JPEG or PDF file.",
-      customOffer: null,
-      attachment: [],
-      createdAt: "2024-09-26T18:11:59Z",
-    },
-    {
-      id: 2,
-      userImage: "",
-      senderUserName: "jhallett",
-      messageText: "",
-      customOffer: true,
-      attachment: [],
-      createdAt: "2024-09-26T18:11:59Z",
-    },
-    {
-      id: 3,
-      userImage: "",
-      senderUserName: "yaro_b",
-      messageText: "Final file",
-      customOffer: null,
-      attachment: ["yes", "yes"],
-      createdAt: "2024-09-26T18:11:59Z",
-    },
-    {
-      id: 4,
-      userImage: thumbnail,
-      senderUserName: "milkesolomon",
-      messageText: "Please let me know, Did you like my designs?",
-      customOffer: null,
-      attachment: [],
-      createdAt: "2024-09-26T18:11:59Z",
-    },
-    {
-      id: 5,
-      userImage: "",
-      senderUserName: "planetfreestyle",
-      messageText: "Yes. I can design your given information.",
-      customOffer: null,
-      attachment: [],
-      createdAt: "2024-09-26T18:11:59Z",
-    },
-    {
-      id: 6,
-      userImage: "",
-      senderUserName: "atdservices23",
-      messageText: "",
-      customOffer: null,
-      attachment: ["Yes", "Yes"],
-      createdAt: "2024-09-26T18:11:59Z",
-    },
-  ]);
+
+  // after clicking on the message button
+  const [triggerGetAllMessages, { data: getAllMessages }] =
+    useLazyGetAllMessagesQuery({
+      // pollingInterval: 500,
+    });
+
+  useEffect(() => {
+    if (getAllMessages) {
+      dispatch(setChatData(getAllMessages));
+      navigate("/inbox");
+      close(false);
+    }
+  }, [dispatch, getAllMessages, navigate, close]);
+
+  const handleMessageButton = (e, id) => {
+    e.preventDefault();
+    dispatch(setConversationUser(id));
+    triggerGetAllMessages({
+      receiverId: id,
+    });
+  };
+
+  const totalUnseenMessage = availableUsers?.reduce(
+    (prev, curr) => prev + curr?.lastmessageinfo?.totalUnseenMessage,
+    0,
+  );
   useOutsideClick(wrapperRef, () => close(false));
   return (
     <div
@@ -74,7 +56,7 @@ const InboxDrawerModal = ({ close }) => {
         <h1 className="flex items-center gap-2">
           <FaRegEnvelope className="text-lg" />
           Inbox
-          <span>(0)</span>
+          <span>({totalUnseenMessage || 0})</span>
         </h1>
         <Link
           className="text-primary"
@@ -85,20 +67,21 @@ const InboxDrawerModal = ({ close }) => {
         </Link>
       </div>
       <div className="max-h-[400px] overflow-y-auto">
-        {messages?.map((msg) => (
+        {availableUsers?.map((msg, index) => (
           <Link
-            key={msg?.id}
+            key={index}
+            onClick={(e) => handleMessageButton(e, msg?.id)}
             className="flex items-start gap-3 border-b px-4 pb-2 pt-4 text-[#3b3b3b]"
           >
             <div className="relative size-14 shrink-0 rounded-full">
-              {msg?.userImage ? (
+              {msg?.image ? (
                 <img
-                  src={msg?.userImage}
-                  className="w-full rounded-full object-cover"
+                  src={msg?.image}
+                  className="size-full rounded-full object-cover"
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center rounded-full bg-gray-200 text-2xl font-bold text-[#3b3b3b]/50">
-                  {msg?.senderUserName.charAt(0).toUpperCase()}
+                  {msg?.userName?.charAt(0).toUpperCase()}
                 </div>
               )}
               <div
@@ -106,17 +89,18 @@ const InboxDrawerModal = ({ close }) => {
               ></div>
             </div>
             <div>
-              <h1 className="font-bold">{msg?.senderUserName}</h1>
+              <h1 className="font-bold">{msg?.userName}</h1>
               <p className="line-clamp-2 font-medium">
-                {user?.userName === msg?.senderUserName && "Me: "}{" "}
-                {msg?.customOffer
-                  ? `${msg?.senderUserName} just sent you a new Custom Offer.`
-                  : msg?.attachment?.length > 0 && !msg?.messageText
-                    ? `${msg?.senderUserName} just sent you some attachments.`
-                    : msg?.messageText}
+                {user?.userName === msg?.userName && "Me: "}{" "}
+                {msg?.lastmessageinfo?.customOffer
+                  ? `${msg?.userName} just sent you a new Custom Offer.`
+                  : msg?.lastmessageinfo?.attachments?.length > 0 &&
+                      !msg?.lastmessageinfo?.messageText
+                    ? `${msg?.userName} just sent you some attachments.`
+                    : msg?.lastmessageinfo?.messageText}
               </p>
               <span className="mt-3 block text-xs font-semibold text-[#3b3b3b]/50">
-                2d
+                {formatTimeAgo(msg?.lastmessageinfo?.createdAt)}
               </span>
             </div>
           </Link>
