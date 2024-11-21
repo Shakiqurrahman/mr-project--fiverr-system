@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../AllRoutes/Layout";
+import AffiliatePaymentMethods from "../components/AffiliatePaymentMethods";
 import SocialMediasForm from "../components/SocialMediasForm";
 import About from "../pages/About";
 import AdminPanel from "../pages/AdminPanel";
@@ -115,6 +116,14 @@ export const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <Affiliate />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/affiliate/payment-method",
+        element: (
+          <PrivateRoute>
+            <AffiliatePaymentMethods />
           </PrivateRoute>
         ),
       },
