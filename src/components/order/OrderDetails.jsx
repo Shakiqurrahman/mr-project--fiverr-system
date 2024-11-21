@@ -94,10 +94,10 @@ const OrderDetails = () => {
           <div className="flex items-center font-semibold">
             <div className="w-3/6 shrink-0 border-b p-3">Item</div>
             <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center">
-              QTY
+              Qty
             </div>
             <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center">
-              DUR
+              Dur
             </div>
             <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center">
               Price
@@ -238,7 +238,11 @@ const OrderDetails = () => {
           <div className="flex items-center font-semibold">
             <div className="w-3/6 shrink-0 p-3">Total</div>
             <div className="w-1/6 shrink-0 border-l border-gray-300 p-3 text-center">
-              {totalQuantity}
+              {projectDetails?.from === "offerProject"
+                ? items[0]?.isFastDelivery
+                  ? items[0]?.designs?.length + 1
+                  : items[0]?.designs?.length
+                : totalQuantity}
             </div>
             <div className="w-1/6 shrink-0 border-l border-gray-300 p-3 text-center">
               {totalDuration} days
