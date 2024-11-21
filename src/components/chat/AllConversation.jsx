@@ -29,7 +29,9 @@ const AllConversation = ({ closeToggle }) => {
   const [openSearch, setOpenSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: availableUsers } = useGetAvailableChatUsersQuery();
+  const { data: availableUsers } = useGetAvailableChatUsersQuery(null, {
+    pollingInterval: 60000,
+  });
   // getAllMessages
   const [triggerGetAllMessages, { data: getAllMessages }] =
     useLazyGetAllMessagesQuery();
