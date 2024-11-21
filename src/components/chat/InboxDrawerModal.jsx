@@ -2,10 +2,6 @@ import { useEffect, useRef } from "react";
 import { FaRegEnvelope } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import useOutsideClick from "../../hooks/useOutsideClick";
-import { configApi } from "../../libs/configApi";
-import { connectSocket } from "../../libs/socketService";
-import { formatTimeAgo } from "../../libs/timeFormatter";
 import {
   useGetAvailableChatUsersQuery,
   useLazyGetAllMessagesQuery,
@@ -15,6 +11,10 @@ import {
   setConversationUser,
 } from "../../Redux/features/chatSlice";
 import { setOnlineUsers } from "../../Redux/features/userSlice";
+import useOutsideClick from "../../hooks/useOutsideClick";
+import { configApi } from "../../libs/configApi";
+import { connectSocket } from "../../libs/socketService";
+import { formatTimeAgo } from "../../libs/timeFormatter";
 
 const InboxDrawerModal = ({ close }) => {
   const { onlineUsers, token } = useSelector((state) => state.user);
@@ -114,7 +114,7 @@ const InboxDrawerModal = ({ close }) => {
                   {user?.userName === msg?.userName && "Me: "}{" "}
                   {msg?.lastmessageinfo?.customOffer
                     ? `${msg?.userName} just sent you a new Custom Offer.`
-                    : msg?.lastmessageinfo?.attachments?.length > 0 &&
+                    : msg?.lastmessageinfo?.attachment?.length > 0 &&
                         !msg?.lastmessageinfo?.messageText
                       ? `${msg?.userName} just sent you some attachments.`
                       : msg?.lastmessageinfo?.messageText}
