@@ -18,13 +18,10 @@ import Divider from "./Divider";
 function Testimonials() {
   const { data: adminInfo } = useGetMahfujurDetailsQuery();
   const { data } = useGetAllAdminReviewsQuery();
-  console.log("admin reviews", data);
   const dispatch = useDispatch();
   const [sortBtn, setSortBtn] = useState("Most relevant");
   const [reviews, setReviews] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-
-  console.log(adminInfo);
 
   useEffect(() => {
     if (data) {

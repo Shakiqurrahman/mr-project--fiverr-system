@@ -169,7 +169,6 @@ const ChatBox = ({ openToggle }) => {
         dispatch(setTypingStatus(`Typing...`));
       }
       if (!isAdmin && data.userId === user?.id) {
-        console.log("i am typinh");
         // dispatch(setTypingStatus(`Typing...`));
       }
       // console.log(data);
@@ -230,7 +229,6 @@ const ChatBox = ({ openToggle }) => {
 
   // replyText handler
   const addReplyText = (msg) => {
-    console.log(msg);
     msg?.messageText
       ? setReplyTo({
           replyMessageId: msg.id,
@@ -344,7 +342,6 @@ const ChatBox = ({ openToggle }) => {
 
   const getImagesWithDimensions = async (files) => {
     const handleImageLoad = async (file, index) => {
-      console.log(file);
       const formData = new FormData();
       // formData.append("image", file);
       formData.append("files", file);
@@ -366,7 +363,6 @@ const ChatBox = ({ openToggle }) => {
       try {
         const response = await axios.post(uploadUrl, formData, {
           onUploadProgress: (data) => {
-            console.log(data);
             const percentage = Math.round((data.loaded / data.total) * 100);
             setSelectedImages((prev) => {
               const newImages = [...prev];
@@ -375,7 +371,6 @@ const ChatBox = ({ openToggle }) => {
             });
           },
         });
-        console.log(response);
 
         // Update image data upon successful upload
         const imageUrl = response.data.data.file.url.replaceAll(
@@ -669,8 +664,6 @@ const ChatBox = ({ openToggle }) => {
   const isUserOnline = (userId) => {
     return onlineUsers.some((onlineUser) => onlineUser?.userId === userId);
   };
-
-  console.log("Messages", messages);
 
   // message unseen to seen
   useEffect(() => {
