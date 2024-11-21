@@ -10,7 +10,7 @@ function UserBox() {
   const navigate = useNavigate();
 
   const { user, loading } = useSelector((state) => state.user);
-  const isAuthorized = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);  
+  const isAuthorized = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -114,9 +114,11 @@ function UserBox() {
             <MenuItem onClick={handleClose}>Admin Panel</MenuItem>
           </Link>
         )}
-        <Link to="/affiliate">
-          <MenuItem onClick={handleClose}>Affiliate</MenuItem>
-        </Link>
+        {user.role === "USER" && (
+          <Link to="/affiliate">
+            <MenuItem onClick={handleClose}>Affiliate</MenuItem>
+          </Link>
+        )}
         <Link to="/change-password">
           <MenuItem onClick={handleClose}>Change Password</MenuItem>
         </Link>
