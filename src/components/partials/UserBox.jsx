@@ -109,12 +109,17 @@ function UserBox() {
             <MenuItem onClick={handleClose}>Payment Methods</MenuItem>
           </Link>
         )}
-        {user.role === "SUPER_ADMIN" && (
+        {user?.role === "SUPER_ADMIN" && (
           <Link to="/admin-panel">
             <MenuItem onClick={handleClose}>Admin Panel</MenuItem>
           </Link>
         )}
-        {user.role === "USER" && (
+        {user?.role === "SUPER_ADMIN" && (
+          <Link to="/affiliate-requests">
+            <MenuItem onClick={handleClose}>Affiliate Requests</MenuItem>
+          </Link>
+        )}
+        {user?.role === "USER" && (
           <Link to="/affiliate">
             <MenuItem onClick={handleClose}>Affiliate</MenuItem>
           </Link>

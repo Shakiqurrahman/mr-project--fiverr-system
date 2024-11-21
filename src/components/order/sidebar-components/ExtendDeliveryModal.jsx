@@ -18,6 +18,7 @@ const ExtendDeliveryModal = ({ handleClose }) => {
     days: 1,
     explainWhyExtend: "",
   });
+  const [replyTo, setReplyTo] = useState(null);
 
   // Socket Connection
   const socket = connectSocket(`${configApi.socket}`, token);
@@ -57,7 +58,7 @@ const ExtendDeliveryModal = ({ handleClose }) => {
       cancelProject: null,
       imageComments: [],
       timeAndDate,
-      // replyTo,
+      replyTo,
       projectNumber: projectDetails?.projectNumber,
     };
 
@@ -88,7 +89,7 @@ const ExtendDeliveryModal = ({ handleClose }) => {
         ...submitForm,
       }).unwrap();
 
-      // setReplyTo(null);
+      setReplyTo(null);
     } catch (error) {
       console.error("Failed to send message:", error);
     }
