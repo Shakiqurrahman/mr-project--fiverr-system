@@ -177,7 +177,7 @@ const OrderDetails = () => {
                   )}
                 </div>
                 <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
-                  -
+                  1
                 </div>
                 <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
                   -
@@ -200,7 +200,7 @@ const OrderDetails = () => {
                     </p>
                   </div>
                   <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
-                    -
+                    1
                   </div>
                   <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
                     -
