@@ -277,6 +277,8 @@ const OrderDeliveryForm = ({ handleClose }) => {
       const formData = {
         attachments: selectedImages,
         thumbnailImage,
+        isRevision: false,
+        isAccepted: false,
       };
       const submitForm = {
         messageText: textValue,

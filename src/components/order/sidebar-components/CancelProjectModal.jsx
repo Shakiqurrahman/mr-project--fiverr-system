@@ -1,11 +1,11 @@
 import React, { useRef, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
+import { useSendAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
+import { setMessages } from "../../../Redux/features/orderSlice";
 import useOutsideClick from "../../../hooks/useOutsideClick";
 import { configApi } from "../../../libs/configApi";
 import { connectSocket } from "../../../libs/socketService";
-import { useSendAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
-import { setMessages } from "../../../Redux/features/orderSlice";
 
 const CancelProjectModal = ({ handleClose }) => {
   const [sendAOrderMessage] = useSendAOrderMessageMutation();
@@ -24,6 +24,8 @@ const CancelProjectModal = ({ handleClose }) => {
 
   const [form, setForm] = useState({
     explainWhyCancel: "",
+    isAccepted: false,
+    isRejected: false,
   });
 
   const handleChange = (e) => {

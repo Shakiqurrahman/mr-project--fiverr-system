@@ -554,16 +554,21 @@ const OrderChatBox = () => {
                       />
                     )}
                     {msg?.deliverProject && (
-                      <OrderDeliveryPreview data={msg?.deliverProject || {}} />
+                      <OrderDeliveryPreview
+                        messageObj={msg}
+                        data={msg?.deliverProject || {}}
+                      />
                     )}
                     {msg?.extendDeliveryTime && (
                       <ExtendingDeliveryPreview
+                        messageObj={msg}
                         value={msg?.extendDeliveryTime || {}}
                       />
                     )}
                     {msg?.cancelProject && (
                       <div className="mt-8">
                         <CancellingProjectPreview
+                          messageObj={msg}
                           value={msg?.cancelProject || {}}
                         />
                       </div>
