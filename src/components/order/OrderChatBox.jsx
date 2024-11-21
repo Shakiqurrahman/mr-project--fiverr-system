@@ -21,6 +21,7 @@ import EditQuickMsgModal from "../chat/EditQuickMsgModal";
 import EmojiPicker from "../chat/EmojiPicker";
 
 import axios from "axios";
+import { IoClose } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import shortid from "shortid";
 import {
@@ -446,6 +447,40 @@ const OrderChatBox = () => {
     }
   };
 
+  // handle reply text
+  const handleReplyTo = (e, msg) => {
+    e.preventDefault();
+    const replyText =
+      msg?.attachment?.length > 0
+        ? "Attachments..."
+        : msg?.additionalOffer
+          ? "Additional Offer..."
+          : msg?.extendDeliveryTime
+            ? "Extend Delivery Time..."
+            : msg?.deliverProject
+              ? "Deliver Project..."
+              : msg?.cancelProject
+                ? "Cancel Request..."
+                : msg?.imageComments?.length > 0
+                  ? "Image Comments..."
+                  : msg?.messageText;
+
+    const replySenderUserName = user?.userName;
+    const replySenderUserRole = user?.role;
+    const msgSenderUserName = msg?.senderUserName;
+    const msgSenderUserRole = msg?.isFromAdmin;
+    const replyObj = {
+      replySenderUserName,
+      replySenderUserRole,
+      msgSenderUserName,
+      msgSenderUserRole,
+      replyText,
+    };
+    setReplyTo(replyObj);
+  };
+
+  console.log(replyTo, "reply");
+
   return (
     <>
       <div className="flex max-h-[2000px] min-h-[800px] w-full flex-col rounded-lg shadow-btn-shadow">
@@ -514,7 +549,10 @@ const OrderChatBox = () => {
                         </p>
                       </div>
                       <div className="flex items-center gap-3 text-black/50 opacity-0 group-hover:opacity-100">
-                        <button type="button">
+                        <button
+                          type="button"
+                          onClick={(e) => handleReplyTo(e, msg)}
+                        >
                           <BsFillReplyFill className="text-xl" />
                         </button>
                         {visibility[msg?.id] && msg?.senderId === user?.id && (
@@ -710,6 +748,36 @@ const OrderChatBox = () => {
                     </div>
                   </div>
                 </div>
+                {replyTo && (
+                  <div className="flex h-[50px] w-full items-center gap-2 border-b border-s-2 border-s-primary bg-gray-50 px-3 text-xs">
+                    <div>
+                      <h1 className="font-semibold">
+                        {(replyTo?.replySenderUserRole === "USER" ||
+                          replyTo?.replySenderUserRole !== "USER") &&
+                        replyTo?.replySenderUserName ===
+                          replyTo?.msgSenderUserName
+                          ? "You"
+                          : replyTo?.replySenderUserName !==
+                                replyTo?.msgSenderUserName &&
+                              user?.role !== "USER"
+                            ? replyTo?.msgSenderUserName
+                            : replyTo?.replySenderUserName !==
+                                  replyTo?.msgSenderUserName &&
+                                user?.role === "USER"
+                              ? "Mahfujurrahm535"
+                              : ""}
+                      </h1>
+                      <p className="line-clamp-1">{replyTo.replyText}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setReplyTo(null)}
+                      className="ms-auto"
+                    >
+                      <IoClose className="text-lg" />
+                    </button>
+                  </div>
+                )}
                 <textarea
                   name=""
                   className="block h-[90px] w-full resize-none p-3 outline-none"
