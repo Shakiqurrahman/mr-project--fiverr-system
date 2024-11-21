@@ -9,6 +9,7 @@ import {
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
 } from "../../Redux/api/inboxApiSlice";
+import logo from "../../assets/images/MR Logo Icon.png";
 import { useLocalStorageObject } from "../../hooks/useLocalStorageObject";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { configApi } from "../../libs/configApi";
@@ -23,6 +24,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import shortid from "shortid";
 import {
+  useDeleteAOrderMessageMutation,
   useLazyGetOrderUserMessagesQuery,
   useSendAOrderMessageMutation,
 } from "../../Redux/api/orderApiSlice";
@@ -42,13 +44,14 @@ import ExtendingDeliveryPreview from "./chatbox-components/ExtendingDeliveryPrev
 import OrderDeliveryPreview from "./chatbox-components/OrderDeliveryPreview";
 
 const OrderChatBox = () => {
-  const [getAllUserMessages, { data: allUserMessages }] =
-    useLazyGetOrderUserMessagesQuery();
   const dispatch = useDispatch();
   // Redux query imports here
+  const [getAllUserMessages, { data: allUserMessages }] =
+    useLazyGetOrderUserMessagesQuery();
   const { data: quickMsgs } = useFetchQuickResMsgQuery();
   const [deleteQuickResMsg] = useDeleteQuickResMsgMutation();
   const [sendAOrderMessage] = useSendAOrderMessageMutation();
+  const [deleteAOrderMessage] = useDeleteAOrderMessageMutation();
 
   const { user, token } = useSelector((state) => state.user);
   const { projectDetails, clientDetails, messages } = useSelector(
@@ -82,6 +85,7 @@ const OrderChatBox = () => {
   const [openOfferModal, setOpenOfferModal] = useState(false);
   const [replyTo, setReplyTo] = useState(null);
   const [uploadFilesLength, setUploadFilesLength] = useState(0);
+  const [visibility, setVisibility] = useState({});
 
   console.log(messages);
 
@@ -124,7 +128,7 @@ const OrderChatBox = () => {
     return () => {
       socket?.off("order:message");
     };
-  }, [socket]);
+  }, [socket, messages]);
   // }, [conversationUser, isAdmin, socket, messages, dispatch, user]);
   // get all messages of user from db
   useEffect(() => {
@@ -135,6 +139,32 @@ const OrderChatBox = () => {
       });
     }
   }, [projectDetails, getAllUserMessages]);
+
+  useEffect(() => {
+    const checkVisibility = () => {
+      const newVisibility = {};
+      const currentTime = new Date();
+
+      messages?.forEach((message) => {
+        const messageDate = new Date(parseInt(message?.timeAndDate));
+        const fiveMinutesLater = new Date(
+          messageDate.getTime() + 5 * 60 * 1000,
+        );
+        newVisibility[message?.id] = currentTime < fiveMinutesLater;
+      });
+
+      setVisibility(newVisibility);
+    };
+
+    // Initial visibility check
+    checkVisibility();
+
+    // Set an interval to check every minute
+    const intervalId = setInterval(checkVisibility, 60 * 1000);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
+  }, [messages]);
 
   useEffect(() => {
     if (allUserMessages) {
@@ -399,6 +429,20 @@ const OrderChatBox = () => {
     }
   };
 
+  // handle delete a order message
+  const handleDeleteAMessage = async (e, messageId) => {
+    e.preventDefault();
+    try {
+      const res = await deleteAOrderMessage(messageId).unwrap();
+      console.log(res);
+
+      // socket.emit("delete-message", { messageId, userId: user?.id });
+      toast.success("Message deleted successfully");
+    } catch {
+      toast.error("Failed to delete message");
+    }
+  };
+
   return (
     <>
       <div className="flex max-h-[2000px] min-h-[800px] w-full flex-col rounded-lg shadow-btn-shadow">
@@ -424,7 +468,21 @@ const OrderChatBox = () => {
                 {/* A conversation message Ui */}
                 <div className="group mt-3 flex items-start gap-3 px-3">
                   <div className="flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[#ffefef]">
-                    {msg?.userImage ? (
+                    {msg?.userImage && msg?.isFromAdmin === "USER" ? (
+                      <img
+                        src={msg?.userImage}
+                        alt=""
+                        className="size-full rounded-full object-cover"
+                      />
+                    ) : user?.role === "USER" && msg?.isFromAdmin !== "USER" ? (
+                      <img
+                        src={logo}
+                        alt=""
+                        className="size-full rounded-full object-cover"
+                      />
+                    ) : user?.role !== "USER" &&
+                      msg?.isFromAdmin !== "USER" &&
+                      msg?.userImage ? (
                       <img
                         src={msg?.userImage}
                         alt=""
@@ -440,7 +498,12 @@ const OrderChatBox = () => {
                     <div className="mt-1 flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <h1 className="text-sm font-semibold sm:text-base">
-                          {msg?.senderUserName}
+                          {msg?.senderUserName === user?.userName
+                            ? "Me"
+                            : msg?.senderUserName !== user?.userName &&
+                                user?.role === "USER"
+                              ? "Mahfujurrahm535"
+                              : msg?.senderUserName}
                         </h1>
                         <p className="text-[10px] text-black/50 sm:text-xs">
                           {renderMessageDate(parseInt(msg?.timeAndDate))},{" "}
@@ -451,9 +514,14 @@ const OrderChatBox = () => {
                         <button type="button">
                           <BsFillReplyFill className="text-xl" />
                         </button>
-                        <button type="button">
-                          <FaTrashAlt />
-                        </button>
+                        {visibility[msg?.id] && msg?.senderId === user?.id && (
+                          <button
+                            type="button"
+                            onClick={(e) => handleDeleteAMessage(e, msg?.id)}
+                          >
+                            <FaTrashAlt />
+                          </button>
+                        )}
                       </div>
                     </div>
                     {/* Here is the message text to preview */}

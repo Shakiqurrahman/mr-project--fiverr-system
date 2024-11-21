@@ -103,58 +103,138 @@ const OrderDetails = () => {
               Price
             </div>
           </div>
-          {items?.map((item, index) => (
-            <Fragment key={index}>
+          {projectDetails?.from !== "offerProject" &&
+            items?.map((item, index) => (
+              <Fragment key={index}>
+                <div className="flex">
+                  <div className="w-3/6 shrink-0 border-b p-3">
+                    {item?.title && item?.designId && (
+                      <Link
+                        to={`/design/${item?.designId}`}
+                        className="font-semibold text-primary underline"
+                      >
+                        {item?.title}
+                      </Link>
+                    )}
+                    <h1 className="text-lg font-medium">
+                      {item?.category?.categoryName ||
+                        item?.categoryName ||
+                        (projectDetails?.from === "customOffer" && item?.title)}
+                    </h1>
+                    <p className="text-black/80">
+                      {item?.subCategory?.subTitle ||
+                        item?.subCategory ||
+                        (projectDetails?.from === "customOffer" && item?.desc)}
+                    </p>
+                  </div>
+                  <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
+                    {item?.selectedQuantity || item?.quantity}
+                  </div>
+                  <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
+                    {item?.deliveryDuration || item?.regularDeliveryDays}
+                  </div>
+                  <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
+                    {item?.subCategory?.subAmount || item?.subTotal}
+                  </div>
+                </div>
+                {item?.isFastDelivery && (
+                  <div className="flex items-center border-b border-gray-300">
+                    <div className="w-5/6 shrink-0 p-3">
+                      Extra-fast{" "}
+                      {item?.fastDeliveryDuration || item?.fastDeliveryDays}-day
+                      delivery
+                    </div>
+                    <div className="w-1/6 shrink-0 p-3 text-center font-medium">
+                      ${item?.fastDeliveryAmount || item?.fastDeliveryPrice}
+                    </div>
+                  </div>
+                )}
+                {item?.bulletPoint?.length > 0 && (
+                  <ul className="border-b border-gray-300 px-3 py-4">
+                    {item?.bulletPoint?.map((bullet, index) => (
+                      <li key={index} className="my-1 flex items-center gap-2">
+                        <FaCircleCheck className="text-primary" /> {bullet}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </Fragment>
+            ))}
+          {projectDetails?.from === "offerProject" &&
+            items[0]?.freeDesign?.designName && (
               <div className="flex">
                 <div className="w-3/6 shrink-0 border-b p-3">
-                  {item?.title && item?.designId && (
-                    <Link
-                      to={`/design/${item?.designId}`}
-                      className="font-semibold text-primary underline"
-                    >
-                      {item?.title}
-                    </Link>
-                  )}
-                  <h1 className="text-lg font-medium">
-                    {item?.category?.categoryName || item?.categoryName}
+                  <h1 className="text-base font-semibold text-primary">
+                    Free Design
                   </h1>
-                  <p className="text-black/80">
-                    {item?.subCategory?.subTitle || item?.subCategory}
-                  </p>
+                  <h1 className="text-lg font-medium">
+                    {items[0]?.freeDesign?.designName}
+                  </h1>
+                  {items[0]?.freeDesign?.freeSubDesign?.isSelected && (
+                    <p className="text-black/80">
+                      {items[0]?.freeDesign?.freeSubDesign?.subDesignName}
+                    </p>
+                  )}
                 </div>
                 <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
-                  {item?.selectedQuantity || item?.quantity}
+                  -
                 </div>
                 <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
-                  {item?.deliveryDuration || item?.regularDeliveryDays}
+                  -
                 </div>
                 <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
-                  {item?.subCategory?.subAmount || item?.subTotal}
+                  -
                 </div>
               </div>
-              {item?.isFastDelivery && (
-                <div className="flex items-center border-b border-gray-300">
-                  <div className="w-5/6 shrink-0 p-3">
-                    Extra-fast{" "}
-                    {item?.fastDeliveryDuration || item?.fastDeliveryDays}-day
-                    delivery
+            )}
+          {projectDetails?.from === "offerProject" &&
+            items[0]?.designs?.map((item, index) => (
+              <Fragment key={index}>
+                <div className="flex">
+                  <div className="w-3/6 shrink-0 border-b p-3">
+                    <h1 className="text-lg font-medium">
+                      {item?.categoryLabel}
+                    </h1>
+                    <p className="text-black/80">
+                      {item?.subCategory?.subCategoryLabel}
+                    </p>
                   </div>
-                  <div className="w-1/6 shrink-0 p-3 text-center font-medium">
-                    ${item?.fastDeliveryAmount || item?.fastDeliveryPrice}
+                  <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
+                    -
+                  </div>
+                  <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
+                    -
+                  </div>
+                  <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
+                    -
                   </div>
                 </div>
-              )}
-              {item?.bulletPoint?.length > 0 && (
-                <ul className="border-b border-gray-300 px-3 py-4">
-                  {item?.bulletPoint?.map((bullet, index) => (
-                    <li key={index} className="my-1 flex items-center gap-2">
-                      <FaCircleCheck className="text-primary" /> {bullet}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </Fragment>
-          ))}
+              </Fragment>
+            ))}
+          {projectDetails?.from === "offerProject" &&
+            items[0]?.isFastDelivery &&
+            items[0]?.isFastDelivery && (
+              <div className="flex items-center border-b border-gray-300">
+                <div className="w-5/6 shrink-0 p-3">
+                  Extra-fast{" "}
+                  {items[0]?.fastDeliveryDuration || items[0]?.fastDeliveryDays}
+                  -day delivery
+                </div>
+                <div className="w-1/6 shrink-0 p-3 text-center font-medium">
+                  ${items[0]?.fastDeliveryAmount || items[0]?.fastDeliveryPrice}
+                </div>
+              </div>
+            )}
+          {projectDetails?.from === "offerProject" &&
+            items[0]?.bulletPoint?.length > 0 && (
+              <ul className="border-b border-gray-300 px-3 py-4">
+                {items[0]?.bulletPoint?.map((bullet, index) => (
+                  <li key={index} className="my-1 flex items-center gap-2">
+                    <FaCircleCheck className="text-primary" /> {bullet}
+                  </li>
+                ))}
+              </ul>
+            )}
           <div className="flex items-center font-semibold">
             <div className="w-3/6 shrink-0 p-3">Total</div>
             <div className="w-1/6 shrink-0 border-l border-gray-300 p-3 text-center">
