@@ -24,7 +24,7 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
     }
   };
   return (
-    <div className="border bg-lightskyblue">
+    <div className="mt-5 border bg-lightskyblue">
       <div className="flex items-center border-b bg-[#CCE5FB] p-4 text-lg font-semibold">
         <div className={`${value?.amount ? "w-4/6" : "w-5/6"}`}>
           Extended Delivery Date
