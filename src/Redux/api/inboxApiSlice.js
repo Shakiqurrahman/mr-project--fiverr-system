@@ -101,8 +101,8 @@ export const inboxApiSlice = createApi({
 
     // delete a message
     deleteAMessage: builder.mutation({
-      query: (messageId) => ({
-        url: `message/${messageId}`,
+      query: (commonKey) => ({
+        url: `message/${commonKey}`,
         method: "DELETE",
       }),
       invalidatesTags: ["getAllMessages"],
