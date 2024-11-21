@@ -5,6 +5,7 @@ import SocialMediasForm from "../components/SocialMediasForm";
 import About from "../pages/About";
 import AdminPanel from "../pages/AdminPanel";
 import Affiliate from "../pages/Affiliate";
+import AffiliateRequests from "../pages/AffiliateRequests";
 import AllCategory from "../pages/AllCategory";
 import AllCompletedProjects from "../pages/AllCompletedProjects";
 import AllDesign from "../pages/AllDesign";
@@ -46,6 +47,7 @@ import UploadDesign from "../pages/UploadDesign";
 import Verify from "../pages/Verify";
 import ChatLayout from "./ChatLayout";
 import AdminRoute from "./private-route/AdminRoute";
+import AllAdminRoute from "./private-route/AllAdminRoute";
 import PrivateRoute from "./private-route/PrivateRoute";
 import SuperAdminRoute from "./private-route/SuperAdminRoute";
 import UnAuthenticatedRoute from "./private-route/UnAuthenticatedRoute";
@@ -177,6 +179,14 @@ export const router = createBrowserRouter([
           <SuperAdminRoute>
             <AdminPanel />
           </SuperAdminRoute>
+        ),
+      },
+      {
+        path: "/affiliate-requests",
+        element: (
+          <AllAdminRoute>
+            <AffiliateRequests />
+          </AllAdminRoute>
         ),
       },
       {
