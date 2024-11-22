@@ -14,7 +14,7 @@ import {
   useFetchQuickResMsgQuery,
 } from "../../Redux/api/inboxApiSlice";
 import { useSendAOrderMessageMutation } from "../../Redux/api/orderApiSlice";
-import { setMessages } from "../../Redux/features/orderSlice";
+import { setMessages, setReplyTo } from "../../Redux/features/orderSlice";
 import { useLocalStorageObject } from "../../hooks/useLocalStorageObject";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { configApi } from "../../libs/configApi";
@@ -30,7 +30,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
   const [sendAOrderMessage] = useSendAOrderMessageMutation();
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.user);
-  const { projectDetails } = useSelector((state) => state.order);
+  const { projectDetails, replyTo } = useSelector((state) => state.order);
   // All reference states here
   const textareaRef = useRef(null);
   const menuRef = useRef(null);
@@ -291,7 +291,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
         cancelProject: null,
         imageComments: [],
         timeAndDate,
-        // replyTo,
+        replyTo,
         projectNumber: projectDetails?.projectNumber,
       };
 
@@ -312,6 +312,8 @@ const OrderDeliveryForm = ({ handleClose }) => {
           recipientId: isAdmin ? projectDetails?.userId : "",
         }),
       );
+
+      dispatch(setReplyTo(null));
 
       try {
         const res = await sendAOrderMessage({

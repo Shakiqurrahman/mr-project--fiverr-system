@@ -32,6 +32,7 @@ import {
 import {
   rollbackMessages,
   setMessages,
+  setReplyTo,
   updateMessagesByUser,
 } from "../../Redux/features/orderSlice";
 import CircleProgressBar from "../CircleProgressBar";
@@ -55,7 +56,7 @@ const OrderChatBox = () => {
   const [deleteAOrderMessage] = useDeleteAOrderMessageMutation();
 
   const { user, token } = useSelector((state) => state.user);
-  const { projectDetails, clientDetails, messages } = useSelector(
+  const { projectDetails, clientDetails, messages, replyTo } = useSelector(
     (state) => state.order,
   );
 
@@ -84,7 +85,6 @@ const OrderChatBox = () => {
   const [openEditMsgModal, setOpenEditMsgModal] = useState(null);
   const [openAddMsgModal, setOpenAddMsgModal] = useState(false);
   const [openOfferModal, setOpenOfferModal] = useState(false);
-  const [replyTo, setReplyTo] = useState(null);
   const [uploadFilesLength, setUploadFilesLength] = useState(0);
   const [visibility, setVisibility] = useState({});
 
@@ -402,7 +402,7 @@ const OrderChatBox = () => {
       // Clear input fields and images on success
       setTextValue("");
       setSelectedImages([]);
-      setReplyTo(null);
+      dispatch(setReplyTo(null));
       fileInputRef.current.value = null;
 
       try {
@@ -476,16 +476,59 @@ const OrderChatBox = () => {
       msgSenderUserRole,
       replyText,
     };
-    setReplyTo(replyObj);
+    dispatch(setReplyTo(replyObj));
   };
 
   // generate replied to function
   const generateRepliedTo = (msg) => {
-    const replyObj = msg?.replyTo;
-    return `${user?.userName === replyObj.replyMsgUserName ? "You" : replyObj.replyUserName === "yourself" ? replyObj.replySenderUserName : "mahfujurrahm535"}`;
-  };
+    const {
+      msgSenderUserRole,
+      replySenderUserName,
+      msgSenderUserName,
+      replySenderUserRole,
+    } = msg?.replyTo;
 
-  console.log(replyTo, "reply");
+    console.log(msg?.replyTo);
+
+    if (
+      msgSenderUserName !== replySenderUserName &&
+      user?.role === msgSenderUserRole
+    ) {
+      return "You"; // User is seeing their own message
+    }
+
+    if (msgSenderUserName !== replySenderUserName && user?.role === "USER") {
+      return "Mahfujurrahm535"; // User is seeing their own message
+    }
+    if (
+      msgSenderUserName === replySenderUserName &&
+      user?.userName === msgSenderUserName
+    ) {
+      return "You"; // User is seeing their own message
+    }
+
+    if (
+      msgSenderUserName === replySenderUserName &&
+      user?.userName !== msgSenderUserName &&
+      user?.role !== "USER"
+    ) {
+      return msgSenderUserName; // User is seeing their own message
+    }
+    if (
+      msgSenderUserName === replySenderUserName &&
+      user?.userName !== msgSenderUserName &&
+      user?.role === "USER"
+    ) {
+      return "Mahfujurrahm535"; // User is seeing their own message
+    }
+    if (
+      msgSenderUserName !== replySenderUserName &&
+      msgSenderUserRole === "USER" &&
+      user?.role !== "USER"
+    ) {
+      return msgSenderUserName; // User is seeing their own message
+    }
+  };
 
   return (
     <>
@@ -526,6 +569,12 @@ const OrderChatBox = () => {
                         alt=""
                         className="size-full rounded-full object-cover"
                       />
+                    ) : user?.role === "USER" &&
+                      msg?.senderUserName === user?.userName &&
+                      !msg?.userImage ? (
+                      <div className="text-xl font-bold text-[#7c7c7c]/50">
+                        {msg?.senderUserName?.charAt(0)?.toUpperCase()}
+                      </div>
                     ) : user?.role === "USER" && msg?.isFromAdmin !== "USER" ? (
                       <img
                         src={logo}
@@ -785,7 +834,7 @@ const OrderChatBox = () => {
                     </div>
                     <button
                       type="button"
-                      onClick={() => setReplyTo(null)}
+                      onClick={() => dispatch(setReplyTo(null))}
                       className="ms-auto"
                     >
                       <IoClose className="text-lg" />

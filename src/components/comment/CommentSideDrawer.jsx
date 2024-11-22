@@ -10,7 +10,7 @@ import {
   setHighlight,
   updateAComment,
 } from "../../Redux/features/commentsSlice";
-import { setMessages } from "../../Redux/features/orderSlice";
+import { setMessages, setReplyTo } from "../../Redux/features/orderSlice";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { configApi } from "../../libs/configApi";
 import { connectSocket } from "../../libs/socketService";
@@ -26,7 +26,7 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
   const commentBoxRef = useRef(null);
 
   const { user, token } = useSelector((state) => state.user);
-  const { projectDetails } = useSelector((state) => state.order);
+  const { projectDetails, replyTo } = useSelector((state) => state.order);
   const {
     images,
     commentObj,
@@ -47,27 +47,6 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
   const [showCommentEdit, setShowCommentEdit] = useState(null);
   const [showReplyEdit, setShowReplyEdit] = useState(null);
   const [showCommentReply, setShowCommentReply] = useState(null);
-  const [replyTo, setReplyTo] = useState(null);
-
-  /* @TODO: api schema
-    {
-      commentId: 1,
-      markerId: null,
-      commentText: "Logo Change",
-      senderUserName: "mahfujurrahm535",
-      senderImage: logo,
-      isSubmitted: true,
-      replies: [
-        {
-          id: 1,
-          replyText: "Okay brother!",
-          senderUserName: "mahfujurrahm535",
-          senderImage: logo,
-          isSubmitted: true,
-        },
-      ],
-    }
-    */
 
   // initially changing state for focusing commentbox
   useEffect(() => {
@@ -171,6 +150,9 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
         recipientId: isAdmin ? projectDetails?.userId : "",
       }),
     );
+
+    dispatch(setReplyTo(null));
+
     close(false);
     try {
       const res = await sendAOrderMessage({
