@@ -906,6 +906,8 @@ const OrderChatBox = () => {
           <AdditionalOfferModal
             handleClose={setOpenOfferModal}
             onOfferSubmit={socket}
+            replyTo={replyTo}
+            setReplyTo={setReplyTo}
           />
         )}
       </div>

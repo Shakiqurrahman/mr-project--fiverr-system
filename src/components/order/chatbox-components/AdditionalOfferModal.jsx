@@ -4,7 +4,12 @@ import { useSendAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
 import { setMessages } from "../../../Redux/features/orderSlice";
 import useOutsideClick from "../../../hooks/useOutsideClick";
 
-const AdditionalOfferModal = ({ handleClose, onOfferSubmit }) => {
+const AdditionalOfferModal = ({
+  handleClose,
+  onOfferSubmit,
+  replyTo,
+  setReplyTo,
+}) => {
   const [sendAOrderMessage] = useSendAOrderMessageMutation();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state?.user);
@@ -46,7 +51,7 @@ const AdditionalOfferModal = ({ handleClose, onOfferSubmit }) => {
       cancelProject: null,
       imageComments: [],
       timeAndDate,
-      // replyTo,
+      replyTo,
       projectNumber: projectDetails?.projectNumber,
     };
 
@@ -67,6 +72,7 @@ const AdditionalOfferModal = ({ handleClose, onOfferSubmit }) => {
         recipientId: isAdmin ? projectDetails?.userId : "",
       }),
     );
+    setReplyTo(null);
 
     handleClose(false);
     try {
