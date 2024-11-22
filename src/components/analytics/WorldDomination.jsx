@@ -4,7 +4,6 @@ import { useGetWordlDominationDataQuery } from "../../Redux/api/analyticsApiSlic
 
 const WorldDomination = () => {
   const { data: worldsData } = useGetWordlDominationDataQuery();
-  console.log(worldsData);
   const [dataList, setDataList] = useState([
     // { country: "cn", value: 1389618778 }, // china
   ]);
