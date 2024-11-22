@@ -31,7 +31,6 @@ function SetupProfile({ from_profile }) {
     description: "",
     countryCode: "",
   });
-  console.log(form.countryCode, form.country);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -96,7 +95,6 @@ function SetupProfile({ from_profile }) {
       }
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching data:", error);
       toast.error("Failed to fetch profile data");
       setLoading(false);
     }
@@ -137,7 +135,6 @@ function SetupProfile({ from_profile }) {
         setForm((prevForm) => ({ ...prevForm, image: imageUrl }));
         localStorage.setItem("profileData", JSON.stringify(form));
       } catch (error) {
-        console.error("Error uploading image:", error);
       } finally {
         setUploading(false);
       }
@@ -153,25 +150,23 @@ function SetupProfile({ from_profile }) {
         <div className="text-center">
           <div className="mx-auto mb-10 flex h-[220px] w-[220px] items-center justify-center overflow-hidden rounded-full bg-[#DCEEFA]">
             <label htmlFor="image" className="h-full w-full">
-              {form.image ? (
-                uploading ? (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      height: "100%",
-                    }}
-                  >
-                    <CircularProgress />
-                  </Box>
-                ) : (
-                  <img
-                    src={form.image}
-                    alt="Profile"
-                    className="h-full w-full cursor-pointer object-cover"
-                  />
-                )
+              {uploading ? (
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100%",
+                  }}
+                >
+                  <CircularProgress />
+                </Box>
+              ) : form.image ? (
+                <img
+                  src={form.image}
+                  alt="Profile"
+                  className="h-full w-full cursor-pointer object-cover"
+                />
               ) : (
                 // <span className="text-gray-500">No image uploaded</span>
                 <img

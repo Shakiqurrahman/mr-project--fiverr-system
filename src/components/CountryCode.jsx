@@ -11,7 +11,6 @@ function CountryCode({ setCountryCode, countryName, countryCode }) {
   const handleChange = (e) => {
     setCountryCode((prev) => ({ ...prev, countryCode: e.target.value }));
   };
-  console.log("Getting Country Name", getTheCountryCode);
   return (
     <select
       name="countryCode"
