@@ -6,7 +6,7 @@ import { BsCart4 } from "react-icons/bs";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { GoSearch } from "react-icons/go";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../../assets/images/MR Logo White.png";
 import CartDrawer from "./CartDrawer";
 import Navbar from "./Navbar";
@@ -17,9 +17,11 @@ import Drawer from "react-modern-drawer";
 import "react-modern-drawer/dist/index.css";
 
 import { IoSearch } from "react-icons/io5";
+import { useLazyGetDesignsBySearchQuery } from "../../Redux/api/uploadDesignApiSlice";
 import {
   setOpenNotificationDrawer,
   setOpenNotifications,
+  setSearchText,
 } from "../../Redux/features/utilSlice";
 import useSyncCart from "../../hooks/useSyncCart";
 import NotificationModal from "../Notifications/NotificationModal";
@@ -28,9 +30,13 @@ import SearchBox from "./SearchBox";
 
 function Header() {
   const dispatch = useDispatch();
-  const { openNotifications, openNotificationDrawer } = useSelector(
+  const navigate = useNavigate();
+  const { openNotifications, openNotificationDrawer, searchText } = useSelector(
     (state) => state.utils,
   );
+  const [getDesignsBySearch, { data: searchResults }] =
+    useLazyGetDesignsBySearchQuery();
+
   const { user } = useSelector((state) => state.user);
   const { items: cartItems } = useSelector((state) => state.cart);
 
@@ -57,6 +63,17 @@ function Header() {
     dispatch(setOpenNotificationDrawer(true));
   };
   useSyncCart();
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (searchText) {
+      getDesignsBySearch(searchText);
+      navigate("/designs");
+    }
+  };
+
+  console.log(searchResults);
+
   return (
     <>
       {/* <header className="sticky top-0 z-[99]"> */}
@@ -70,13 +87,19 @@ function Header() {
                 alt="MR Logo"
               />
             </Link>
-            <form className="hidden min-w-[400px] rounded-md bg-white lg:block">
+            <form
+              onSubmit={handleSearch}
+              className="hidden min-w-[400px] rounded-md bg-white lg:block"
+            >
               <div className="relative flex items-stretch">
                 <input
-                  className="w-full rounded-md px-4 py-2 outline-none"
+                  className="w-full rounded-md px-4 py-2 text-base outline-none"
                   type="text"
+                  value={searchText}
+                  name="searchText"
                   placeholder="What design you are looking for today?"
-                  onClick={() => setOpenSearchBox(true)}
+                  onChange={(e) => dispatch(setSearchText(e.target.value))}
+                  // onClick={() => setOpenSearchBox(true)}
                 />
                 <button
                   className="m-px rounded-md bg-primary p-2"

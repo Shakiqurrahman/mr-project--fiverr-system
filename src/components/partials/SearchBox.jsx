@@ -5,11 +5,10 @@ import { IoClose, IoSearch } from "react-icons/io5";
 import { MdChevronRight } from "react-icons/md";
 import { Link } from "react-router-dom";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import { useLazySearchByDesignQuery } from "../../Redux/api/apiSlice";
 
 const SearchBox = ({ handleClose }) => {
-  const [searchQuery, { data: searchResult, isLoading }] =
-    useLazySearchByDesignQuery();
+  // const [searchQuery, { data: searchResult, isLoading }] =
+  //   useLazyGetDesignsBySearchQuery();
 
   const textRef = useRef(null);
   const searchBoxRef = useRef(null);
@@ -24,11 +23,11 @@ const SearchBox = ({ handleClose }) => {
     textRef.current && textRef.current.focus();
   };
 
-  const handleSearch = useCallback(async () => {
-    if (textInput.length > 2) {
-      await searchQuery(`${textInput}`);
-    }
-  }, [textInput, searchQuery]);
+  // const handleSearch = useCallback(async () => {
+  //   if (textInput.length > 2) {
+  //     await searchQuery(`${textInput}`);
+  //   }
+  // }, [textInput, searchQuery]);
 
   useEffect(() => {
     if (textRef.current) {
@@ -36,11 +35,11 @@ const SearchBox = ({ handleClose }) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (textInput) {
-      handleSearch();
-    }
-  }, [textInput, handleSearch]);
+  // useEffect(() => {
+  //   if (textInput) {
+  //     handleSearch();
+  //   }
+  // }, [textInput, handleSearch]);
 
   useOutsideClick(searchBoxRef, handleClose);
 
