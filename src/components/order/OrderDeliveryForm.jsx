@@ -17,6 +17,7 @@ import { useSendAOrderMessageMutation } from "../../Redux/api/orderApiSlice";
 import { setMessages, setReplyTo } from "../../Redux/features/orderSlice";
 import { useLocalStorageObject } from "../../hooks/useLocalStorageObject";
 import useOutsideClick from "../../hooks/useOutsideClick";
+import { TimeZoneConverter } from "../../libs/TimeZoneConverter";
 import { configApi } from "../../libs/configApi";
 import formatFileSize from "../../libs/formatFileSize";
 import { connectSocket } from "../../libs/socketService";
@@ -53,6 +54,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
   const [openAddMsgModal, setOpenAddMsgModal] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
   const [thumbnailImage, setThumbnailImage] = useState(null);
+  const [clientTimeAndDate, setClientTimeAndDate] = useState(null);
 
   // localStorage state
   const [{ quickResponse }, updateItem] = useLocalStorageObject("utils", {
@@ -65,6 +67,13 @@ const OrderDeliveryForm = ({ handleClose }) => {
   });
 
   //   all side effects here
+  useEffect(() => {
+    if (projectDetails) {
+      const dateTime = TimeZoneConverter(projectDetails?.orderFrom);
+      setClientTimeAndDate(dateTime);
+    }
+  }, []);
+
   useEffect(() => {
     if (deliveryDraft) {
       setTextValue(deliveryDraft?.messageText);
@@ -373,8 +382,15 @@ const OrderDeliveryForm = ({ handleClose }) => {
                   </button>
                 </div>
                 <div className="hidden items-center gap-3 text-xs font-medium sm:flex">
-                  <p>Local time: 07:13 PM, Nov 7, 2024</p>
-                  <Divider className="h-4 w-px !bg-black" />
+                  {clientTimeAndDate && (
+                    <>
+                      <p>
+                        Local time: {clientTimeAndDate?.time},{" "}
+                        {clientTimeAndDate?.date}
+                      </p>
+                      <Divider className="h-4 w-px !bg-black" />
+                    </>
+                  )}
                   <p>Last seen 23 hours ago</p>
                 </div>
               </div>

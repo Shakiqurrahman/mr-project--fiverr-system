@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { BsFillReplyFill } from "react-icons/bs";
 import { FaTrashAlt } from "react-icons/fa";
@@ -35,6 +35,7 @@ import {
   setReplyTo,
   updateMessagesByUser,
 } from "../../Redux/features/orderSlice";
+import { TimeZoneConverter } from "../../libs/TimeZoneConverter";
 import CircleProgressBar from "../CircleProgressBar";
 import FilePreview from "../FilePreview";
 import AdditionalOfferModal from "./chatbox-components/AdditionalOfferModal";
@@ -87,10 +88,29 @@ const OrderChatBox = () => {
   const [openOfferModal, setOpenOfferModal] = useState(false);
   const [uploadFilesLength, setUploadFilesLength] = useState(0);
   const [visibility, setVisibility] = useState({});
+  const [clientTimeAndDate, setClientTimeAndDate] = useState(null);
 
   console.log(messages);
 
   // all side effect calls here
+  useEffect(() => {
+    if (projectDetails) {
+      const updateClientTime = () => {
+        const dateTime = TimeZoneConverter(projectDetails?.orderFrom);
+        setClientTimeAndDate(dateTime);
+      };
+
+      // Update the time immediately when the component mounts
+      updateClientTime();
+
+      // Set an interval to update the time every 1 minute (60000ms)
+      const intervalId = setInterval(updateClientTime, 60000);
+
+      // Clean up the interval when the component unmounts
+      return () => clearInterval(intervalId);
+    }
+  }, []);
+
   // Socket connection reader
   useEffect(() => {
     // Listen for incoming messages
@@ -750,8 +770,25 @@ const OrderChatBox = () => {
                       </button>
                     </div>
                     <div className="flex items-center gap-3 text-xs font-medium">
-                      <p>Local time: 07:13 PM, Nov 7, 2024</p>
-                      <Divider className="h-4 w-px !bg-black" />
+                      {clientTimeAndDate && user?.role !== "USER" && (
+                        <>
+                          <p>
+                            Local time: {clientTimeAndDate?.time},{" "}
+                            {clientTimeAndDate?.date}
+                          </p>
+                          <Divider className="h-4 w-px !bg-black" />
+                        </>
+                      )}
+                      {user?.role === "USER" && (
+                        <>
+                          <p>
+                            Local time:{" "}
+                            {renderMessageTime(parseInt(new Date().getTime()))},{" "}
+                            {renderMessageDate(parseInt(new Date().getTime()))}
+                          </p>
+                          <Divider className="h-4 w-px !bg-black" />
+                        </>
+                      )}
                       <p>Last seen 23 hours ago</p>
                     </div>
                   </div>
@@ -927,4 +964,4 @@ const OrderChatBox = () => {
   );
 };
 
-export default OrderChatBox;
+export default React.memo(OrderChatBox);
