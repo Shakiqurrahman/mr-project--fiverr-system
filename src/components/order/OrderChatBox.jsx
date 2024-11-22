@@ -481,11 +481,54 @@ const OrderChatBox = () => {
 
   // generate replied to function
   const generateRepliedTo = (msg) => {
-    const replyObj = msg?.replyTo;
-    return `${user?.userName === replyObj.replyMsgUserName ? "You" : replyObj.replyUserName === "yourself" ? replyObj.replySenderUserName : "mahfujurrahm535"}`;
-  };
+    const {
+      msgSenderUserRole,
+      replySenderUserName,
+      msgSenderUserName,
+      replySenderUserRole,
+    } = msg?.replyTo;
 
-  console.log(replyTo, "reply");
+    console.log(msg?.replyTo);
+
+    if (
+      msgSenderUserName !== replySenderUserName &&
+      user?.role === msgSenderUserRole
+    ) {
+      return "You"; // User is seeing their own message
+    }
+
+    if (msgSenderUserName !== replySenderUserName && user?.role === "USER") {
+      return "Mahfujurrahm535"; // User is seeing their own message
+    }
+    if (
+      msgSenderUserName === replySenderUserName &&
+      user?.userName === msgSenderUserName
+    ) {
+      return "You"; // User is seeing their own message
+    }
+
+    if (
+      msgSenderUserName === replySenderUserName &&
+      user?.userName !== msgSenderUserName &&
+      user?.role !== "USER"
+    ) {
+      return msgSenderUserName; // User is seeing their own message
+    }
+    if (
+      msgSenderUserName === replySenderUserName &&
+      user?.userName !== msgSenderUserName &&
+      user?.role === "USER"
+    ) {
+      return "Mahfujurrahm535"; // User is seeing their own message
+    }
+    if (
+      msgSenderUserName !== replySenderUserName &&
+      msgSenderUserRole === "USER" &&
+      user?.role !== "USER"
+    ) {
+      return msgSenderUserName; // User is seeing their own message
+    }
+  };
 
   return (
     <>
@@ -526,6 +569,12 @@ const OrderChatBox = () => {
                         alt=""
                         className="size-full rounded-full object-cover"
                       />
+                    ) : user?.role === "USER" &&
+                      msg?.senderUserName === user?.userName &&
+                      !msg?.userImage ? (
+                      <div className="text-xl font-bold text-[#7c7c7c]/50">
+                        {msg?.senderUserName?.charAt(0)?.toUpperCase()}
+                      </div>
                     ) : user?.role === "USER" && msg?.isFromAdmin !== "USER" ? (
                       <img
                         src={logo}
