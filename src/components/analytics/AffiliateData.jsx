@@ -13,8 +13,6 @@ const AffiliateData = () => {
   const [getAllAffiliates, { data: affiliatesData, isLoading }] =
     useLazyGetAllAffiliatesQuery();
 
-  console.log(affiliatesData, "aff");
-
   const lastYear = new Date().getFullYear() - 1;
   const twoYearsAgo = new Date().getFullYear() - 2;
 
@@ -71,8 +69,6 @@ const AffiliateData = () => {
     affiliateData?.length > 10 && !expend
       ? affiliateData?.slice(0, 10)
       : affiliateData;
-
-  console.log("slicedAffiliateData", slicedAffiliateData);
   return (
     <>
       <div className="border border-gray-300 bg-lightcream">

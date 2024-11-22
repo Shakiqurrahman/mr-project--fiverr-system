@@ -33,7 +33,6 @@ function Affiliate() {
       })
       .catch((err) => {
         toast.error("Failed to copy text");
-        console.error("Error copying text: ", err);
       });
   };
 
@@ -46,7 +45,6 @@ function Affiliate() {
       })
       .catch((err) => {
         toast.error("Failed to copy text");
-        console.error("Error copying text: ", err);
       });
 
     try {
@@ -63,10 +61,8 @@ function Affiliate() {
           link: `aff-${affLink}`,
         }).unwrap();
         toast.success("Affiliate link created successfully!");
-        console.log("Successfully", res);
       } catch (error) {
         toast.error("Failed to create affiliate link");
-        console.error("Error creating affiliate link: ", error);
       }
     } else {
       toast.error("Please enter something to generate your link.");
@@ -86,7 +82,6 @@ function Affiliate() {
   const autoGenerateLinkData = affiliateData?.formattedAffiliates?.find(
     (link) => link?.links === `aff-${user?.userName}`,
   );
-  console.log(autoGenerateLinkData);
   return (
     <>
       <PageHeaderWithText

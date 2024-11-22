@@ -6,7 +6,6 @@ import StartSingleProject from "../components/projectStart/StartSingleProject";
 const Project = () => {
   const { state } = useLocation();
   const { user } = useSelector((state) => state.user);
-  console.log(state);
   const item = state?.item;
   const items = state?.items;
   return (

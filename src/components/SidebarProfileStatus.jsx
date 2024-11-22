@@ -3,9 +3,6 @@ import Divider from "./Divider";
 
 function SidebarProfileStatus() {
   const { data } = useGetMahfujurDetailsQuery();
-
-  console.log(data);
-
   return (
     <div className="rounded-lg border border-primary bg-[#F2F9FF] p-2">
       <h1 className="font-semibold">Mahfujurrahm535</h1>

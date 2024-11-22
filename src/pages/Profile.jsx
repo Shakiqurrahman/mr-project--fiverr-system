@@ -49,8 +49,6 @@ function Profile({ user = {}, slug }) {
 
   const [userReviews, setUserReviews] = useState([]);
 
-  console.log("user reviews", userReviews);
-
   //functions for filtering projects
   const isActiveProject = (project) =>
     project?.projectStatus !== "Completed" &&
