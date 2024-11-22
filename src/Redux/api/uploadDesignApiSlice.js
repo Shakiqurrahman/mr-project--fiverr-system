@@ -21,6 +21,7 @@ export const uploadDesignApiSlice = createApi({
       transformResponse: (response) => response?.data,
       providesTags: ["Design", "Uploaded Design"],
     }),
+
     uploadADesign: builder.mutation({
       query: (data) => ({
         url: `upload/create`,
@@ -29,6 +30,7 @@ export const uploadDesignApiSlice = createApi({
       }),
       invalidatesTags: ["Uploaded Design"],
     }),
+
     updateADesign: builder.mutation({
       query: ({ data, designId }) => ({
         url: `upload/update/${designId}`,
@@ -37,10 +39,12 @@ export const uploadDesignApiSlice = createApi({
       }),
       invalidatesTags: ["Uploaded Design"],
     }),
+
     fetchRelatedTags: builder.query({
       query: () => "upload/get",
       transformResponse: (response) => response?.data?.map((v) => v.designId),
     }),
+
     fetchFolders: builder.query({
       query: () => "folder/get",
       transformResponse: (response) => {
@@ -48,6 +52,7 @@ export const uploadDesignApiSlice = createApi({
         return [...new Set(folders)];
       },
     }),
+
     fetchSubFolders: builder.query({
       query: () => "folder/get",
       transformResponse: (response, meta, arg) => {
@@ -56,6 +61,7 @@ export const uploadDesignApiSlice = createApi({
         return [...new Set(subFolders)];
       },
     }),
+
     fetchIndustries: builder.query({
       query: () => "upload/get",
       transformResponse: (response) => {
@@ -63,6 +69,7 @@ export const uploadDesignApiSlice = createApi({
         return [...new Set(industries)];
       },
     }),
+
     fetchDesigns: builder.query({
       query: () => "upload/get",
       transformResponse: (response) => {
@@ -70,31 +77,38 @@ export const uploadDesignApiSlice = createApi({
         return [...new Set(industries)];
       },
     }),
+
     fetchProductById: builder.query({
       query: (productId) => `upload/get/${productId}`,
       transformResponse: (response) => response?.data,
     }),
+
     fetchAllDesignKeywords: builder.query({
       query: () => `designs/get`,
       transformResponse: (response) => [...new Set(response?.data)],
     }),
+
     fetchAllIndustryKeywords: builder.query({
       query: () => `industrys/get`,
       transformResponse: (response) => [...new Set(response?.data)],
     }),
+
     fetchDesignByKey: builder.query({
       query: (key) => `designs/filter/get?name=${key}`,
       transformResponse: (response) => response?.data,
     }),
+
     fetchIndustryByKey: builder.query({
       query: (key) => `industrys/filter/get?name=${key}`,
       transformResponse: (response) => response?.data,
     }),
+
     fetchDesignNdIndustryByKey: builder.query({
       query: ({ dKey, iKey }) =>
         `getTogether/get?design=${dKey}&industry=${iKey}`,
       transformResponse: (response) => response?.data,
     }),
+
     deleteDesignById: builder.mutation({
       query: (id) => ({
         url: `upload/delete/${id}`,
@@ -102,8 +116,14 @@ export const uploadDesignApiSlice = createApi({
       }),
       invalidatesTags: ["Design"],
     }),
+
     fetchGetAllFolders: builder.query({
       query: () => "upload/feature-folder",
+      transformResponse: (response) => response?.data,
+    }),
+
+    getDesignsBySearch: builder.query({
+      query: (searchKey) => `search?searchQuery=${searchKey}`,
       transformResponse: (response) => response?.data,
     }),
   }),
@@ -126,4 +146,5 @@ export const {
   useFetchGetAllFoldersQuery,
   useUploadADesignMutation,
   useUpdateADesignMutation,
+  useLazyGetDesignsBySearchQuery,
 } = uploadDesignApiSlice;

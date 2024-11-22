@@ -103,7 +103,7 @@ const DashboardProjects = () => {
       } else if (monthsLate >= 1) {
         overdueText = `${monthsLate} month${monthsLate > 1 ? "s" : ""} late`;
       } else if (daysLate >= 1) {
-        overdueText = `${daysLate} day${daysLate > 1 ? "s" : ""}`;
+        overdueText = `${daysLate} day${daysLate > 1 ? "s" : ""} late`;
       } else if (hoursLate >= 1) {
         overdueText = `${hoursLate}h ${minutesLate}min late`;
       } else {

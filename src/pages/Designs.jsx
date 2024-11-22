@@ -2,6 +2,7 @@ import ProjectCard from "../components/categories/ProjectCard";
 
 import { Pagination, PaginationItem, Stack } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import {
   useFetchAllDesignKeywordsQuery,
@@ -10,6 +11,7 @@ import {
   useFetchDesignNdIndustryByKeyQuery,
   useFetchGetUploadQuery,
   useFetchIndustryByKeyQuery,
+  useLazyGetDesignsBySearchQuery,
 } from "../Redux/api/uploadDesignApiSlice";
 import prevBtn from "../assets/images/icons/Left Arrow.svg";
 import nextBtn from "../assets/images/icons/Right Arrow.svg";
@@ -24,6 +26,8 @@ function Designs() {
   const { data: designKeyWordsData } = useFetchAllDesignKeywordsQuery();
   const { data: industryKeyWordsData } = useFetchAllIndustryKeywordsQuery();
   const { data: designsData } = useFetchGetUploadQuery();
+
+  const { searchText } = useSelector((state) => state.utils);
 
   const [designs, setDesigns] = useState([]);
   const [designKeywords, setDesignKeywords] = useState([]);
@@ -173,6 +177,7 @@ function Designs() {
     setSelectedValue(state);
   }, [state]);
 
+
   return (
     <>
       <div className="max-width">
@@ -207,11 +212,20 @@ function Designs() {
             </ButtonSecondary>
           ))}
         </div>
-        <div className="my-10 text-end">
-          <SortDropdown
-            options={sortingOptions}
-            onSortChange={handleSortChange}
-          />
+        <div className="my-10 flex flex-wrap items-center justify-between gap-6 md:flex-nowrap md:gap-2">
+          <div className="w-full md:w-3/4">
+            {searchText && (
+              <h1 className="rounded-[30px] border px-6 py-2.5 text-lg font-semibold text-primary">
+                {`Searched For " ${searchText} "`}
+              </h1>
+            )}
+          </div>
+          <div className="w-full justify-end md:flex md:w-1/4">
+            <SortDropdown
+              options={sortingOptions}
+              onSortChange={handleSortChange}
+            />
+          </div>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {currentPageData?.map((design, idx) => {
