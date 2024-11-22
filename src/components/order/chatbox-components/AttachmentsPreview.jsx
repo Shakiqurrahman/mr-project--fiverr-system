@@ -10,6 +10,7 @@ import DownArrow from "../../../assets/images/icons/Down Arrow.svg";
 import UpArrow from "../../../assets/images/icons/Upper Arrow.svg";
 import formatFileSize from "../../../libs/formatFileSize";
 import CommentPage from "../../../pages/CommentPage";
+import GenerateName from "../../GenerateName";
 import PreviewChatFiles from "../../PreviewChatFiles";
 
 const AttachmentsPreview = ({ files }) => {
@@ -74,7 +75,7 @@ const AttachmentsPreview = ({ files }) => {
               >
                 <BiDownload className="shrink-0 text-lg text-primary" />
                 <p className="mx-2 line-clamp-1 font-medium" title={att?.name}>
-                  {att?.name}
+                  <GenerateName name={att?.name} />
                 </p>
                 <span className="shrink-0 text-black/50">
                   ({formatFileSize(att?.size)})

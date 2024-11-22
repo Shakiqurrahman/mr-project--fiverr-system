@@ -24,6 +24,7 @@ import { connectSocket } from "../../libs/socketService";
 import CircleProgressBar from "../CircleProgressBar";
 import Divider from "../Divider";
 import FilePreview from "../FilePreview";
+import GenerateName from "../GenerateName";
 import AddQuickMsgModal from "../chat/AddQuickMsgModal";
 import EditQuickMsgModal from "../chat/EditQuickMsgModal";
 
@@ -490,7 +491,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
                       className="truncate text-xs font-medium"
                       title={image?.name}
                     >
-                      {image?.name}
+                      <GenerateName name={image?.name} />
                     </h1>
                     <span className="text-xs">
                       ({formatFileSize(image?.size)})
@@ -568,7 +569,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
                   </div>
                   <div className="text-sm">
                     <h1 className="break-words md:max-w-[200px]">
-                      {thumbnailImage?.name}
+                      <GenerateName name={thumbnailImage?.name} />
                     </h1>
                     <span className="text-black/50">
                       ({formatFileSize(thumbnailImage?.size)})

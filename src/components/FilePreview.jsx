@@ -24,7 +24,7 @@ const FilePreview = ({ file }) => {
           src={file.url}
           alt="preview"
           style={{
-            maxWidth: "100%",
+            width: "100%",
             maxHeight: "80px",
             height: "100%",
             objectFit: "cover",

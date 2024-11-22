@@ -38,6 +38,7 @@ import {
 import { TimeZoneConverter } from "../../libs/TimeZoneConverter";
 import CircleProgressBar from "../CircleProgressBar";
 import FilePreview from "../FilePreview";
+import GenerateName from "../GenerateName";
 import AdditionalOfferModal from "./chatbox-components/AdditionalOfferModal";
 import AdditionalOfferPreview from "./chatbox-components/AdditionalOfferPreview";
 import AttachmentsPreview from "./chatbox-components/AttachmentsPreview";
@@ -736,10 +737,10 @@ const OrderChatBox = () => {
                             )}
                           </div>
                           <h1
-                            className="truncate text-xs font-medium"
+                            className="text-xs font-medium"
                             title={image?.name}
                           >
-                            {image?.name}
+                            <GenerateName name={image?.name} />
                           </h1>
                           <span className="text-xs">
                             ({formatFileSize(image?.size)})

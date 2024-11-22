@@ -1232,7 +1232,7 @@ const ChatBox = ({ openToggle }) => {
                         className="truncate text-xs font-medium"
                         title={image.name}
                       >
-                        {image.name}
+                        <GenerateName name={image.name} />
                       </h1>
                       <span className="text-xs">
                         ({formatFileSize(image.size)})
