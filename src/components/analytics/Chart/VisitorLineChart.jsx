@@ -62,102 +62,28 @@ const VisitorLineChart = ({
 
   console.log(visitorsData);
 
-  const generateLabels = (option) => {
-    const currentDate = new Date();
-    const labels = [];
-    const totalVisitors = [];
-    const newVisitors = [];
-    const returningVisitors = [];
-
-    switch (option) {
-      case "Last 7 Days": {
-        for (let i = 6; i >= 0; i--) {
-          const date = new Date(currentDate);
-          date.setDate(currentDate.getDate() - i);
-
-          totalVisitors.push(Math.floor(visitorsData?.totalVisitors || 0));
-          newVisitors.push(Math.floor(visitorsData?.newVisitors || 0));
-          returningVisitors.push(
-            Math.floor(visitorsData?.ReturningVisitors || 0),
-          );
-
-          labels.push(
-            date.toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            }),
-          );
-        }
-        break;
-      }
-      case "Last 30 Days": {
-        for (let i = 29; i >= 0; i--) {
-          const date = new Date(currentDate);
-          date.setDate(currentDate.getDate() - i);
-
-          totalVisitors.push(Math.floor(visitorsData?.totalVisitors || 0));
-          newVisitors.push(Math.floor(visitorsData?.totalVisitors || 0));
-          returningVisitors.push(Math.floor(visitorsData?.totalVisitors || 0));
-
-          labels.push(
-            date.toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            }),
-          );
-        }
-        break;
-      }
-      case "Last Month": {
-        const lastMonth = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth() - 1,
-        );
-        const totalDays = new Date(
-          lastMonth.getFullYear(),
-          lastMonth.getMonth() + 1,
-          0,
-        ).getDate();
-
-        for (let i = 1; i <= totalDays; i++) {
-          const date = new Date(
-            lastMonth.getFullYear(),
-            lastMonth.getMonth(),
-            i,
-          );
-          totalVisitors.push(Math.floor(visitorsData?.totalVisitors || 0));
-          newVisitors.push(Math.floor(visitorsData?.totalVisitors || 0));
-          returningVisitors.push(Math.floor(visitorsData?.totalVisitors || 0));
-
-          labels.push(
-            date.toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            }),
-          );
-        }
-        break;
-      }
-      // Include other cases (Last 3 Months, Last 6 Months, etc.) similar to above
-      default:
-        break;
-    }
-
-    setLabels(labels);
-    setTotalVisitors(totalVisitors);
-    setNewVisitors(newVisitors);
-    setReturningVisitors(returningVisitors);
-  };
+  console.log(selectedTimeOption);
 
   useEffect(() => {
-    generateLabels(selectedTimeOption);
     if (selectedTimeOption) {
       getAllVisitorsByTime({ date: selectedTimeOption });
     }
   }, [selectedTimeOption, getAllVisitorsByTime]);
+
+  useEffect(() => {
+    if (visitorsData) {
+      const allLabels = visitorsData?.map((item) => item.date);
+      const allTotalVisitors = visitorsData?.map((item) => item.totalVisitors);
+      const allNewVisitors = visitorsData?.map((item) => item.newVisitors);
+      const allReturningVisitors = visitorsData?.map(
+        (item) => item.returningVisitors,
+      );
+      setLabels(allLabels);
+      setTotalVisitors(allTotalVisitors);
+      setNewVisitors(allNewVisitors);
+      setReturningVisitors(allReturningVisitors);
+    }
+  }, [visitorsData]);
 
   const data = {
     labels: labels,
@@ -211,10 +137,16 @@ const VisitorLineChart = ({
             switch (selectedTimeOption) {
               case "Last 7 Days":
                 return this.getLabelForValue(value);
-              default:
+              case "Last 30 Days":
                 return index > 0 && (index - 4) % 5 === 0
                   ? this.getLabelForValue(value)
                   : "";
+              case "Last Month":
+                return index > 0 && (index - 4) % 5 === 0
+                  ? this.getLabelForValue(value)
+                  : "";
+              default:
+                return this.getLabelForValue(val);
             }
           },
           autoSkip: false, // Prevent automatic skipping of labels

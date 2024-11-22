@@ -14,7 +14,6 @@ const getFilterTimes = () => {
     "This Year",
     `${currentYear - 1}`, // Last Year
     `${currentYear - 2}`, // 2 Years Ago
-    "All Times",
   ];
 };
 
@@ -31,6 +30,10 @@ const VisitorsData = () => {
   const [newVisitors, setNewVisitors] = useState(0);
   const [returnVisitors, setReturnVisitors] = useState(0);
 
+  const [totalVisitorsUporDown, setTotalVisitorsUporDown] = useState(false);
+  const [newVisitorsUporDown, setNewVisitorsUporDown] = useState(false);
+  const [returnVisitorsUporDown, setReturnVisitorsUporDown] = useState(false);
+
   console.log(totalVisitors, newVisitors, returnVisitors);
 
   useEffect(() => {
@@ -41,9 +44,31 @@ const VisitorsData = () => {
 
   useEffect(() => {
     if (visitorsData) {
-      setTotalVisitors(visitorsData?.totalVisitors);
-      setNewVisitors(visitorsData?.newVisitors);
-      setReturnVisitors(visitorsData?.ReturningVisitors);
+      const allTotalVisitors = visitorsData
+        ?.map((item) => item.totalVisitors)
+        ?.reduce((prev, curr) => prev + parseInt(curr), 0);
+      const allNewVisitors = visitorsData
+        ?.map((item) => item.newVisitors)
+        ?.reduce((prev, curr) => prev + parseInt(curr), 0);
+      const allReturningVisitors = visitorsData
+        ?.map((item) => item.returningVisitors)
+        .reduce((prev, curr) => prev + parseInt(curr), 0);
+      setTotalVisitors(allTotalVisitors);
+      setNewVisitors(allNewVisitors);
+      setReturnVisitors(allReturningVisitors);
+
+      const totalUpDown =
+        parseInt(visitorsData[visitorsData?.length - 1]?.totalVisitors) >=
+        parseInt(visitorsData[visitorsData?.length - 2]?.totalVisitors);
+      const newUpDown =
+        parseInt(visitorsData[visitorsData?.length - 1]?.newVisitors) >=
+        parseInt(visitorsData[visitorsData?.length - 2]?.newVisitors);
+      const returnUpDown =
+        parseInt(visitorsData[visitorsData?.length - 1]?.returningVisitors) >=
+        parseInt(visitorsData[visitorsData?.length - 2]?.returningVisitors);
+      setTotalVisitorsUporDown(totalUpDown);
+      setNewVisitorsUporDown(newUpDown);
+      setReturnVisitorsUporDown(returnUpDown);
     }
   }, [visitorsData]);
 
@@ -59,14 +84,22 @@ const VisitorsData = () => {
             Total Visitors {totalVisitors || 0}
           </span>
           <div className="flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-full bg-white">
-            <TiArrowUpThick className="text-black/50" />
+            {totalVisitorsUporDown ? (
+              <TiArrowUpThick className="text-black/50" />
+            ) : (
+              <TiArrowDownThick className="text-revision" />
+            )}
           </div>
         </div>
         <div className="flex w-full shrink-0 items-center gap-3 md:w-auto">
           <div className="h-[10px] w-[10px] shrink-0 rounded-full bg-ongoing"></div>
           <span className="font-medium">New Visitors {newVisitors || 0}</span>
           <div className="flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-full bg-white">
-            <TiArrowUpThick className="text-black/50" />
+            {newVisitorsUporDown ? (
+              <TiArrowUpThick className="text-black/50" />
+            ) : (
+              <TiArrowDownThick className="text-revision" />
+            )}
           </div>
         </div>
         <div className="flex w-full shrink-0 items-center gap-3 md:w-auto">
@@ -75,7 +108,11 @@ const VisitorsData = () => {
             Returning Visitors {returnVisitors || 0}
           </span>
           <div className="flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-full bg-white">
-            <TiArrowDownThick className="text-revision" />
+            {returnVisitorsUporDown ? (
+              <TiArrowUpThick className="text-black/50" />
+            ) : (
+              <TiArrowDownThick className="text-revision" />
+            )}
           </div>
         </div>
         <select
