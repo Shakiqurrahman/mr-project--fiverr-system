@@ -64,7 +64,10 @@ const TotalVisitors = () => {
   }, [selectedFilterType, getVisitorsByFilter]);
 
   // const totalVisitors = "200263435";
-  const totalVisitorsArray = VisitorsData?.totalVisitors
+  const totalVisitorsArray = VisitorsData?.reduce(
+    (prev, curr) => prev + parseInt(curr.totalVisitors),
+    0,
+  )
     ?.toString()
     ?.split("")
     ?.map(Number);
@@ -89,7 +92,10 @@ const TotalVisitors = () => {
 
       <div
         className="flex flex-wrap justify-center gap-2"
-        title={VisitorsData?.totalVisitors}
+        title={VisitorsData?.reduce(
+          (prev, curr) => prev + parseInt(curr.totalVisitors),
+          0,
+        )}
       >
         {totalVisitorsArray?.slice(0, 5).map((totalVistor, idx) => (
           <div

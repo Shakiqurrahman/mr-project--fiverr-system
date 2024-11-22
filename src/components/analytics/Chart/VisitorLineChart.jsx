@@ -60,10 +60,6 @@ const VisitorLineChart = ({
   const [getAllVisitorsByTime, { data: visitorsData }] =
     useLazyGetVisitorsByFilterQuery();
 
-  console.log(visitorsData);
-
-  console.log(selectedTimeOption);
-
   useEffect(() => {
     if (selectedTimeOption) {
       getAllVisitorsByTime({ date: selectedTimeOption });
