@@ -145,8 +145,8 @@ const ChatBox = ({ openToggle }) => {
 
         // setMessages((prevMessages) => [...prevMessages, msg]);
       }
-      console.log('msg seeing all',msg);
-      
+      console.log("msg seeing all", msg);
+
       let filter = msg.userId === conversationUser && msg;
       if (isAdmin && filter) {
         // setMessages((prev) => [...prev, filter]);
@@ -231,57 +231,84 @@ const ChatBox = ({ openToggle }) => {
 
   // replyText handler
   const addReplyText = (msg) => {
-    msg?.messageText
-      ? setReplyTo({
-          replyMessageId: msg.id,
-          replyUserRole: user?.role,
-          replySenderUserName: user?.userName,
-          replyUserName:
-            msg.senderUserName === user?.userName
-              ? "yourself"
-              : msg.senderUserName,
-          replyText: msg.messageText,
-        })
-      : msg?.contactForm
-        ? setReplyTo({
-            replyMessageId: msg.id,
-            replyUserRole: user?.role,
-            replySenderUserName: user?.userName,
-            replyUserName:
-              msg.senderUserName === user?.userName
-                ? "yourself"
-                : msg.senderUserName,
-            replyText: msg?.contactForm?.messageText,
-          })
-        : msg?.attachment.length > 0
-          ? setReplyTo({
-              replyMessageId: msg.id,
-              replyUserRole: user?.role,
-              replySenderUserName: user?.userName,
-              replyUserName:
-                msg.senderUserName === user?.userName
-                  ? "yourself"
-                  : msg.senderUserName,
-              replyText: "Attachments...",
-            })
-          : msg?.customOffer
-            ? setReplyTo({
-                replyMessageId: msg.id,
-                replyUserRole: user?.role,
-                replySenderUserName: user?.userName,
-                replyUserName:
-                  msg.senderUserName === user?.userName
-                    ? "yourself"
-                    : msg.senderUserName,
-                replyText: "Custom Offer...",
-              })
-            : setReplyTo("");
+    const replyText =
+      msg?.attachment?.length > 0
+        ? "Attachments..."
+        : msg?.additionalOffer
+          ? "Additional Offer..."
+          : msg?.extendDeliveryTime
+            ? "Extend Delivery Time..."
+            : msg?.deliverProject
+              ? "Deliver Project..."
+              : msg?.cancelProject
+                ? "Cancel Request..."
+                : msg?.imageComments?.length > 0
+                  ? "Image Comments..."
+                  : msg?.messageText;
+
+    const replySenderUserName = user?.userName;
+    const replySenderUserRole = user?.role;
+    const msgSenderUserName = msg?.senderUserName;
+    const msgSenderUserRole = msg?.isFromAdmin;
+    const replyObj = {
+      replySenderUserName,
+      replySenderUserRole,
+      msgSenderUserName,
+      msgSenderUserRole,
+      replyText,
+    };
+    setReplyTo(replyObj);
   };
 
   // generate replied to function
   const generateRepliedTo = (msg) => {
-    const replyObj = msg?.replyTo;
-    return `${user?.userName === replyObj.replySenderUserName ? "You" : replyObj.replyUserName === "yourself" ? replyObj.replySenderUserName : "mahfujurrahm535"}`;
+    const {
+      msgSenderUserRole,
+      replySenderUserName,
+      msgSenderUserName,
+      replySenderUserRole,
+    } = msg?.replyTo;
+
+    console.log(msg?.replyTo, "replyto");
+
+    if (
+      msgSenderUserName !== replySenderUserName &&
+      user?.role === msgSenderUserRole
+    ) {
+      return "You"; // User is seeing their own message
+    }
+
+    if (msgSenderUserName !== replySenderUserName && user?.role === "USER") {
+      return "Mahfujurrahm535"; // User is seeing their own message
+    }
+    if (
+      msgSenderUserName === replySenderUserName &&
+      user?.userName === msgSenderUserName
+    ) {
+      return "You"; // User is seeing their own message
+    }
+
+    if (
+      msgSenderUserName === replySenderUserName &&
+      user?.userName !== msgSenderUserName &&
+      user?.role !== "USER"
+    ) {
+      return msgSenderUserName; // User is seeing their own message
+    }
+    if (
+      msgSenderUserName === replySenderUserName &&
+      user?.userName !== msgSenderUserName &&
+      user?.role === "USER"
+    ) {
+      return "Mahfujurrahm535"; // User is seeing their own message
+    }
+    if (
+      msgSenderUserName !== replySenderUserName &&
+      msgSenderUserRole === "USER" &&
+      user?.role !== "USER"
+    ) {
+      return msgSenderUserName; // User is seeing their own message
+    }
   };
 
   // Quick Messages Handlers
@@ -677,7 +704,7 @@ const ChatBox = ({ openToggle }) => {
   }, [conversationUser, messages]);
 
   console.log(messages);
-  
+
   return (
     <div className="flex h-full flex-col">
       {/* Header Part */}
@@ -855,7 +882,9 @@ const ChatBox = ({ openToggle }) => {
                             msg?.senderId === user?.id && (
                               <button
                                 type="button"
-                                onClick={() => handleDeleteAMessage(msg?.commonkey)}
+                                onClick={() =>
+                                  handleDeleteAMessage(msg?.commonkey)
+                                }
                               >
                                 <FaTrashAlt />
                               </button>
@@ -1245,12 +1274,18 @@ const ChatBox = ({ openToggle }) => {
               <div className="flex h-[50px] w-full items-center gap-2 border-b border-s-2 border-s-primary bg-gray-50 px-3 text-xs">
                 <div>
                   <h1 className="font-semibold">
-                    {replyTo.replyUserName === "yourself"
+                    {(replyTo?.replySenderUserRole === "USER" ||
+                      replyTo?.replySenderUserRole !== "USER") &&
+                    replyTo?.replySenderUserName === replyTo?.msgSenderUserName
                       ? "You"
-                      : user?.role === "USER" &&
-                          replyTo.replyUserName !== "yourself"
-                        ? "mahfujurrahm535"
-                        : replyTo.replyUserName}
+                      : replyTo?.replySenderUserName !==
+                            replyTo?.msgSenderUserName && user?.role !== "USER"
+                        ? replyTo?.msgSenderUserName
+                        : replyTo?.replySenderUserName !==
+                              replyTo?.msgSenderUserName &&
+                            user?.role === "USER"
+                          ? "Mahfujurrahm535"
+                          : ""}
                   </h1>
                   <p className="line-clamp-1">{replyTo.replyText}</p>
                 </div>

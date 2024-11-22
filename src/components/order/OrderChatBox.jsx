@@ -488,8 +488,6 @@ const OrderChatBox = () => {
       replySenderUserRole,
     } = msg?.replyTo;
 
-    console.log(msg?.replyTo);
-
     if (
       msgSenderUserName !== replySenderUserName &&
       user?.role === msgSenderUserRole
