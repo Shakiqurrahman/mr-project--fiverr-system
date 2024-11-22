@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getStatusText } from "../../customer-profile/StatusText";
 
@@ -94,4 +94,4 @@ const OrderProjectDetails = () => {
   );
 };
 
-export default OrderProjectDetails;
+export default React.memo(OrderProjectDetails);

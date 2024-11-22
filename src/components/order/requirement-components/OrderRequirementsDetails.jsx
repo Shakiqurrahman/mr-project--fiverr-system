@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BiDownload } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -116,4 +116,4 @@ const OrderRequirementsDetails = () => {
   );
 };
 
-export default OrderRequirementsDetails;
+export default React.memo(OrderRequirementsDetails);

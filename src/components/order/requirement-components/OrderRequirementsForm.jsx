@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaSpinner } from "react-icons/fa6";
 import { IoMdAttach } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -474,4 +474,4 @@ const OrderRequirementsForm = () => {
   );
 };
 
-export default OrderRequirementsForm;
+export default React.memo(OrderRequirementsForm);

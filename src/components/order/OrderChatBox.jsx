@@ -199,10 +199,10 @@ const OrderChatBox = () => {
     }
   }, [selectedImages?.length]);
 
-  // useEffect(() => {
-  //   // Inital Scroll to last message
-  //   endOfMessagesRef.current?.scrollIntoView();
-  // }, [messages]);
+  useEffect(() => {
+    // Inital Scroll to last message
+    endOfMessagesRef.current?.scrollIntoView();
+  }, [messages]);
 
   // click outside the box it will be toggled
   useOutsideClick(menuRef, () => setQucikMsgBtnController(null));

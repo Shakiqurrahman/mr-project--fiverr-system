@@ -1,4 +1,5 @@
 // File icon imports (you can replace these with your actual icon paths)
+import React from "react";
 import FileIcon from "./FileIcon";
 
 const getExtension = (filename) => {
@@ -46,4 +47,4 @@ const FilePreview = ({ file }) => {
   return renderPreview();
 };
 
-export default FilePreview;
+export default React.memo(FilePreview);

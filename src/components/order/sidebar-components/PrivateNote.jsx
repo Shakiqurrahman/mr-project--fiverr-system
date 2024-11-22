@@ -85,4 +85,4 @@ const PrivateNote = () => {
   );
 };
 
-export default PrivateNote;
+export default React.memo(PrivateNote);

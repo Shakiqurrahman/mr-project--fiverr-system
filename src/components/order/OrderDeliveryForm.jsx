@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import {
   IoIosArrowDown,
@@ -606,4 +606,4 @@ const OrderDeliveryForm = ({ handleClose }) => {
   );
 };
 
-export default OrderDeliveryForm;
+export default React.memo(OrderDeliveryForm);

@@ -76,4 +76,4 @@ const TrackProject = () => {
   );
 };
 
-export default TrackProject;
+export default React.memo(TrackProject);

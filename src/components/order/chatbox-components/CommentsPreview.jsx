@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import {
   setImageArray,
@@ -84,4 +84,4 @@ const CommentsPreview = ({ commentedImages }) => {
   );
 };
 
-export default CommentsPreview;
+export default React.memo(CommentsPreview);

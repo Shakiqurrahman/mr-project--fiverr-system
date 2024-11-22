@@ -4,7 +4,7 @@ import Slider from "react-slick/lib/slider";
 import LeftArrowIcon from "../../../assets/images/icons/Left Arrow.svg";
 import RightArrowIcon from "../../../assets/images/icons/Right Arrow.svg";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { BiDownload } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { setPreviewImage } from "../../../Redux/features/previewImageSlice";
@@ -332,4 +332,4 @@ function PrevArrow({ onClick }) {
   );
 }
 
-export default OrderDeliveryPreview;
+export default React.memo(OrderDeliveryPreview);

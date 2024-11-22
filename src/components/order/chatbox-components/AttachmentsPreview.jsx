@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { BiDownload } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -109,4 +109,4 @@ const AttachmentsPreview = ({ files }) => {
   );
 };
 
-export default AttachmentsPreview;
+export default React.memo(AttachmentsPreview);

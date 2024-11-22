@@ -1,5 +1,6 @@
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
+import React from "react";
 import { useSelector } from "react-redux";
 import { useUpdateAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
 import { STRIPE_PUBLIC_KEY, configApi } from "../../../libs/configApi";
@@ -152,4 +153,4 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
   );
 };
 
-export default AdditionalOfferPreview;
+export default React.memo(AdditionalOfferPreview);

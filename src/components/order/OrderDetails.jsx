@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { FaCircleCheck } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -257,4 +257,4 @@ const OrderDetails = () => {
   );
 };
 
-export default OrderDetails;
+export default React.memo(OrderDetails);

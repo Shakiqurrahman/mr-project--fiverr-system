@@ -176,4 +176,4 @@ const ExtendDeliveryModal = ({ handleClose }) => {
   );
 };
 
-export default ExtendDeliveryModal;
+export default React.memo(ExtendDeliveryModal);

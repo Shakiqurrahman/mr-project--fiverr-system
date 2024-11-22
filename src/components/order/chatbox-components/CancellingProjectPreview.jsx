@@ -62,4 +62,4 @@ const CancellingProjectPreview = ({ messageObj, value }) => {
   );
 };
 
-export default CancellingProjectPreview;
+export default React.memo(CancellingProjectPreview);

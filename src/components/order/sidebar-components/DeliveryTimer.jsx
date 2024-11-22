@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import OrderDeliveryForm from "../OrderDeliveryForm";
 import ExtendDeliveryModal from "./ExtendDeliveryModal";
@@ -108,4 +108,4 @@ const DeliveryTimer = ({ deliveryTime }) => {
   );
 };
 
-export default DeliveryTimer;
+export default React.memo(DeliveryTimer);

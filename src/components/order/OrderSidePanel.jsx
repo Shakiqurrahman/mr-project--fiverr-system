@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import CancelProjectModal from "./sidebar-components/CancelProjectModal";
 import DeliveryTimer from "./sidebar-components/DeliveryTimer";
@@ -64,4 +64,4 @@ const OrderSidePanel = () => {
   );
 };
 
-export default OrderSidePanel;
+export default React.memo(OrderSidePanel);

@@ -159,4 +159,4 @@ const CancelProjectModal = ({ handleClose }) => {
   );
 };
 
-export default CancelProjectModal;
+export default React.memo(CancelProjectModal);

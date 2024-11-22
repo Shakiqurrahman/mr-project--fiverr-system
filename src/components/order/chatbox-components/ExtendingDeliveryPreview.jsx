@@ -77,4 +77,4 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
   );
 };
 
-export default ExtendingDeliveryPreview;
+export default React.memo(ExtendingDeliveryPreview);
