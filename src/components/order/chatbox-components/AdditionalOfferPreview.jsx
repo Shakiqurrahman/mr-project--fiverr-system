@@ -1,5 +1,10 @@
+import { loadStripe } from "@stripe/stripe-js";
+import axios from "axios";
 import { useSelector } from "react-redux";
 import { useUpdateAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
+import { STRIPE_PUBLIC_KEY, configApi } from "../../../libs/configApi";
+
+const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 
 const AdditionalOfferPreview = ({ value, messageObj }) => {
   const [updateAOrderMessage] = useUpdateAOrderMessageMutation();
@@ -7,21 +12,37 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
 
   const handleAcceptOffer = async (e) => {
     e.preventDefault();
-    // if (messageObj?.commonKey) {
-    //   const data = {
-    //     ...messageObj,
-    //     additionalOffer: {
-    //       ...messageObj?.additionalOffer,
-    //       isWithdrawn: true,
-    //     },
-    //   };
-    //   console.log("DATA", data);
-    //   try {
-    //     const res = await updateAOrderMessage(data).unwrap();
-    //     console.log(res);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
+    if (messageObj?.commonKey) {
+      const updatedMessage = {
+        ...messageObj,
+        additionalOffer: {
+          ...messageObj?.additionalOffer,
+          isAccepted: true,
+        },
+      };
+      const data = {
+        amount: value?.price,
+        paymentType: "Additional Offer",
+        projectNumber: messageObj?.projectNumber,
+        duration: value?.duration,
+        updatedMessage,
+      };
+      try {
+        const response = await axios.post(
+          `${configApi.api}payment/additional`,
+          {
+            data,
+          },
+        );
+
+        const sessionId = response?.data?.data?.id;
+        // Redirect to Stripe Checkout
+        const stripe = await stripePromise;
+        await stripe.redirectToCheckout({ sessionId });
+      } catch (error) {
+        console.error("Error redirecting to checkout:", error);
+      }
+    }
   };
   const handleRejectOffer = async (e) => {
     e.preventDefault();
