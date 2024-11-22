@@ -26,4 +26,4 @@ const PreviewChatFiles = ({ file, handlePreviewImage }) => {
   return renderPreview();
 };
 
-export default PreviewChatFiles;
+export default React.memo(PreviewChatFiles);

@@ -77,6 +77,7 @@ const OrderChatBox = () => {
   const fileInputRef = useRef(null);
   const textareaRef = useRef(null);
   const menuRef = useRef(null);
+  const prevMessagesRef = useRef([]);
   const endOfMessagesRef = useRef(null);
 
   // all states defination here
@@ -150,7 +151,7 @@ const OrderChatBox = () => {
     return () => {
       socket?.off("order:message");
     };
-  }, [socket, messages]);
+  }, [socket, dispatch]);
   // }, [conversationUser, isAdmin, socket, messages, dispatch, user]);
   // get all messages of user from db
   useEffect(() => {
@@ -192,7 +193,7 @@ const OrderChatBox = () => {
     if (allUserMessages) {
       dispatch(updateMessagesByUser(allUserMessages));
     }
-  }, [allUserMessages]);
+  }, [allUserMessages, dispatch]);
 
   useEffect(() => {
     if (selectedImages?.length === uploadFilesLength) {
@@ -200,10 +201,14 @@ const OrderChatBox = () => {
     }
   }, [selectedImages?.length]);
 
-  useEffect(() => {
-    // Inital Scroll to last message
-    endOfMessagesRef.current?.scrollIntoView();
-  }, [messages]);
+  // useEffect(() => {
+  //   // Only run the effect if the messages array has actually changed
+  //   if (prevMessagesRef.current.length !== messages?.length) {
+  //     console.log("Scroll"); // Log when scroll happens
+  //     prevMessagesRef.current = messages; // Update the previous messages ref
+  //     endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" }); // Scroll to the end of messages
+  //   }
+  // }, [messages]); // Dependency on the messages array
 
   // click outside the box it will be toggled
   useOutsideClick(menuRef, () => setQucikMsgBtnController(null));

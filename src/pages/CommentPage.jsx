@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import CommentImagePreview from "../components/comment/CommentImagePreview";
 import CommentSideDrawer from "../components/comment/CommentSideDrawer";
@@ -34,4 +34,4 @@ const CommentPage = ({ close }) => {
   );
 };
 
-export default CommentPage;
+export default React.memo(CommentPage);

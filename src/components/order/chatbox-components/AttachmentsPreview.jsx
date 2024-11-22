@@ -57,12 +57,6 @@ const AttachmentsPreview = ({ files }) => {
         <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
           {files?.map((att, index) => (
             <div key={index}>
-              {/* <img
-                onClick={() => handleOpenComment(att)}
-                src={att?.url}
-                alt={att?.name}
-                className="h-[100px] w-full cursor-pointer object-cover sm:h-[150px]"
-              /> */}
               <PreviewChatFiles
                 file={att}
                 handlePreviewImage={() => handleOpenComment(att)}
@@ -74,9 +68,12 @@ const AttachmentsPreview = ({ files }) => {
                 className="mt-2 flex items-center justify-center text-xs"
               >
                 <BiDownload className="shrink-0 text-lg text-primary" />
-                <p className="mx-2 line-clamp-1 font-medium" title={att?.name}>
+                <div
+                  className="mx-2 line-clamp-1 font-medium"
+                  title={att?.name}
+                >
                   <GenerateName name={att?.name} />
-                </p>
+                </div>
                 <span className="shrink-0 text-black/50">
                   ({formatFileSize(att?.size)})
                 </span>
