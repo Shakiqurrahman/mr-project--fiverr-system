@@ -44,6 +44,7 @@ import {
 import { setPreviewImage } from "../../Redux/features/previewImageSlice";
 import { setTypingStatus } from "../../Redux/features/userSlice";
 import useLocalDateTime from "../../hooks/useLocalDateTime";
+import { TimeZoneConverter } from "../../libs/TimeZoneConverter";
 import { configApi } from "../../libs/configApi";
 import { timeAgoTracker } from "../../libs/timeAgoTracker";
 import CircleProgressBar from "../CircleProgressBar";
@@ -97,6 +98,7 @@ const ChatBox = ({ openToggle }) => {
 
   // messages state
   const [messages, setMessages] = useState([]);
+  const [clientTimeAndDate, setClientTimeAndDate] = useState(null);
   const [replyTo, setReplyTo] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState(null);
@@ -110,10 +112,29 @@ const ChatBox = ({ openToggle }) => {
     userName: recipientUserName,
     lastSeen,
     id: recipientUserId,
+    country: userCountry,
   } = usersData?.find((user) => user?.id === conversationUser) || "";
 
   const { isBookMarked, isBlocked, isArchived } =
     availableUsers?.find((user) => user?.id === conversationUser) || "";
+
+  useEffect(() => {
+    if (userCountry) {
+      const updateClientTime = () => {
+        const dateTime = TimeZoneConverter(userCountry);
+        setClientTimeAndDate(dateTime);
+      };
+
+      // Update the time immediately when the component mounts
+      updateClientTime();
+
+      // Set an interval to update the time every 1 minute (60000ms)
+      const intervalId = setInterval(updateClientTime, 60000);
+
+      // Clean up the interval when the component unmounts
+      return () => clearInterval(intervalId);
+    }
+  }, [usersData, userCountry]);
 
   useEffect(() => {
     if (getAllMessagesForUser && user.role === "USER") {
@@ -730,13 +751,35 @@ const ChatBox = ({ openToggle }) => {
                     : "Online"}
                 </p>
               ))}
-            <Divider
-              className={"hidden h-[15px] w-[2px] !bg-black/50 sm:block"}
-            />
-            <p className="sm:block">
-              Local time: {localTime}
-              <span className="hidden sm:inline">, {localDate}</span>
-            </p>
+            {user?.role === "USER" ? (
+              <>
+                <Divider
+                  className={"hidden h-[15px] w-[2px] !bg-black/50 sm:block"}
+                />
+                <p className="sm:block">
+                  Local time: {localTime}
+                  <span className="hidden sm:inline">, {localDate}</span>
+                </p>
+              </>
+            ) : (
+              <>
+                {clientTimeAndDate && (
+                  <>
+                    <Divider
+                      className={
+                        "hidden h-[15px] w-[2px] !bg-black/50 sm:block"
+                      }
+                    />
+                    <p className="sm:block">
+                      Local time: {clientTimeAndDate?.time}
+                      <span className="hidden sm:inline">
+                        , {clientTimeAndDate?.date}
+                      </span>
+                    </p>
+                  </>
+                )}
+              </>
+            )}
           </div>
         </div>
         {isAdmin && (
