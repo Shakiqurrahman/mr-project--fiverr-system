@@ -15,7 +15,14 @@ const getFilterTimes = () => {
   ];
 };
 
-const HorizontalBarChart = ({ data, title, color, filter, handler }) => {
+const HorizontalBarChart = ({
+  data,
+  title,
+  color,
+  filter,
+  handler,
+  dollarSign,
+}) => {
   const [filterTimes, setFilterTimes] = useState(getFilterTimes());
   const [selectedTimeOption, setSelectedTimeOption] = useState(
     getFilterTimes()[1],
@@ -91,6 +98,7 @@ const HorizontalBarChart = ({ data, title, color, filter, handler }) => {
                 />
                 <span className="ml-1">
                   {label.charAt(0).toUpperCase() + label.slice(1)} (
+                  {dollarSign && "$"}
                   {values[index]})
                 </span>
               </div>

@@ -1,8 +1,10 @@
 import { useState } from "react";
 import {
   useGetActiveProjectsAnalyticsQuery,
+  useLazyGetAvarageSellingAnalyticsQuery,
   useLazyGetFinishProjectsAnalyticsQuery,
   useLazyGetProjectBuyersAnalyticsQuery,
+  useLazyGetProjectOptionsAnalyticsQuery,
 } from "../../Redux/api/analyticsApiSlice";
 import HorizontalBarChart from "./Chart/HorizontalBarChart";
 import ProjectLineChart from "./Chart/ProjectLineChart";
@@ -36,18 +38,10 @@ const ProjectDetailsData = () => {
     useLazyGetFinishProjectsAnalyticsQuery();
   const [getProjectsBuyer, { data: ProjectBuyersData }] =
     useLazyGetProjectBuyersAnalyticsQuery();
-
-  const ProjectOptionsData = {
-    custom: 250,
-    direct: 100,
-    offer: 100,
-    "M-D Project": 80,
-  };
-
-  const avgSellingData = {
-    custom: 250,
-    direct: 100,
-  };
+  const [getProjectOptions, { data: ProjectOptionsData }] =
+    useLazyGetProjectOptionsAnalyticsQuery();
+  const [getAvarageSelling, { data: avgSellingData }] =
+    useLazyGetAvarageSellingAnalyticsQuery();
 
   return (
     <>
@@ -122,6 +116,7 @@ const ProjectDetailsData = () => {
           data={ProjectOptionsData}
           title={"Project Options"}
           filter={true}
+          handler={getProjectOptions}
         />
         <HorizontalBarChart
           data={ProjectBuyersData}
@@ -134,6 +129,8 @@ const ProjectDetailsData = () => {
           title={"Avg Selling Price"}
           color={{ custom: "#7ba7c2", direct: "#9258c8" }}
           filter={true}
+          handler={getAvarageSelling}
+          dollarSign={true}
         />
       </div>
     </>

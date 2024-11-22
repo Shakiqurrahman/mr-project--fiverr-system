@@ -51,9 +51,21 @@ export const analyticsApiSlice = createApi({
       transformResponse: (response) => response.data,
     }),
 
+    getProjectOptionsAnalytics: builder.query({
+      query: ({ timeFilter }) =>
+        `analytics/project-details/project-options?timeFilter=${timeFilter}`,
+      transformResponse: (response) => response.data,
+    }),
+
     getProjectBuyersAnalytics: builder.query({
       query: ({ timeFilter }) =>
         `analytics/project-details/project-buyers?timeFilter=${timeFilter}`,
+      transformResponse: (response) => response.data,
+    }),
+
+    getAvarageSellingAnalytics: builder.query({
+      query: ({ timeFilter }) =>
+        `analytics/project-details/avg-selling?timeFilter=${timeFilter}`,
       transformResponse: (response) => response.data,
     }),
 
@@ -73,4 +85,6 @@ export const {
   useLazyGetFinishProjectsAnalyticsQuery,
   useLazyGetProjectBuyersAnalyticsQuery,
   useLazyGetCategoriesDataAnalyticsQuery,
+  useLazyGetProjectOptionsAnalyticsQuery,
+  useLazyGetAvarageSellingAnalyticsQuery,
 } = analyticsApiSlice;
