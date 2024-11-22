@@ -6,6 +6,7 @@ const orderSlice = createSlice({
     messages: [],
     projectDetails: null,
     clientDetails: {},
+    replyTo: null,
   },
   reducers: {
     setMessages: (state, action) => {
@@ -25,6 +26,9 @@ const orderSlice = createSlice({
     setClientDetails: (state, action) => {
       state.clientDetails = action.payload;
     },
+    setReplyTo: (state, action) => {
+      state.replyTo = action.payload;
+    },
   },
 });
 
@@ -34,6 +38,7 @@ export const {
   setProjectDetails,
   rollbackMessages,
   updateMessagesByUser,
+  setReplyTo,
 } = orderSlice.actions;
 
 export default orderSlice.reducer;

@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { useSendAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
-import { setMessages } from "../../../Redux/features/orderSlice";
+import { setMessages, setReplyTo } from "../../../Redux/features/orderSlice";
 import useOutsideClick from "../../../hooks/useOutsideClick";
 import { configApi } from "../../../libs/configApi";
 import { connectSocket } from "../../../libs/socketService";
@@ -11,14 +11,13 @@ const ExtendDeliveryModal = ({ handleClose }) => {
   const [sendAOrderMessage] = useSendAOrderMessageMutation();
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.user);
-  const { projectDetails } = useSelector((state) => state.order);
+  const { projectDetails, replyTo } = useSelector((state) => state.order);
   const modalRef = useRef(null);
   const [extendType, setExtendType] = useState("requestByClient");
   const [form, setForm] = useState({
     days: 1,
     explainWhyExtend: "",
   });
-  const [replyTo, setReplyTo] = useState(null);
 
   // Socket Connection
   const socket = connectSocket(`${configApi.socket}`, token);
@@ -80,6 +79,7 @@ const ExtendDeliveryModal = ({ handleClose }) => {
       }),
     );
 
+    dispatch(setReplyTo(null));
     // onNoteSubmit(form);
     handleClose(false);
 
@@ -88,8 +88,6 @@ const ExtendDeliveryModal = ({ handleClose }) => {
         recipientId: isAdmin ? projectDetails?.userId : null,
         ...submitForm,
       }).unwrap();
-
-      setReplyTo(null);
     } catch (error) {
       console.error("Failed to send message:", error);
     }

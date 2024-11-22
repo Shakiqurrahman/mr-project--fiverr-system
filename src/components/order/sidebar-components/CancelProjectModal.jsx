@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { useSendAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
-import { setMessages } from "../../../Redux/features/orderSlice";
+import { setMessages, setReplyTo } from "../../../Redux/features/orderSlice";
 import useOutsideClick from "../../../hooks/useOutsideClick";
 import { configApi } from "../../../libs/configApi";
 import { connectSocket } from "../../../libs/socketService";
@@ -11,7 +11,7 @@ const CancelProjectModal = ({ handleClose }) => {
   const [sendAOrderMessage] = useSendAOrderMessageMutation();
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state?.user);
-  const { projectDetails } = useSelector((state) => state?.order);
+  const { projectDetails, replyTo } = useSelector((state) => state?.order);
 
   // Socket Connection
   const socket = connectSocket(`${configApi.socket}`, token);
@@ -56,7 +56,7 @@ const CancelProjectModal = ({ handleClose }) => {
       cancelProject: data,
       imageComments: [],
       timeAndDate,
-      // replyTo,
+      replyTo,
       projectNumber: projectDetails?.projectNumber,
     };
 
@@ -77,6 +77,8 @@ const CancelProjectModal = ({ handleClose }) => {
         recipientId: isAdmin ? projectDetails?.userId : "",
       }),
     );
+
+    dispatch(setReplyTo(null));
 
     setForm({
       explainWhyCancel: "",

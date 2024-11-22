@@ -32,6 +32,7 @@ import {
 import {
   rollbackMessages,
   setMessages,
+  setReplyTo,
   updateMessagesByUser,
 } from "../../Redux/features/orderSlice";
 import CircleProgressBar from "../CircleProgressBar";
@@ -55,7 +56,7 @@ const OrderChatBox = () => {
   const [deleteAOrderMessage] = useDeleteAOrderMessageMutation();
 
   const { user, token } = useSelector((state) => state.user);
-  const { projectDetails, clientDetails, messages } = useSelector(
+  const { projectDetails, clientDetails, messages, replyTo } = useSelector(
     (state) => state.order,
   );
 
@@ -84,7 +85,6 @@ const OrderChatBox = () => {
   const [openEditMsgModal, setOpenEditMsgModal] = useState(null);
   const [openAddMsgModal, setOpenAddMsgModal] = useState(false);
   const [openOfferModal, setOpenOfferModal] = useState(false);
-  const [replyTo, setReplyTo] = useState(null);
   const [uploadFilesLength, setUploadFilesLength] = useState(0);
   const [visibility, setVisibility] = useState({});
 
@@ -402,7 +402,7 @@ const OrderChatBox = () => {
       // Clear input fields and images on success
       setTextValue("");
       setSelectedImages([]);
-      setReplyTo(null);
+      dispatch(setReplyTo(null));
       fileInputRef.current.value = null;
 
       try {
@@ -476,7 +476,7 @@ const OrderChatBox = () => {
       msgSenderUserRole,
       replyText,
     };
-    setReplyTo(replyObj);
+    dispatch(setReplyTo(replyObj));
   };
 
   // generate replied to function
@@ -834,7 +834,7 @@ const OrderChatBox = () => {
                     </div>
                     <button
                       type="button"
-                      onClick={() => setReplyTo(null)}
+                      onClick={() => dispatch(setReplyTo(null))}
                       className="ms-auto"
                     >
                       <IoClose className="text-lg" />
@@ -906,8 +906,6 @@ const OrderChatBox = () => {
           <AdditionalOfferModal
             handleClose={setOpenOfferModal}
             onOfferSubmit={socket}
-            replyTo={replyTo}
-            setReplyTo={setReplyTo}
           />
         )}
       </div>

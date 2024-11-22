@@ -1,19 +1,14 @@
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSendAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
-import { setMessages } from "../../../Redux/features/orderSlice";
+import { setMessages, setReplyTo } from "../../../Redux/features/orderSlice";
 import useOutsideClick from "../../../hooks/useOutsideClick";
 
-const AdditionalOfferModal = ({
-  handleClose,
-  onOfferSubmit,
-  replyTo,
-  setReplyTo,
-}) => {
+const AdditionalOfferModal = ({ handleClose, onOfferSubmit }) => {
   const [sendAOrderMessage] = useSendAOrderMessageMutation();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state?.user);
-  const { projectDetails } = useSelector((state) => state?.order);
+  const { projectDetails, replyTo } = useSelector((state) => state?.order);
 
   // Checking Admin
   const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
@@ -72,7 +67,7 @@ const AdditionalOfferModal = ({
         recipientId: isAdmin ? projectDetails?.userId : "",
       }),
     );
-    setReplyTo(null);
+    dispatch(setReplyTo(null));
 
     handleClose(false);
     try {
