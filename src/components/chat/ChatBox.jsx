@@ -162,12 +162,12 @@ const ChatBox = ({ openToggle }) => {
 
     socket?.on("delete-message", (msg) => {
       if (!isAdmin) {
-        console.log("deltedMsg from user", msg);
-
-        // setMessages((prevMessages) => [...prevMessages, msg]);
+        setMessages((prevMessages) =>
+          prevMessages.filter((m) => m.commonKey !== msg.commonKey),
+        );
       }
-      console.log("msg seeing all", msg);
 
+      console.log("deltedMsg from admin", msg);
       let filter = msg.userId === conversationUser && msg;
       if (isAdmin && filter) {
         // setMessages((prev) => [...prev, filter]);
@@ -622,7 +622,11 @@ const ChatBox = ({ openToggle }) => {
       const res = await deleteAMessage(commonKey).unwrap();
       console.log(res);
 
-      socket.emit("delete-message", { commonKey, userId: user?.id });
+      socket.emit("delete-message", {
+        commonKey,
+        userId: user?.id,
+        recipientId: recipientUserId,
+      });
       toast.success("Message deleted successfully");
     } catch {
       toast.error("Failed to delete message");
