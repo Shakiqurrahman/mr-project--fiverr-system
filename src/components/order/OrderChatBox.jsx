@@ -63,8 +63,6 @@ const OrderChatBox = () => {
     (state) => state.order,
   );
 
-  console.log("searching.......", projectDetails, clientDetails);
-
   // Checking Admin
   const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
 
