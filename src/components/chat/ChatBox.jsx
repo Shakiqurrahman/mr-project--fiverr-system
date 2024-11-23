@@ -161,18 +161,21 @@ const ChatBox = ({ openToggle }) => {
     });
 
     socket?.on("delete-message", (msg) => {
-      if (!isAdmin) {
-        setMessages((prevMessages) =>
-          prevMessages.filter((m) => m.commonKey !== msg.commonKey),
-        );
-      }
+      // if (!isAdmin) {
+      //   setMessages((prevMessages) =>
+      //     prevMessages.filter((m) => m.commonKey !== msg.commonKey),
+      //   );
+      // }
 
-      console.log("deltedMsg from admin", msg);
-      let filter = msg.userId === conversationUser && msg;
-      if (isAdmin && filter) {
-        // setMessages((prev) => [...prev, filter]);
-        console.log("deltedMsg from admin", msg);
-      }
+      console.log("deltedMsg", msg);
+      setMessages((prevMessages) =>
+        prevMessages.filter((m) => m.commonKey !== msg.commonKey),
+      );
+      // let filter = msg.userId === conversationUser && msg;
+      // if (isAdmin && filter) {
+      //   // setMessages((prev) => [...prev, filter]);
+      //   console.log("deltedMsg", msg);
+      // }
     });
 
     socket.on("admin-notification", (msg) => {
@@ -289,8 +292,6 @@ const ChatBox = ({ openToggle }) => {
       msgSenderUserName,
       replySenderUserRole,
     } = msg?.replyTo;
-
-    console.log(msg?.replyTo, "replyto");
 
     if (
       msgSenderUserName !== replySenderUserName &&
@@ -728,7 +729,7 @@ const ChatBox = ({ openToggle }) => {
     }
   }, [conversationUser, messages]);
 
-  console.log(messages);
+  // console.log(messages);
 
   return (
     <div className="flex h-full flex-col">
