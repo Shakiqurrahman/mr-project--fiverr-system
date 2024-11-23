@@ -4,16 +4,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Slider from "react-slick";
 import Swal from "sweetalert2";
-import {
-  useDeleteDesignByIdMutation,
-  useFetchGetUploadQuery,
-} from "../Redux/api/uploadDesignApiSlice";
-import { addToCart, removeFromCart } from "../Redux/features/cartSlice";
-import { setPreviewImage } from "../Redux/features/previewImageSlice";
 import LeftArrowIcon from "../assets/images/icons/Left Arrow.svg";
 import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
 import Divider from "../components/Divider";
 import RelatedDesigns from "../components/RelatedDesigns";
+import {
+  useDeleteDesignByIdMutation,
+  useFetchGetUploadQuery,
+  useLazyGetDesignsBySearchQuery,
+} from "../Redux/api/uploadDesignApiSlice";
+import { addToCart, removeFromCart } from "../Redux/features/cartSlice";
+import { setPreviewImage } from "../Redux/features/previewImageSlice";
+import { setSearchedText, setSearchResult } from "../Redux/features/utilSlice";
 
 function SingleProductPage() {
   const { slug } = useParams();
@@ -57,10 +59,20 @@ function SingleProductPage() {
     refetch,
   } = useFetchGetUploadQuery();
 
+  const [getDesignsBySearch, { data: searchedData }] =
+    useLazyGetDesignsBySearchQuery();
+
   const design = useMemo(
     () => uploadDesigns?.find((d) => d.designId === slug),
     [uploadDesigns, slug],
   );
+
+  const handleTagClick = (tag) => {
+    dispatch(setSearchedText(tag));
+    if (tag) {
+      getDesignsBySearch(tag);
+    }
+  };
 
   const relatedDesigns = useMemo(
     () =>
@@ -79,6 +91,13 @@ function SingleProductPage() {
       setImages(sortedImages);
     }
   }, [design]);
+
+  useEffect(() => {
+    if (searchedData) {
+      dispatch(setSearchResult(searchedData));
+      navigate("/designs");
+    }
+  }, [searchedData, dispatch]);
 
   useEffect(() => {
     if (uploadDesigns) {
@@ -243,6 +262,7 @@ function SingleProductPage() {
           {tagsToShow?.map((tag, index) => (
             <button
               key={index}
+              onClick={() => handleTagClick(tag)}
               className="rounded-[30px] bg-[#ffefef] px-2 py-1 text-sm font-medium duration-300 hover:bg-secondary hover:text-white sm:px-4 sm:py-2 sm:text-base"
             >
               {tag}
