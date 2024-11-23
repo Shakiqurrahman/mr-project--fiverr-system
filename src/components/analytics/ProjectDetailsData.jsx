@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useGetActiveProjectsAnalyticsQuery,
   useLazyGetAvarageSellingAnalyticsQuery,
   useLazyGetFinishProjectsAnalyticsQuery,
   useLazyGetProjectBuyersAnalyticsQuery,
   useLazyGetProjectOptionsAnalyticsQuery,
+  useLazyGetProjectsDetailsByFilterQuery,
 } from "../../Redux/api/analyticsApiSlice";
 import HorizontalBarChart from "./Chart/HorizontalBarChart";
 import ProjectLineChart from "./Chart/ProjectLineChart";
@@ -20,11 +21,13 @@ const getFilterTimes = () => {
     "This Year",
     `${currentYear - 1}`, // Last Year
     `${currentYear - 2}`, // 2 Years Ago
-    "All Times",
   ];
 };
 
 const ProjectDetailsData = () => {
+  const [getProjectDetails, { data: projectDetailsData }] =
+    useLazyGetProjectsDetailsByFilterQuery();
+
   // Line Chart stats
   const [keywordFilterOptions, setKeywordFilterOptions] = useState([]);
   const [selectedFilterOption, setSelectedFilterOption] = useState("All");
@@ -32,6 +35,10 @@ const ProjectDetailsData = () => {
   const [selectedTimeOption, setSelectedTimeOption] = useState(
     getFilterTimes()[1],
   );
+
+  const [newProjects, setNewProjects] = useState([]);
+  const [completedProjects, setCompletedProjects] = useState([]);
+  const [canceledProjects, setCanceledProjects] = useState([]);
 
   const { data: activeProjectsData } = useGetActiveProjectsAnalyticsQuery();
   const [getFinishedProject, { data: finishedProjectData }] =
@@ -43,6 +50,36 @@ const ProjectDetailsData = () => {
   const [getAvarageSelling, { data: avgSellingData }] =
     useLazyGetAvarageSellingAnalyticsQuery();
 
+  useEffect(() => {
+    if (selectedTimeOption) {
+      getProjectDetails({ date: selectedTimeOption });
+    }
+  }, [selectedTimeOption, getProjectDetails]);
+
+  useEffect(() => {
+    if (projectDetailsData) {
+      const allNewProjects = projectDetailsData?.map((item) => ({
+        items: item.newOrders,
+        earning: item.newOrdersEarnings,
+      }));
+      const allCompletedProjects = projectDetailsData?.map((item) => ({
+        items: item.completedOrders,
+        earning: item.completedOrdersEarnings,
+      }));
+      const allCanceledProjects = projectDetailsData?.map((item) => ({
+        items: item.canceledOrders,
+        earning: item.canceledOrdersEarnings,
+      }));
+      setNewProjects(allNewProjects);
+      setCompletedProjects(allCompletedProjects);
+      setCanceledProjects(allCanceledProjects);
+    }
+  }, [projectDetailsData]);
+
+  const sumNewProjects = `${newProjects?.reduce((acc, curr) => acc + parseInt(curr.items), 0)} ($${newProjects?.reduce((acc, curr) => acc + parseInt(curr.earning), 0)})`;
+  const sumCompletedProjects = `${completedProjects?.reduce((acc, curr) => acc + parseInt(curr.items), 0)} ($${completedProjects?.reduce((acc, curr) => acc + parseInt(curr.earning), 0)})`;
+  const sumCanceledProjects = `${canceledProjects?.reduce((acc, curr) => acc + parseInt(curr.items), 0)} ($${canceledProjects?.reduce((acc, curr) => acc + parseInt(curr.earning), 0)})`;
+
   return (
     <>
       {/* LineChart Component */}
@@ -53,18 +90,20 @@ const ProjectDetailsData = () => {
           </h1>
           <div className="flex w-full shrink-0 items-center gap-3 md:w-auto">
             <div className="h-[10px] w-[10px] shrink-0 rounded-full bg-ongoing"></div>
-            <span className="text-sm font-medium">New Projects 16 ($470)</span>
+            <span className="text-sm font-medium">
+              New Projects {sumNewProjects}
+            </span>
           </div>
           <div className="flex w-full shrink-0 items-center gap-3 md:w-auto">
             <div className="h-[10px] w-[10px] shrink-0 rounded-full bg-primary"></div>
             <span className="text-sm font-medium">
-              Completed Projects 14 ($430)
+              Completed Projects {sumCompletedProjects}
             </span>
           </div>
           <div className="flex w-full shrink-0 items-center gap-3 md:w-auto">
             <div className="h-[10px] w-[10px] shrink-0 rounded-full bg-revision"></div>
             <span className="text-sm font-medium">
-              Cancelled Projects 1 ($25)
+              Cancelled Projects {sumCanceledProjects}
             </span>
           </div>
           <select

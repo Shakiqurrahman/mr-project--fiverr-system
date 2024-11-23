@@ -10,6 +10,7 @@ import {
 } from "chart.js";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
+import { useLazyGetProjectsDetailsByFilterQuery } from "../../../Redux/api/analyticsApiSlice";
 
 ChartJS.register(
   LineElement,
@@ -51,109 +52,48 @@ const ProjectLineChart = ({
   selectedLegend,
   setDatasetLabels,
 }) => {
+  const [getProjectDetails, { data: projectDetailsData }] =
+    useLazyGetProjectsDetailsByFilterQuery();
+
   const [labels, setLabels] = useState([]);
-  const [totalVisitors, setTotalVisitors] = useState([]);
-  const [newVisitors, setNewVisitors] = useState([]);
-  const [returningVisitors, setReturningVisitors] = useState([]);
-
-  const generateLabels = (option) => {
-    const currentDate = new Date();
-    const labels = [];
-    const totalVisitors = [];
-    const newVisitors = [];
-    const returningVisitors = [];
-
-    switch (option) {
-      case "Last 7 Days": {
-        for (let i = 6; i >= 0; i--) {
-          const date = new Date(currentDate);
-          date.setDate(currentDate.getDate() - i);
-
-          totalVisitors.push(Math.floor(Math.random() * 200));
-          newVisitors.push(Math.floor(Math.random() * 200));
-          returningVisitors.push(Math.floor(Math.random() * 200));
-
-          labels.push(
-            date.toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            }),
-          );
-        }
-        break;
-      }
-      case "Last 30 Days": {
-        for (let i = 29; i >= 0; i--) {
-          const date = new Date(currentDate);
-          date.setDate(currentDate.getDate() - i);
-
-          totalVisitors.push(Math.floor(Math.random() * 200));
-          newVisitors.push(Math.floor(Math.random() * 200));
-          returningVisitors.push(Math.floor(Math.random() * 200));
-
-          labels.push(
-            date.toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            }),
-          );
-        }
-        break;
-      }
-      case "Last Month": {
-        const lastMonth = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth() - 1,
-        );
-        const totalDays = new Date(
-          lastMonth.getFullYear(),
-          lastMonth.getMonth() + 1,
-          0,
-        ).getDate();
-
-        for (let i = 1; i <= totalDays; i++) {
-          const date = new Date(
-            lastMonth.getFullYear(),
-            lastMonth.getMonth(),
-            i,
-          );
-          totalVisitors.push(Math.floor(Math.random() * 200));
-          newVisitors.push(Math.floor(Math.random() * 200));
-          returningVisitors.push(Math.floor(Math.random() * 200));
-
-          labels.push(
-            date.toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            }),
-          );
-        }
-        break;
-      }
-      // Include other cases (Last 3 Months, Last 6 Months, etc.) similar to above
-      default:
-        break;
-    }
-
-    setLabels(labels);
-    setTotalVisitors(totalVisitors);
-    setNewVisitors(newVisitors);
-    setReturningVisitors(returningVisitors);
-  };
+  const [newProjects, setNewProjects] = useState([]);
+  const [completedProjects, setCompletedProjects] = useState([]);
+  const [canceledProjects, setCanceledProjects] = useState([]);
 
   useEffect(() => {
-    generateLabels(selectedTimeOption);
-  }, [selectedTimeOption]);
+    if (selectedTimeOption) {
+      getProjectDetails({ date: selectedTimeOption });
+    }
+  }, [selectedTimeOption, getProjectDetails]);
+
+  useEffect(() => {
+    if (projectDetailsData) {
+      const allLabels = projectDetailsData?.map((item) => item.date);
+      const allNewProjects = projectDetailsData?.map((item) => ({
+        items: item.newOrders,
+        earning: item.newOrdersEarnings,
+      }));
+      const allCompletedProjects = projectDetailsData?.map((item) => ({
+        items: item.completedOrders,
+        earning: item.completedOrdersEarnings,
+      }));
+      const allCanceledProjects = projectDetailsData?.map((item) => ({
+        items: item.canceledOrders,
+        earning: item.canceledOrdersEarnings,
+      }));
+      setLabels(allLabels);
+      setNewProjects(allNewProjects);
+      setCompletedProjects(allCompletedProjects);
+      setCanceledProjects(allCanceledProjects);
+    }
+  }, [projectDetailsData]);
 
   const data = {
     labels: labels,
     datasets: [
       {
         label: "New Projects",
-        data: totalVisitors,
+        data: newProjects?.map((v) => v.earning),
         fill: false,
         borderColor: "#078510",
         backgroundColor: "#078510",
@@ -162,7 +102,7 @@ const ProjectLineChart = ({
       },
       {
         label: "Completed Projects",
-        data: newVisitors,
+        data: completedProjects?.map((v) => v.earning),
         fill: false,
         borderColor: "#1b8cdc",
         backgroundColor: "#1b8cdc",
@@ -171,7 +111,7 @@ const ProjectLineChart = ({
       },
       {
         label: "Cancelled Projects",
-        data: returningVisitors,
+        data: canceledProjects?.map((v) => v.earning),
         fill: false,
         borderColor: "#f1592a",
         backgroundColor: "#f1592a",
@@ -200,10 +140,16 @@ const ProjectLineChart = ({
             switch (selectedTimeOption) {
               case "Last 7 Days":
                 return this.getLabelForValue(value);
-              default:
+              case "Last 30 Days":
                 return index > 0 && (index - 4) % 5 === 0
                   ? this.getLabelForValue(value)
                   : "";
+              case "Last Month":
+                return index > 0 && (index - 4) % 5 === 0
+                  ? this.getLabelForValue(value)
+                  : "";
+              default:
+                return this.getLabelForValue(val);
             }
           },
           autoSkip: false, // Prevent automatic skipping of labels
@@ -230,8 +176,15 @@ const ProjectLineChart = ({
           label: function (context) {
             const label = context.dataset.label || "";
             const value = context.raw;
-
-            return ` ${label}: ${value}`;
+            const index = context.dataIndex;
+            switch (label) {
+              case "New Projects":
+                return ` ${label}: ${newProjects[index].items} ($${value})`;
+              case "Completed Projects":
+                return ` ${label}: ${completedProjects[index].items} ($${value})`;
+              case "Cancelled Projects":
+                return ` ${label}: ${canceledProjects[index].items} ($${value})`;
+            }
           },
         },
         backgroundColor: "#fff", // Tooltip background color

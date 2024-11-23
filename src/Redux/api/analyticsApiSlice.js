@@ -40,6 +40,12 @@ export const analyticsApiSlice = createApi({
       transformResponse: (response) => response.data,
     }),
 
+    getProjectsDetailsByFilter: builder.query({
+      query: ({ date }) =>
+        `analytics/project-details/getProjectAnalytics?timeFilter=${date}`,
+      transformResponse: (response) => response.data,
+    }),
+
     getActiveProjectsAnalytics: builder.query({
       query: () => `analytics/project-details/active-project`,
       transformResponse: (response) => response.data,
@@ -87,4 +93,5 @@ export const {
   useLazyGetCategoriesDataAnalyticsQuery,
   useLazyGetProjectOptionsAnalyticsQuery,
   useLazyGetAvarageSellingAnalyticsQuery,
+  useLazyGetProjectsDetailsByFilterQuery,
 } = analyticsApiSlice;
