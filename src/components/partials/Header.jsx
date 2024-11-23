@@ -1,6 +1,6 @@
 // import { Drawer } from "@mui/material";
 import { Badge } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BiX } from "react-icons/bi";
 import { BsCart4 } from "react-icons/bs";
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -21,7 +21,8 @@ import { useLazyGetDesignsBySearchQuery } from "../../Redux/api/uploadDesignApiS
 import {
   setOpenNotificationDrawer,
   setOpenNotifications,
-  setSearchText,
+  setSearchedText,
+  setSearchResult,
 } from "../../Redux/features/utilSlice";
 import useSyncCart from "../../hooks/useSyncCart";
 import NotificationModal from "../Notifications/NotificationModal";
@@ -31,9 +32,8 @@ import SearchBox from "./SearchBox";
 function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { openNotifications, openNotificationDrawer, searchText } = useSelector(
-    (state) => state.utils,
-  );
+  const { openNotifications, openNotificationDrawer, searchedText } =
+    useSelector((state) => state.utils);
   const [getDesignsBySearch, { data: searchResults }] =
     useLazyGetDesignsBySearchQuery();
 
@@ -44,6 +44,7 @@ function Header() {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [openInboxDrawer, setOpenInboxDrawer] = useState(false);
   const [openSearchBox, setOpenSearchBox] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
 
   const isAuthorized = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(
     user?.role,
@@ -65,14 +66,20 @@ function Header() {
   useSyncCart();
 
   const handleSearch = async (e) => {
+    dispatch(setSearchedText(searchValue));
     e.preventDefault();
-    if (searchText) {
-      getDesignsBySearch(searchText);
+    if (searchValue) {
+      getDesignsBySearch(searchValue);
       navigate("/designs");
     }
+    setSearchValue("");
   };
 
-  console.log(searchResults);
+  useEffect(() => {
+    if (searchResults) {
+      dispatch(setSearchResult(searchResults));
+    }
+  }, [searchResults]);
 
   return (
     <>
@@ -95,10 +102,10 @@ function Header() {
                 <input
                   className="w-full rounded-md px-4 py-2 text-base outline-none"
                   type="text"
-                  value={searchText}
+                  value={searchValue}
                   name="searchText"
                   placeholder="What design you are looking for today?"
-                  onChange={(e) => dispatch(setSearchText(e.target.value))}
+                  onChange={(e) => setSearchValue(e.target.value)}
                   // onClick={() => setOpenSearchBox(true)}
                 />
                 <button

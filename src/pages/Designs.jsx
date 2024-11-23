@@ -2,8 +2,14 @@ import ProjectCard from "../components/categories/ProjectCard";
 
 import { Pagination, PaginationItem, Stack } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
+import prevBtn from "../assets/images/icons/Left Arrow.svg";
+import nextBtn from "../assets/images/icons/Right Arrow.svg";
+import ButtonPrimary from "../components/ButtonPrimary";
+import ButtonSecondary from "../components/ButtonSecondary";
+import Divider from "../components/Divider";
+import SortDropdown from "../components/SortDropdown";
 import {
   useFetchAllDesignKeywordsQuery,
   useFetchAllIndustryKeywordsQuery,
@@ -11,23 +17,18 @@ import {
   useFetchDesignNdIndustryByKeyQuery,
   useFetchGetUploadQuery,
   useFetchIndustryByKeyQuery,
-  useLazyGetDesignsBySearchQuery,
 } from "../Redux/api/uploadDesignApiSlice";
-import prevBtn from "../assets/images/icons/Left Arrow.svg";
-import nextBtn from "../assets/images/icons/Right Arrow.svg";
-import ButtonPrimary from "../components/ButtonPrimary";
-import ButtonSecondary from "../components/ButtonSecondary";
-import Divider from "../components/Divider";
-import SortDropdown from "../components/SortDropdown";
+import { setSearchedText } from "../Redux/features/utilSlice";
 
 function Designs() {
   const { state } = useLocation();
+  const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
   const { data: designKeyWordsData } = useFetchAllDesignKeywordsQuery();
   const { data: industryKeyWordsData } = useFetchAllIndustryKeywordsQuery();
   const { data: designsData } = useFetchGetUploadQuery();
 
-  const { searchText } = useSelector((state) => state.utils);
+  const { searchedText, searchResult } = useSelector((state) => state.utils);
 
   const [designs, setDesigns] = useState([]);
   const [designKeywords, setDesignKeywords] = useState([]);
@@ -74,9 +75,31 @@ function Designs() {
 
   useEffect(() => {
     if (!designsData) return; // Return early if no designs data is available
-
+    // searching results
+    if (designsData && searchedText) {
+      const searchDesigns = designsData.filter((d) =>
+        searchResult.some((sr) => sr.designId === d.designId),
+      );
+      setDesigns(searchDesigns);
+      selectedOption(searchDesigns);
+      const updatedDesignKeywords = designKeyWordsData?.map((key) => ({
+        name: key,
+        quantity: designsData?.filter((design) =>
+          design?.designs?.includes(key),
+        ).length,
+      }));
+      setDesignKeywords(updatedDesignKeywords);
+      const updatedIndustryKeywords = industryKeyWordsData?.map((key) => ({
+        name: key,
+        quantity: designsData?.filter((design) =>
+          design?.industrys?.includes(key),
+        ).length,
+      }));
+      setIndustryKeywords(updatedIndustryKeywords);
+      setCurrentPage(1);
+    }
     // Check if both design and industry keywords are selected
-    if (selectedValue && industrySelectedValue) {
+    else if (selectedValue && industrySelectedValue) {
       // updateKeywordsData(filterBothData, designKeyWordsData, industryKeyWordsData);
       setDesigns(filterBothData);
       selectedOption(filterBothData);
@@ -153,13 +176,17 @@ function Designs() {
     designKeyWordsData,
     industryKeyWordsData,
     selectedOption,
+    searchedText,
+    searchResult,
   ]);
 
   const handleDesignClick = useCallback((value) => {
+    dispatch(setSearchedText(""));
     setSelectedValue((prev) => (prev === value ? null : value));
   }, []);
 
   const handleIndustryClick = useCallback((value) => {
+    dispatch(setSearchedText(""));
     setIndustrySelectedValue((prev) => (prev === value ? null : value));
   }, []);
 
@@ -176,7 +203,6 @@ function Designs() {
   useEffect(() => {
     setSelectedValue(state);
   }, [state]);
-
 
   return (
     <>
@@ -214,10 +240,18 @@ function Designs() {
         </div>
         <div className="my-10 flex flex-wrap items-center justify-between gap-6 md:flex-nowrap md:gap-2">
           <div className="w-full md:w-3/4">
-            {searchText && (
-              <h1 className="rounded-[30px] border px-6 py-2.5 text-lg font-semibold text-primary">
-                {`Searched For " ${searchText} "`}
-              </h1>
+            {searchedText && (
+              <div className="flex w-full items-center rounded-[30px] border px-4">
+                <h1 className="w-full py-2.5 text-lg font-semibold text-primary">
+                  {`Searched For " ${searchedText} "`}
+                </h1>
+                <span
+                  onClick={() => dispatch(setSearchedText(""))}
+                  className="cursor-pointer border-l pl-4 text-lg font-medium text-primary"
+                >
+                  Clear
+                </span>
+              </div>
             )}
           </div>
           <div className="w-full justify-end md:flex md:w-1/4">

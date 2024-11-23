@@ -5,7 +5,8 @@ const utilSlice = createSlice({
   initialState: {
     openNotifications: false,
     openNotificationDrawer: false,
-    searchText: "",
+    searchedText: "",
+    searchResult: [],
   },
   reducers: {
     setOpenNotifications: (state, action) => {
@@ -14,8 +15,11 @@ const utilSlice = createSlice({
     setOpenNotificationDrawer: (state, action) => {
       state.openNotificationDrawer = action.payload;
     },
-    setSearchText: (state, action) => {
-      state.searchText = action.payload;
+    setSearchedText: (state, action) => {
+      state.searchedText = action.payload;
+    },
+    setSearchResult: (state, action) => {
+      state.searchResult = action.payload;
     },
   },
 });
@@ -23,6 +27,7 @@ const utilSlice = createSlice({
 export const {
   setOpenNotifications,
   setOpenNotificationDrawer,
-  setSearchText,
+  setSearchedText,
+  setSearchResult,
 } = utilSlice.actions;
 export default utilSlice.reducer;
