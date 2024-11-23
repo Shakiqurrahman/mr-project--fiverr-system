@@ -279,6 +279,16 @@ function Designs() {
           })}
         </div>
 
+        {designs?.length === 0 && (
+          <div>
+            <p className="text-center">
+              {searchedText
+                ? "Sorry, no designs were found for your search."
+                : "No designs found!"}
+            </p>
+          </div>
+        )}
+
         {designs?.length > 20 && (
           <div className="mt-10 flex justify-center">
             <Stack spacing={2}>
