@@ -32,8 +32,9 @@ import SearchBox from "./SearchBox";
 function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { openNotifications, openNotificationDrawer, searchedText } =
-    useSelector((state) => state.utils);
+  const { openNotifications, openNotificationDrawer } = useSelector(
+    (state) => state.utils,
+  );
   const [getDesignsBySearch, { data: searchResults }] =
     useLazyGetDesignsBySearchQuery();
 

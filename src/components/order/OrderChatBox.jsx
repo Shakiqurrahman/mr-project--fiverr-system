@@ -36,6 +36,7 @@ import {
   updateMessagesByUser,
 } from "../../Redux/features/orderSlice";
 import { TimeZoneConverter } from "../../libs/TimeZoneConverter";
+import { timeAgoTracker } from "../../libs/timeAgoTracker";
 import CircleProgressBar from "../CircleProgressBar";
 import FilePreview from "../FilePreview";
 import GenerateName from "../GenerateName";
@@ -57,7 +58,7 @@ const OrderChatBox = () => {
   const [sendAOrderMessage] = useSendAOrderMessageMutation();
   const [deleteAOrderMessage] = useDeleteAOrderMessageMutation();
 
-  const { user, token } = useSelector((state) => state.user);
+  const { user, token, onlineUsers } = useSelector((state) => state.user);
   const { projectDetails, clientDetails, messages, replyTo } = useSelector(
     (state) => state.order,
   );
@@ -554,6 +555,18 @@ const OrderChatBox = () => {
     }
   };
 
+  const [isAdminOnline, setIsAdminOnline] = useState(false);
+  useEffect(() => {
+    if (onlineUsers && onlineUsers.length > 0) {
+      const adminOnline = onlineUsers.some(
+        (onlineUser) => onlineUser?.role !== "USER",
+      );
+      setIsAdminOnline(adminOnline);
+    } else {
+      setIsAdminOnline(false);
+    }
+  }, [onlineUsers]);
+
   return (
     <>
       <div className="flex max-h-[2000px] min-h-[800px] w-full flex-col rounded-lg shadow-btn-shadow">
@@ -795,7 +808,18 @@ const OrderChatBox = () => {
                           <Divider className="h-4 w-px !bg-black" />
                         </>
                       )}
-                      <p>Last seen 23 hours ago</p>
+                      <div>
+                        {user?.role === "USER" && (
+                          <p>{!isAdminOnline ? "Offline" : "Online"}</p>
+                        )}
+                        {isAdmin && (
+                          <p>
+                            {projectDetails?.user?.lastSeen
+                              ? `Last seen: ${timeAgoTracker(projectDetails?.user?.lastSeen)}`
+                              : "Online"}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
                   <div

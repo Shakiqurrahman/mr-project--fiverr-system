@@ -30,6 +30,8 @@ function Designs() {
 
   const { searchedText, searchResult } = useSelector((state) => state.utils);
 
+  console.log(searchResult, searchedText);
+
   const [designs, setDesigns] = useState([]);
   const [designKeywords, setDesignKeywords] = useState([]);
   const [industryKeywords, setIndustryKeywords] = useState([]);
@@ -78,7 +80,7 @@ function Designs() {
     // searching results
     if (designsData && searchedText) {
       const searchDesigns = designsData.filter((d) =>
-        searchResult.some((sr) => sr.designId === d.designId),
+        searchResult?.some((sr) => sr.designId === d.designId),
       );
       setDesigns(searchDesigns);
       selectedOption(searchDesigns);
@@ -243,7 +245,7 @@ function Designs() {
             {searchedText && (
               <div className="flex w-full items-center rounded-[30px] border px-4">
                 <h1 className="w-full py-2.5 text-lg font-semibold text-primary">
-                  {`Searched For " ${searchedText} "`}
+                  {`Results For " ${searchedText} "`}
                 </h1>
                 <span
                   onClick={() => dispatch(setSearchedText(""))}
