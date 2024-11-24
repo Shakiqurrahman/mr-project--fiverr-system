@@ -18,12 +18,6 @@ function AllCategory() {
   const navigate = useNavigate();
   const { categories } = useGetCategory();
 
-  // const selectedCategory = (categories || []).find(
-  //   (data) => data.slug === slug,
-  // );
-  // const subFolders = selectedCategory?.subFolders;
-  // const title = selectedCategory?.folder;
-
   // filtering related folders
   const relatedFolders = useMemo(
     () => categories?.filter((cat) => cat.slug !== slug),
@@ -32,7 +26,6 @@ function AllCategory() {
 
   const handleCustomize = (e) => {
     e.preventDefault();
-    console.log("Folder data", subFolders, folderObject);
     if (subFolders?.length > 0 && folderObject) {
       navigate("/drag-and-drop", { state: { subFolders, folderObject } });
     }
@@ -42,7 +35,9 @@ function AllCategory() {
   const limit = 20;
   const totalPages = Math.ceil(subFolders?.length / limit) || 0;
   const startIndex = (currentPage - 1) * limit;
-  const currentPageData = subFolders?.slice(startIndex, startIndex + limit);
+  const currentPageData = subFolders
+    ?.sort((a, b) => a.order - b.order)
+    ?.slice(startIndex, startIndex + limit);
 
   return (
     <>
@@ -61,7 +56,7 @@ function AllCategory() {
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {currentPageData?.map((design, idx) => {
-            const thumbnail = design.images.find(
+            const thumbnail = design?.images?.find(
               (img) => img?.thumbnail === true,
             );
             return (

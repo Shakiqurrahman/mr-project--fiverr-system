@@ -102,8 +102,8 @@ function RelatedDesigns({
                       key={idx}
                       thumbnail={thumbnail?.url}
                       watermark={thumbnail?.watermark}
-                      title={design?.title}
-                      thumbnailName={thumbnail?.name}
+                      title={design?.subFolder}
+                      thumbnailName={design?.title}
                       slug={`/categories/${folder.slug}/`}
                     />
                   );
@@ -127,8 +127,8 @@ function RelatedDesigns({
                       key={idx}
                       thumbnail={thumbnail?.url}
                       watermark={thumbnail?.watermark}
-                      title={design?.title}
-                      thumbnailName={thumbnail?.name}
+                      title={design?.subFolder}
+                      thumbnailName={design?.title}
                       slug={`/designs/${folder.slug}/${subFolder.slug}`}
                     />
                   );

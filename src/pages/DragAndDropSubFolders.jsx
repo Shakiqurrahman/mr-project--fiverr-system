@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useUpdateAllSubFoldersByFolderSlugMutation } from "../Redux/api/uploadDesignApiSlice";
@@ -10,10 +10,19 @@ const DragAndDropSubFolders = () => {
   const [updateSubFoldersOrdering] =
     useUpdateAllSubFoldersByFolderSlugMutation();
 
-  const [subFolders, setSubFolders] = useState(state?.subFolders || []);
+  const [subFolders, setSubFolders] = useState([]);
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [isCustomizing, setIsCustomizing] = useState(true);
   //   const [tempProducts, setTempProducts] = useState([]);
+
+  useEffect(() => {
+    if (state?.subFolders) {
+      const sortSubFolders = state?.subFolders?.sort(
+        (a, b) => a.order - b.order,
+      );
+      setSubFolders(sortSubFolders);
+    }
+  }, [state?.subFolders]);
 
   const folderObject = state?.folderObject;
 
@@ -39,12 +48,15 @@ const DragAndDropSubFolders = () => {
   const handleSave = async () => {
     setSubFolders(subFolders); // Save the reordered products
     // setIsCustomizing(false);
-    const newArr = subFolders.map((folder) => ({ id: folder.id }));
     try {
-      const data = {};
-      const response = await updateSubFoldersOrdering();
-      if (response.status === 200) {
+      const data = {
+        folderName: folderObject?.folderName,
+        newOrder: subFolders,
+      };
+      const response = await updateSubFoldersOrdering(data).unwrap();
+      if (response.success) {
         toast.success("Updated Successfully!");
+        navigate(-1);
       }
     } catch (error) {
       toast.error("Update Failed!");
