@@ -12,23 +12,31 @@ import useGetCategory from "../hooks/useGetCategory";
 import useGetSubFolders from "../hooks/useGetSubFolders";
 
 function AllCategory() {
-  const { categories: dddd } = useGetSubFolders();
   const { slug } = useParams();
+  const { subFolders, folderObject } = useGetSubFolders({ slug });
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
-  const { categories, isLoading } = useGetCategory();
+  const { categories } = useGetCategory();
 
-  const selectedCategory = (categories || []).find(
-    (data) => data.slug === slug,
-  );
-  const subFolders = selectedCategory?.subFolders;
-  const title = selectedCategory?.folder;
+  // const selectedCategory = (categories || []).find(
+  //   (data) => data.slug === slug,
+  // );
+  // const subFolders = selectedCategory?.subFolders;
+  // const title = selectedCategory?.folder;
 
   // filtering related folders
   const relatedFolders = useMemo(
     () => categories?.filter((cat) => cat.slug !== slug),
     [categories, slug],
   );
+
+  const handleCustomize = (e) => {
+    e.preventDefault();
+    console.log("Folder data", subFolders, folderObject);
+    if (subFolders?.length > 0 && folderObject) {
+      navigate("/drag-and-drop", { state: { subFolders, folderObject } });
+    }
+  };
 
   // Pagination related work
   const limit = 20;
@@ -38,22 +46,24 @@ function AllCategory() {
 
   return (
     <>
-      <PageHeader>{title}</PageHeader>
+      <PageHeader>{folderObject?.folderName}</PageHeader>
       <div className="max-width">
         <div className="my-10 flex items-center justify-between">
           <h1 className="text-base font-semibold sm:text-lg">
             Click on the design you need to see more designs.
           </h1>
-          <button className="rounded-[30px] border border-solid border-primary px-4 py-1 text-sm font-semibold duration-300 hover:bg-primary hover:text-white">
+          <button
+            className="rounded-[30px] border border-solid border-primary px-4 py-1 text-sm font-semibold duration-300 hover:bg-primary hover:text-white"
+            onClick={handleCustomize}
+          >
             Customise
           </button>
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {currentPageData?.map((subFolder, idx) => {
-            const design = subFolder?.designs[0];
-            const thumbnail = design.images.filter(
+          {currentPageData?.map((design, idx) => {
+            const thumbnail = design.images.find(
               (img) => img?.thumbnail === true,
-            )[0];
+            );
             return (
               <ProjectCard
                 folder={true}
@@ -61,8 +71,8 @@ function AllCategory() {
                 thumbnail={thumbnail?.url}
                 thumbnailName={design?.title}
                 watermark={thumbnail?.watermark}
-                title={subFolder?.subFolder}
-                slug={`/designs/${slug}/${subFolder?.slug}`}
+                title={design?.subFolder}
+                slug={`/designs/${slug}/${design?.slug}`}
               />
             );
           })}

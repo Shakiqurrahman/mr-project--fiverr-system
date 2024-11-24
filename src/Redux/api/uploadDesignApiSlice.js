@@ -14,7 +14,7 @@ export const uploadDesignApiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Design", "Uploaded Design"],
+  tagTypes: ["Design", "Uploaded Design", "SubFolderData"],
   endpoints: (builder) => ({
     fetchGetUpload: builder.query({
       query: () => "upload/get",
@@ -122,6 +122,24 @@ export const uploadDesignApiSlice = createApi({
       transformResponse: (response) => response?.data,
     }),
 
+    fetchGetAllSubFoldersByFolderSlug: builder.query({
+      query: ({ slug }) => `dd/get/${slug}`,
+      transformResponse: (response) => response?.data,
+      providesTags: ["SubFolderData"],
+    }),
+
+    UpdateAllSubFoldersByFolderSlug: builder.mutation({
+      query: ({ folderName, newOrder }) => ({
+        url: `dd/update`,
+        method: "POST",
+        body: {
+          folderName,
+          newOrder,
+        },
+      }),
+      invalidatesTags: ["SubFolderData"],
+    }),
+
     getDesignsBySearch: builder.query({
       query: (searchKey) => `search?searchQuery=${searchKey}`,
       transformResponse: (response) => response?.data,
@@ -147,4 +165,6 @@ export const {
   useUploadADesignMutation,
   useUpdateADesignMutation,
   useLazyGetDesignsBySearchQuery,
+  useFetchGetAllSubFoldersByFolderSlugQuery,
+  useUpdateAllSubFoldersByFolderSlugMutation,
 } = uploadDesignApiSlice;
