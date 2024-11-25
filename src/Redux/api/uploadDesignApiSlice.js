@@ -14,7 +14,12 @@ export const uploadDesignApiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Design", "Uploaded Design", "SubFolderData"],
+  tagTypes: [
+    "Design",
+    "Uploaded Design",
+    "SubFolderData",
+    "SubFolderDesignsData",
+  ],
   endpoints: (builder) => ({
     fetchGetUpload: builder.query({
       query: () => "upload/get",
@@ -128,16 +133,33 @@ export const uploadDesignApiSlice = createApi({
       providesTags: ["SubFolderData"],
     }),
 
+    fetchGetAllDesignsByFolderSubFolder: builder.query({
+      query: ({ folderName, subFolderName }) =>
+        `dd/allDesginByFolderSubFolder?folderName=${folderName}&subFolderName=${subFolderName}`,
+      transformResponse: (response) => response?.data,
+      providesTags: ["SubFolderDesignsData"],
+    }),
+
     UpdateAllSubFoldersByFolderSlug: builder.mutation({
-      query: ({ folderName, newOrder }) => ({
+      query: ({ newOrder }) => ({
         url: `dd/update`,
         method: "POST",
         body: {
-          folderName,
           newOrder,
         },
       }),
       invalidatesTags: ["SubFolderData"],
+    }),
+
+    UpdateAllDesignsOfFolderSubFolder: builder.mutation({
+      query: ({ newOrder }) => ({
+        url: `dd/allDesginByFolderSubFolder`,
+        method: "POST",
+        body: {
+          newOrder,
+        },
+      }),
+      invalidatesTags: ["SubFolderDesignsData"],
     }),
 
     getDesignsBySearch: builder.query({
@@ -167,4 +189,6 @@ export const {
   useLazyGetDesignsBySearchQuery,
   useFetchGetAllSubFoldersByFolderSlugQuery,
   useUpdateAllSubFoldersByFolderSlugMutation,
+  useLazyFetchGetAllDesignsByFolderSubFolderQuery,
+  useUpdateAllDesignsOfFolderSubFolderMutation,
 } = uploadDesignApiSlice;

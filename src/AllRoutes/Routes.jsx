@@ -19,6 +19,7 @@ import CreateCategory from "../pages/CreateCategory";
 import CreateOfferProject from "../pages/CreateOfferProject";
 import DashboardPage from "../pages/DashboardPage";
 import Designs from "../pages/Designs";
+import DragAndDropSubFolderDesigns from "../pages/DragAndDropSubFolderDesigns";
 import DragAndDropSubFolders from "../pages/DragAndDropSubFolders";
 import EditCategory from "../pages/EditCategory";
 import EditDesign from "../pages/EditDesign";
@@ -187,6 +188,14 @@ export const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <DragAndDropSubFolders />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/drag-and-drop-designs",
+        element: (
+          <AdminRoute>
+            <DragAndDropSubFolderDesigns />
           </AdminRoute>
         ),
       },
