@@ -115,7 +115,7 @@ const PaymentPage = () => {
     try {
       const response = await axios.post(
         `${configApi.api}api/checkout-session`,
-        { data, tags: state?.tags },
+        { data, tags: state?.tags || [] },
       );
 
       const sessionId = response?.data?.data?.id;
@@ -151,10 +151,10 @@ const PaymentPage = () => {
             )}
             {(state?.from === "multipleProject" ||
               state?.from === "customOffer") && (
-              <h3 className="text-3xl font-bold">
-                ${designs?.totalAmount || designs?.subTotal}
-              </h3>
-            )}
+                <h3 className="text-3xl font-bold">
+                  ${designs?.totalAmount || designs?.subTotal}
+                </h3>
+              )}
           </div>
           {state?.from !== "multipleProject" &&
             state?.from !== "customOffer" && (
