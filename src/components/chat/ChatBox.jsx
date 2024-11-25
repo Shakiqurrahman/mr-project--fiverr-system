@@ -530,18 +530,31 @@ const ChatBox = ({ openToggle }) => {
         replyTo,
       };
 
+      const createdAt = new Date().toISOString();
+
       if (isAdmin) {
         socket?.emit("admin-message", {
           userId: conversationUser,
           ...submitForm,
+        });
+
+        socket?.emit("available-for-chat", {
+          userId: conversationUser,
+          ...submitForm,
+          createdAt,
         });
       } else {
         socket?.emit("user-message", {
           userId: user?.id,
           ...submitForm,
         });
-      }
 
+        socket?.emit("available-for-chat", {
+          userId: user?.id,
+          ...submitForm,
+          createdAt,
+        });
+      }
       // Optimistically add the message to local state (before API response)
       setMessages((prev) => [
         ...prev,
@@ -620,14 +633,20 @@ const ChatBox = ({ openToggle }) => {
   // for deleting a single message
   const handleDeleteAMessage = async (commonKey) => {
     try {
-      const res = await deleteAMessage(commonKey).unwrap();
-      console.log(res);
-
-      socket.emit("delete-message", {
-        commonKey,
-        userId: user?.id,
-        recipientId: recipientUserId,
-      });
+      await deleteAMessage(commonKey).unwrap();
+      if (isAdmin) {
+        socket.emit("notifi:delete-message", {
+          commonKey,
+          userId: conversationUser,
+          recipientId: recipientUserId,
+        });
+      } else {
+        socket.emit("notifi:delete-message", {
+          commonKey,
+          userId: user?.id,
+          recipientId: recipientUserId,
+        });
+      }
       toast.success("Message deleted successfully");
     } catch {
       toast.error("Failed to delete message");
@@ -722,12 +741,12 @@ const ChatBox = ({ openToggle }) => {
 
   // message unseen to seen
   useEffect(() => {
-    if (conversationUser || messages) {
+    if (conversationUser) {
       unseenMessageHandler({
         userId: conversationUser,
       });
     }
-  }, [conversationUser, messages]);
+  }, [conversationUser]);
 
   // console.log(messages);
 

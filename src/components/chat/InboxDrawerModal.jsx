@@ -86,7 +86,7 @@ const InboxDrawerModal = ({ close }) => {
       <div className="max-h-[400px] overflow-y-auto">
         {isLoading ? (
           <p className="p-4 text-center">Loading...</p>
-        ) : availableUsers.length > 0 ? (
+        ) : availableUsers?.length > 0 ? (
           availableUsers?.map((msg, index) => (
             <Link
               key={index}

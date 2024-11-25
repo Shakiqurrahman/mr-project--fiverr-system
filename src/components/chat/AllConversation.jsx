@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { IoIosStar } from "react-icons/io";
 import { IoSearchOutline } from "react-icons/io5";
 import { LuClock3 } from "react-icons/lu";
@@ -14,6 +14,8 @@ import {
   setConversationUser,
 } from "../../Redux/features/chatSlice";
 import repeatIcon from "../../assets/svg/Repeat icon.svg";
+import { configApi } from "../../libs/configApi";
+import { connectSocket } from "../../libs/socketService";
 import { formatTimeAgo } from "../../libs/timeFormatter";
 
 const AllConversation = ({ closeToggle }) => {
@@ -21,17 +23,24 @@ const AllConversation = ({ closeToggle }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { onlineUsers } = useSelector((state) => state.user);
+  const { onlineUsers, token } = useSelector((state) => state.user);
 
   const { conversationUser } = useSelector((state) => state.chat);
+
+  const socket = connectSocket(`${configApi.socket}`, token);
 
   const [selectedOption, setSelectedOption] = useState("AllConversations");
   const [openSearch, setOpenSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [chatList, setChatList] = useState([]);
+
   const { data: availableUsers } = useGetAvailableChatUsersQuery(null, {
     pollingInterval: 60000,
   });
+
+  console.log("chatList", chatList);
+
   // getAllMessages
   const [triggerGetAllMessages, { data: getAllMessages }] =
     useLazyGetAllMessagesQuery();
@@ -46,11 +55,42 @@ const AllConversation = ({ closeToggle }) => {
     }
   }, [dispatch, getAllMessages]);
 
-  // Filter chat list based on selected option
-  const getFilteredChatList = () => {
-    let filteredChats = availableUsers;
+  useEffect(() => {
+    if (availableUsers) {
+      setChatList(availableUsers);
+    }
+  }, [availableUsers]);
 
-    console.log(availableUsers);
+  useEffect(() => {
+    socket.on("newChatMessage", (msg) => {
+      console.log("newChatMessage", msg);
+      setChatList((prev) =>
+        prev.map((chat) => {
+          console.log("iam matcher", chat.id, msg.userId);
+
+          return chat.id === msg.userId
+            ? {
+                ...chat,
+                lastmessageinfo: {
+                  ...chat.lastmessageinfo,
+                  messageText: msg.messageText,
+                  createdAt: msg.createdAt,
+                },
+              }
+            : chat;
+        }),
+      );
+    });
+
+    // Cleanup on component unmount
+    return () => {
+      socket?.off("newChatMessage");
+    };
+  }, [socket]);
+
+  // Filter chat list based on selected option
+  const filteredChatList = useMemo(() => {
+    let filteredChats = chatList;
 
     switch (selectedOption) {
       case "unread":
@@ -90,13 +130,13 @@ const AllConversation = ({ closeToggle }) => {
     }
 
     return filteredChats;
-  };
+  }, [chatList, selectedOption, searchQuery]);
 
+  // const filteredChatList = getFilteredChatList();
   const handleCancelSearch = () => {
     setOpenSearch(false);
     setSearchQuery("");
   };
-  const filteredChatList = getFilteredChatList();
 
   const handleChatOpen = (id, userName) => {
     // if (!slug?.userName) navigate(`${userName}`);
@@ -203,7 +243,8 @@ const AllConversation = ({ closeToggle }) => {
                 <div className="flex items-center gap-3">
                   <div className="flex flex-col items-end gap-1">
                     <p className="text-[12px] text-gray-500">
-                      {formatTimeAgo(chat?.lastmessageinfo?.createdAt)}
+                      {chat?.lastmessageinfo?.createdAt &&
+                        formatTimeAgo(chat?.lastmessageinfo?.createdAt)}
                     </p>
                     {chat?.lastmessageinfo?.totalUnseenMessage > 0 && (
                       <span className="size-6 rounded-full bg-primary text-center text-[10px] leading-[24px] text-white">

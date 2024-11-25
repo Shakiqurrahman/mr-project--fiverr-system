@@ -58,7 +58,8 @@ export const inboxApiSlice = createApi({
     getAvailableChatUsers: builder.query({
       query: () => "avaiableforchat",
       transformResponse: (response) => response?.data,
-      providesTags: ["availablechatusers", "getAllMessages"],
+      // providesTags: ["availablechatusers", "getAllMessages"],
+      providesTags: ["availablechatusers"],
     }),
 
     // Get All Conversational Messages for admin
