@@ -209,6 +209,7 @@ const StartMultipleProject = ({ items }) => {
         from: "multipleProject",
         projectType: "MD_PROJECT",
         projectImage: multiProjectData.projectImage?.url,
+        tags: choosenItems?.flatMap((item) => item.tags),
       };
       navigate("/payment", { state: data });
     } else if (choosenItems?.length === 1) {

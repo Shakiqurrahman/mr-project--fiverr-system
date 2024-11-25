@@ -63,6 +63,8 @@ const InboxDrawerModal = ({ close }) => {
   const isUserOnline = (userId) => {
     return onlineUsers?.some((onlineUser) => onlineUser?.userId === userId);
   };
+
+  console.log(availableUsers);
   useOutsideClick(wrapperRef, () => close(false));
   return (
     <div
@@ -110,17 +112,26 @@ const InboxDrawerModal = ({ close }) => {
               </div>
               <div>
                 <h1 className="font-bold">{msg?.userName}</h1>
-                <p className="line-clamp-2 font-medium">
-                  {user?.userName === msg?.userName && "Me: "}{" "}
-                  {msg?.lastmessageinfo?.customOffer
-                    ? `${msg?.userName} just sent you a new Custom Offer.`
-                    : msg?.lastmessageinfo?.attachment?.length > 0 &&
-                        !msg?.lastmessageinfo?.messageText
-                      ? `${msg?.userName} just sent you some attachments.`
-                      : msg?.lastmessageinfo?.messageText}
+                <p
+                  className={`truncate ${msg?.lastmessageinfo?.totalUnseenMessage > 0 ? "font-bold" : "font-medium"}`}
+                >
+                  {msg?.lastmessageinfo?.senderUserName &&
+                    `${
+                      user?.userName === msg?.lastmessageinfo?.senderUserName
+                        ? "Me"
+                        : msg?.lastmessageinfo?.senderUserName
+                    }: ${
+                      msg?.lastmessageinfo?.customOffer
+                        ? `${msg?.lastmessageinfo?.senderUserName} just sent you a new Custom Offer.`
+                        : msg?.lastmessageinfo?.attachment?.length > 0 &&
+                            !msg?.lastmessageinfo?.messageText
+                          ? `${msg?.lastmessageinfo?.senderUserName} just sent you some attachments.`
+                          : msg?.lastmessageinfo?.messageText
+                    }`}
                 </p>
                 <span className="mt-3 block text-xs font-semibold text-[#3b3b3b]/50">
-                  {formatTimeAgo(msg?.lastmessageinfo?.createdAt)}
+                  {msg?.lastmessageinfo?.createdAt &&
+                    formatTimeAgo(msg?.lastmessageinfo?.createdAt)}
                 </span>
               </div>
             </Link>
