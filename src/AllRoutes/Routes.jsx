@@ -185,9 +185,9 @@ export const router = createBrowserRouter([
       {
         path: "/drag-and-drop",
         element: (
-          <SuperAdminRoute>
+          <AdminRoute>
             <DragAndDropSubFolders />
-          </SuperAdminRoute>
+          </AdminRoute>
         ),
       },
       {
