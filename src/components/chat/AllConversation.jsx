@@ -25,7 +25,7 @@ const AllConversation = ({ closeToggle }) => {
 
   const { onlineUsers, token, user } = useSelector((state) => state.user);
 
-  const { conversationUser, unseenCounts } = useSelector((state) => state.chat);
+  const { conversationUser } = useSelector((state) => state.chat);
 
   const socket = connectSocket(`${configApi.socket}`, token);
 
@@ -64,16 +64,34 @@ const AllConversation = ({ closeToggle }) => {
   // console.log(chatList, "chatlsit");
 
   useEffect(() => {
-    socket.on("newChatMessage", (msg) => {
-      console.log("newChatMessage", msg);
+    const handleSeenBy = (msg) => {
+      console.log("updated message", msg);
+      setChatList((prev) =>
+        prev.map((chat) => {
+          if (chat.id === msg?.senderId) {
+            const isSeenByCurrentUser = msg?.seenBy?.includes(user.id);
+            return {
+              ...chat,
+              lastmessageinfo: {
+                ...chat?.lastmessageinfo,
+                totalUnseenMessage: isSeenByCurrentUser && 0,
+              },
+            };
+          }
+          return chat;
+        }),
+      );
+    };
+
+    const handleNewChatMessage = (msg) => {
+      const shouldUpdate = !msg?.seenBy?.includes(user.id); // Only update if the message is unseen
+      if (!shouldUpdate) return; // Skip state update if conditions are not met
+
       setChatList((prev) =>
         prev.map((chat) => {
           if (chat.id === msg.userId) {
             const isSeenByCurrentUser = msg?.seenBy?.includes(user.id);
-
-            // dispatch(
-            //   setUnseenCount(unseenCount + (isSeenByCurrentUser ? 0 : 1)),
-            // );
+            const seenedUser = conversationUser === msg.userId;
 
             return {
               ...chat,
@@ -81,22 +99,28 @@ const AllConversation = ({ closeToggle }) => {
                 ...chat.lastmessageinfo,
                 messageText: msg.messageText,
                 createdAt: msg.createdAt,
-                totalUnseenMessage: isSeenByCurrentUser
+                totalUnseenMessage: seenedUser
                   ? 0
-                  : chat.lastmessageinfo.totalUnseenMessage + 1,
+                  : isSeenByCurrentUser
+                    ? 0
+                    : chat.lastmessageinfo.totalUnseenMessage + 1,
               },
             };
           }
           return chat;
         }),
       );
-    });
+    };
+
+    socket?.on("getSeenBy", handleSeenBy);
+    socket?.on("newChatMessage", handleNewChatMessage);
 
     // Cleanup on component unmount
     return () => {
-      socket?.off("newChatMessage");
+      socket?.off("getSeenBy", handleSeenBy);
+      socket?.off("newChatMessage", handleNewChatMessage);
     };
-  }, [socket, user.id]);
+  }, [socket, user.id, conversationUser]);
 
   // Filter chat list based on selected option
   const filteredChatList = useMemo(() => {
@@ -139,7 +163,12 @@ const AllConversation = ({ closeToggle }) => {
       );
     }
 
-    return filteredChats;
+    // Sort by lastmessageinfo.createdAt in descending order
+    return filteredChats?.sort((a, b) => {
+      const dateA = new Date(a?.lastmessageinfo?.createdAt).getTime();
+      const dateB = new Date(b?.lastmessageinfo?.createdAt).getTime();
+      return dateB - dateA; // Latest messages first
+    });
   }, [chatList, selectedOption, searchQuery]);
 
   // const filteredChatList = getFilteredChatList();

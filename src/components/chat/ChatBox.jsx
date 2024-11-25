@@ -533,7 +533,7 @@ const ChatBox = ({ openToggle }) => {
       };
 
       const createdAt = new Date().toISOString();
-      const senderUserName = user?.userName;      
+      const senderUserName = user?.userName;
 
       if (isAdmin) {
         socket?.emit("admin-message", {
@@ -754,6 +754,24 @@ const ChatBox = ({ openToggle }) => {
       });
     }
   }, [conversationUser]);
+
+  useEffect(() => {
+    console.log("i am calling");
+
+    if (isAdmin) {
+      socket?.emit("seen", {
+        userId: user.id,
+        recipientId: conversationUser,
+        // seenBy: [user.id],
+      });
+    } else {
+      socket?.emit("seen", {
+        userId: user.id,
+        recipientId: user?.id,
+        // seenBy: [user.id],
+      });
+    }
+  }, [user.id, socket, messages, conversationUser, isAdmin]);
 
   // console.log(messages);
 
