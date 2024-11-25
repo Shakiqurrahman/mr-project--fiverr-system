@@ -1,22 +1,56 @@
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import Stack from "@mui/material/Stack";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import prevBtn from "../assets/images/icons/Left Arrow.svg";
 import nextBtn from "../assets/images/icons/Right Arrow.svg";
 import PageHeader from "../components/PageHeader";
 import RelatedDesigns from "../components/RelatedDesigns";
+import SortDropdown from "../components/SortDropdown";
 import ProjectCard from "../components/categories/ProjectCard";
 import useGetCategory from "../hooks/useGetCategory";
 import useGetSubFolders from "../hooks/useGetSubFolders";
 
 function AllCategory() {
   const { slug } = useParams();
-  const { subFolders, folderObject } = useGetSubFolders({ slug });
-  const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
+
+  const { subFolders, folderObject } = useGetSubFolders({ slug });
   const { categories } = useGetCategory();
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortedBy, setSortedBy] = useState("DefaultDesigns");
+  const [allFilteredSubFolders, setAllFilteredSubFolders] = useState([]);
+
+  const sortingOptions = [
+    "Default Designs",
+    "Newest Designs",
+    "Oldest Designs",
+  ];
+
+  const { user } = useSelector((state) => state.user);
+  const isAuthorized = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
+
+  useEffect(() => {
+    if (subFolders) {
+      if (sortedBy === "DefaultDesigns") {
+        // Sort by the 'order' property
+        const sortedDefaultDesigns = [...subFolders].sort(
+          (a, b) => a.order - b.order,
+        );
+        setAllFilteredSubFolders(sortedDefaultDesigns);
+      } else if (sortedBy === "NewestDesigns") {
+        // No sorting, just set as is
+        setAllFilteredSubFolders([...subFolders]);
+      } else if (sortedBy === "OldestDesigns") {
+        // Reverse the array to show oldest first
+        const sortedOldestDesigns = [...subFolders].reverse();
+        setAllFilteredSubFolders(sortedOldestDesigns);
+      }
+    }
+  }, [subFolders, sortedBy]);
 
   // filtering related folders
   const relatedFolders = useMemo(
@@ -31,28 +65,39 @@ function AllCategory() {
     }
   };
 
+  const handleSortChange = (option) => {
+    setSortedBy(option);
+  };
+
   // Pagination related work
   const limit = 20;
   const totalPages = Math.ceil(subFolders?.length / limit) || 0;
   const startIndex = (currentPage - 1) * limit;
-  const currentPageData = subFolders
-    ?.sort((a, b) => a.order - b.order)
-    ?.slice(startIndex, startIndex + limit);
+  const currentPageData = allFilteredSubFolders.slice(
+    startIndex,
+    startIndex + limit,
+  );
 
   return (
     <>
       <PageHeader>{folderObject?.folderName}</PageHeader>
       <div className="max-width">
-        <div className="my-10 flex items-center justify-between">
-          <h1 className="text-base font-semibold sm:text-lg">
+        <div className="my-10 flex flex-wrap items-center justify-start gap-5 lg:flex-nowrap lg:justify-between">
+          <h1 className="w-full text-base font-semibold sm:text-lg lg:w-auto">
             Click on the design you need to see more designs.
           </h1>
-          <button
-            className="rounded-[30px] border border-solid border-primary px-4 py-1 text-sm font-semibold duration-300 hover:bg-primary hover:text-white"
-            onClick={handleCustomize}
-          >
-            Customise
-          </button>
+          {isAuthorized && (
+            <button
+              className="rounded-[30px] border border-solid border-primary px-4 py-2 text-sm font-medium duration-300 hover:bg-primary hover:text-white lg:ml-auto"
+              onClick={handleCustomize}
+            >
+              Customise
+            </button>
+          )}
+          <SortDropdown
+            options={sortingOptions}
+            onSortChange={handleSortChange}
+          />
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {currentPageData?.map((design, idx) => {

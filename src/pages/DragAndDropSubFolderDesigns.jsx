@@ -1,28 +1,27 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useUpdateAllSubFoldersByFolderSlugMutation } from "../Redux/api/uploadDesignApiSlice";
+import { useUpdateAllDesignsOfFolderSubFolderMutation } from "../Redux/api/uploadDesignApiSlice";
 
-const DragAndDropSubFolders = () => {
+const DragAndDropSubFolderDesigns = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
 
   const [updateSubFoldersOrdering] =
-    useUpdateAllSubFoldersByFolderSlugMutation();
+    useUpdateAllDesignsOfFolderSubFolderMutation();
 
-  const [subFolders, setSubFolders] = useState([]);
+  const [subFolderDesigns, setSubFolderDesigns] = useState([]);
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [isCustomizing, setIsCustomizing] = useState(true);
-  //   const [tempProducts, setTempProducts] = useState([]);
 
   useEffect(() => {
-    if (state?.subFolders) {
-      const sortSubFolders = state?.subFolders?.sort(
+    if (state?.subFolderDesigns) {
+      const sortSubFoldersDesigns = state?.subFolderDesigns?.sort(
         (a, b) => a.order - b.order,
       );
-      setSubFolders(sortSubFolders);
+      setSubFolderDesigns(sortSubFoldersDesigns);
     }
-  }, [state?.subFolders]);
+  }, [state?.subFolderDesigns]);
 
   const handleDragStart = (index) => {
     setDraggedIndex(index);
@@ -30,11 +29,11 @@ const DragAndDropSubFolders = () => {
 
   const handleDragEnter = (index) => {
     if (index !== draggedIndex) {
-      const updatedProducts = [...subFolders];
+      const updatedProducts = [...subFolderDesigns];
       const draggedProduct = updatedProducts[draggedIndex];
       updatedProducts.splice(draggedIndex, 1);
       updatedProducts.splice(index, 0, draggedProduct);
-      setSubFolders(updatedProducts);
+      setSubFolderDesigns(updatedProducts);
       setDraggedIndex(index);
     }
   };
@@ -44,10 +43,10 @@ const DragAndDropSubFolders = () => {
   };
 
   const handleSave = async () => {
-    setSubFolders(subFolders); // Save the reordered products
+    setSubFolderDesigns(subFolderDesigns); // Save the reordered products
     try {
       const data = {
-        newOrder: subFolders,
+        newOrder: subFolderDesigns,
       };
       const response = await updateSubFoldersOrdering(data).unwrap();
       if (response.success) {
@@ -60,10 +59,9 @@ const DragAndDropSubFolders = () => {
   };
 
   const handleCancel = () => {
-    setSubFolders([...subFolders]); // Reset to original order
+    setSubFolderDesigns([...subFolderDesigns]); // Reset to original order
     navigate(-1);
   };
-
   return (
     <div className="max-width my-10">
       <div className="mb-5 flex items-center gap-5">
@@ -80,10 +78,10 @@ const DragAndDropSubFolders = () => {
           Cancel
         </button>
       </div>
-      {subFolders?.length > 0 && (
+      {subFolderDesigns?.length > 0 && (
         <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
-          {subFolders?.map((subfolder, index) => {
-            const thumbnail = subfolder?.images?.find(
+          {subFolderDesigns?.map((design, index) => {
+            const thumbnail = design?.images?.find(
               (img) => img?.thumbnail === true,
             ).url;
             return (
@@ -97,7 +95,7 @@ const DragAndDropSubFolders = () => {
               >
                 <img src={thumbnail} alt="" />
                 <h1 className="line-clamp-2 px-3 py-2 text-sm sm:text-base">
-                  {subfolder?.subFolder}
+                  {design?.title}
                 </h1>
               </div>
             );
@@ -108,4 +106,4 @@ const DragAndDropSubFolders = () => {
   );
 };
 
-export default DragAndDropSubFolders;
+export default DragAndDropSubFolderDesigns;

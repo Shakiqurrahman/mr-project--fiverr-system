@@ -5,31 +5,58 @@ import PageHeader from "../components/PageHeader";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import Stack from "@mui/material/Stack";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import prevBtn from "../assets/images/icons/Left Arrow.svg";
 import nextBtn from "../assets/images/icons/Right Arrow.svg";
 import RelatedDesigns from "../components/RelatedDesigns";
+import SortDropdown from "../components/SortDropdown";
 import ProjectCard from "../components/categories/ProjectCard";
 import useGetCategory from "../hooks/useGetCategory";
+import useGetSubFolderDesigns from "../hooks/useGetSubFolderDesigns";
 
 function AllDesign() {
-  const { catSlug, slug } = useParams();
-  const [currentPage, setCurrentPage] = useState(1);
-  const { categories, isLoading } = useGetCategory();
   const navigate = useNavigate();
+  const { catSlug, slug } = useParams();
+  const { categories } = useGetCategory();
 
-  // Find the category by `catSlug`
-  const category = (categories || []).find((cat) => cat.slug === catSlug);
+  const { user } = useSelector((state) => state.user);
+  const isAuthorized = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
 
-  // Find the subFolder within the selected category by `slug`
-  const subFolder = category?.subFolders?.find(
-    (subFolder) => subFolder.slug === slug,
-  );
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortedBy, setSortedBy] = useState("DefaultDesigns");
+  const [allFilteredDesigns, setAllFilteredDesigns] = useState([]);
 
-  // Extract the designs and title
-  const designs = subFolder?.designs;
-  const title = subFolder?.subFolder;
+  const sortingOptions = [
+    "Default Designs",
+    "Newest Designs",
+    "Oldest Designs",
+  ];
+
+  const { subFolderName, subFolderDesigns } = useGetSubFolderDesigns({
+    folderSlug: catSlug,
+    subFolderSlug: slug,
+  });
+
+  useEffect(() => {
+    if (subFolderDesigns) {
+      if (sortedBy === "DefaultDesigns") {
+        // Sort by the 'order' property
+        const sortedDefaultDesigns = [...subFolderDesigns].sort(
+          (a, b) => a.order - b.order,
+        );
+        setAllFilteredDesigns(sortedDefaultDesigns);
+      } else if (sortedBy === "NewestDesigns") {
+        // No sorting, just set as is
+        setAllFilteredDesigns([...subFolderDesigns]);
+      } else if (sortedBy === "OldestDesigns") {
+        // Reverse the array to show oldest first
+        const sortedOldestDesigns = [...subFolderDesigns].reverse();
+        setAllFilteredDesigns(sortedOldestDesigns);
+      }
+    }
+  }, [subFolderDesigns, sortedBy]);
 
   // Filtering relatedDesign
   const relatedDesigns = useMemo(
@@ -48,36 +75,61 @@ function AllDesign() {
     [catSlug, categories, slug],
   );
 
+  const handleCustomize = (e) => {
+    e.preventDefault();
+    if (subFolderDesigns?.length > 0) {
+      navigate("/drag-and-drop-designs", {
+        state: { subFolderDesigns: subFolderDesigns },
+      });
+    }
+  };
+
+  const handleSortChange = (option) => {
+    setSortedBy(option);
+  };
+
   // Pagination related work
   const limit = 20;
-  const totalPages = Math.ceil(designs?.length / limit) || 0;
+  const totalPages = Math.ceil(allFilteredDesigns?.length / limit) || 0;
   const startIndex = (currentPage - 1) * limit;
-  const currentPageData = designs?.slice(startIndex, startIndex + limit);
+  const currentPageData = allFilteredDesigns?.slice(
+    startIndex,
+    startIndex + limit,
+  );
 
   return (
     <>
       <PageHeader bgImage={bgImage} color={"text-secondary"}>
-        {title}
+        {subFolderName}
       </PageHeader>
       <div className="max-width">
-        <div className="my-10 flex items-center justify-between">
-          <h1 className="text-base font-semibold sm:text-lg">
+        <div className="my-10 flex flex-wrap items-center justify-start gap-5 lg:flex-nowrap lg:justify-between">
+          <h1 className="w-full text-base font-semibold sm:text-lg lg:w-auto">
             Click on the design of your choice to view the design description.
           </h1>
-          <button className="rounded-[30px] border border-solid border-primary px-4 py-1 text-sm font-semibold duration-300 hover:bg-primary hover:text-white">
-            Customise
-          </button>
+          {isAuthorized && (
+            <button
+              className="rounded-[30px] border border-solid border-primary px-4 py-2 text-sm font-medium duration-300 hover:bg-primary hover:text-white lg:ml-auto"
+              onClick={handleCustomize}
+            >
+              Customise
+            </button>
+          )}
+          <SortDropdown
+            options={sortingOptions}
+            onSortChange={handleSortChange}
+          />
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {currentPageData?.map((design) => {
-            const thumbnail = design.images.find((img) => img.thumbnail);
+            const thumbnail = design?.images?.find((img) => img.thumbnail);
             return (
               <ProjectCard
                 cart={true}
-                key={design.id}
-                thumbnail={thumbnail.url}
+                key={design?.id}
+                thumbnail={thumbnail?.url}
                 watermark={thumbnail?.watermark}
-                title={design.title}
+                title={design?.title}
                 design={design}
                 slug={`/design/${design?.designId}`}
               />
@@ -85,7 +137,7 @@ function AllDesign() {
           })}
         </div>
 
-        {designs?.length > 20 && (
+        {subFolderDesigns?.length > 20 && (
           <div className="mt-10 flex justify-center">
             <Stack spacing={2}>
               <Pagination
