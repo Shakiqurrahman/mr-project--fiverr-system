@@ -23,9 +23,9 @@ const AllConversation = ({ closeToggle }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { onlineUsers, token } = useSelector((state) => state.user);
+  const { onlineUsers, token, user } = useSelector((state) => state.user);
 
-  const { conversationUser } = useSelector((state) => state.chat);
+  const { conversationUser, unseenCounts } = useSelector((state) => state.chat);
 
   const socket = connectSocket(`${configApi.socket}`, token);
 
@@ -39,7 +39,7 @@ const AllConversation = ({ closeToggle }) => {
     pollingInterval: 60000,
   });
 
-  console.log("chatList", chatList);
+  // console.log("chatList", chatList);
 
   // getAllMessages
   const [triggerGetAllMessages, { data: getAllMessages }] =
@@ -61,23 +61,34 @@ const AllConversation = ({ closeToggle }) => {
     }
   }, [availableUsers]);
 
+  console.log(chatList, "chatlsit");
+
   useEffect(() => {
     socket.on("newChatMessage", (msg) => {
       console.log("newChatMessage", msg);
       setChatList((prev) =>
         prev.map((chat) => {
-          console.log("iam matcher", chat.id, msg.userId);
+          if (chat.id === msg.userId) {
+            console.log("chattttt", chat);
 
-          return chat.id === msg.userId
-            ? {
-                ...chat,
-                lastmessageinfo: {
-                  ...chat.lastmessageinfo,
-                  messageText: msg.messageText,
-                  createdAt: msg.createdAt,
-                },
-              }
-            : chat;
+            const isSeenByCurrentUser = msg?.lastmessageinfo?.seenBy?.includes(
+              user.id,
+            );
+            // dispatch(
+            //   setUnseenCount(unseenCount + (isSeenByCurrentUser ? 0 : 1)),
+            // );
+
+            return {
+              ...chat,
+              lastmessageinfo: {
+                ...chat.lastmessageinfo,
+                messageText: msg.messageText,
+                createdAt: msg.createdAt,
+                totalUnseenMessage: chat.lastmessageinfo.totalUnseenMessage + 1,
+              },
+            };
+          }
+          return chat;
         }),
       );
     });
@@ -86,7 +97,7 @@ const AllConversation = ({ closeToggle }) => {
     return () => {
       socket?.off("newChatMessage");
     };
-  }, [socket]);
+  }, [socket, user.id]);
 
   // Filter chat list based on selected option
   const filteredChatList = useMemo(() => {
@@ -236,7 +247,8 @@ const AllConversation = ({ closeToggle }) => {
                       title={chat?.lastmessageinfo?.messageText}
                       className={`${chat?.lastmessageinfo?.totalUnseenMessage > 0 && "font-bold"} max-w-[180px] truncate text-[12px] sm:max-w-[250px] md:max-w-[80px] lg:max-w-[150px]`}
                     >
-                      {chat?.lastmessageinfo?.messageText}
+                      {`${chat?.senderUserName === user?.userName ? "Me" : ""}
+                       ${chat?.lastmessageinfo?.messageText}`}
                     </p>
                   </div>
                 </div>
@@ -247,7 +259,9 @@ const AllConversation = ({ closeToggle }) => {
                         formatTimeAgo(chat?.lastmessageinfo?.createdAt)}
                     </p>
                     {chat?.lastmessageinfo?.totalUnseenMessage > 0 && (
+                      /* {unseenCounts > 0 && ( */
                       <span className="size-6 rounded-full bg-primary text-center text-[10px] leading-[24px] text-white">
+                        {/* {unseenCounts} */}
                         {chat?.lastmessageinfo?.totalUnseenMessage}
                       </span>
                     )}

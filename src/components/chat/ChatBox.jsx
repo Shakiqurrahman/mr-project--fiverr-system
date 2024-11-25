@@ -23,6 +23,7 @@ import EmojiPicker from "./EmojiPicker";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { RxHamburgerMenu } from "react-icons/rx";
+import shortid from "shortid";
 import { useFetchAllUsersQuery } from "../../Redux/api/allUserApiSlice";
 import {
   useArchiveAUserConversationMutation,
@@ -169,7 +170,7 @@ const ChatBox = ({ openToggle }) => {
 
       console.log("deltedMsg", msg);
       setMessages((prevMessages) =>
-        prevMessages.filter((m) => m.commonKey !== msg.commonKey),
+        prevMessages.filter((m) => m.uniqueId !== msg.uniqueId),
       );
       // let filter = msg.userId === conversationUser && msg;
       // if (isAdmin && filter) {
@@ -179,7 +180,6 @@ const ChatBox = ({ openToggle }) => {
     });
 
     socket.on("admin-notification", (msg) => {
-      console.log("admin-notification", msg);
       if (
         isAdmin &&
         msg?.userId !== user.id &&
@@ -519,7 +519,7 @@ const ChatBox = ({ openToggle }) => {
         url: img.url,
         format: img.format,
       }));
-
+      const uniqueId = shortid();
       const submitForm = {
         messageText: textValue,
         senderUserName: user?.userName,
@@ -528,9 +528,12 @@ const ChatBox = ({ openToggle }) => {
         customOffer: null,
         timeAndDate,
         replyTo,
+        seenBy: [user?.id],
+        uniqueId,
       };
 
       const createdAt = new Date().toISOString();
+      const senderUserName = user?.userName;
 
       if (isAdmin) {
         socket?.emit("admin-message", {
@@ -542,6 +545,7 @@ const ChatBox = ({ openToggle }) => {
           userId: conversationUser,
           ...submitForm,
           createdAt,
+          senderUserName,
         });
       } else {
         socket?.emit("user-message", {
@@ -553,6 +557,7 @@ const ChatBox = ({ openToggle }) => {
           userId: user?.id,
           ...submitForm,
           createdAt,
+          senderUserName,
         });
       }
       // Optimistically add the message to local state (before API response)
@@ -611,7 +616,7 @@ const ChatBox = ({ openToggle }) => {
     setTextValue(e.target.value);
     if (!isTyping) {
       setIsTyping(true);
-      socket.emit("typing", { userId: user?.id }); // Send typing event
+      socket.emit("typing", { userId: user?.id });
     }
 
     // Clear previous timeout
@@ -625,13 +630,13 @@ const ChatBox = ({ openToggle }) => {
         setIsTyping(false);
         socket.emit("stopTyping", {
           userId: user?.id,
-        }); // Send stop typing event
+        });
       }, 3000),
     );
   };
 
   // for deleting a single message
-  const handleDeleteAMessage = async (commonKey) => {
+  const handleDeleteAMessage = async (commonKey, uniqueId) => {
     try {
       await deleteAMessage(commonKey).unwrap();
       if (isAdmin) {
@@ -639,12 +644,14 @@ const ChatBox = ({ openToggle }) => {
           commonKey,
           userId: conversationUser,
           recipientId: recipientUserId,
+          uniqueId,
         });
       } else {
         socket.emit("notifi:delete-message", {
           commonKey,
           userId: user?.id,
           recipientId: recipientUserId,
+          uniqueId,
         });
       }
       toast.success("Message deleted successfully");
@@ -950,7 +957,10 @@ const ChatBox = ({ openToggle }) => {
                               <button
                                 type="button"
                                 onClick={() =>
-                                  handleDeleteAMessage(msg?.commonkey)
+                                  handleDeleteAMessage(
+                                    msg?.commonkey,
+                                    msg?.uniqueId,
+                                  )
                                 }
                               >
                                 <FaTrashAlt />
