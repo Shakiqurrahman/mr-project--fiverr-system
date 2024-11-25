@@ -1,14 +1,23 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { FaAnglesRight } from "react-icons/fa6";
-import { IoMdReturnLeft } from "react-icons/io";
-import { IoClose, IoSearch } from "react-icons/io5";
-import { MdChevronRight } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { IoSearch } from "react-icons/io5";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import useOutsideClick from "../../hooks/useOutsideClick";
+import { useLazyGetDesignsBySearchQuery } from "../../Redux/api/uploadDesignApiSlice";
+import {
+  setSearchedText,
+  setSearchResult,
+} from "../../Redux/features/utilSlice";
 
 const SearchBox = ({ handleClose }) => {
   // const [searchQuery, { data: searchResult, isLoading }] =
   //   useLazyGetDesignsBySearchQuery();
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [getDesignsBySearch, { data: searchResults }] =
+    useLazyGetDesignsBySearchQuery();
 
   const textRef = useRef(null);
   const searchBoxRef = useRef(null);
@@ -23,23 +32,40 @@ const SearchBox = ({ handleClose }) => {
     textRef.current && textRef.current.focus();
   };
 
-  // const handleSearch = useCallback(async () => {
-  //   if (textInput.length > 2) {
-  //     await searchQuery(`${textInput}`);
-  //   }
-  // }, [textInput, searchQuery]);
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    dispatch(setSearchedText(textInput));
+    if (textInput) {
+      getDesignsBySearch(textInput);
+      navigate("/designs");
+    }
+    setTextInput("");
+    handleClose(false);
+  };
+
+  const handleEnterKeySearch = (e) => {
+    if (e.key === "Enter") {
+      dispatch(setSearchedText(textInput));
+      if (textInput) {
+        getDesignsBySearch(textInput);
+        navigate("/designs");
+      }
+      setTextInput("");
+      handleClose(false);
+    }
+  };
+
+  useEffect(() => {
+    if (searchResults) {
+      dispatch(setSearchResult(searchResults));
+    }
+  }, [searchResults]);
 
   useEffect(() => {
     if (textRef.current) {
       textRef.current.focus();
     }
   }, []);
-
-  // useEffect(() => {
-  //   if (textInput) {
-  //     handleSearch();
-  //   }
-  // }, [textInput, handleSearch]);
 
   useOutsideClick(searchBoxRef, handleClose);
 
@@ -50,13 +76,14 @@ const SearchBox = ({ handleClose }) => {
         ref={searchBoxRef}
       >
         <div className="flex items-center gap-2 rounded-lg border-2 border-primary p-3">
-          <IoSearch className="shrink-0 text-2xl text-gray-400" />
+          {/* <IoSearch className="shrink-0 text-2xl text-gray-400" /> */}
           <input
             ref={textRef}
             type="text"
             placeholder="Search..."
             className={`${textInput ? "search-box" : ""} flex-1 outline-none`}
             onChange={handleInput}
+            onKeyDown={handleEnterKeySearch}
             value={textInput}
           />
           {textInput && (
@@ -68,13 +95,13 @@ const SearchBox = ({ handleClose }) => {
             </button>
           )}
           <button
-            onClick={() => handleClose(false)}
-            className="flex shrink-0 items-center"
+            onClick={handleSearch}
+            className="ml-auto flex shrink-0 items-center"
           >
-            <IoClose className="text-2xl text-gray-400" />
+            <IoSearch className="text-2xl text-gray-400" />
           </button>
         </div>
-        <div className="bg-white">
+        {/* <div className="bg-white">
           {textInput?.length > 0 &&
             searchResult?.map((res, idx) => {
               return (
@@ -101,7 +128,7 @@ const SearchBox = ({ handleClose }) => {
                 </Link>
               );
             })}
-        </div>
+        </div> */}
       </div>
     </div>
   );

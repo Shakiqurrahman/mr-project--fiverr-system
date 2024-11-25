@@ -321,6 +321,6 @@ select {
 
 @media (max-width: 370px) {
   .search-box {
-    max-width: 150px;
+    max-width: 180px;
   }
 }
