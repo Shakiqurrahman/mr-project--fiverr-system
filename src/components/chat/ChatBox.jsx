@@ -533,7 +533,7 @@ const ChatBox = ({ openToggle }) => {
       };
 
       const createdAt = new Date().toISOString();
-      const senderUserName = user?.userName;
+      const senderUserName = user?.userName;      
 
       if (isAdmin) {
         socket?.emit("admin-message", {

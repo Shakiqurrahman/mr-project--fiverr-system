@@ -61,7 +61,7 @@ const AllConversation = ({ closeToggle }) => {
     }
   }, [availableUsers]);
 
-  console.log(chatList, "chatlsit");
+  // console.log(chatList, "chatlsit");
 
   useEffect(() => {
     socket.on("newChatMessage", (msg) => {
@@ -69,11 +69,8 @@ const AllConversation = ({ closeToggle }) => {
       setChatList((prev) =>
         prev.map((chat) => {
           if (chat.id === msg.userId) {
-            console.log("chattttt", chat);
+            const isSeenByCurrentUser = msg?.seenBy?.includes(user.id);
 
-            const isSeenByCurrentUser = msg?.lastmessageinfo?.seenBy?.includes(
-              user.id,
-            );
             // dispatch(
             //   setUnseenCount(unseenCount + (isSeenByCurrentUser ? 0 : 1)),
             // );
@@ -84,7 +81,9 @@ const AllConversation = ({ closeToggle }) => {
                 ...chat.lastmessageinfo,
                 messageText: msg.messageText,
                 createdAt: msg.createdAt,
-                totalUnseenMessage: chat.lastmessageinfo.totalUnseenMessage + 1,
+                totalUnseenMessage: isSeenByCurrentUser
+                  ? 0
+                  : chat.lastmessageinfo.totalUnseenMessage + 1,
               },
             };
           }
@@ -206,6 +205,14 @@ const AllConversation = ({ closeToggle }) => {
             const isOnline = onlineUsers?.some(
               (user) => user?.userId === chat?.id,
             );
+
+            const {
+              senderUserName,
+              messageText,
+              totalUnseenMessage,
+              createdAt,
+            } = chat?.lastmessageinfo || {};
+            const sameUser = senderUserName === user?.userName;
             return (
               <div
                 key={chat?.id}
@@ -244,25 +251,25 @@ const AllConversation = ({ closeToggle }) => {
                       </span>
                     </p>
                     <p
-                      title={chat?.lastmessageinfo?.messageText}
-                      className={`${chat?.lastmessageinfo?.totalUnseenMessage > 0 && "font-bold"} max-w-[180px] truncate text-[12px] sm:max-w-[250px] md:max-w-[80px] lg:max-w-[150px]`}
+                      title={messageText}
+                      className={`${totalUnseenMessage > 0 && "font-bold"} max-w-[180px] truncate text-[12px] sm:max-w-[250px] md:max-w-[80px] lg:max-w-[150px]`}
                     >
-                      {`${chat?.senderUserName === user?.userName ? "Me" : ""}
-                       ${chat?.lastmessageinfo?.messageText}`}
+                      {/* -----for user name printing in user last message----- */}
+                      {senderUserName
+                        ? `${sameUser ? "Me" : senderUserName} :
+                       ${messageText}`
+                        : messageText}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="flex flex-col items-end gap-1">
                     <p className="text-[12px] text-gray-500">
-                      {chat?.lastmessageinfo?.createdAt &&
-                        formatTimeAgo(chat?.lastmessageinfo?.createdAt)}
+                      {createdAt && formatTimeAgo(createdAt)}
                     </p>
-                    {chat?.lastmessageinfo?.totalUnseenMessage > 0 && (
-                      /* {unseenCounts > 0 && ( */
+                    {totalUnseenMessage > 0 && (
                       <span className="size-6 rounded-full bg-primary text-center text-[10px] leading-[24px] text-white">
-                        {/* {unseenCounts} */}
-                        {chat?.lastmessageinfo?.totalUnseenMessage}
+                        {totalUnseenMessage}
                       </span>
                     )}
                   </div>
