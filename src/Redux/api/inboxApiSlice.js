@@ -176,6 +176,12 @@ export const inboxApiSlice = createApi({
       }),
       invalidatesTags: ["getAllMessages", "availablechatusers"],
     }),
+
+    // Inbox bubble counting value
+    inboxBubbleCounting: builder.query({
+      query: () => "notification/inbox",
+      transformResponse: (response) => response?.data?.total,
+    }),
   }),
 });
 
@@ -199,4 +205,5 @@ export const {
   useUpdateCustomOfferImageMutation,
   useSendMessageFromProfileMutation,
   useUpdateUnseenMessageMutation,
+  useInboxBubbleCountingQuery,
 } = inboxApiSlice;

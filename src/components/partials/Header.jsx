@@ -17,6 +17,7 @@ import Drawer from "react-modern-drawer";
 import "react-modern-drawer/dist/index.css";
 
 import { IoSearch } from "react-icons/io5";
+import { useInboxBubbleCountingQuery } from "../../Redux/api/inboxApiSlice";
 import { useLazyGetDesignsBySearchQuery } from "../../Redux/api/uploadDesignApiSlice";
 import {
   setOpenNotificationDrawer,
@@ -37,6 +38,8 @@ function Header() {
   );
   const [getDesignsBySearch, { data: searchResults }] =
     useLazyGetDesignsBySearchQuery();
+
+  const { data: inboxBubbleCount } = useInboxBubbleCountingQuery();
 
   const { user } = useSelector((state) => state.user);
   const { items: cartItems } = useSelector((state) => state.cart);
@@ -137,7 +140,7 @@ function Header() {
                     onClick={handleClose}
                   >
                     <Badge
-                      badgeContent={0}
+                      badgeContent={inboxBubbleCount ? inboxBubbleCount : 0}
                       sx={{
                         "& .MuiBadge-badge": {
                           backgroundColor: "#1b8cdc",
@@ -170,7 +173,7 @@ function Header() {
                       onClick={handleClose}
                     >
                       <Badge
-                        badgeContent={0}
+                        badgeContent={inboxBubbleCount ? inboxBubbleCount : 0}
                         sx={{
                           "& .MuiBadge-badge": {
                             backgroundColor: "#1b8cdc",
