@@ -30,11 +30,9 @@ const Order = () => {
     projectNumber,
   });
 
-  console.log(projectNumber, projectDetails);
   const [fetchUserById, { data: clientDetails }] =
     useLazyFetchSingleUserByIdQuery();
 
-  console.log(projectDetails, clientDetails);
   const { user } = useSelector((state) => state.user);
 
   // Checking Admin
@@ -98,7 +96,6 @@ const Order = () => {
   const adminReview = projectDetails?.review?.find(
     (r) => r.senderType === "OWNER",
   );
-  console.log("admin review", adminReview);
 
   return (
     projectDetails && (

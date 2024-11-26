@@ -5,8 +5,6 @@ import useOutsideClick from "../../hooks/useOutsideClick";
 import { useUpdateQuickResMsgMutation } from "../../Redux/api/inboxApiSlice";
 
 const EditQuickMsgModal = ({ handleClose, value, controller }) => {
-  console.log(value);
-
   const editQuickMsgRef = useRef(null);
   const [updateQuickResMsg, { isLoading, error }] =
     useUpdateQuickResMsgMutation();
@@ -41,7 +39,6 @@ const EditQuickMsgModal = ({ handleClose, value, controller }) => {
         handleClose(null);
       } catch (err) {
         toast.error("Failed to update message");
-        console.error("Failed to update message:", err);
       }
       controller(null);
     }

@@ -414,7 +414,7 @@ function UploadDesign() {
         }
       }
     } catch (error) {
-      console.log("image array", error);
+      toast.error("Something went wrong!");
     }
 
     const images = imagesRes.map((image, index) => ({
@@ -446,7 +446,7 @@ function UploadDesign() {
           navigate("/");
         }
       } catch (error) {
-        console.log(error);
+        toast.error("Something went wrong!");
       }
     }
 

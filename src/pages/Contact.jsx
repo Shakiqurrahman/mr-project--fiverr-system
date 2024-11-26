@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { CgAttachment } from "react-icons/cg";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
@@ -38,7 +39,6 @@ function Contact() {
 
   const getImagesWithDimensions = async (files) => {
     const handleImageLoad = async (file, index) => {
-      console.log(file);
       const formData = new FormData();
       // formData.append("image", file);
       formData.append("files", file);
@@ -60,7 +60,6 @@ function Contact() {
       try {
         const response = await axios.post(uploadUrl, formData, {
           onUploadProgress: (data) => {
-            console.log(data);
             const percentage = Math.round((data.loaded / data.total) * 100);
             setMatchingImages((prev) => {
               const newImages = [...prev];
@@ -69,7 +68,6 @@ function Contact() {
             });
           },
         });
-        console.log(response);
 
         // Update image data upon successful upload
         const imageUrl = response.data.data.file.url.replaceAll(
@@ -88,7 +86,7 @@ function Contact() {
           return newImages;
         });
       } catch (error) {
-        console.error("Error uploading image:", error);
+        toast.error("Something went wrong!");
       }
     };
 
@@ -130,7 +128,6 @@ function Contact() {
       userImage: user?.image,
       timeAndDate,
     }).unwrap();
-    console.log(res, value.Message);
     navigate("/inbox");
   };
 

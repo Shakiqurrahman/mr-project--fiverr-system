@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect } from "react";
+import toast from "react-hot-toast";
 import { configApi } from "../libs/configApi";
 
 const useSaveAffiliate = () => {
@@ -18,7 +19,7 @@ const useSaveAffiliate = () => {
             .put(`${configApi.api}affiliate/update?link=${affQuery}`)
             .then((response) => {})
             .catch((err) => {
-              console.error("Error tracking affiliate click:", err);
+              toast.error("Something went wrong!");
             });
         }
       }

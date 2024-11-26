@@ -24,8 +24,6 @@ const CommentImagePreview = ({ selected, close, openDrawer, drawer }) => {
   const filteredComments = comments?.filter((c) => c.top);
   // const [images, setImages] = useState(imagesArray || []);
 
-  console.log("images", images);
-
   const [selectedImage, setSelectedImage] = useState(imageDetails || {});
 
   const CustomMarker = ({ markerId }) => {

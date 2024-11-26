@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
 import { BsInfoCircle } from "react-icons/bs";
 import {
   FaFacebookF,
@@ -136,7 +137,7 @@ function Profile({ user = {}, slug }) {
         setShowDesqEdit(false);
         setLoading(false);
       } catch (error) {
-        console.error("Error updating description:", error);
+        toast.error("Something went wrong!");
       }
     } else {
       setShowDesqEdit(false);
@@ -185,7 +186,7 @@ function Profile({ user = {}, slug }) {
     try {
       sendMessageFromProfile({ userId: id }).unwrap();
     } catch (error) {
-      console.log(error);
+      toast.error("Something went wrong!");
     }
   };
 

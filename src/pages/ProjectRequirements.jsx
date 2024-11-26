@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { FaSpinner } from "react-icons/fa";
 import { IoMdAttach } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -31,7 +32,6 @@ const ProjectRequirements = () => {
     projectNumber,
   });
   const [updateRequirementHandler] = useUpdateRequirementMutation();
-  console.log(projectDetails);
   const navigate = useNavigate();
   const fileInputsRef = useRef([]);
   const textareasRef = useRef([]);
@@ -237,7 +237,7 @@ const ProjectRequirements = () => {
           }),
         );
       } catch (error) {
-        console.error("Error uploading image:", error);
+        toast.error("Something went wrong!");
       }
     };
 
@@ -252,7 +252,6 @@ const ProjectRequirements = () => {
   };
 
   const handleChangeSelectedImage = (event, id) => {
-    console.log(event, id);
     const files = Array.from(event.target.files);
     getImagesWithDimensions(files, id);
     setUploadFilesLength([
@@ -298,7 +297,6 @@ const ProjectRequirements = () => {
           navigate(`/order/${projectNumber}`);
         }
       } catch {
-        console.log("error to save requirements");
         setSubmitLoading(false);
       }
     }

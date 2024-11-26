@@ -93,8 +93,6 @@ const OrderChatBox = () => {
   const [visibility, setVisibility] = useState({});
   const [clientTimeAndDate, setClientTimeAndDate] = useState(null);
 
-  console.log(messages);
-
   // all side effect calls here
   useEffect(() => {
     if (projectDetails) {
@@ -117,10 +115,8 @@ const OrderChatBox = () => {
   // Socket connection reader
   useEffect(() => {
     // Listen for incoming messages
-    console.log("effected");
 
     socket?.on("order:message", (msg) => {
-      console.log(msg, "checking messages");
       // if (!isAdmin) {
       dispatch(setMessages(msg));
       // }
@@ -253,7 +249,6 @@ const OrderChatBox = () => {
   // Image Preview Controllers
   const getImagesWithDimensions = async (files) => {
     const handleImageLoad = async (file, index) => {
-      console.log(file);
       const formData = new FormData();
       // formData.append("image", file);
       formData.append("files", file);
@@ -275,7 +270,6 @@ const OrderChatBox = () => {
       try {
         const response = await axios.post(uploadUrl, formData, {
           onUploadProgress: (data) => {
-            console.log(data);
             const percentage = Math.round((data.loaded / data.total) * 100);
             setSelectedImages((prev) => {
               const newImages = [...prev];
@@ -284,7 +278,6 @@ const OrderChatBox = () => {
             });
           },
         });
-        console.log(response);
 
         // Update image data upon successful upload
         const imageUrl = response.data.data.file.url.replaceAll(
@@ -465,7 +458,6 @@ const OrderChatBox = () => {
         commonKey,
         projectNumber,
       }).unwrap();
-      console.log(res);
 
       // socket.emit("delete-message", { messageId, userId: user?.id });
       toast.success("Message deleted successfully");

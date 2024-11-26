@@ -128,7 +128,6 @@ const OrderDeliveryForm = ({ handleClose }) => {
 
   const getImagesWithDimensions = async (files) => {
     const handleImageLoad = async (file, index) => {
-      console.log(file);
       const formData = new FormData();
       // formData.append("image", file);
       formData.append("files", file);
@@ -151,7 +150,6 @@ const OrderDeliveryForm = ({ handleClose }) => {
       try {
         const response = await axios.post(uploadUrl, formData, {
           onUploadProgress: (data) => {
-            console.log(data);
             const percentage = Math.round((data.loaded / data.total) * 100);
             setSelectedImages((prev) => {
               const newImages = [...prev];
@@ -160,7 +158,6 @@ const OrderDeliveryForm = ({ handleClose }) => {
             });
           },
         });
-        console.log(response);
 
         // Update image data upon successful upload
         const imageUrl = response.data.data.file.url.replaceAll(
@@ -183,7 +180,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
           return newImages;
         });
       } catch (error) {
-        console.error("Error uploading image:", error);
+        toast.error("Something went wrong!");
       }
     };
 
@@ -248,7 +245,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
         watermark: watermarkUrl,
       }));
     } catch (error) {
-      console.error("Error uploading image:", error);
+      toast.error("Something went wrong!");
     }
 
     thumbnailInputRef.current.value = "";
@@ -333,7 +330,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
 
         // setReplyTo(null);
       } catch (error) {
-        console.error("Failed to send message:", error);
+        toast.error("Something went wrong!");
       }
 
       const resetStorage = {

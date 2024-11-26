@@ -73,14 +73,12 @@ const AdminPanel = () => {
       user_id: userId,
       role: userRoles[userId],
     }));
-    console.log("Users updated successfully:", usersToUpdate);
     if (usersToUpdate.length > 0) {
       try {
         await updateUserRoles({ users: usersToUpdate });
         toast.success("Users updated successfully!");
         setUserRoles({});
       } catch (err) {
-        console.error("Error updating users:", err);
         toast.error("Failed to update!");
       }
     }

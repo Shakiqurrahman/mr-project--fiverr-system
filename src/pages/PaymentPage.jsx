@@ -1,6 +1,7 @@
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import Check from "../assets/svg/Check";
@@ -12,7 +13,6 @@ const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 const PaymentPage = () => {
   const { user } = useSelector((state) => state.user);
   const { state } = useLocation();
-  console.log(state);
 
   const [activeTab, setActiveTab] = useState(null);
   const [isAcceptingCondition, SetIsAcceptingCondition] = useState(false);
@@ -21,7 +21,6 @@ const PaymentPage = () => {
   );
 
   const [designs, setDesigns] = useState(state || []);
-  console.log("designs", designs);
 
   // Function to handle tab click
   const handleTabClick = (tab) => {
@@ -47,11 +46,8 @@ const PaymentPage = () => {
 
   const [items, setItems] = useState([]);
 
-  console.log("items", items);
-
   useEffect(() => {
     if (Array.isArray(designs?.designs) && !designs?.freeDesign) {
-      console.log(designs);
       const designsArr = designs?.designs?.map((design) => ({
         ...design,
         subTotal: design.subCategory.subAmount,
@@ -110,8 +106,6 @@ const PaymentPage = () => {
       from: state?.from,
     };
 
-    console.log("data checking", data);
-
     try {
       const response = await axios.post(
         `${configApi.api}api/checkout-session`,
@@ -123,7 +117,7 @@ const PaymentPage = () => {
       const stripe = await stripePromise;
       await stripe.redirectToCheckout({ sessionId });
     } catch (error) {
-      console.error("Error redirecting to checkout:", error);
+      toast.error("Something went wrong!");
     }
   };
 
@@ -151,10 +145,10 @@ const PaymentPage = () => {
             )}
             {(state?.from === "multipleProject" ||
               state?.from === "customOffer") && (
-                <h3 className="text-3xl font-bold">
-                  ${designs?.totalAmount || designs?.subTotal}
-                </h3>
-              )}
+              <h3 className="text-3xl font-bold">
+                ${designs?.totalAmount || designs?.subTotal}
+              </h3>
+            )}
           </div>
           {state?.from !== "multipleProject" &&
             state?.from !== "customOffer" && (

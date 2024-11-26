@@ -1,8 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import Cookies from "js-cookie";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import * as z from "zod";
 import { configApi } from "../libs/configApi";
 import {
@@ -10,24 +14,24 @@ import {
   toggleShowNewPassword,
   toggleShowPassword,
 } from "../Redux/features/passwordVisibilitySlice";
-import { useState } from "react";
-import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 
 // Zod schema for validation
-const schema = z.object({
-  currentPassword: z.string().min(6, "Please enter your current password"),
-  password: z.string().min(8, "New password must be at least 8 characters long."),
-  confirmPassword: z.string().min(1, "Please confirm your new password"),
-}).superRefine((data, ctx) => {
-  if (data.password !== data.confirmPassword) {
-    ctx.addIssue({
-      path: ["confirmPassword"],
-      message: "Passwords do not match",
-    });
-  }
-});
+const schema = z
+  .object({
+    currentPassword: z.string().min(6, "Please enter your current password"),
+    password: z
+      .string()
+      .min(8, "New password must be at least 8 characters long."),
+    confirmPassword: z.string().min(1, "Please confirm your new password"),
+  })
+  .superRefine((data, ctx) => {
+    if (data.password !== data.confirmPassword) {
+      ctx.addIssue({
+        path: ["confirmPassword"],
+        message: "Passwords do not match",
+      });
+    }
+  });
 
 function ChangePassword() {
   const dispatch = useDispatch();
@@ -64,7 +68,7 @@ function ChangePassword() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       if (response.status === 200) {
@@ -83,10 +87,9 @@ function ChangePassword() {
         setApiError("Failed to change password.");
       }
     } catch (error) {
-      console.error("Error:", error);
       setApiError(
         error.response?.data?.message ||
-        "Failed to change password. Please try again."
+          "Failed to change password. Please try again.",
       );
     } finally {
       setLoading(false);
@@ -182,9 +185,7 @@ function ChangePassword() {
 
           {/* API Error Message */}
           {apiError && (
-            <p className="mt-2 text-sm text-red-500 text-center">
-              {apiError}
-            </p>
+            <p className="mt-2 text-center text-sm text-red-500">{apiError}</p>
           )}
         </form>
       </div>

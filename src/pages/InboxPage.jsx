@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import loading from "../assets/svg/loading.gif";
@@ -34,10 +35,10 @@ const InboxPage = () => {
         try {
           setOffSetTop(sectionRef.current.offsetTop);
         } catch (error) {
-          console.error("Error accessing offsetTop:", error);
+          toast.error("Something went wrong!");
         }
       } else {
-        console.warn("sectionRef.current is null in updateOffsetTop");
+        toast.error("Something went wrong!");
       }
     };
 

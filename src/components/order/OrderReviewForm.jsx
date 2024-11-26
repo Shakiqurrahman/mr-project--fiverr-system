@@ -1,5 +1,6 @@
 import { Rating } from "@mui/material";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { GiCheckMark } from "react-icons/gi";
 import { IoStarOutline, IoStarSharp } from "react-icons/io5";
 import { useSelector } from "react-redux";
@@ -11,7 +12,6 @@ const OrderReviewForm = () => {
   const [submitReview] = useCreateAReviewMutation();
   const { user } = useSelector((state) => state.user);
   const { projectDetails } = useSelector((state) => state.order);
-  console.log(projectDetails);
 
   const [isThumbnail, setIsThumbnail] = useState(true);
   const [value, setValue] = useState(0);
@@ -43,9 +43,8 @@ const OrderReviewForm = () => {
       };
       try {
         const res = await submitReview(data).unwrap();
-        console.log(res);
       } catch (error) {
-        console.log(error);
+        toast.error("Something went wrong!");
       }
     }
   };

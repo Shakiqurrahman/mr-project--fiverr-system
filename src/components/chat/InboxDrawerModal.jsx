@@ -64,7 +64,6 @@ const InboxDrawerModal = ({ close }) => {
     return onlineUsers?.some((onlineUser) => onlineUser?.userId === userId);
   };
 
-  console.log(availableUsers);
   useOutsideClick(wrapperRef, () => close(false));
   return (
     <div

@@ -41,8 +41,6 @@ const AttachmentsPreview = ({ files }) => {
     dispatch(setImageArray(getOnlyImages));
   };
 
-  console.log(files);
-
   return (
     <>
       <div className="relative mt-3">

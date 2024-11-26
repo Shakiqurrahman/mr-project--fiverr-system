@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useCreateNoteMutation } from "../../../Redux/api/orderApiSlice";
 import useOutsideClick from "../../../hooks/useOutsideClick";
@@ -29,7 +30,7 @@ const AddNoteModal = ({ handleClose }) => {
           handleClose(false);
         }
       } catch {
-        console.log("Note Create Failed");
+        toast.error("Note Create Failed");
       }
     }
   };

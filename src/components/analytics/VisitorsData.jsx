@@ -34,8 +34,6 @@ const VisitorsData = () => {
   const [newVisitorsUporDown, setNewVisitorsUporDown] = useState(false);
   const [returnVisitorsUporDown, setReturnVisitorsUporDown] = useState(false);
 
-  console.log(totalVisitors, newVisitors, returnVisitors);
-
   useEffect(() => {
     if (selectedTimeOption) {
       getAllVisitorsByTime({ date: selectedTimeOption });

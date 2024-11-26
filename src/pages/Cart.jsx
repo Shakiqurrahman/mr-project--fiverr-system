@@ -27,7 +27,6 @@ function Cart() {
   // Handle checkout
   const handleCheckout = () => {
     const selectedItems = cart.filter((item) => item.checked);
-    console.log("Items ready for checkout:", selectedItems);
     navigate("/project", { state: { items: selectedItems } });
   };
   const hasSelectedItems = cart.some((item) => item.checked);

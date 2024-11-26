@@ -130,8 +130,6 @@ function EditDesign() {
   const [matchingImages, setMatchingImages] = useState(prevImages || []);
   // const [errorImg, setErrorImg] = useState(null);
 
-  console.log(prevImages);
-
   const getImagesWithDimensions = (files) => {
     const images = [];
     let isError = false;
@@ -412,46 +410,6 @@ function EditDesign() {
   const handleSubmit = async (e) => {
     setSubmitLoading(true);
     e.preventDefault();
-    // const withoutFiles = matchingImages
-    //   .filter((file) => !file.file)
-    //   ?.map(({ value, ...rest }) => rest);
-    // const withFiles = matchingImages
-    //   .filter((file) => file.file)
-    //   .map((file) => file.file);
-    // let withFilesRes = null;
-    // try {
-    //   const formData = new FormData();
-    //   // Append each file in the array individually
-    //   withFiles.forEach((file) => {
-    //     formData.append("files", file); // Optionally, you can add a second argument with a filename like so: `formData.append("files", file, file.name)`
-    //   });
-    //   const uploadUrl = `${configApi.api}upload-attachment-optimized`;
-    //   const response = await axios.post(uploadUrl, formData);
-    //   if (response.data.success) {
-    //     if (response.data.data.files) {
-    //       withFilesRes = response.data.data.files.map((file) => ({
-    //         url: file.optimizedUrl,
-    //         watermark: file.url,
-    //         name: file.originalName,
-    //       }));
-    //     } else {
-    //       withFilesRes = [
-    //         {
-    //           url: response.data.data.file.optimizedUrl,
-    //           watermark: response.data.data.file.url,
-    //           name: response.data.data.file.originalName,
-    //         },
-    //       ];
-    //     }
-    //   }
-    // } catch (error) {
-    //   console.log("image array", error);
-    // }
-    // const imagesArrWithFiles = withFilesRes.map((image, index) => ({
-    //   ...image, // Spread the properties of the image object
-    //   thumbnail: withFiles[index]?.thumbnail, // Add the thumbnail property from thumbnailsArray
-    // }));
-    // const images = [...withoutFiles, ...imagesArrWithFiles];
 
     const imagesToRemove = [];
     const newImagesToAdd = [];
@@ -497,7 +455,7 @@ function EditDesign() {
           }
         }
       } catch (error) {
-        console.log("image array", error);
+        toast.error("Something went wrong!");
       }
     }
 
@@ -551,7 +509,7 @@ function EditDesign() {
           navigate(`/design/${state.designId}`);
         }
       } catch (error) {
-        console.log(error);
+        toast.error("Something went wrong!");
       }
     }
 

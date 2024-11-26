@@ -26,7 +26,6 @@ function Verify() {
         const response = await axios.get(
           `${configApi.api}verify-otp/${state?.email}?code=${otp}`,
         );
-        console.log(response);
         setLoading(false);
         if (response?.data?.success) {
           navigate("/update-password", {
@@ -53,7 +52,6 @@ function Verify() {
       const response = await axios.get(
         `${configApi.api}forgot-pass/${state?.email}`,
       );
-      console.log(response);
 
       setLoadingRequest(false);
     } catch (error) {

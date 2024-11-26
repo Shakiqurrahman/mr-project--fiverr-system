@@ -91,7 +91,6 @@ const CreateOfferModal = ({
 
   const dates = new Date();
   const timeAndDate = dates.getTime();
-  console.log("time and date", timeAndDate);
 
   const handleSubmit = async (e) => {
     const { title, thumbnail, price, deliveryCount, desc } = form;
@@ -123,7 +122,6 @@ const CreateOfferModal = ({
             recipientId: conversationUser,
             ...offerMessage,
           }).unwrap();
-          console.log(res);
           setForm({
             thumbnail: null,
             title: "",
@@ -134,7 +132,7 @@ const CreateOfferModal = ({
           });
           setReplyTo(null);
         } catch (error) {
-          console.log(error);
+          toast.error("Something went wrong!");
         }
       }
 

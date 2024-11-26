@@ -108,15 +108,12 @@ const OrderDeliveryPreview = ({ data }) => {
 
   const handlePreviewImage = (e, url) => {
     e.preventDefault();
-    console.log(url);
     dispatch(setPreviewImage(url));
   };
 
   const foundImages =
     data?.attachments?.filter((file) => file?.format?.startsWith("image/"))
       .length > 0;
-
-  console.log("delivery files", data);
 
   return (
     <>

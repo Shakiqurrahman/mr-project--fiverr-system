@@ -114,7 +114,7 @@ function EditCategory() {
         // Optionally, you can also store this data in localStorage if needed
         // localStorage.setItem("profileData", JSON.stringify({ ...form, categoryImage: imageUrl }));
       } catch (error) {
-        console.error("Error uploading image:", error);
+        toast.error("Something went wrong!");
         // You can use a library like react-toastify to display error messages
         // toast.error("Failed to upload image");
       } finally {
@@ -167,8 +167,6 @@ function EditCategory() {
       bulletPoint: bullets,
       requirements: requirements.filter((req) => req.trim() !== ""),
     };
-    // console.log(JSON.stringify(data));
-    console.log(data);
     // Here you can handle form submission, e.g., by sending the data to your backend
     try {
       const api = `${configApi.api}category/update/${state.id}`;
@@ -178,7 +176,7 @@ function EditCategory() {
         navigate("/pricelist");
       }
     } catch (error) {
-      console.log(error);
+      toast.error("Something went wrong!");
     }
   };
 

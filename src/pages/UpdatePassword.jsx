@@ -9,7 +9,6 @@ function UpdatePassword() {
   const navigate = useNavigate();
   const forgetPasswordToken = state?.data?.forgetPasswordToken;
   const email = state?.data?.email;
-  console.log(forgetPasswordToken, "email", email);
 
   const [form, setForm] = useState({
     password: "",
@@ -39,7 +38,6 @@ function UpdatePassword() {
           `${configApi.api}set-forget-pass/${forgetPasswordToken}`,
           updatedData,
         );
-        console.log(response);
         setLoading(false);
         if (response?.data?.success) {
           toast.success("Password updated successfully!");

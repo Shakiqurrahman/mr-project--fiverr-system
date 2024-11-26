@@ -1,4 +1,5 @@
 import React from "react";
+import toast from "react-hot-toast";
 import { useUpdateAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
 
 const CancellingProjectPreview = ({ messageObj, value }) => {
@@ -19,7 +20,7 @@ const CancellingProjectPreview = ({ messageObj, value }) => {
       try {
         const res = await updateAOrderMessage(data).unwrap();
       } catch (error) {
-        console.log(error);
+        toast.error("Something went wrong!");
       }
     }
   };

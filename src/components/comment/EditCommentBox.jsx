@@ -17,8 +17,6 @@ const EditCommentBox = ({
 
   const [commentObj, setCommentObj] = useState(comment || null);
 
-  console.log(commentObj);
-
   useEffect(() => {
     if (commentObj) {
       textAreaRef.current.focus();

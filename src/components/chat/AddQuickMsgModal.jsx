@@ -32,7 +32,6 @@ const AddQuickMsgModal = ({ handleClose }) => {
         // Close the modal on success
         handleClose(false);
       } catch (err) {
-        console.error("Failed to create the quick message:", err);
         toast.error("Failed to create the quick message");
       }
     }

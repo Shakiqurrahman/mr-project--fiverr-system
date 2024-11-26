@@ -30,8 +30,6 @@ function Designs() {
 
   const { searchedText, searchResult } = useSelector((state) => state.utils);
 
-  console.log(searchResult, searchedText);
-
   const [designs, setDesigns] = useState([]);
   const [designKeywords, setDesignKeywords] = useState([]);
   const [industryKeywords, setIndustryKeywords] = useState([]);

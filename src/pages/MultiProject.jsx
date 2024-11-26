@@ -128,12 +128,10 @@ const MultiProject = () => {
           setProjectImage(res.data.data.projectImage);
           setRequirements(res.data.data.requirements);
         }
-        console.log("Project updated", res);
         setSubmitLoading(false);
         toast.success("Successfully Saved!");
       } catch (error) {
         setSubmitLoading(false);
-        console.error("Error uploading image or updating project:", error);
         toast.error("Failed to upload image or update project");
       }
     } else {

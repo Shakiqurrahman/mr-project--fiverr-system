@@ -38,10 +38,7 @@ const CommentsPreview = ({ commentedImages }) => {
       )
       .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
-  console.log("filteredImages", filteredImages);
-
   const handleOpenCommentBox = (imgObj) => {
-    console.log("image object", imgObj);
     const image = { ...imgObj, newComment: false };
     setOpenCommentBox(true);
     dispatch(setImageDetails(image));

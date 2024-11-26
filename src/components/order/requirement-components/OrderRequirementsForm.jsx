@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { FaSpinner } from "react-icons/fa6";
 import { IoMdAttach } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -61,8 +62,6 @@ const OrderRequirementsForm = () => {
           const startPos = textarea.selectionStart;
           const endPos = textarea.selectionEnd;
 
-          console.log(textarea.value, id);
-
           // Insert the emoji at the cursor position
           const newText =
             item.answer.substring(0, startPos) +
@@ -109,8 +108,6 @@ const OrderRequirementsForm = () => {
 
   const getImagesWithDimensions = async (files, id) => {
     const handleImageLoad = async (file, index) => {
-      console.log("file", file);
-
       // Create FormData and append the file
       const formData = new FormData();
       formData.append("files", file); // Ensure you're appending files correctly
@@ -145,7 +142,6 @@ const OrderRequirementsForm = () => {
       try {
         const response = await axios.post(uploadUrl, formData, {
           onUploadProgress: (data) => {
-            console.log(data);
             const percentage = Math.round((data.loaded / data.total) * 100);
 
             // Update progress state
@@ -201,7 +197,7 @@ const OrderRequirementsForm = () => {
           }),
         );
       } catch (error) {
-        console.error("Error uploading image:", error);
+        toast.error("Something went wrong!");
       }
     };
 
@@ -257,7 +253,7 @@ const OrderRequirementsForm = () => {
         setIsOrderStartByAdmin(true);
       }
     } catch {
-      console.log("error to save requirements");
+      toast.error("error to save requirements");
       setSubmitLoading(false);
     }
   };
@@ -280,7 +276,7 @@ const OrderRequirementsForm = () => {
           setSubmitLoading(false);
         }
       } catch {
-        console.log("error to save requirements");
+        toast.error("error to save requirements");
         setSubmitLoading(false);
       }
     }

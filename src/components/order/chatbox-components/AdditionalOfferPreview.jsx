@@ -1,6 +1,7 @@
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import React from "react";
+import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useUpdateAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
 import { STRIPE_PUBLIC_KEY, configApi } from "../../../libs/configApi";
@@ -44,7 +45,7 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
         const stripe = await stripePromise;
         await stripe.redirectToCheckout({ sessionId });
       } catch (error) {
-        console.error("Error redirecting to checkout:", error);
+        toast.error("Something went wrong!");
       }
     }
   };
@@ -60,9 +61,8 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
       };
       try {
         const res = await updateAOrderMessage(data).unwrap();
-        console.log(res);
       } catch (error) {
-        console.log(error);
+        toast.error("Something went wrong!");
       }
     }
   };
@@ -78,9 +78,8 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
       };
       try {
         const res = await updateAOrderMessage(data).unwrap();
-        console.log(res);
       } catch (error) {
-        console.log(error);
+        toast.error("Something went wrong!");
       }
     }
   };

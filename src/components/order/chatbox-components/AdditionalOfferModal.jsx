@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useSendAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
 import { setMessages, setReplyTo } from "../../../Redux/features/orderSlice";
@@ -83,7 +84,7 @@ const AdditionalOfferModal = ({ handleClose, onOfferSubmit }) => {
       });
       // setReplyTo(null);
     } catch (error) {
-      console.error("Failed to send message:", error);
+      toast.error("Something went wrong!");
     }
   };
 

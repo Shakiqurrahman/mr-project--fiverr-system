@@ -22,7 +22,6 @@ const commentSlice = createSlice({
           })),
         })),
       }));
-      console.log("new Comments", images);
       state.images = images;
     },
 
@@ -80,8 +79,6 @@ const commentSlice = createSlice({
 
     setCommentsData: (state, action) => {
       const details = state.imageDetails;
-      console.log("image details", details);
-      console.log("image action", action.payload);
       if (action.payload.markerId) {
         state.imageDetails.comments = state.imageDetails.comments.map((c) => {
           if (c.markerId === action.payload.markerId) {

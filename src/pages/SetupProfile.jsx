@@ -53,7 +53,7 @@ function SetupProfile({ from_profile }) {
       setUploading(false);
       setLoading(false);
     } catch (error) {
-      console.error("Error saving data to the database:", error);
+      toast.error("Something went wrong!");
       setUploading(false);
       setLoading(false);
     }

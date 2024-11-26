@@ -21,7 +21,6 @@ function CreateOfferProject() {
   const [projectImage, setProjectImage] = useState(
     offerProjects?.projectImage || {},
   );
-  console.log(projectImage);
 
   // Form state
   const [form, setForm] = useState({
@@ -220,7 +219,6 @@ function CreateOfferProject() {
         const uploadUrl = `${configApi.api}upload-attachment-optimized`;
         try {
           const response = await axios.post(uploadUrl, formData);
-          console.log(response);
           const name = response.data.data.file.originalName;
           const imageUrl = response.data.data.file.optimizedUrl;
           const watermark = response.data.data.file.url;
@@ -231,7 +229,7 @@ function CreateOfferProject() {
             watermark,
           };
         } catch (error) {
-          console.error("Error uploading image:", error);
+          toast.error("Something went wrong!");
           // You can use a library like react-toastify to display error messages
           // toast.error("Failed to upload image");
           uploadSuccess = false;
@@ -243,8 +241,6 @@ function CreateOfferProject() {
     const imageResult = await imageRes();
 
     const image = { ...projectImage, ...imageResult };
-
-    console.log(image, imageResult);
 
     if (image) {
       const data = {
@@ -263,7 +259,6 @@ function CreateOfferProject() {
       try {
         // Call the mutation function with the constructed data
         const response = await updateOfferProject(data).unwrap();
-        console.log(response);
         if (!uploadSuccess) {
           toast.error("Failed to upload image");
         }
@@ -271,7 +266,6 @@ function CreateOfferProject() {
         navigate(-1);
       } catch (error) {
         toast.error("Update failed!");
-        console.error("Update failed:", error);
       }
     }
   };

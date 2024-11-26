@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { IoCloseSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { useSendAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
@@ -89,7 +90,7 @@ const ExtendDeliveryModal = ({ handleClose }) => {
         ...submitForm,
       }).unwrap();
     } catch (error) {
-      console.error("Failed to send message:", error);
+      toast.error("Something went wrong!");
     }
   };
 

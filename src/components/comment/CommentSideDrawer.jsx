@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { GrFormUp } from "react-icons/gr";
 import { MdEdit, MdReply } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -160,7 +161,7 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
         ...submitForm,
       }).unwrap();
     } catch (error) {
-      console.error("Failed to send message:", error);
+      toast.error("Something went wrong!");
     }
   };
 

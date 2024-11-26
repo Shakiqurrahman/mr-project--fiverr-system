@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { LiaEdit } from "react-icons/lia";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { useSelector } from "react-redux";
@@ -24,11 +25,10 @@ const PrivateNote = () => {
   }, [projectDetails, getNotesData]);
 
   const handleDeleteNote = async (orderId, noteId) => {
-    console.log("Order Id", orderId, "Note Id", noteId);
     try {
       await deleteANote({ orderId, noteId }).unwrap();
     } catch {
-      console.log("Note Delete Failed");
+      toast.error("Note Delete Failed");
     }
   };
 

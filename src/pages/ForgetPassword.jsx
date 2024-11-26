@@ -27,8 +27,6 @@ function ForgetPassword() {
           state: { email: response?.data?.data.email },
         });
       }
-      console.log(response?.data);
-      
     } catch (error) {
       setError(
         error.response

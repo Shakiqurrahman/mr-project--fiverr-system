@@ -214,7 +214,6 @@ const StartMultipleProject = ({ items }) => {
       navigate("/payment", { state: data });
     } else if (choosenItems?.length === 1) {
       const choosenItem = choosenItems[0];
-      console.log("choosen item", choosenItem);
       const selectedCategory = choosenItem?.category;
       const data = {
         ...selectedCategory,

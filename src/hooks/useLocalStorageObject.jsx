@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export const useLocalStorageObject = (key, initialValue) => {
   const [storedValue, setStoredValue] = useState(() => {
@@ -6,7 +7,7 @@ export const useLocalStorageObject = (key, initialValue) => {
       const item = window.localStorage.getItem(key);
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
-      console.error(`Error getting item from local storage: ${error}`);
+      toast.error("Something went wrong!");
       return initialValue;
     }
   });
@@ -15,14 +16,14 @@ export const useLocalStorageObject = (key, initialValue) => {
     try {
       window.localStorage.setItem(key, JSON.stringify(storedValue));
     } catch (error) {
-      console.error(`Error setting item in local storage: ${error}`);
+      toast.error("Something went wrong!");
     }
   }, [key, storedValue]);
 
   const updateItem = (itemKey, value) => {
-    setStoredValue(prevState => ({
+    setStoredValue((prevState) => ({
       ...prevState,
-      [itemKey]: value
+      [itemKey]: value,
     }));
   };
 

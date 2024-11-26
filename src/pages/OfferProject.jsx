@@ -23,8 +23,6 @@ function OfferProject() {
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
-  console.log(state, isFastDelivery);
-
   useEffect(() => {
     // Get the selected categories
     const selectedCategories = categories.filter((item) => item.isSelected);
