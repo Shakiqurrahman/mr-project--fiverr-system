@@ -1,102 +1,17 @@
 import { useEffect, useState } from "react";
 import DownArrow from "../../assets/svg/DownArrow";
 import UpArrow from "../../assets/svg/UpArrow";
+import { useLazyGetTopKeywordsByFilterQuery } from "../../Redux/api/analyticsApiSlice";
 
 const TopKeywords = () => {
   const [expend, setExpend] = useState(false);
   const [selectedFilterOption, setSelectedFilterOption] =
     useState("Impressions");
   const [selectedTimeOption, setSelectedTimeOption] = useState("Last 30 Days");
-  const [keywordsData, setKeywordsData] = useState([
-    {
-      id: 1,
-      name: "Door Hanger",
-      impressions: 369,
-      clicks: 124,
-      projects: 2,
-      earning: 60,
-    },
-    {
-      id: 2,
-      name: "Flyer Design",
-      impressions: 350,
-      clicks: 79,
-      projects: 0,
-      earning: 0,
-    },
-    {
-      id: 3,
-      name: "Postcard Design",
-      impressions: 345,
-      clicks: 93,
-      projects: 3,
-      earning: 120,
-    },
-    {
-      id: 4,
-      name: "Poster Design",
-      impressions: 325,
-      clicks: 136,
-      projects: 0,
-      earning: 0,
-    },
-    {
-      id: 5,
-      name: "Rack Card Design",
-      impressions: 301,
-      clicks: 84,
-      projects: 1,
-      earning: 30,
-    },
-    {
-      id: 6,
-      name: "Business Card",
-      impressions: 285,
-      clicks: 105,
-      projects: 0,
-      earning: 0,
-    },
-    {
-      id: 7,
-      name: "Brochure Design",
-      impressions: 273,
-      clicks: 49,
-      projects: 0,
-      earning: 0,
-    },
-    {
-      id: 8,
-      name: "Facebook cover",
-      impressions: 245,
-      clicks: 97,
-      projects: 2,
-      earning: 40,
-    },
-    {
-      id: 9,
-      name: "Billboard Design",
-      impressions: 210,
-      clicks: 20,
-      projects: 3,
-      earning: 75,
-    },
-    {
-      id: 10,
-      name: "Yard Sign Design",
-      impressions: 190,
-      clicks: 69,
-      projects: 1,
-      earning: 25,
-    },
-    {
-      id: 11,
-      name: "Yard Sign Design",
-      impressions: 191,
-      clicks: 69,
-      projects: 1,
-      earning: 25,
-    },
-  ]);
+  const [keywordsData, setKeywordsData] = useState([]);
+
+  const [getTopKeywordsByFilter, { data }] =
+    useLazyGetTopKeywordsByFilterQuery();
 
   const lastYear = new Date().getFullYear() - 1;
   const twoYearsAgo = new Date().getFullYear() - 2;
@@ -120,24 +35,36 @@ const TopKeywords = () => {
     "All Times",
   ];
 
-  const sortKeywordsData = (option) => {
-    return [...keywordsData].sort((a, b) => {
-      if (option === "Impressions") return b.impressions - a.impressions;
-      if (option === "Clicks") return b.clicks - a.clicks;
-      if (option === "Projects") return b.projects - a.projects;
-      if (option === "Earnings") return b.earning - a.earning;
-      return 0;
-    });
-  };
+  useEffect(() => {
+    if (selectedTimeOption) {
+      getTopKeywordsByFilter({ date: selectedTimeOption });
+    }
+  }, [selectedTimeOption, getTopKeywordsByFilter]);
 
   useEffect(() => {
-    const sortedData = sortKeywordsData(selectedFilterOption);
-    setKeywordsData(sortedData);
-  }, [selectedFilterOption]);
+    if (data) {
+      let sortedData = [...data];
+
+      if (selectedFilterOption === "Impressions") {
+        sortedData.sort((a, b) => b.impressions - a.impressions);
+      }
+      if (selectedFilterOption === "Clicks") {
+        sortedData.sort((a, b) => b.clicks - a.clicks);
+      }
+      if (selectedFilterOption === "Projects") {
+        sortedData.sort((a, b) => b.totalOrders - a.totalOrders);
+      }
+      if (selectedFilterOption === "Earnings") {
+        sortedData.sort((a, b) => b.totalSales - a.totalSales);
+      }
+
+      setKeywordsData(sortedData);
+    }
+  }, [selectedFilterOption, data]);
 
   const slicedKeywordData =
-    keywordsData.length > 10 && !expend
-      ? keywordsData.slice(0, 10)
+    keywordsData?.length > 10 && !expend
+      ? keywordsData?.slice(0, 10)
       : keywordsData;
 
   return (
@@ -192,22 +119,22 @@ const TopKeywords = () => {
               </tr>
             </thead>
             <tbody>
-              {slicedKeywordData.map((keyword) => (
-                <tr key={keyword.id} className="text-center even:bg-white">
+              {slicedKeywordData?.map((keyword, index) => (
+                <tr key={index} className="text-center even:bg-white">
                   <td className="border-collapse border border-gray-300 px-3 py-2 text-start">
-                    {keyword.name}
+                    {keyword?.name}
                   </td>
                   <td className="border-collapse border border-gray-300 px-3 py-2">
-                    {keyword.impressions}
+                    {keyword?.impressions}
                   </td>
                   <td className="border-collapse border border-gray-300 px-3 py-2">
-                    {keyword.clicks}
+                    {keyword?.clicks}
                   </td>
                   <td className="border-collapse border border-gray-300 px-3 py-2">
-                    {keyword.projects}
+                    {keyword?.totalOrders}
                   </td>
                   <td className="border-collapse border border-gray-300 px-3 py-2">
-                    ${keyword.earning}
+                    ${keyword?.totalSales}
                   </td>
                 </tr>
               ))}
@@ -215,7 +142,7 @@ const TopKeywords = () => {
           </table>
         </div>
       </div>
-      {keywordsData.length > 10 && (
+      {keywordsData?.length > 10 && (
         <button
           className="mx-auto mt-5 flex items-center gap-1 rounded-[30px] bg-primary px-3 py-1 text-white"
           onClick={() => setExpend(!expend)}

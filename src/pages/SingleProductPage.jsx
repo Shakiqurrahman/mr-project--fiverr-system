@@ -9,6 +9,10 @@ import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
 import Divider from "../components/Divider";
 import RelatedDesigns from "../components/RelatedDesigns";
 import {
+  useLazyTopKeywordsClickQuery,
+  useLazyTopKeywordsImpressionQuery,
+} from "../Redux/api/analyticsApiSlice";
+import {
   useDeleteDesignByIdMutation,
   useFetchGetUploadQuery,
   useLazyGetDesignsBySearchQuery,
@@ -62,6 +66,10 @@ function SingleProductPage() {
   const [getDesignsBySearch, { data: searchedData }] =
     useLazyGetDesignsBySearchQuery();
 
+  const [topKeywordClick] = useLazyTopKeywordsClickQuery();
+  const [updateTopKeywordsImpression, { data: tagsImpressions }] =
+    useLazyTopKeywordsImpressionQuery();
+
   const design = useMemo(
     () => uploadDesigns?.find((d) => d.designId === slug),
     [uploadDesigns, slug],
@@ -70,6 +78,7 @@ function SingleProductPage() {
   const handleTagClick = (tag) => {
     dispatch(setSearchedText(tag));
     if (tag) {
+      topKeywordClick({ keyword: tag }).unwrap();
       getDesignsBySearch(tag);
     }
   };
@@ -104,6 +113,13 @@ function SingleProductPage() {
       refetch();
     }
   }, [uploadDesigns, refetch]);
+
+  useEffect(() => {
+    if (design && design?.tags?.length > 0) {
+      const keywords = design?.tags?.join(",");
+      updateTopKeywordsImpression({ keywords: keywords });
+    }
+  }, [design]);
 
   if (!design && !isLoading) {
     navigate("/not-found", { replace: true });

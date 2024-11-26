@@ -36,7 +36,17 @@ export const analyticsApiSlice = createApi({
     }),
 
     getTopKeywordsByFilter: builder.query({
-      query: ({ date }) => `analytics/top-keyword?timeFilter=${date}/order`,
+      query: ({ date }) => `analytics/top-keywords?timeFilter=${date}`,
+      transformResponse: (response) => response.data,
+    }),
+
+    topKeywordsImpression: builder.query({
+      query: ({ keywords }) => `analytics/top-keyword?keywords=${keywords}`,
+      transformResponse: (response) => response.data,
+    }),
+
+    topKeywordsClick: builder.query({
+      query: ({ keyword }) => `analytics/top-keyword/${keyword}`,
       transformResponse: (response) => response.data,
     }),
 
@@ -94,4 +104,7 @@ export const {
   useLazyGetProjectOptionsAnalyticsQuery,
   useLazyGetAvarageSellingAnalyticsQuery,
   useLazyGetProjectsDetailsByFilterQuery,
+  useLazyTopKeywordsClickQuery,
+  useLazyTopKeywordsImpressionQuery,
+  useLazyGetTopKeywordsByFilterQuery,
 } = analyticsApiSlice;
