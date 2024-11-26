@@ -10,6 +10,7 @@ const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 const AdditionalOfferPreview = ({ value, messageObj }) => {
   const [updateAOrderMessage] = useUpdateAOrderMessageMutation();
   const { user } = useSelector((state) => state.user);
+  const { projectDetails } = useSelector((state) => state.order);
 
   const handleAcceptOffer = async (e) => {
     e.preventDefault();
@@ -27,6 +28,8 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
         projectNumber: messageObj?.projectNumber,
         duration: value?.duration,
         updatedMessage,
+        userId: user?.id,
+        orderId: projectDetails?.id,
       };
       try {
         const response = await axios.post(
