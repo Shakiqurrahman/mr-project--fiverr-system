@@ -539,6 +539,7 @@ const ChatBox = ({ openToggle }) => {
         socket?.emit("admin-message", {
           userId: conversationUser,
           ...submitForm,
+          isAdminSeen: true,
         });
 
         socket?.emit("available-for-chat", {
@@ -546,11 +547,13 @@ const ChatBox = ({ openToggle }) => {
           ...submitForm,
           createdAt,
           senderUserName,
+          isAdminSeen: true,
         });
       } else {
         socket?.emit("user-message", {
           userId: user?.id,
           ...submitForm,
+          isClientSeen: true,
         });
 
         socket?.emit("available-for-chat", {
@@ -558,6 +561,7 @@ const ChatBox = ({ openToggle }) => {
           ...submitForm,
           createdAt,
           senderUserName,
+          isClientSeen: true,
         });
       }
       // Optimistically add the message to local state (before API response)

@@ -56,7 +56,7 @@ export const inboxApiSlice = createApi({
 
     // Get available chat users for admin
     getAvailableChatUsers: builder.query({
-      query: () => "avaiableforchat",
+      query: (userId) => `avaiableforchat/${userId}`,
       transformResponse: (response) => response?.data,
       // providesTags: ["availablechatusers", "getAllMessages"],
       providesTags: ["availablechatusers"],
@@ -85,7 +85,7 @@ export const inboxApiSlice = createApi({
         method: "POST",
         body: newMessage,
       }),
-      invalidatesTags: ["getAllMessages"],
+      invalidatesTags: ["getAllMessages", "bubble"],
     }),
 
     //reply message
@@ -97,7 +97,7 @@ export const inboxApiSlice = createApi({
         method: "POST",
         body: newMessage,
       }),
-      invalidatesTags: ["getAllMessages"],
+      invalidatesTags: ["getAllMessages", "bubble"],
     }),
 
     // delete a message
@@ -165,7 +165,7 @@ export const inboxApiSlice = createApi({
         method: "POST",
         // body: data,
       }),
-      invalidatesTags: ["getAllMessages", "availablechatusers"],
+      invalidatesTags: ["getAllMessages", "availablechatusers", "bubble"],
     }),
 
     // send message from profile
@@ -174,13 +174,14 @@ export const inboxApiSlice = createApi({
         url: `seen/update/${userId}`,
         method: "PATCH",
       }),
-      invalidatesTags: ["getAllMessages", "availablechatusers"],
+      invalidatesTags: ["getAllMessages", "availablechatusers", "bubble"],
     }),
 
     // Inbox bubble counting value
     inboxBubbleCounting: builder.query({
       query: () => "notification/inbox",
       transformResponse: (response) => response?.data?.total,
+      providesTags : ["bubble"]
     }),
   }),
 });

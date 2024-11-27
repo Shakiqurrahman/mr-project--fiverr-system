@@ -35,7 +35,7 @@ const AllConversation = ({ closeToggle }) => {
 
   const [chatList, setChatList] = useState([]);
 
-  const { data: availableUsers } = useGetAvailableChatUsersQuery(null, {
+  const { data: availableUsers } = useGetAvailableChatUsersQuery(user.id, {
     pollingInterval: 60000,
   });
 
@@ -61,20 +61,21 @@ const AllConversation = ({ closeToggle }) => {
     }
   }, [availableUsers]);
 
-  // console.log(chatList, "chatlsit");
+  console.log(chatList, "chatlsit");
 
   useEffect(() => {
     const handleSeenBy = (msg) => {
-      console.log("updated message", msg);
+      // console.log("updated message", msg);
       setChatList((prev) =>
         prev.map((chat) => {
           if (chat.id === msg?.senderId) {
-            const isSeenByCurrentUser = msg?.seenBy?.includes(user.id);
+            // const isSeenByCurrentUser = msg?.seenBy?.includes(user.id);
+            const isSeenByAdmin = msg?.isAdminSeen;
             return {
               ...chat,
               lastmessageinfo: {
                 ...chat?.lastmessageinfo,
-                totalUnseenMessage: isSeenByCurrentUser && 0,
+                totalUnseenMessage: isSeenByAdmin && 0,
               },
             };
           }
@@ -84,13 +85,14 @@ const AllConversation = ({ closeToggle }) => {
     };
 
     const handleNewChatMessage = (msg) => {
-      const shouldUpdate = !msg?.seenBy?.includes(user.id); // Only update if the message is unseen
+      const shouldUpdate = !msg?.isAdminSeen; // Only update if the message is unseen
       if (!shouldUpdate) return; // Skip state update if conditions are not met
 
       setChatList((prev) =>
         prev.map((chat) => {
           if (chat.id === msg.userId) {
-            const isSeenByCurrentUser = msg?.seenBy?.includes(user.id);
+            // const isSeenByCurrentUser = msg?.seenBy?.includes(user.id);
+            const isSeenByAdmin = msg?.isAdminSeen;
             const seenedUser = conversationUser === msg.userId;
 
             return {
@@ -99,9 +101,10 @@ const AllConversation = ({ closeToggle }) => {
                 ...chat.lastmessageinfo,
                 messageText: msg.messageText,
                 createdAt: msg.createdAt,
+                senderUserName: msg.senderUserName,
                 totalUnseenMessage: seenedUser
                   ? 0
-                  : isSeenByCurrentUser
+                  : isSeenByAdmin
                     ? 0
                     : chat.lastmessageinfo.totalUnseenMessage + 1,
               },
@@ -296,11 +299,12 @@ const AllConversation = ({ closeToggle }) => {
                     <p className="text-[12px] text-gray-500">
                       {createdAt && formatTimeAgo(createdAt)}
                     </p>
-                    {totalUnseenMessage > 0 && (
+                    {/* REVIEW:-------------total unseen message count---------------  */}
+                    {/* {totalUnseenMessage > 0 && (
                       <span className="size-6 rounded-full bg-primary text-center text-[10px] leading-[24px] text-white">
                         {totalUnseenMessage}
                       </span>
-                    )}
+                    )} */}
                   </div>
                   {chat?.isBookMarked && (
                     <IoIosStar className="text-lg text-primary" />
