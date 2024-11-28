@@ -42,7 +42,7 @@ const SitemapProject = () => {
           </Link>
           <p className="mb-10 mt-3">
             Go to the &quot;Design Description&quot; page by clicking on the
-            design of your choice, then click on &quot;Start Project&quot; and
+            design of your choice, then click on &quot;Project Start&quot; and
             continue.
           </p>
         </li>

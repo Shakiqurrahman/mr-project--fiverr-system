@@ -62,9 +62,9 @@ function Designs() {
       if (data) {
         const prevDesigns = [...data];
         if (sortedBy === "NewestDesigns") {
-          setDesigns(prevDesigns.reverse());
-        } else if (sortedBy === "OldestDesigns") {
           setDesigns(prevDesigns);
+        } else if (sortedBy === "OldestDesigns") {
+          setDesigns(prevDesigns.reverse());
         } else {
           setDesigns(prevDesigns);
         }

@@ -77,10 +77,10 @@ const MultiProject = () => {
 
       // Check if a new image is selected
       if (selectImage) {
-        formData.append("fileName", selectImage);
+        formData.append("files", selectImage);
       }
 
-      const uploadUrl = `${configApi.api}upload-image`;
+      const uploadUrl = `${configApi.api}upload-attachment-optimized`;
 
       try {
         setSubmitLoading(true);
@@ -92,11 +92,9 @@ const MultiProject = () => {
           const response = await axios.post(uploadUrl, formData);
 
           if (response.data.success) {
-            const name =
-              response.data.data[0].result.original_filename +
-              "." +
-              response.data.data[0].result.format;
-            const imageUrl = response.data.data[0].result.url;
+            const name = selectImage?.name;
+            const imageUrl = response.data.data.file.optimizedUrl;
+            const watermark = response.data.data.file.url;
 
             imageObj = {
               url: imageUrl,

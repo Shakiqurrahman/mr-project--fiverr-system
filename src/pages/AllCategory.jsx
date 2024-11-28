@@ -42,12 +42,12 @@ function AllCategory() {
         );
         setAllFilteredSubFolders(sortedDefaultDesigns);
       } else if (sortedBy === "NewestDesigns") {
-        // No sorting, just set as is
-        setAllFilteredSubFolders([...subFolders]);
-      } else if (sortedBy === "OldestDesigns") {
         // Reverse the array to show oldest first
         const sortedOldestDesigns = [...subFolders].reverse();
         setAllFilteredSubFolders(sortedOldestDesigns);
+      } else if (sortedBy === "OldestDesigns") {
+        // No sorting, just set as is
+        setAllFilteredSubFolders([...subFolders]);
       }
     }
   }, [subFolders, sortedBy]);

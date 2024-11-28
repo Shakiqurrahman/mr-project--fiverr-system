@@ -34,6 +34,8 @@ function SingleProductPage() {
   const [images, setImages] = useState([]);
   const [showAll, setShowAll] = useState(false);
 
+  const isAuthorized = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
+
   const settings = {
     dots: false,
     infinite: images?.length > 1 ? true : false,
@@ -171,7 +173,7 @@ function SingleProductPage() {
   return (
     <>
       <div className="max-width">
-        {user?.role !== "USER" && (
+        {isAuthorized && (
           <div className="relative mt-5 text-right">
             <button className="text-4xl" onClick={handleIsClicked}>
               <BsThreeDots />
