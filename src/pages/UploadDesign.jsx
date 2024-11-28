@@ -60,6 +60,7 @@ function UploadDesign() {
       "bold italic backcolor forecolor alignleft aligncenter alignright alignjustify" +
       " link bullist numlist outdent indent  fullscreen " +
       " help",
+    link_assume_external_targets: true,
   };
   const log = () => {
     if (editorRef.current) {
