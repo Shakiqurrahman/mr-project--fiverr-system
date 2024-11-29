@@ -341,66 +341,68 @@ function SubCategory({
   handleSubCategoryRemove,
 }) {
   return (
-    <div className="relative px-3 pt-10">
+    <div className="flex items-center gap-2 px-3">
+      <div className="relative w-full shrink px-3">
+        <input
+          type="text"
+          name="subTitle"
+          value={input.subTitle}
+          onChange={(e) => handleChange(e, index)}
+          placeholder="Subcategory Title"
+          className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+          required
+        />
+        <input
+          type="text"
+          name="subAmount"
+          value={input.subAmount}
+          onChange={(e) => handleChange(e, index)}
+          placeholder="Subcategory Amount"
+          className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+          required
+        />
+        <input
+          type="text"
+          name="regularDeliveryDays"
+          value={input.regularDeliveryDays}
+          onChange={(e) => handleChange(e, index)}
+          placeholder="Regular Delivery Days"
+          className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+          required
+        />
+        <div className="flex">
+          <input
+            type="text"
+            name="fastDeliveryDays"
+            value={input.fastDeliveryDays}
+            onChange={(e) => handleChange(e, index)}
+            placeholder="Fast Delivery Days"
+            className="mt-3 block w-full flex-grow border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+            required
+          />
+          <input
+            type="text"
+            name="fastDeliveryPrice"
+            value={input.fastDeliveryPrice}
+            onChange={(e) => handleChange(e, index)}
+            placeholder="F.D. Amount"
+            className="mt-3 block w-56 border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+            required
+          />
+        </div>
+
+        {/* Conditionally render the divider */}
+        {index !== subCategoryLength - 1 && (
+          <div className="mt-4 border-b border-gray-300" />
+        )}
+      </div>
       <button
         type="button"
-        className="absolute right-3 top-3 rounded-full bg-black bg-opacity-50 p-1 text-white"
+        className="shrink-0 rounded-full bg-black bg-opacity-50 p-1 text-white"
         onClick={() => handleSubCategoryRemove(index)}
       >
         <RiDeleteBin6Line size={20} />
       </button>
-      <input
-        type="text"
-        name="subTitle"
-        value={input.subTitle}
-        onChange={(e) => handleChange(e, index)}
-        placeholder="Subcategory Title"
-        className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
-        required
-      />
-      <input
-        type="text"
-        name="subAmount"
-        value={input.subAmount}
-        onChange={(e) => handleChange(e, index)}
-        placeholder="Subcategory Amount"
-        className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
-        required
-      />
-      <input
-        type="text"
-        name="regularDeliveryDays"
-        value={input.regularDeliveryDays}
-        onChange={(e) => handleChange(e, index)}
-        placeholder="Regular Delivery Days"
-        className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
-        required
-      />
-      <div className="flex">
-        <input
-          type="text"
-          name="fastDeliveryDays"
-          value={input.fastDeliveryDays}
-          onChange={(e) => handleChange(e, index)}
-          placeholder="Fast Delivery Days"
-          className="mt-3 block w-full flex-grow border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
-          required
-        />
-        <input
-          type="text"
-          name="fastDeliveryPrice"
-          value={input.fastDeliveryPrice}
-          onChange={(e) => handleChange(e, index)}
-          placeholder="F.D. Amount"
-          className="mt-3 block w-56 border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
-          required
-        />
-      </div>
-
-      {/* Conditionally render the divider */}
-      {index !== subCategoryLength - 1 && (
-        <div className="mt-4 border-b border-gray-300" />
-      )}
     </div>
   );
 }
