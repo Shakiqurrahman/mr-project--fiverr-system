@@ -3,10 +3,10 @@ import React from "react";
 import FileIcon from "./FileIcon";
 
 const getExtension = (filename) => {
-  const lastDotIndex = filename.lastIndexOf(".");
+  const lastDotIndex = filename?.lastIndexOf(".");
   if (lastDotIndex === -1) return ""; // No extension found
 
-  return filename.slice(lastDotIndex + 1); // Get everything after the last dot
+  return filename?.slice(lastDotIndex + 1); // Get everything after the last dot
 };
 
 const FilePreview = ({ file }) => {

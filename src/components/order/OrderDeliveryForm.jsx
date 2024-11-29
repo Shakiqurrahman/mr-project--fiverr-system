@@ -56,6 +56,8 @@ const OrderDeliveryForm = ({ handleClose }) => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [thumbnailImage, setThumbnailImage] = useState(null);
   const [clientTimeAndDate, setClientTimeAndDate] = useState(null);
+  const [uploadingLength, setUploadingLength] = useState(0);
+  const [uploadingTempLength, setUploadingTempLength] = useState(0);
 
   // localStorage state
   const [{ quickResponse }, updateItem] = useLocalStorageObject("utils", {
@@ -82,6 +84,14 @@ const OrderDeliveryForm = ({ handleClose }) => {
       setThumbnailImage(deliveryDraft?.thumbnailImage);
     }
   }, [deliveryDraft]);
+
+  useEffect(() => {
+    if (uploadingLength === uploadingTempLength) {
+      setUploadingLength(0);
+    }
+  }, [uploadingTempLength]);
+
+  console.log(uploadingTempLength);
 
   //  all handler functions here
   // Quick Messages Handlers
@@ -127,13 +137,13 @@ const OrderDeliveryForm = ({ handleClose }) => {
   // Image Preview Controllers
 
   const getImagesWithDimensions = async (files) => {
-    const handleImageLoad = async (file, index) => {
+    const handleImageLoad = async (file, index, i) => {
       const formData = new FormData();
-      // formData.append("image", file);
       formData.append("files", file);
 
-      // const uploadUrl = `${configApi.api}upload-image`;
       const uploadUrl = `${configApi.api}upload-attachment`;
+
+      setUploadingTempLength(i + 1);
 
       const uploadData = {
         name: file.name,
@@ -187,13 +197,14 @@ const OrderDeliveryForm = ({ handleClose }) => {
     // Process files one by one in sequence
     for (let i = 0; i < files.length; i++) {
       const index = selectedImages?.length + i;
-      await handleImageLoad(files[i], index); // Wait for each file to finish uploading before starting the next
+      await handleImageLoad(files[i], index, i); // Wait for each file to finish uploading before starting the next
     }
   };
 
   const handleChangeSelectedImage = (event) => {
     const files = Array.from(event.target.files);
     getImagesWithDimensions(files);
+    setUploadingLength(files?.length);
 
     // Reset the file input to allow re-uploading the same file
     sourceInputRef.current.value = null;
@@ -281,8 +292,11 @@ const OrderDeliveryForm = ({ handleClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (textValue.length <= 5000 && selectedImages && thumbnailImage) {
+      const filteredImages = selectedImages?.filter(
+        (i) => i?.url && i?.name && i?.size,
+      );
       const formData = {
-        attachments: selectedImages,
+        attachments: filteredImages,
         thumbnailImage,
         isRevision: false,
         isAccepted: false,
@@ -461,40 +475,46 @@ const OrderDeliveryForm = ({ handleClose }) => {
             </p>
             {selectedImages?.length > 0 && (
               <div className="preview-scroll-overflow-x flex gap-2 border-t p-2">
-                {selectedImages?.map((image, index) => (
-                  <div key={index} className="w-[120px]">
-                    <div className="group relative">
-                      {image.url ? (
-                        <FilePreview file={image} />
-                      ) : (
-                        <div className="flex h-[80px] items-center justify-center bg-lightcream">
-                          <CircleProgressBar
-                            precentage={image.progress}
-                            circleWidth={50}
-                          />
+                {selectedImages?.map(
+                  (image, index) =>
+                    image?.name &&
+                    image?.size && (
+                      <div key={index} className="w-[120px]">
+                        <div className="group relative">
+                          {image?.url ? (
+                            <FilePreview file={image} />
+                          ) : (
+                            <div className="flex h-[80px] items-center justify-center bg-lightcream">
+                              <CircleProgressBar
+                                precentage={image?.progress}
+                                circleWidth={50}
+                              />
+                            </div>
+                          )}
+                          {(isAdmin ||
+                            image?.url ||
+                            image?.progress === 100) && (
+                            <button
+                              type="button"
+                              className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
+                              onClick={() => handleImageRemove(index)}
+                            >
+                              <RiDeleteBin6Line size={20} />
+                            </button>
+                          )}
                         </div>
-                      )}
-                      {(image?.url || image?.progress === 100) && (
-                        <button
-                          type="button"
-                          className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
-                          onClick={() => handleImageRemove(index)}
+                        <h1
+                          className="truncate text-xs font-medium"
+                          title={image?.name}
                         >
-                          <RiDeleteBin6Line size={20} />
-                        </button>
-                      )}
-                    </div>
-                    <h1
-                      className="truncate text-xs font-medium"
-                      title={image?.name}
-                    >
-                      <GenerateName name={image?.name} />
-                    </h1>
-                    <span className="text-xs">
-                      ({formatFileSize(image?.size)})
-                    </span>
-                  </div>
-                ))}
+                          <GenerateName name={image?.name} />
+                        </h1>
+                        <span className="text-xs">
+                          ({formatFileSize(image?.size)})
+                        </span>
+                      </div>
+                    ),
+                )}
               </div>
             )}
           </div>
@@ -532,9 +552,20 @@ const OrderDeliveryForm = ({ handleClose }) => {
                 </label>
               </div>
               {selectedImages?.length > 0 && (
-                <p className="mx-auto text-xs font-semibold sm:me-0 sm:ms-auto">
-                  {selectedImages?.length} Attachments
-                </p>
+                <div className="mx-auto text-xs font-semibold sm:me-0 sm:ms-auto">
+                  {uploadingLength > 0 && (
+                    <p>
+                      Uploading {uploadingTempLength}/{uploadingLength}
+                    </p>
+                  )}
+                  <p className="">
+                    {
+                      selectedImages?.filter((i) => i.url && i.name && i.size)
+                        .length
+                    }{" "}
+                    Attachments
+                  </p>
+                </div>
               )}
             </div>
             <div className="mt-5 flex flex-wrap items-end justify-center gap-5 md:flex-nowrap md:justify-normal">
@@ -553,7 +584,8 @@ const OrderDeliveryForm = ({ handleClose }) => {
                         />
                       </div>
                     )}
-                    {(thumbnailImage?.url ||
+                    {(isAdmin ||
+                      thumbnailImage?.url ||
                       thumbnailImage?.progress === 100) && (
                       <button
                         type="button"
