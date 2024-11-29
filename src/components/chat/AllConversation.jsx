@@ -61,7 +61,6 @@ const AllConversation = ({ closeToggle }) => {
     }
   }, [availableUsers]);
 
-  console.log(chatList, "chatlsit");
 
   useEffect(() => {
     const handleSeenBy = (msg) => {

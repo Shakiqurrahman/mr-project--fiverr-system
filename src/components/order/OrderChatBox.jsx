@@ -296,7 +296,7 @@ const OrderChatBox = () => {
           return newImages;
         });
       } catch (error) {
-        console.error("Error uploading image:", error);
+        toast.error("Failed to upload image");
       }
     };
 
@@ -445,7 +445,7 @@ const OrderChatBox = () => {
         //   prev.filter((msg) => msg?.messageText !== submitForm?.messageText),
         // );
         dispatch(rollbackMessages(submitForm?.messageText));
-        console.error("Failed to send message:", error);
+        toast.error("Failed to upload image");
       }
     }
   };

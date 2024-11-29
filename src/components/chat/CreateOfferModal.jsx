@@ -137,7 +137,6 @@ const CreateOfferModal = ({
           });
           setReplyTo(null);
         } catch (error) {
-          console.log(error);
           toast.error("Something went wrong!");
         }
       }

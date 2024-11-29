@@ -168,7 +168,6 @@ const ChatBox = ({ openToggle }) => {
       //   );
       // }
 
-      console.log("deltedMsg", msg);
       setMessages((prevMessages) =>
         prevMessages.filter((m) => m.uniqueId !== msg.uniqueId),
       );
@@ -440,7 +439,7 @@ const ChatBox = ({ openToggle }) => {
           return newImages;
         });
       } catch (error) {
-        console.error("Error uploading image:", error);
+        toast.error("Failed to upload image");
       }
     };
 
@@ -598,7 +597,7 @@ const ChatBox = ({ openToggle }) => {
         setMessages((prev) =>
           prev.filter((msg) => msg?.messageText !== submitForm?.messageText),
         );
-        console.error("Failed to send message:", error);
+        toast.error("Failed to send message");
       }
     }
   };
@@ -760,7 +759,7 @@ const ChatBox = ({ openToggle }) => {
   }, [conversationUser]);
 
   useEffect(() => {
-    console.log("i am calling");
+    // console.log("i am calling");
 
     if (isAdmin) {
       socket?.emit("seen", {
