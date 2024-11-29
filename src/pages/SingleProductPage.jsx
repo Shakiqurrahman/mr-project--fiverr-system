@@ -4,10 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Slider from "react-slick";
 import Swal from "sweetalert2";
-import LeftArrowIcon from "../assets/images/icons/Left Arrow.svg";
-import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
-import Divider from "../components/Divider";
-import RelatedDesigns from "../components/RelatedDesigns";
 import {
   useLazyTopKeywordsClickQuery,
   useLazyTopKeywordsImpressionQuery,
@@ -19,7 +15,11 @@ import {
 } from "../Redux/api/uploadDesignApiSlice";
 import { addToCart, removeFromCart } from "../Redux/features/cartSlice";
 import { setPreviewImage } from "../Redux/features/previewImageSlice";
-import { setSearchedText, setSearchResult } from "../Redux/features/utilSlice";
+import { setSearchResult, setSearchedText } from "../Redux/features/utilSlice";
+import LeftArrowIcon from "../assets/images/icons/Left Arrow.svg";
+import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
+import Divider from "../components/Divider";
+import RelatedDesigns from "../components/RelatedDesigns";
 
 function SingleProductPage() {
   const { slug } = useParams();
@@ -198,7 +198,9 @@ function SingleProductPage() {
             )}
           </div>
         )}
-        <div className="mt-5 flex flex-wrap items-start gap-4 sm:mt-10 md:flex-nowrap">
+        <div
+          className={`mt-5 flex flex-wrap items-start gap-4 ${isAuthorized ? "sm:mt-2" : "sm:mt-10"} md:flex-nowrap`}
+        >
           <div className="w-full md:w-2/3 lg:w-3/4">
             {images?.length === 1 ? (
               <img
