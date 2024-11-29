@@ -5,6 +5,7 @@ import { ImPlus } from "react-icons/im";
 import { IoIosArrowDown, IoIosArrowUp, IoIosAttach } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
+import shortid from "shortid";
 import {
   useFetchCustomOfferImageQuery,
   useSendAMessageMutation,
@@ -103,13 +104,17 @@ const CreateOfferModal = ({
         ...form,
         requirements,
       };
+      const uniqueId = shortid();
       const offerMessage = {
         messageText: "",
+        senderUserName: user?.userName,
+        userImage: user?.image,
         attachment: [],
         customOffer: formData,
         timeAndDate,
         replyTo: reply || null,
-        // contactForm: null,
+        seenBy: [user?.id],
+        uniqueId,
       };
       if (isAuthorized) {
         onOfferSubmit?.emit("admin-message", {
@@ -132,6 +137,7 @@ const CreateOfferModal = ({
           });
           setReplyTo(null);
         } catch (error) {
+          console.log(error);
           toast.error("Something went wrong!");
         }
       }
