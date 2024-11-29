@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import useOutsideClick from "../hooks/useOutsideClick";
 import { closePreviewImage } from "../Redux/features/previewImageSlice";
+import useOutsideClick from "../hooks/useOutsideClick";
 
 const PreviewImage = () => {
   const dispatch = useDispatch();
@@ -12,7 +12,7 @@ const PreviewImage = () => {
   };
   useOutsideClick(imageRef, closePreview);
   return (
-    <div className="fixed left-0 top-0 z-[9999999] flex h-screen w-full items-center justify-center overflow-clip bg-black/50 p-10 backdrop-blur-sm sm:p-20">
+    <div className="fixed left-0 top-0 z-[9999999] flex h-screen w-full items-center justify-center overflow-clip bg-black/50 p-10 backdrop-blur-sm">
       <img
         src={url}
         alt=""
