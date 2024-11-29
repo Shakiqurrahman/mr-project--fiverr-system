@@ -25,7 +25,6 @@ const AffiliatePaymentMethods = () => {
   const handleSave = (e) => {
     e.preventDefault();
     const data = form;
-    console.log("submittedData", data);
 
     // Save the payment info to the database or API
     navigate("/affiliate");
