@@ -9,21 +9,19 @@ import AuthWrapper from "./libs/AuthWrapper";
 import { configApi } from "./libs/configApi";
 function App() {
   useEffect(() => {
-    const countVisitor = async () => {
-      const hasCounted = sessionStorage.getItem("hasVisited");
+    const hasVisited = JSON.parse(localStorage.getItem("hasVisited"));
 
-      if (!hasCounted) {
-        try {
-          const url = `${configApi.api}analytics/visitors/`;
-          await axios.get(url);
-          sessionStorage.setItem("hasVisited", "true");
-        } catch (error) {
-          return;
-        }
-      }
-    };
-
-    countVisitor();
+    if (!hasVisited || Date.now() - hasVisited.timestamp > 86400000) {
+      axios
+        .get(`${configApi.api}analytics/visitors/`)
+        .then(() => {
+          localStorage.setItem(
+            "hasVisited",
+            JSON.stringify({ timestamp: Date.now() }),
+          );
+        })
+        .catch(() => {});
+    }
   }, []);
 
   return (
