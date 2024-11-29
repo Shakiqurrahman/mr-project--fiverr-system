@@ -8,6 +8,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import shortid from "shortid";
 import { useUpdateOfferProjectMutation } from "../Redux/api/offerProjectApiSlice";
 import { setPreviewImage } from "../Redux/features/previewImageSlice";
 import { configApi } from "../libs/configApi";
@@ -56,26 +57,28 @@ function CreateOfferProject() {
   // State for new variant input
   const [newVariant, setNewVariant] = useState({});
 
+  const designId = shortid();
+
   // Add new design
   const addDesign = () => {
     setDesigns([
       ...designs,
-      { designName: "", designView: ["Single Side", "Double Side"] },
+      { designId, designName: "", designView: ["Single Side", "Double Side"] },
     ]);
   };
 
   // Remove design
-  const removeDesign = (designName) => {
-    setDesigns(designs?.filter((design) => design.designName !== designName));
+  const removeDesign = (designId) => {
+    setDesigns(designs?.filter((design) => design.designId !== designId));
     const { [designName]: _, ...rest } = newVariant;
     setNewVariant(rest);
   };
 
   // Handle design name change
-  const handleDesignChange = (designName, e) => {
+  const handleDesignChange = (designId, e) => {
     setDesigns(
       designs?.map((design) =>
-        design.designName === designName
+        design.designId === designId
           ? { ...design, designName: e.target.value }
           : design,
       ),
@@ -90,7 +93,11 @@ function CreateOfferProject() {
     setDesigns(
       designs?.map((design) =>
         design.designName === designName
-          ? { ...design, designView: [...design.designView, variantValue] }
+          ? {
+              ...design,
+              designId,
+              designView: [...design.designView, variantValue],
+            }
           : design,
       ),
     );
@@ -116,10 +123,10 @@ function CreateOfferProject() {
   };
 
   // Remove variant from design
-  const removeVariant = (designName, variant) => {
+  const removeVariant = (designId, variant) => {
     setDesigns(
       designs?.map((design) =>
-        design.designName === designName
+        design.designId === designId
           ? {
               ...design,
               designView: design.designView.filter((v) => v !== variant),
@@ -421,13 +428,13 @@ function CreateOfferProject() {
                     type="text"
                     placeholder="Design Name"
                     value={design.designName}
-                    onChange={(e) => handleDesignChange(design.designName, e)}
+                    onChange={(e) => handleDesignChange(design.designId, e)}
                     className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
                     required
                   />
                   <RiDeleteBin6Line
                     className="mt-2 text-gray-500"
-                    onClick={() => removeDesign(design.designName)}
+                    onClick={() => removeDesign(design.designId)}
                   />
                 </div>
                 <div className="mt-2 flex flex-wrap gap-2">
@@ -440,7 +447,7 @@ function CreateOfferProject() {
                       <RxCross2
                         className="text-red-600"
                         onClick={() =>
-                          removeVariant(design.designName, variant)
+                          removeVariant(design.designId, variant)
                         }
                       />
                     </small>
