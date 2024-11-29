@@ -91,8 +91,6 @@ const OrderDeliveryForm = ({ handleClose }) => {
     }
   }, [uploadingTempLength]);
 
-  console.log(uploadingTempLength);
-
   //  all handler functions here
   // Quick Messages Handlers
   const handleQuickMsgs = (id) => {

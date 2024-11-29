@@ -16,6 +16,8 @@ function FeatureCategory() {
   const [expand, setExpand] = useState(false);
   const { categories, error, loading } = useGetCategory();
 
+  const isAuthorized = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
+
   const [products, setProducts] = useState([]);
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [isCustomizing, setIsCustomizing] = useState(false);
@@ -76,9 +78,12 @@ function FeatureCategory() {
     setTempProducts([...products]); // Reset to original order
     setIsCustomizing(false);
   };
+
+  console.log("isCustomizing", isCustomizing, draggedIndex);
+
   return (
     <div className="max-width">
-      {user?.role !== "USER" && (
+      {isAuthorized && (
         <div className="mt-10 flex items-center justify-between">
           <button
             className="rounded-[30px] border-2 border-solid border-primary bg-[#EEF7FE] p-[6px_15px]"
@@ -117,11 +122,6 @@ function FeatureCategory() {
                       onDragStart={() => handleDragStart(idx)}
                       onDragEnter={() => handleDragEnter(idx)}
                       onDragEnd={handleDragEnd}
-                      className={`${
-                        draggedIndex === idx
-                          ? "bg-gray-200"
-                          : "hover:bg-gray-50"
-                      }`}
                     >
                       <CategoryCards
                         title={category.folder}
@@ -140,9 +140,6 @@ function FeatureCategory() {
                     onDragStart={() => handleDragStart(idx)}
                     onDragEnter={() => handleDragEnter(idx)}
                     onDragEnd={handleDragEnd}
-                    className={`cursor-move rounded-md border bg-white p-4 shadow-md ${
-                      draggedIndex === idx ? "bg-gray-200" : "hover:bg-gray-50"
-                    }`}
                   >
                     <CategoryCards
                       title={category.folder}
