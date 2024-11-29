@@ -79,8 +79,6 @@ function FeatureCategory() {
     setIsCustomizing(false);
   };
 
-  console.log("isCustomizing", isCustomizing, draggedIndex);
-
   return (
     <div className="max-width">
       {isAuthorized && (

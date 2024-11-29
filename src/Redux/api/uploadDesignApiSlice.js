@@ -53,16 +53,16 @@ export const uploadDesignApiSlice = createApi({
     fetchFolders: builder.query({
       query: () => "folder/get",
       transformResponse: (response) => {
-        const folders = response?.data?.map((v) => v.name);
+        const folders = response?.data?.map((v) => v.folder);
         return [...new Set(folders)];
       },
     }),
 
     fetchSubFolders: builder.query({
-      query: () => "folder/get",
-      transformResponse: (response, meta, arg) => {
-        const subFolders =
-          response?.data?.find((v) => v.name === arg)?.subFolders || [];
+      query: ({ folderName }) =>
+        `folder/getSubFolders?folderName=${folderName}`,
+      transformResponse: (response) => {
+        const subFolders = response?.data?.map((v) => v.subFolder) || [];
         return [...new Set(subFolders)];
       },
     }),
@@ -173,7 +173,7 @@ export const {
   useFetchGetUploadQuery,
   useFetchRelatedTagsQuery,
   useFetchFoldersQuery,
-  useFetchSubFoldersQuery,
+  useLazyFetchSubFoldersQuery,
   useFetchIndustriesQuery,
   useFetchDesignsQuery,
   useFetchProductByIdQuery,

@@ -11,7 +11,7 @@ import {
   useFetchFoldersQuery,
   useFetchIndustriesQuery,
   useFetchRelatedTagsQuery,
-  useFetchSubFoldersQuery,
+  useLazyFetchSubFoldersQuery,
   useUploadADesignMutation,
 } from "../Redux/api/uploadDesignApiSlice";
 import { fetchCategory } from "../Redux/features/category/categoryApi";
@@ -207,9 +207,15 @@ function UploadDesign() {
   // Related Designs Operations
   const [relatedTags, setRelatedTags] = useState([]);
   const [newRelatedTag, setNewRelatedTag] = useState("");
+  const [relatedDesignsExtend, setRelatedDesignsExtend] = useState(false);
   const { data: relatedDesign } = useFetchRelatedTagsQuery();
 
   const relatedDesigns = useMemo(() => relatedDesign, [relatedDesign]);
+
+  const relatedDesignsShow =
+    relatedDesignsExtend && relatedDesigns?.length > 25
+      ? relatedDesigns
+      : relatedDesigns?.slice(0, 25);
 
   const handleNewRelatedTag = (e) => {
     e.preventDefault();
@@ -259,9 +265,13 @@ function UploadDesign() {
   // Folder Operations
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [newFolder, setNewFolder] = useState("");
+  const [folderExtend, setFolderExtend] = useState(false);
   const { data: folder } = useFetchFoldersQuery();
 
   const folders = useMemo(() => folder, [folder]);
+
+  const foldersShow =
+    folderExtend && folders?.length > 10 ? folders : folders?.slice(0, 10);
 
   const addNewFolder = (e) => {
     e.preventDefault();
@@ -275,11 +285,21 @@ function UploadDesign() {
 
   // SubFolder Operations
   const [newSubFolder, setNewSubFolder] = useState("");
-  const { data: subFolder } = useFetchSubFoldersQuery(selectedFolder, {
-    skip: selectedFolder === null,
-  });
+  const [subFolderExtend, setSubFolderExtend] = useState(false);
+  const [getSubFolders, { data: subFolder }] = useLazyFetchSubFoldersQuery();
 
-  const subFolders = useMemo(() => subFolder?.map((v) => v.name), [subFolder]);
+  useEffect(() => {
+    if (selectedFolder) {
+      getSubFolders({ folderName: selectedFolder });
+    }
+  }, [selectedFolder]);
+
+  const subFolders = useMemo(() => subFolder?.map((v) => v), [subFolder]);
+
+  const subFoldersShow =
+    subFolderExtend && subFolders?.length > 10
+      ? subFolders
+      : subFolders?.slice(0, 10);
 
   const addNewSubFolder = (e) => {
     e.preventDefault();
@@ -288,9 +308,15 @@ function UploadDesign() {
 
   // Industries Operations
   const [industries, setIndustries] = useState([]);
+  const [industryExtend, setIndustryExtend] = useState(false);
   const { data: industrie } = useFetchIndustriesQuery();
 
   const allIndustries = useMemo(() => industrie, [industrie]);
+
+  const allIndustriesShow =
+    industryExtend && allIndustries?.length > 10
+      ? allIndustries
+      : allIndustries?.slice(0, 10);
 
   const removeIndustrie = (indexToRemove, e) => {
     e.preventDefault();
@@ -336,8 +362,14 @@ function UploadDesign() {
   const [designs, setDesigns] = useState([]);
   const { data: design } = useFetchDesignsQuery();
   const [newDesign, setNewDesign] = useState("");
+  const [designExtend, setDesignExtend] = useState(false);
 
   const allDesigns = useMemo(() => design, [design]);
+
+  const allDesignsShow =
+    designExtend && allDesigns?.length > 10
+      ? allDesigns
+      : allDesigns?.slice(0, 10);
 
   const addDesign = (e) => {
     e.preventDefault();
@@ -678,7 +710,7 @@ function UploadDesign() {
               />
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
-              {relatedDesigns?.map((d) => (
+              {relatedDesignsShow?.map((d) => (
                 <button
                   key={d}
                   className="rounded-[30px] bg-lightcream px-4 py-1 text-sm"
@@ -688,6 +720,17 @@ function UploadDesign() {
                   {d}
                 </button>
               ))}
+              {relatedDesigns?.length > 25 && (
+                <button
+                  className="rounded-[30px] bg-lightcream px-4 py-1 text-sm"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setRelatedDesignsExtend(!relatedDesignsExtend);
+                  }}
+                >
+                  {relatedDesignsExtend ? "See Less" : "See More"}
+                </button>
+              )}
             </div>
           </div>
           <div className="flex flex-wrap gap-2 sm:flex-nowrap">
@@ -708,7 +751,7 @@ function UploadDesign() {
                 value={newFolder}
               />
               <div className="mt-3 flex flex-wrap gap-2">
-                {folders?.map((v, i) => (
+                {foldersShow?.map((v, i) => (
                   <button
                     key={i}
                     className="rounded-[30px] bg-[#e7e7e7] px-3 py-1 text-xs"
@@ -718,6 +761,17 @@ function UploadDesign() {
                     {v}
                   </button>
                 ))}
+                {folders?.length > 10 && (
+                  <button
+                    className="rounded-[30px] bg-[#e7e7e7] px-3 py-1 text-xs"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setFolderExtend(!folderExtend);
+                    }}
+                  >
+                    {folderExtend ? "See Less" : "See More"}
+                  </button>
+                )}
               </div>
             </div>
             <div className="mt-5 flex w-full flex-col sm:w-1/2">
@@ -738,7 +792,7 @@ function UploadDesign() {
               />
               {subFolders?.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {subFolders?.map((v, i) => (
+                  {subFoldersShow?.map((v, i) => (
                     <button
                       key={i}
                       className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
@@ -748,6 +802,17 @@ function UploadDesign() {
                       {v}
                     </button>
                   ))}
+                  {subFolders?.length > 10 && (
+                    <button
+                      className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setSubFolderExtend(!subFolderExtend);
+                      }}
+                    >
+                      {subFolderExtend ? "See Less" : "See More"}
+                    </button>
+                  )}
                 </div>
               )}
             </div>
@@ -788,7 +853,7 @@ function UploadDesign() {
                 />
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
-                {allIndustries?.map((v, i) => (
+                {allIndustriesShow?.map((v, i) => (
                   <button
                     key={i}
                     className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
@@ -798,6 +863,17 @@ function UploadDesign() {
                     {v}
                   </button>
                 ))}
+                {allIndustries?.length > 10 && (
+                  <button
+                    className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIndustryExtend(!industryExtend);
+                    }}
+                  >
+                    {industryExtend ? "See Less" : "See More"}
+                  </button>
+                )}
               </div>
             </div>
             <div className="mt-5 flex w-full flex-col sm:w-1/2">
@@ -835,7 +911,7 @@ function UploadDesign() {
                 />
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
-                {allDesigns?.map((v, i) => (
+                {allDesignsShow?.map((v, i) => (
                   <button
                     key={i}
                     className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
@@ -845,6 +921,17 @@ function UploadDesign() {
                     {v}
                   </button>
                 ))}
+                {allDesigns?.length > 10 && (
+                  <button
+                    className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setDesignExtend(!designExtend);
+                    }}
+                  >
+                    {designExtend ? "See Less" : "See More"}
+                  </button>
+                )}
               </div>
             </div>
           </div>
