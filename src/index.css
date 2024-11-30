@@ -304,10 +304,12 @@ input[type="password"] + div {
   @apply !hidden;
 }
 
+
 select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+  background: none;
   cursor: pointer;
   background-image: url("./assets/svg/Dropdown Icon.svg");
   background-repeat: no-repeat;

@@ -66,7 +66,7 @@ const Analytics = () => {
       <select
         value={selectedAnalyticsTab}
         onChange={(e) => updateItem("selectedAnalyticsTab", e.target.value)}
-        className="mb-10 block w-full border border-gray-300 p-3 font-medium outline-none lg:hidden"
+        className="mb-10 block w-full border border-gray-300 p-3 font-medium outline-none lg:hidden bg-white"
       >
         {btns.map((btn, i) => (
           <option key={i} value={btn}>

@@ -158,7 +158,7 @@ const DashboardProjects = () => {
             {filteredSelectedProject?.totalPrice})
           </h1>
           <select
-            className="border p-1 px-2 font-semibold outline-none"
+            className="border p-1 px-2 font-semibold outline-none bg-white"
             name="projectType"
             id="projectType"
             onChange={handleProjectTypeChange}
