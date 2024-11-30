@@ -188,6 +188,7 @@ export const {
   useUpdateADesignMutation,
   useLazyGetDesignsBySearchQuery,
   useFetchGetAllSubFoldersByFolderSlugQuery,
+  useLazyFetchGetAllSubFoldersByFolderSlugQuery,
   useUpdateAllSubFoldersByFolderSlugMutation,
   useLazyFetchGetAllDesignsByFolderSubFolderQuery,
   useUpdateAllDesignsOfFolderSubFolderMutation,

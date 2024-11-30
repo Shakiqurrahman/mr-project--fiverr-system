@@ -51,19 +51,18 @@ function CategoryCards({ title, path, subCategory = [], titleSlug }) {
         <Slider {...settings}>
           {subCategory.length > 0 &&
             subCategory.map((category) => {
-              const design = category?.designs[0];
-              const thumbnail = design.images.filter(
+              const thumbnail = category.images.find(
                 (img) => img?.thumbnail === true,
-              )[0];
+              );
               return (
                 <ProjectCard
                   key={Math.random()}
                   thumbnail={thumbnail?.url}
                   watermark={thumbnail?.watermark}
-                  thumbnailName={design?.title}
+                  thumbnailName={category?.title}
                   title={category?.subFolder}
                   folder={true}
-                  slug={`/designs/${titleSlug}/${category?.slug}`}
+                  slug={`/designs/${titleSlug}/${category?.subFolderSlug}`}
                 />
               );
             })}

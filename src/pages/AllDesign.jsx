@@ -65,7 +65,7 @@ function AllDesign() {
         ?.filter((folder) => folder.slug !== catSlug) // Filter out folders without catSlag
         .flatMap((folder) =>
           folder.subFolders
-            .filter((subFolder) => subFolder.slug === slug) // Find subfolders with slug
+            .filter((subFolder) => subFolder.subFolderSlug === slug) // Find subfolders with slug
             .map((subFolder) => ({
               subFolder: { ...subFolder },
               folder: folder.folder,

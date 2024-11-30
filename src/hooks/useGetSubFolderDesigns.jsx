@@ -17,7 +17,7 @@ const useGetSubFolderDesigns = ({ folderSlug, subFolderSlug }) => {
     if (categories?.length > 0) {
       const categoryObj = categories?.find((c) => c.slug === folderSlug);
       const subFolderObj = categoryObj?.subFolders?.find(
-        (s) => s.slug === subFolderSlug,
+        (s) => s.subFolderSlug === subFolderSlug,
       );
       const folderName = categoryObj?.folder || "";
       const subfolderName = subFolderObj?.subFolder || "";
@@ -29,7 +29,7 @@ const useGetSubFolderDesigns = ({ folderSlug, subFolderSlug }) => {
         });
       }
     }
-  }, [categories]);
+  }, [categories, folderSlug, subFolderSlug]);
 
   useEffect(() => {
     if (uploadDesigns?.length > 0 && allSubFolderdesignsData?.length > 0) {

@@ -15,11 +15,17 @@ function RelatedDesigns({
 }) {
   const settings = {
     dots: false,
-    infinite: items?.length > 4 ? true : false,
+    infinite:
+      items?.length || relatedFolders?.length || relatedDesigns?.length > 4
+        ? true
+        : false,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
-    arrows: items?.length > 4 ? true : false,
+    arrows:
+      items?.length || relatedFolders?.length || relatedDesigns?.length > 4
+        ? true
+        : false,
     autoplay: true,
     autoplaySpeed: 2000,
     nextArrow: <NextArrow />,
@@ -92,8 +98,7 @@ function RelatedDesigns({
               <Slider {...settings}>
                 {relatedFolders?.map((folder, idx) => {
                   const subFolder = folder?.subFolders[0];
-                  const design = subFolder?.designs[0];
-                  const thumbnail = design?.images?.filter(
+                  const thumbnail = subFolder?.images?.filter(
                     (img) => img?.thumbnail === true,
                   )[0];
                   return (
@@ -102,8 +107,8 @@ function RelatedDesigns({
                       key={idx}
                       thumbnail={thumbnail?.url}
                       watermark={thumbnail?.watermark}
-                      title={design?.subFolder}
-                      thumbnailName={design?.title}
+                      title={subFolder?.subFolder}
+                      thumbnailName={subFolder?.title}
                       slug={`/categories/${folder.slug}/`}
                     />
                   );
@@ -117,8 +122,7 @@ function RelatedDesigns({
               <Slider {...settings}>
                 {relatedDesigns?.map((folder, idx) => {
                   const subFolder = folder?.subFolder;
-                  const design = subFolder?.designs[0];
-                  const thumbnail = design?.images?.filter(
+                  const thumbnail = subFolder?.images?.filter(
                     (img) => img?.thumbnail === true,
                   )[0];
                   return (
@@ -127,9 +131,9 @@ function RelatedDesigns({
                       key={idx}
                       thumbnail={thumbnail?.url}
                       watermark={thumbnail?.watermark}
-                      title={design?.subFolder}
-                      thumbnailName={design?.title}
-                      slug={`/designs/${folder.slug}/${subFolder.slug}`}
+                      title={subFolder?.subFolder}
+                      thumbnailName={subFolder?.title}
+                      slug={`/designs/${folder.slug}/${subFolder.subFolderSlug}`}
                     />
                   );
                 })}
