@@ -92,6 +92,7 @@ const ChatBox = ({ openToggle }) => {
   const fileInputRef = useRef(null);
   const [selectedImages, setSelectedImages] = useState([]);
   const [uploadedFilesLength, setUploadedFilesLength] = useState(0);
+  const [uploadedTempFilesLength, setUploadedTempFilesLength] = useState(0);
   const [qucikMsgBtnController, setQucikMsgBtnController] = useState(null);
   const [openAddMsgModal, setOpenAddMsgModal] = useState(false);
   const [openEditMsgModal, setOpenEditMsgModal] = useState(null);
@@ -118,6 +119,12 @@ const ChatBox = ({ openToggle }) => {
 
   const { isBookMarked, isBlocked, isArchived } =
     availableUsers?.find((user) => user?.id === conversationUser) || "";
+
+  useEffect(() => {
+    if (uploadedFilesLength === uploadedTempFilesLength) {
+      setUploadedFilesLength(0);
+    }
+  }, [uploadedTempFilesLength]);
 
   useEffect(() => {
     if (userCountry) {
@@ -219,12 +226,6 @@ const ChatBox = ({ openToggle }) => {
     // Inital Scroll to last message
     endOfMessagesRef.current?.scrollIntoView();
   }, [messages]);
-
-  useEffect(() => {
-    if (selectedImages?.length === uploadedFilesLength) {
-      setUploadedFilesLength(0);
-    }
-  }, [selectedImages?.length]);
 
   useEffect(() => {
     const checkVisibility = () => {
@@ -391,7 +392,8 @@ const ChatBox = ({ openToggle }) => {
   };
 
   const getImagesWithDimensions = async (files) => {
-    const handleImageLoad = async (file, index) => {
+    const handleImageLoad = async (file, index, i) => {
+      setUploadedTempFilesLength(i + 1);
       const formData = new FormData();
       // formData.append("image", file);
       formData.append("files", file);
@@ -446,7 +448,7 @@ const ChatBox = ({ openToggle }) => {
     // Process files one by one in sequence
     for (let i = 0; i < files.length; i++) {
       const index = selectedImages?.length + i;
-      await handleImageLoad(files[i], index); // Wait for each file to finish uploading before starting the next
+      await handleImageLoad(files[i], index, i); // Wait for each file to finish uploading before starting the next
     }
   };
 
@@ -1253,12 +1255,11 @@ const ChatBox = ({ openToggle }) => {
           <div className="rounded-t-md border border-b border-slate-300">
             {selectedImages?.length > 0 && (
               <>
-                {selectedImages?.length !== uploadedFilesLength &&
-                  uploadedFilesLength > 0 && (
-                    <p className="p-3 pb-0 text-xs">
-                      Uploaded {selectedImages?.length}/{uploadedFilesLength}
-                    </p>
-                  )}
+                {uploadedFilesLength > 0 && (
+                  <p className="p-3 pb-0 text-xs">
+                    Uploaded {uploadedTempFilesLength}/{uploadedFilesLength}
+                  </p>
+                )}
                 <div className="preview-scroll-overflow-x flex gap-2 border-b p-[10px]">
                   {selectedImages?.map((image, index) => (
                     <div key={index} className="w-[100px]">
@@ -1273,7 +1274,7 @@ const ChatBox = ({ openToggle }) => {
                             />
                           </div>
                         )}
-                        {(image?.url || image?.progress === 100) && (
+                        {(isAdmin || image?.url || image?.progress === 100) && (
                           <button
                             type="button"
                             className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
