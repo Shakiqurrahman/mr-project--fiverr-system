@@ -130,7 +130,7 @@ const StartSingleProject = ({ item }) => {
               id="subcategory"
               value={selectedCategory}
               onChange={handleCategoryChange}
-              className={`w-full p-4 text-base font-semibold outline-none ${selectedCategory ? "sm:text-2xl" : "sm:text-lg"}`}
+              className={`w-full p-4 text-base font-semibold outline-none  bg-white ${selectedCategory ? "sm:text-2xl" : "sm:text-lg"}`}
             >
               {!selectedCategory && (
                 <option className="text-base" value={""}>
@@ -158,7 +158,7 @@ const StartSingleProject = ({ item }) => {
                 id="subcategory"
                 value={selectedSubCategory}
                 onChange={handleSubCategoryChange}
-                className="w-full border p-4 font-medium outline-none"
+                className="w-full border p-4 font-medium outline-none bg-white"
               >
                 {!selectedSubCategory && (
                   <option value={""}>Select a Subcategory</option>

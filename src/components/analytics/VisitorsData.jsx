@@ -116,7 +116,7 @@ const VisitorsData = () => {
         <select
           value={selectedFilterOption}
           onChange={(e) => setSelectedFilterOption(e.target.value)}
-          className="shrink-0 border px-2 py-1 text-sm outline-none sm:text-base"
+          className="shrink-0 border px-2 py-1 text-sm outline-none sm:text-base bg-white"
         >
           {keywordFilterOptions.map((key, i) => (
             <option value={key} key={i}>
@@ -127,7 +127,7 @@ const VisitorsData = () => {
         <select
           value={selectedTimeOption}
           onChange={(e) => setSelectedTimeOption(e.target.value)}
-          className="shrink-0 border px-2 py-1 text-sm outline-none sm:text-base"
+          className="shrink-0 border px-2 py-1 text-sm outline-none sm:text-base bg-white"
         >
           {filterTimes.map((key, i) => (
             <option value={key} key={i}>

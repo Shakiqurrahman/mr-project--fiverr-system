@@ -217,7 +217,7 @@ const AllConversation = ({ closeToggle }) => {
         <select
           name="conversationList"
           id="conversationList"
-          className={`border border-gray-300 p-2 font-medium outline-none ${openSearch && "hidden"}`}
+          className={`border border-gray-300 p-2 font-medium outline-none bg-white ${openSearch && "hidden"}`}
           value={selectedOption}
           onChange={handleSelectChange}
         >
