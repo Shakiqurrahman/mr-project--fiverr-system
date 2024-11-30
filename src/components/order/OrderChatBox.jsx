@@ -90,6 +90,7 @@ const OrderChatBox = () => {
   const [openAddMsgModal, setOpenAddMsgModal] = useState(false);
   const [openOfferModal, setOpenOfferModal] = useState(false);
   const [uploadFilesLength, setUploadFilesLength] = useState(0);
+  const [uploadTempFilesLength, setUploadTempFilesLength] = useState(0);
   const [visibility, setVisibility] = useState({});
   const [clientTimeAndDate, setClientTimeAndDate] = useState(null);
 
@@ -193,10 +194,10 @@ const OrderChatBox = () => {
   }, [allUserMessages, dispatch]);
 
   useEffect(() => {
-    if (selectedImages?.length === uploadFilesLength) {
+    if (uploadTempFilesLength === uploadFilesLength) {
       setUploadFilesLength(0);
     }
-  }, [selectedImages?.length]);
+  }, [uploadTempFilesLength]);
 
   // useEffect(() => {
   //   // Only run the effect if the messages array has actually changed
@@ -248,7 +249,8 @@ const OrderChatBox = () => {
 
   // Image Preview Controllers
   const getImagesWithDimensions = async (files) => {
-    const handleImageLoad = async (file, index) => {
+    const handleImageLoad = async (file, index, i) => {
+      setUploadTempFilesLength(i + 1);
       const formData = new FormData();
       // formData.append("image", file);
       formData.append("files", file);
@@ -303,7 +305,7 @@ const OrderChatBox = () => {
     // Process files one by one in sequence
     for (let i = 0; i < files.length; i++) {
       const index = selectedImages?.length + i;
-      await handleImageLoad(files[i], index); // Wait for each file to finish uploading before starting the next
+      await handleImageLoad(files[i], index, i); // Wait for each file to finish uploading before starting the next
     }
   };
 
@@ -716,12 +718,11 @@ const OrderChatBox = () => {
               <div className="rounded-t-md border border-b border-slate-300">
                 {selectedImages?.length > 0 && (
                   <>
-                    {selectedImages?.length !== uploadFilesLength &&
-                      uploadFilesLength > 0 && (
-                        <p className="p-3 pb-0 text-xs">
-                          Uploaded {selectedImages?.length}/{uploadFilesLength}
-                        </p>
-                      )}
+                    {uploadFilesLength > 0 && (
+                      <p className="p-3 pb-0 text-xs">
+                        Uploaded {uploadTempFilesLength}/{uploadFilesLength}
+                      </p>
+                    )}
                     <div className="preview-scroll-overflow-x flex gap-2 border-b p-[10px]">
                       {selectedImages?.map((image, index) => (
                         <div key={index} className="w-[120px]">
