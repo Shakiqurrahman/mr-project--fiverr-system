@@ -39,7 +39,7 @@ const AllConversation = ({ closeToggle }) => {
     pollingInterval: 60000,
   });
 
-  // console.log("chatList", chatList);
+  console.log("chatList", chatList);
 
   // getAllMessages
   const [triggerGetAllMessages, { data: getAllMessages }] =
@@ -278,7 +278,7 @@ const AllConversation = ({ closeToggle }) => {
                     <p className="flex items-center gap-2 font-semibold">
                       {chat?.userName}{" "}
                       <span className="text-secondary">
-                        {chat?.status === "New Client" && <LuClock3 />}
+                        {chat?.isNewMessage && <LuClock3 />}
                       </span>
                     </p>
                     <p
