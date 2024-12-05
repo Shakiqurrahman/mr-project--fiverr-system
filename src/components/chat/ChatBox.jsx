@@ -786,7 +786,11 @@ const ChatBox = ({ openToggle }) => {
       <div className="flex h-[70px] items-center justify-between rounded-tl-lg rounded-tr-lg bg-[#efefef] p-4 md:rounded-tl-none">
         <div className="">
           <h1 className="text-base font-semibold sm:text-lg">
-            {isAdmin ? recipientUserName : "Mahfujurrahm535"}
+            {isAdmin ? (
+              <Link to={`/${recipientUserName}`}>{recipientUserName}</Link>
+            ) : (
+              "Mahfujurrahm535"
+            )}
           </h1>
           <div className="flex flex-col items-start text-xs sm:flex-row sm:items-center sm:gap-3 lg:text-sm">
             {user.role === "USER" &&

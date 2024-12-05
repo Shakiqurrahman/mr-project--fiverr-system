@@ -174,7 +174,7 @@ const AllUsers = () => {
         <select
           name="filterStatistics"
           id="filterStatistics"
-          className="border p-1 px-2 text-sm font-medium outline-none"
+          className="border p-1 px-2 text-sm font-medium outline-none bg-white"
           onChange={handleStatsTypeChange}
         >
           {filterType?.map((type, idx) => (

@@ -334,7 +334,7 @@ const StartMultipleProject = ({ items }) => {
                   <div className="flex items-center justify-between gap-3 sm:justify-end">
                     <span className="font-medium">Quantity</span>
                     <select
-                      className="w-[150px] border bg-white p-3 font-semibold outline-none sm:w-[100px] bg-white"
+                      className="w-[150px] border p-3 font-semibold outline-none sm:w-[100px] bg-white"
                       name="quantity"
                       value={item?.quantity}
                       onChange={(e) =>

@@ -94,14 +94,14 @@ function Footer() {
                       Contact
                     </Link>
                   </li>
-                  {/* <li>
+                  <li>
                     <Link
                       to={"/affiliate"}
                       className="duration-300 hover:text-primary"
                     >
                       Affiliate
                     </Link>
-                  </li> */}
+                  </li>
                 </ul>
               </div>
               <Divider className="mx-auto my-5 h-[1px] w-[100px] sm:mx-0" />
