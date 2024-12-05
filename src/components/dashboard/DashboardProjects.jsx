@@ -37,6 +37,7 @@ const DashboardProjects = () => {
 
   const [getAllProjects, { data: projects, isLoading }] =
     useLazyGetAllProjectsQuery();
+    
 
   const [addDesignerModal, setAddDesignerModal] = useState(false);
 
@@ -112,7 +113,7 @@ const DashboardProjects = () => {
 
       return {
         time: overdueText,
-        color: "black", // Default color for overdue events
+        color: "red",
       };
     } else {
       // time is remaining
@@ -132,7 +133,6 @@ const DashboardProjects = () => {
         displayTime = `${hours}h - ${minutes} min`;
       }
 
-      // Set color based on remaining time
       const color = totalHours < 12 ? "red" : "black"; // Red if less than 12 hours
 
       return {
