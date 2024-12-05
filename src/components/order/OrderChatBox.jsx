@@ -737,7 +737,9 @@ const OrderChatBox = () => {
                                 />
                               </div>
                             )}
-                            {(image?.url || image?.progress === 100) && (
+                            {(isAdmin ||
+                              image?.url ||
+                              image?.progress === 100) && (
                               <button
                                 type="button"
                                 className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
