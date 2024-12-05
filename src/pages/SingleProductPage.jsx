@@ -278,25 +278,27 @@ function SingleProductPage() {
           dangerouslySetInnerHTML={{ __html: design?.description }}
         ></div>
         <Divider className={"h-px w-full bg-[#000!important]"} />
-        <div className="mt-10 flex flex-wrap gap-3">
-          {tagsToShow?.map((tag, index) => (
-            <button
-              key={index}
-              onClick={() => handleTagClick(tag)}
-              className="rounded-[30px] bg-[#ffefef] px-2 py-1 text-sm font-medium duration-300 hover:bg-secondary hover:text-white sm:px-4 sm:py-2 sm:text-base"
-            >
-              {tag}
-            </button>
-          ))}
-          {design?.tags?.length > 10 && (
-            <button
-              className="rounded-[30px] bg-[#ffefef] px-2 py-1 text-sm font-medium duration-300 hover:bg-secondary hover:text-white sm:px-4 sm:py-2 sm:text-base"
-              onClick={handleToggle}
-            >
-              {showAll ? "Show Less" : "See All"}
-            </button>
-          )}
-        </div>
+        {isAuthorized && (
+          <div className="mt-10 flex flex-wrap gap-3">
+            {tagsToShow?.map((tag, index) => (
+              <button
+                key={index}
+                onClick={() => handleTagClick(tag)}
+                className="rounded-[30px] bg-[#ffefef] px-2 py-1 text-sm font-medium duration-300 hover:bg-secondary hover:text-white sm:px-4 sm:py-2 sm:text-base"
+              >
+                {tag}
+              </button>
+            ))}
+            {design?.tags?.length > 10 && (
+              <button
+                className="rounded-[30px] bg-[#ffefef] px-2 py-1 text-sm font-medium duration-300 hover:bg-secondary hover:text-white sm:px-4 sm:py-2 sm:text-base"
+                onClick={handleToggle}
+              >
+                {showAll ? "Show Less" : "See All"}
+              </button>
+            )}
+          </div>
+        )}
       </div>
       <RelatedDesigns items={relatedDesigns} />
     </>
