@@ -12,7 +12,7 @@ const Analytics = () => {
   const btns = [
     "Project Details",
     "World Domination",
-    "Top Keywords",
+    // "Top Keywords",
     "Repeated Buyers",
     "Categories",
     "Affiliate",
@@ -26,8 +26,8 @@ const Analytics = () => {
   );
 
   useEffect(() => {
-    updateItem("selectedAnalyticsTab", "Project Details")
-  }, [])
+    updateItem("selectedAnalyticsTab", "Project Details");
+  }, []);
   const RenderComponent = () => {
     switch (selectedAnalyticsTab) {
       case "Project Details":
@@ -66,7 +66,7 @@ const Analytics = () => {
       <select
         value={selectedAnalyticsTab}
         onChange={(e) => updateItem("selectedAnalyticsTab", e.target.value)}
-        className="mb-10 block w-full border border-gray-300 p-3 font-medium outline-none lg:hidden bg-white"
+        className="mb-10 block w-full border border-gray-300 bg-white p-3 font-medium outline-none lg:hidden"
       >
         {btns.map((btn, i) => (
           <option key={i} value={btn}>
