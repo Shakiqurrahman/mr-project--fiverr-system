@@ -16,7 +16,7 @@ const PreviewImage = () => {
       <img
         src={url}
         alt=""
-        className="max-h-full w-full max-w-[800px] object-cover object-center"
+        className="max-h-full max-w-full object-cover object-center"
         ref={imageRef}
       />
     </div>
