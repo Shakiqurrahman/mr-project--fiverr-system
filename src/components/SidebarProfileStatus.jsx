@@ -8,8 +8,8 @@ function SidebarProfileStatus() {
       <h1 className="font-semibold">Mahfujurrahm535</h1>
       <Divider className="my-2 h-px w-full bg-[#1b8cdc!important]" />
       <p className="text-sm">Avg. Response Time</p>
-      <span className="mb-3 block text-lg font-semibold">
-        {data?.Avg_Respons}
+      <span className="mb-3 block text-base font-semibold">
+        {/* {data?.Avg_Respons} */}1 hour
       </span>
       <p className="text-sm">Avg. Rating</p>
       <span className="mb-3 block text-lg font-semibold">
