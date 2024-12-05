@@ -234,7 +234,10 @@ function EditDesign() {
   const [relatedDesignsExtend, setRelatedDesignsExtend] = useState(false);
   const { data: relatedDesign } = useFetchRelatedTagsQuery();
 
-  const relatedDesigns = useMemo(() => relatedDesign, [relatedDesign]);
+  const relatedDesigns = useMemo(
+    () => [...relatedDesign].reverse().slice(0, 50),
+    [relatedDesign],
+  );
 
   const relatedDesignsShow =
     relatedDesignsExtend && relatedDesigns?.length > 25
@@ -531,6 +534,24 @@ function EditDesign() {
         industries,
         designs,
       };
+      if (
+        !form.title ||
+        !content ||
+        !selectedCategory ||
+        !selectedSubCategory ||
+        !form.fileFormat ||
+        !form.size ||
+        images?.length === 0 ||
+        tags?.length === 0 ||
+        !newFolder ||
+        !newSubFolder ||
+        industries?.length === 0 ||
+        designs?.length === 0
+      ) {
+        toast.error("All fields are required without Related Designs!!!");
+        setSubmitLoading(false);
+        return;
+      }
       try {
         const response = await updateADesign({
           data,
