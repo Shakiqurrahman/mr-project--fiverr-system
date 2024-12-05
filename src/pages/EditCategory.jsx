@@ -341,8 +341,8 @@ function SubCategory({
   handleSubCategoryRemove,
 }) {
   return (
-    <div className="flex items-center gap-2 px-3">
-      <div className="relative w-full shrink px-3">
+    <div className="flex items-start gap-2">
+      <div className="relative w-full shrink">
         <input
           type="text"
           name="subTitle"
@@ -398,10 +398,10 @@ function SubCategory({
       </div>
       <button
         type="button"
-        className="shrink-0 rounded-full bg-black bg-opacity-50 p-1 text-white"
+        className="mt-5 shrink-0 text-black/50"
         onClick={() => handleSubCategoryRemove(index)}
       >
-        <RiDeleteBin6Line size={20} />
+        <RiDeleteBin6Line size={16} />
       </button>
     </div>
   );
