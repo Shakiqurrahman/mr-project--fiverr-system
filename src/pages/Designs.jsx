@@ -4,12 +4,6 @@ import { Pagination, PaginationItem, Stack } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import prevBtn from "../assets/images/icons/Left Arrow.svg";
-import nextBtn from "../assets/images/icons/Right Arrow.svg";
-import ButtonPrimary from "../components/ButtonPrimary";
-import ButtonSecondary from "../components/ButtonSecondary";
-import Divider from "../components/Divider";
-import SortDropdown from "../components/SortDropdown";
 import {
   useFetchAllDesignKeywordsQuery,
   useFetchAllIndustryKeywordsQuery,
@@ -19,6 +13,12 @@ import {
   useFetchIndustryByKeyQuery,
 } from "../Redux/api/uploadDesignApiSlice";
 import { setSearchedText } from "../Redux/features/utilSlice";
+import prevBtn from "../assets/images/icons/Left Arrow.svg";
+import nextBtn from "../assets/images/icons/Right Arrow.svg";
+import ButtonPrimary from "../components/ButtonPrimary";
+import ButtonSecondary from "../components/ButtonSecondary";
+import Divider from "../components/Divider";
+import SortDropdown from "../components/SortDropdown";
 
 function Designs() {
   const { state } = useLocation();
@@ -62,9 +62,9 @@ function Designs() {
       if (data) {
         const prevDesigns = [...data];
         if (sortedBy === "NewestDesigns") {
-          setDesigns(prevDesigns);
-        } else if (sortedBy === "OldestDesigns") {
           setDesigns(prevDesigns.reverse());
+        } else if (sortedBy === "OldestDesigns") {
+          setDesigns(prevDesigns);
         } else {
           setDesigns(prevDesigns);
         }
