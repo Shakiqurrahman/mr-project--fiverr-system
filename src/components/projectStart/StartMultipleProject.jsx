@@ -295,7 +295,10 @@ const StartMultipleProject = ({ items }) => {
               </p>
               <div className="my-5 flex flex-wrap items-center gap-3 sm:flex-nowrap">
                 <div className="w-full border bg-white p-3 text-sm sm:text-base">
-                  {item?.regularDeliveryDays} Days Delivery
+                  {item?.isFastDelivery
+                    ? item?.fastDeliveryDays
+                    : item?.regularDeliveryDays}{" "}
+                  Days Delivery
                 </div>
                 <div className="flex w-full items-center gap-3 sm:justify-end">
                   <div className="flex items-center gap-x-2 text-sm font-medium sm:text-base">
@@ -334,7 +337,7 @@ const StartMultipleProject = ({ items }) => {
                   <div className="flex items-center justify-between gap-3 sm:justify-end">
                     <span className="font-medium">Quantity</span>
                     <select
-                      className="w-[150px] border p-3 font-semibold outline-none sm:w-[100px] bg-white"
+                      className="w-[150px] border bg-white p-3 font-semibold outline-none sm:w-[100px]"
                       name="quantity"
                       value={item?.quantity}
                       onChange={(e) =>

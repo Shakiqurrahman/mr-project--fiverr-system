@@ -331,7 +331,8 @@ function OfferProject() {
           {/* Extra Delivery Field */}
           <div className="flex flex-wrap items-center justify-between gap-3 sm:flex-nowrap">
             <div className="w-full border border-solid bg-white p-2 text-xs font-medium sm:w-1/2 sm:text-sm">
-              {state?.delivery} Days Delivery
+              {isFastDelivery ? state?.extraFastDelivery : state?.delivery} Days
+              Delivery
             </div>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-x-2 text-xs font-medium sm:text-sm">

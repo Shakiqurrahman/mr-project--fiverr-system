@@ -130,7 +130,7 @@ const StartSingleProject = ({ item }) => {
               id="subcategory"
               value={selectedCategory}
               onChange={handleCategoryChange}
-              className={`w-full p-4 text-base font-semibold outline-none  bg-white ${selectedCategory ? "sm:text-2xl" : "sm:text-lg"}`}
+              className={`w-full bg-white p-4 text-base font-semibold outline-none ${selectedCategory ? "sm:text-2xl" : "sm:text-lg"}`}
             >
               {!selectedCategory && (
                 <option className="text-base" value={""}>
@@ -158,7 +158,7 @@ const StartSingleProject = ({ item }) => {
                 id="subcategory"
                 value={selectedSubCategory}
                 onChange={handleSubCategoryChange}
-                className="w-full border p-4 font-medium outline-none bg-white"
+                className="w-full border bg-white p-4 font-medium outline-none"
               >
                 {!selectedSubCategory && (
                   <option value={""}>Select a Subcategory</option>
@@ -176,7 +176,8 @@ const StartSingleProject = ({ item }) => {
             <>
               <div className="my-5 flex flex-wrap items-center gap-3 sm:flex-nowrap">
                 <div className="w-full border bg-white p-3 text-sm sm:text-base">
-                  {regularDeliveryDay} Days Delivery
+                  {isFastDelivery ? extraFastDeliveryDay : regularDeliveryDay}{" "}
+                  Days Delivery
                 </div>
                 <div className="flex w-full items-center gap-3 sm:justify-end">
                   <div className="flex items-center gap-x-2 text-sm font-medium sm:text-base">
