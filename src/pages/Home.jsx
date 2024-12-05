@@ -3,7 +3,6 @@ import CompletedProject from "../components/CompletedProject";
 import Hero from "../components/Hero";
 import HomeActivityCards from "../components/HomeActivityCards";
 import HomeKeywords from "../components/HomeKeywords";
-import SocialMediaLinks from "../components/SocialMediaLinks";
 import Testimonials from "../components/Testimonials";
 import { useGetAllProjectsQuery } from "../Redux/api/dashboardApiSlice";
 import { useGetAllAdminReviewsQuery } from "../Redux/api/orderApiSlice";
@@ -42,9 +41,6 @@ function Home() {
 
       {/* Testimonial section */}
       {reviews?.length > 0 && <Testimonials />}
-
-      {/* Social Media Section  */}
-      <SocialMediaLinks />
     </>
   );
 }
