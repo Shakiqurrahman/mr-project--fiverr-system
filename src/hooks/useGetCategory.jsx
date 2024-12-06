@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useFetchGetAllFoldersQuery,
   useFetchGetUploadQuery,
@@ -113,4 +113,4 @@ const useGetCategory = () => {
   return { categories, error, loading };
 };
 
-export default React.memo(useGetCategory);
+export default useGetCategory;

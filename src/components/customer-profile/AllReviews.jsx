@@ -22,8 +22,6 @@ const AllReviews = ({ user, allReviews }) => {
     ? allReviews
     : allReviews?.slice(0, initialReviews);
 
-  console.log(reviewsToShow);
-
   return (
     <div>
       <h2 className="mb-2 text-2xl font-semibold">

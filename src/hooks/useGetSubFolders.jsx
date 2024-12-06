@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useFetchGetAllSubFoldersByFolderSlugQuery,
   useFetchGetUploadQuery,
@@ -87,4 +87,4 @@ const useGetSubFolders = ({ slug }) => {
   return { subFolders, folderObject };
 };
 
-export default React.memo(useGetSubFolders);
+export default useGetSubFolders;
