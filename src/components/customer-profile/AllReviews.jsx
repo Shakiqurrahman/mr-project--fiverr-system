@@ -1,92 +1,28 @@
 import React, { useState } from "react";
 import { IoIosStar } from "react-icons/io";
+import { useDispatch } from "react-redux";
+import { setPreviewImage } from "../../Redux/features/previewImageSlice";
 import logo from "../../assets/images/MR Logo Icon.png";
 import downArrow from "../../assets/images/icons/Down Arrow.svg";
 import upperArrow from "../../assets/images/icons/Upper Arrow.svg";
+import thumbnail from "../../assets/images/project-thumbnail.jpg";
 import { timeAgoTracker } from "../../libs/timeAgoTracker";
 
 const AllReviews = ({ user, allReviews }) => {
+  const dispatch = useDispatch();
   const [showMore, setShowMore] = useState(false);
 
-  // const [allReviews] = useState([
-  //   {
-  //     id: 1,
-  //     name: "Mahfuj25",
-  //     img: sellerImg,
-  //     review: "This is a great service! I would recommend it to others.",
-  //     rating: 5,
-  //     time: "5 hours ago",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Mahfuj25",
-  //     img: sellerImg,
-  //     review: `I was thoroughly impressed with the level of service and the quality of work delivered. The project was completed ahead of schedule, and the attention to detail was evident in every aspect. Communication was seamless throughout the process, making it a smooth and enjoyable experience. I highly recommend this team to anyone looking for professional and reliable service.`,
-  //     rating: 5,
-  //     time: "5 hours ago",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Mahfuj25",
-  //     img: sellerImg,
-  //     review: "This is a great service! I would recommend it to others.",
-  //     rating: 3,
-  //     time: "5 hours ago",
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "Mahfuj25",
-  //     img: sellerImg,
-  //     review: `Overall, a good experience. The team was efficient and delivered a solid result. There were a few hiccups along the way, but they were resolved effectively. I appreciated their flexibility and willingness to make adjustments as needed. The final product was worth the investment.`,
-  //     rating: 5,
-  //     time: "5 hours ago",
-  //   },
-  //   {
-  //     id: 5,
-  //     name: "Mahfuj25",
-  //     img: sellerImg,
-  //     review: "Good experience, but there were some delays.",
-  //     rating: 4,
-  //     time: "1 day ago",
-  //   },
-  //   {
-  //     id: 6,
-  //     name: "Mahfuj25",
-  //     img: sellerImg,
-  //     review: "The service was okay, but communication could be improved.",
-  //     rating: 3,
-  //     time: "2 days ago",
-  //   },
-  //   {
-  //     id: 7,
-  //     name: "Mahfuj25",
-  //     img: sellerImg,
-  //     review: "Great value for the price. Would use again.",
-  //     rating: 4,
-  //     time: "3 days ago",
-  //   },
-  //   {
-  //     id: 8,
-  //     name: "Mahfuj25",
-  //     img: sellerImg,
-  //     review: "Satisfied with the outcome, though there were minor issues.",
-  //     rating: 4,
-  //     time: "4 days ago",
-  //   },
-  //   {
-  //     id: 9,
-  //     name: "Mahfuj25",
-  //     img: sellerImg,
-  //     review: "Excellent service. Exceeded expectations.",
-  //     rating: 5,
-  //     time: "5 days ago",
-  //   },
-  // ]);
+  const handlePreviewImage = (e, url) => {
+    e.preventDefault();
+    dispatch(setPreviewImage(url));
+  };
 
   const initialReviews = 5;
   const reviewsToShow = showMore
     ? allReviews
     : allReviews?.slice(0, initialReviews);
+
+  console.log(reviewsToShow);
 
   return (
     <div>
@@ -128,7 +64,17 @@ const AllReviews = ({ user, allReviews }) => {
                     : "Mahfujurrahm535"}
                 </h4>
               </div>
-              <p className="mb-2 text-gray-600">{review?.message}</p>
+              <div className="flex items-start justify-between gap-3">
+                <p className="mb-2 text-gray-600">{review?.message}</p>
+                {review?.isThumbnail && (
+                  <img
+                    src={thumbnail}
+                    alt=""
+                    className="w-[120px] cursor-pointer rounded"
+                    onClick={(e) => handlePreviewImage(e, thumbnail)}
+                  />
+                )}
+              </div>
               <div className="flex items-center gap-8">
                 <span className="flex items-center gap-2">
                   {review?.rating}
