@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useFetchGetUploadQuery,
   useLazyFetchGetAllDesignsByFolderSubFolderQuery,
@@ -64,4 +64,4 @@ const useGetSubFolderDesigns = ({ folderSlug, subFolderSlug }) => {
   return { subFolderName, subFolderDesigns };
 };
 
-export default useGetSubFolderDesigns;
+export default React.memo(useGetSubFolderDesigns);
