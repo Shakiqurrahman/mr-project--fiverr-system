@@ -206,6 +206,13 @@ textarea:placeholder-shown {
   justify-content: start !important;
   align-items: stretch !important;
 }
+.category-cards .slick-track .slick-slide {
+  height: auto !important;
+}
+
+.category-cards .slick-track .slick-slide > div {
+  height: 100% !important;
+}
 
 /* order delivery images slider design */
 .order-slider .slick-track {
@@ -303,7 +310,6 @@ input[type="password"] + div {
 .MuiPaginationItem-previousNext > span {
   @apply !hidden;
 }
-
 
 select {
   appearance: none;
