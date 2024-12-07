@@ -71,7 +71,7 @@ function EditDesign() {
       "bold italic backcolor forecolor alignleft aligncenter alignright alignjustify" +
       " link bullist numlist outdent indent  fullscreen " +
       " help",
-    link_assume_external_targets: true,
+    relative_urls: false,
   };
   const log = () => {
     if (editorRef.current) {
@@ -235,7 +235,7 @@ function EditDesign() {
   const { data: relatedDesign } = useFetchRelatedTagsQuery();
 
   const relatedDesigns = useMemo(
-    () => [...relatedDesign].reverse().slice(0, 50),
+    () => relatedDesign?.length && [...relatedDesign].reverse().slice(0, 50),
     [relatedDesign],
   );
 

@@ -57,7 +57,7 @@ function ProjectCard({
             <FaFolderOpen className="text-black/50" />
           </Link>
         )}
-        <Link to={slug} className="block cursor-pointer border bg-white">
+        <Link to={slug} className="block h-full cursor-pointer border bg-white">
           {clientName ? (
             <div
               className="relative"

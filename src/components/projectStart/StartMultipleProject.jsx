@@ -263,7 +263,7 @@ const StartMultipleProject = ({ items }) => {
               <img
                 src={i.designImage}
                 alt=""
-                className="w-[80px] object-cover sm:w-[100px]"
+                className={`${selectedItem === i?.id ? "opacity-100" : "opacity-50"} w-[80px] object-cover sm:w-[100px]`}
               />
             </button>
           ))}
