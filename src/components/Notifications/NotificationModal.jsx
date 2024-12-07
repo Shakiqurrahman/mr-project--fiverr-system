@@ -8,54 +8,56 @@ import GetNotificationTitle from "./GetNotificationTitle";
 const NotificationModal = ({ close }) => {
   const dispatch = useDispatch();
   const notificalModal = useRef(null);
-  const unReadNotifications = 15;
+  const unReadNotifications = 0;
 
-  const notifications = [
-    {
-      id: 1,
-      userName: "shake75",
-      avatar: "",
-      date: "15d",
-      orderedImage: "",
-      isOnline: true,
-      type: "order",
-    },
-    {
-      id: 2,
-      userName: "shakil",
-      avatar: "",
-      date: "1h",
-      orderedImage:
-        "https://media.vanityfair.com/photos/5f5245d91e10df7a77868af6/master/pass/avatar-the-last-airbender.jpg",
-      isOnline: false,
-      type: "instructions",
-    },
-    {
-      id: 3,
-      userName: "shakil",
-      avatar:
-        "https://media.gq.com/photos/627d37fbbad17dc46fce8158/4:3/w_2507,h_1880,c_limit/MCDAVAT_FE021.jpg",
-      date: "15min",
-      orderedImage:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_gaxAkYYDw8UfNleSC2Viswv3xSmOa4bIAQ&s",
-      isOnline: false,
-      type: "review",
-      rating: 5,
-    },
-    {
-      id: 4,
-      userName: "Soumik",
-      avatar:
-        "https://media.gq.com/photos/627d37fbbad17dc46fce8158/4:3/w_2507,h_1880,c_limit/MCDAVAT_FE021.jpg",
-      message: "Red is the logos Yellow is the verbiage",
-      date: "15min",
-      type: "orderMessage",
-      orderedImage:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_gaxAkYYDw8UfNleSC2Viswv3xSmOa4bIAQ&s",
-      isOnline: false,
-    },
-  ];
+  // Note: client told me to make temporary blank
+  // const notifications = [
+  //   {
+  //     id: 1,
+  //     userName: "shake75",
+  //     avatar: "",
+  //     date: "15d",
+  //     orderedImage: "",
+  //     isOnline: true,
+  //     type: "order",
+  //   },
+  //   {
+  //     id: 2,
+  //     userName: "shakil",
+  //     avatar: "",
+  //     date: "1h",
+  //     orderedImage:
+  //       "https://media.vanityfair.com/photos/5f5245d91e10df7a77868af6/master/pass/avatar-the-last-airbender.jpg",
+  //     isOnline: false,
+  //     type: "instructions",
+  //   },
+  //   {
+  //     id: 3,
+  //     userName: "shakil",
+  //     avatar:
+  //       "https://media.gq.com/photos/627d37fbbad17dc46fce8158/4:3/w_2507,h_1880,c_limit/MCDAVAT_FE021.jpg",
+  //     date: "15min",
+  //     orderedImage:
+  //       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_gaxAkYYDw8UfNleSC2Viswv3xSmOa4bIAQ&s",
+  //     isOnline: false,
+  //     type: "review",
+  //     rating: 5,
+  //   },
+  //   {
+  //     id: 4,
+  //     userName: "Soumik",
+  //     avatar:
+  //       "https://media.gq.com/photos/627d37fbbad17dc46fce8158/4:3/w_2507,h_1880,c_limit/MCDAVAT_FE021.jpg",
+  //     message: "Red is the logos Yellow is the verbiage",
+  //     date: "15min",
+  //     type: "orderMessage",
+  //     orderedImage:
+  //       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_gaxAkYYDw8UfNleSC2Viswv3xSmOa4bIAQ&s",
+  //     isOnline: false,
+  //   },
+  // ];
 
+  const notifications = [];
   useOutsideClick(notificalModal, () => dispatch(close(false)));
   return (
     <div
@@ -77,11 +79,11 @@ const NotificationModal = ({ close }) => {
 
         {/* List of unread notifications */}
         <div className="max-h-[400px] overflow-y-auto">
-          {notifications.map((notification) => {
+          {notifications?.map((notification) => {
             const letterLogo = notification?.userName
               ?.trim()
-              .charAt(0)
-              .toUpperCase();
+              ?.charAt(0)
+              ?.toUpperCase();
 
             const notificationTitle = GetNotificationTitle({
               type: notification?.type,
@@ -92,16 +94,16 @@ const NotificationModal = ({ close }) => {
             });
             return (
               <div
-                key={notification.id}
+                key={notification?.id}
                 className="flex items-center justify-between gap-4 border-b p-4 last:border-b-0"
               >
                 <div className="flex items-center gap-2">
                   {/* avatar  */}
                   <div className="relative mx-auto flex size-10 items-center justify-center rounded-full border border-gray-300 bg-[#ffefef]/30 sm:size-14">
-                    {notification.avatar ? (
+                    {notification?.avatar ? (
                       <img
                         className="h-full w-full rounded-full object-cover"
-                        src={notification.avatar}
+                        src={notification?.avatar}
                         alt="Sender Logo"
                       />
                     ) : (
@@ -110,7 +112,7 @@ const NotificationModal = ({ close }) => {
                       </div>
                     )}
                     <span
-                      className={`absolute bottom-0 right-1 size-3 rounded-full border border-white ${notification.isOnline ? "bg-primary" : "bg-gray-400"}`}
+                      className={`absolute bottom-0 right-1 size-3 rounded-full border border-white ${notification?.isOnline ? "bg-primary" : "bg-gray-400"}`}
                     ></span>
                   </div>
 
@@ -132,6 +134,11 @@ const NotificationModal = ({ close }) => {
               </div>
             );
           })}
+          {notifications?.length === 0 && (
+            <p className="py-3 text-center text-black">
+              No notifications found.
+            </p>
+          )}
         </div>
       </div>
     </div>
