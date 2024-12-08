@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import {
   useFetchGetAllFoldersQuery,
   useFetchGetUploadQuery,
@@ -102,7 +103,7 @@ const useGetCategory = () => {
             setCategories(finalArray);
           }
         } catch (error) {
-          console.error("Error fetching subfolders data:", error);
+          toast.error("Something Want Wrong!");
         }
       }
     };

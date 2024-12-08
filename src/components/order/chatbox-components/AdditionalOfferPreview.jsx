@@ -33,15 +33,12 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
         orderId: projectDetails?.id,
       };
       try {
-        console.log(data);
         const response = await axios.post(
           `${configApi.api}payment/additional`,
           {
             data,
           },
         );
-
-        console.log("response", response);
 
         const sessionId = response?.data?.data?.id;
         // Redirect to Stripe Checkout
