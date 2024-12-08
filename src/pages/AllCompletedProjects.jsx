@@ -1,9 +1,9 @@
 import { Pagination, PaginationItem, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useGetAllProjectsQuery } from "../Redux/api/dashboardApiSlice";
 import prevBtn from "../assets/images/icons/Left Arrow.svg";
 import nextBtn from "../assets/images/icons/Right Arrow.svg";
 import ProjectCard from "../components/categories/ProjectCard";
-import { useGetAllProjectsQuery } from "../Redux/api/dashboardApiSlice";
 
 function AllCompletedProjects() {
   const { data } = useGetAllProjectsQuery({ status: "Completed" });
@@ -12,8 +12,13 @@ function AllCompletedProjects() {
   const [completedProjects, setCompletedProjects] = useState([]);
 
   useEffect(() => {
-    if (data) {
-      setCompletedProjects(data);
+    if (data?.length > 0) {
+      const filteredData = data?.filter((order) =>
+        order?.review?.find(
+          (r) => r?.isThumbnail && r?.senderType === "CLIENT",
+        ),
+      );
+      setCompletedProjects(filteredData);
     }
   }, [data]);
 

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
@@ -8,7 +9,20 @@ import CategoryLayout from "./categories/CategoryLayout";
 import ProjectCard from "./categories/ProjectCard";
 
 function CompletedProject() {
-  const { data } = useGetAllProjectsQuery({ status: "Completed" });
+  const { data: orderData } = useGetAllProjectsQuery({ status: "Completed" });
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    if (orderData?.length > 0) {
+      const filteredData = orderData?.filter((order) =>
+        order?.review?.find(
+          (r) => r?.isThumbnail && r?.senderType === "CLIENT",
+        ),
+      );
+      setData(filteredData);
+    }
+  }, [orderData]);
+
   const settings = {
     dots: false,
     infinite: data?.length > 4 ? true : false,
