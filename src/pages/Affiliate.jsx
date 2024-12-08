@@ -58,7 +58,7 @@ function Affiliate() {
     if (affLink) {
       try {
         const res = await createAffiliate({
-          link: `aff-${affLink}`,
+          link: `aff-${user?.userName}`,
         }).unwrap();
         toast.success("Affiliate link created successfully!");
       } catch (error) {
