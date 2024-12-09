@@ -62,7 +62,7 @@ function Industries() {
       if (data) {
         const prevDesigns = [...data];
         if (sortedBy === "NewestDesigns") {
-          setDesigns(prevDesigns.reverse());
+          setDesigns(prevDesigns);
         } else if (sortedBy === "OldestDesigns") {
           setDesigns(prevDesigns);
         } else {
@@ -126,8 +126,8 @@ function Industries() {
     }
     // Default case: no keywords selected, set original designs and update keywords
     else {
-      setDesigns(designsData);
-      selectedOption(designsData);
+      setDesigns([...designsData].reverse());
+      selectedOption([...designsData].reverse());
       const updatedDesignKeywords = designKeyWordsData?.map((key) => ({
         name: key,
         quantity: designsData?.filter((design) =>
