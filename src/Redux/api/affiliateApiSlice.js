@@ -44,6 +44,24 @@ export const affiliateApiSlice = createApi({
       }),
       invalidatesTags: ["affiliate"],
     }),
+
+    withdrawRequest: builder.mutation({
+      query: (data) => ({
+        url: `affiliate/withdrawRequest`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["affiliate"],
+    }),
+
+    saveWithdrawInfo: builder.mutation({
+      query: (data) => ({
+        url: `affiliate/paymentMethod-setUp`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["affiliate"],
+    }),
   }),
 });
 
@@ -52,4 +70,6 @@ export const {
   useGetAUserAffiliatesQuery,
   useCreateAffiliateMutation,
   useDeleteAffiliateMutation,
+  useWithdrawRequestMutation,
+  useSaveWithdrawInfoMutation,
 } = affiliateApiSlice;

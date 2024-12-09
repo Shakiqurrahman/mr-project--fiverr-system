@@ -79,6 +79,14 @@ function Affiliate() {
     }
   };
 
+  const handleWithdrawRequest = () => {
+    if (affiliateData?.totalEarnings >= 10) {
+      setOpenWithdrawModal(true);
+    } else {
+      toast.error("You must have atleast 10$ to Make a withdraw request!");
+    }
+  };
+
   const autoGenerateLinkData = affiliateData?.formattedAffiliates?.find(
     (link) => link?.links === `aff-${user?.userName}`,
   );
@@ -120,7 +128,7 @@ function Affiliate() {
               <p className="font-semibold">Method</p>
             </Link>
             <button
-              onClick={() => setOpenWithdrawModal(true)}
+              onClick={handleWithdrawRequest}
               className="bg-[#DCEEFA] p-5 text-center"
             >
               <img

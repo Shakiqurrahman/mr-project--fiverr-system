@@ -1,14 +1,27 @@
 import React, { useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { useWithdrawRequestMutation } from "../Redux/api/affiliateApiSlice";
 import useOutsideClick from "../hooks/useOutsideClick";
 
 const WithdrawRequestModal = ({ handleClose }) => {
   const modalRef = useRef(null);
   const [withDrawAmount, setWithDrawAmount] = useState("");
 
+  const [widthRequest] = useWithdrawRequestMutation();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (withDrawAmount) {
-      console.log("withdrawAmount", withDrawAmount);
+    if (parseInt(withDrawAmount) >= 10) {
+      const data = {
+        ammount: parseInt(withDrawAmount),
+      };
+      try {
+        const res = await widthRequest(data);
+      } catch (error) {
+        toast.error("Something went wrong!");
+      }
+    } else {
+      toast.error("Minimum Withdraw Request 10$!");
     }
   };
 

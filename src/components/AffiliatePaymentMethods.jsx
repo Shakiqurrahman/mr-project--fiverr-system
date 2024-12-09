@@ -1,12 +1,17 @@
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { FiChevronRight } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { useSaveWithdrawInfoMutation } from "../Redux/api/affiliateApiSlice";
 
 const AffiliatePaymentMethods = () => {
   const navigate = useNavigate();
 
+  const [saveWithdrawInfo] = useSaveWithdrawInfoMutation();
+
   const { user } = useSelector((state) => state.user);
+
   const [form, setForm] = useState({
     fullName: user?.fullName || "",
     email: user?.email || "",
@@ -22,12 +27,28 @@ const AffiliatePaymentMethods = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
-    const data = form;
+    const data = {
+      fullname: form.fullName,
+      email: form.email,
+      accountHolderName: form.accountHolderName,
+      bankName: form.bankName,
+      accountNumber: form.accountNumber,
+      SWIFTCode: form.swiftCode,
+      bankAddress: form.bankAddress,
+      recipientAddress: form.recipientAddress,
+    };
 
-    // Save the payment info to the database or API
-    navigate("/affiliate");
+    try {
+      const res = await saveWithdrawInfo(data);
+      if (res?.data?.success) {
+        toast.success("Information saved successfully!");
+        navigate("/affiliate");
+      }
+    } catch (error) {
+      toast.error("Something Went Wrong!");
+    }
   };
   return (
     <section className="mx-auto my-16 max-w-[600px] rounded-xl bg-lightskyblue p-8">
@@ -54,7 +75,7 @@ const AffiliatePaymentMethods = () => {
           <label className="block px-2 pt-2 text-base font-medium">Email</label>
           <input
             type="text"
-            name="fullName"
+            name="email"
             value={form.email}
             onChange={handleChange}
             className="mt-1 block w-full rounded-md border border-solid border-[#e7e7e7] bg-white p-2.5 text-sm outline-none"
