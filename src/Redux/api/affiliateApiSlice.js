@@ -28,6 +28,12 @@ export const affiliateApiSlice = createApi({
       providesTags: ["affiliate"],
     }),
 
+    getAllWithdrawRequests: builder.query({
+      query: () => `affiliate/withdrawRequests`,
+      transformResponse: (response) => response.data,
+      providesTags: ["affiliate"],
+    }),
+
     createAffiliate: builder.mutation({
       query: ({ link }) => ({
         url: `affiliate/create`,
@@ -72,4 +78,5 @@ export const {
   useDeleteAffiliateMutation,
   useWithdrawRequestMutation,
   useSaveWithdrawInfoMutation,
+  useGetAllWithdrawRequestsQuery,
 } = affiliateApiSlice;
