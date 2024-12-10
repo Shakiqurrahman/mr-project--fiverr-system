@@ -460,8 +460,8 @@ const ProjectRequirements = () => {
         <div className="w-full shrink-0 sm:w-1/3 md:w-1/4 lg:w-1/5">
           <div className="overflow-hidden rounded-lg border border-solid border-primary">
             <p className="bg-primary p-2 text-center text-white">
-              I&apos;ve added links to a few stock image sites below. You can
-              choose images from any of the sites linked below for your design.
+              We have added links to some stock image sites below. You can
+              choose images from any of sites linked below for your design.
             </p>
             <div className="grid grid-cols-2 gap-x-3 p-2 sm:grid-cols-1">
               {stockImages.map((stock, i) => (
