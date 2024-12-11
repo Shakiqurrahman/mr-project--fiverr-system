@@ -1,5 +1,6 @@
 import React from "react";
 import { FaCheck } from "react-icons/fa";
+import { ImCross } from "react-icons/im";
 import { useSelector } from "react-redux";
 
 const TrackProject = () => {
@@ -60,8 +61,20 @@ const TrackProject = () => {
                   )}
                 </span>
               ) : (
-                <span className="relative flex size-7 flex-shrink-0 items-center justify-center rounded-full bg-primary p-1 text-base text-white">
-                  {status === "Completed" && <FaCheck />}
+                <span
+                  className={`relative flex size-7 flex-shrink-0 items-center justify-center rounded-full ${
+                    status === "Completed"
+                      ? "bg-primary"
+                      : projectDetails?.projectStatus === "Canceled"
+                        ? "bg-red-600"
+                        : "bg-primary"
+                  } p-1 text-base text-white`}
+                >
+                  {status === "Completed" ? (
+                    <FaCheck />
+                  ) : projectDetails?.projectStatus === "Canceled" ? (
+                    <ImCross className="text-sm" />
+                  ) : null}
                   {idx !== 0 && (
                     <div className="absolute bottom-full left-1/2 h-[26px] w-[2px] -translate-x-1/2 bg-primary"></div>
                   )}
