@@ -16,14 +16,19 @@ function RelatedDesigns({
   const settings = {
     dots: false,
     infinite:
-      items?.length || relatedFolders?.length || relatedDesigns?.length > 4
+      items?.length > 4 ||
+      relatedFolders?.length > 4 ||
+      relatedDesigns?.length > 4
         ? true
         : false,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
+    className: "related-cards",
     arrows:
-      items?.length || relatedFolders?.length || relatedDesigns?.length > 4
+      items?.length > 4 ||
+      relatedFolders?.length > 4 ||
+      relatedDesigns?.length > 4
         ? true
         : false,
     autoplay: true,

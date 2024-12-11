@@ -214,6 +214,15 @@ textarea:placeholder-shown {
   height: 100% !important;
 }
 
+/* related cards slider design */
+.related-cards .slick-track .slick-slide {
+  height: auto !important;
+}
+
+.related-cards .slick-track .slick-slide > div {
+  height: 100% !important;
+}
+
 /* order delivery images slider design */
 .order-slider .slick-track {
   width: auto !important;
