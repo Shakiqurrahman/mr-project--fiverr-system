@@ -166,6 +166,14 @@ export const uploadDesignApiSlice = createApi({
       query: (searchKey) => `search?searchQuery=${searchKey}`,
       transformResponse: (response) => response?.data,
     }),
+
+    createMultipleProject: builder.mutation({
+      query: (data) => ({
+        url: `multi-project/create`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -192,4 +200,5 @@ export const {
   useUpdateAllSubFoldersByFolderSlugMutation,
   useLazyFetchGetAllDesignsByFolderSubFolderQuery,
   useUpdateAllDesignsOfFolderSubFolderMutation,
+  useCreateMultipleProjectMutation,
 } = uploadDesignApiSlice;

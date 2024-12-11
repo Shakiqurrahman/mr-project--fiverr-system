@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { configApi } from "../libs/configApi";
 import { useFetchMultiProjectQuery } from "../Redux/api/multiProjectApiSlice";
+import { useCreateMultipleProjectMutation } from "../Redux/api/uploadDesignApiSlice";
 import { setPreviewImage } from "../Redux/features/previewImageSlice";
 
 const MultiProject = () => {
@@ -25,6 +26,8 @@ const MultiProject = () => {
     "Do you have your own company logo?",
     "",
   ]);
+
+  const [createMultiProject] = useCreateMultipleProjectMutation();
 
   useEffect(() => {
     if (data) {
@@ -116,16 +119,11 @@ const MultiProject = () => {
           requirements: reqArray,
         };
 
-        const res = await axios.post(
-          `${configApi.api}/multi-project/create`,
-          data,
-        );
-        if (res) {
-          setId(res.data.data.id);
-          setProjectTitle(res.data.data.projectTitle);
-          setProjectImage(res.data.data.projectImage);
-          setRequirements(res.data.data.requirements);
-        }
+        const res = await createMultiProject(data).unwrap();
+        setId(res?.data?.id);
+        setProjectTitle(res?.data?.projectTitle);
+        setProjectImage(res?.data?.projectImage);
+        setRequirements(res?.data?.requirements);
         setSubmitLoading(false);
         toast.success("Successfully Saved!");
       } catch (error) {
