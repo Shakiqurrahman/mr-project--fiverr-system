@@ -1,0 +1,41 @@
+import React, { useRef } from "react";
+import useOutsideClick from "../hooks/useOutsideClick";
+
+const WithdrawUserDetails = ({ close, remove }) => {
+  const box = useRef(null);
+
+  const outsiderClick = () => {
+    close(false);
+    remove(null);
+  };
+
+  useOutsideClick(box, () => outsiderClick());
+  return (
+    <div className="fixed left-0 top-0 z-[999999] flex h-screen w-full items-center justify-center overflow-y-auto bg-black/20 p-4 backdrop-blur">
+      <div
+        className="w-full max-w-[600px] rounded-lg bg-white p-8 shadow-btn-shadow"
+        ref={box}
+      >
+        <h1 className="mb-5 text-xl font-semibold">Withdrawal Information</h1>
+        <h2 className="font-semibold">Full Name</h2>
+        <p className="mb-3">Shakiqur Rahman</p>
+        <h2 className="font-semibold">Email</h2>
+        <p className="mb-3">rahmanshakiqur@gmail.com</p>
+        <h2 className="font-semibold">Account Holder Name</h2>
+        <p className="mb-3">John A. Doe</p>
+        <h2 className="font-semibold">Bank Name</h2>
+        <p className="mb-3">Global Bank</p>
+        <h2 className="font-semibold">Account Number / IBAN</h2>
+        <p className="mb-3">123456789</p>
+        <h2 className="font-semibold">SWIFT / BIC Code</h2>
+        <p className="mb-3">GBL123456</p>
+        <h2 className="font-semibold">Bank Address</h2>
+        <p className="mb-3">123 Bank Street, Financial City, Country</p>
+        <h2 className="font-semibold">Recipient Address</h2>
+        <p className="mb-3">456 Main Street, Suburb City, Country</p>
+      </div>
+    </div>
+  );
+};
+
+export default WithdrawUserDetails;
