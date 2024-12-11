@@ -12,8 +12,8 @@ const AffiliateRequests = () => {
   return (
     <>
       <div className="max-width my-10">
-        <div className="overflow-x-auto">
-          <table className="w-full table-auto text-left shadow-btn-shadow">
+        <div className="overflow-x-auto shadow-btn-shadow">
+          <table className="w-full table-auto text-left">
             <thead>
               <tr className="bg-gray-200">
                 <th className="p-3">Widthdrawal Info</th>
