@@ -143,7 +143,10 @@ function AllDesign() {
               <Pagination
                 count={totalPages}
                 page={currentPage}
-                onChange={(_, page) => setCurrentPage(page)}
+                onChange={(_, page) => {
+                  setCurrentPage(page);
+                  window.scrollTo(0, 0);
+                }}
                 renderItem={(item) => (
                   <PaginationItem
                     slots={{ previous: prevBtnIcon, next: nextBtnIcon }}
