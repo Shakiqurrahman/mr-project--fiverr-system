@@ -37,7 +37,6 @@ const DashboardProjects = () => {
 
   const [getAllProjects, { data: projects, isLoading }] =
     useLazyGetAllProjectsQuery();
-    
 
   const [addDesignerModal, setAddDesignerModal] = useState(false);
 
@@ -158,7 +157,7 @@ const DashboardProjects = () => {
             {filteredSelectedProject?.totalPrice})
           </h1>
           <select
-            className="border p-1 px-2 font-semibold outline-none bg-white"
+            className="border bg-white p-1 px-2 font-semibold outline-none"
             name="projectType"
             id="projectType"
             onChange={handleProjectTypeChange}
@@ -231,11 +230,15 @@ const DashboardProjects = () => {
                       <p className="font-bold">${project?.totalPrice}</p>
                     </div>
                     <div className="w-[50%] text-center text-sm">
-                      <p className="font-medium text-gray-500">Time</p>
+                      <p className="font-medium text-gray-500">
+                        {project?.finishedDate ? "Date" : "Time"}
+                      </p>
                       <p
                         className={`font-bold ${color === "red" ? "text-red-500" : "text-black"}`}
                       >
-                        {time || "Not Determined"}
+                        {project?.finishedDate
+                          ? new Date(project?.finishedDate)?.toLocaleDateString()
+                          : time || "Not Determined"}
                       </p>
                     </div>
                     <div className="w-[30%] text-center text-sm">
