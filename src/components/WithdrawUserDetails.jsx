@@ -1,12 +1,12 @@
 import React, { useRef } from "react";
 import useOutsideClick from "../hooks/useOutsideClick";
 
-const WithdrawUserDetails = ({ close, remove }) => {
+const WithdrawUserDetails = ({ info, close, reset }) => {
   const box = useRef(null);
 
   const outsiderClick = () => {
     close(false);
-    remove(null);
+    reset(null);
   };
 
   useOutsideClick(box, () => outsiderClick());
@@ -18,21 +18,21 @@ const WithdrawUserDetails = ({ close, remove }) => {
       >
         <h1 className="mb-5 text-xl font-semibold">Withdrawal Information</h1>
         <h2 className="font-semibold">Full Name</h2>
-        <p className="mb-3">Shakiqur Rahman</p>
+        <p className="mb-3">{info?.fullname}</p>
         <h2 className="font-semibold">Email</h2>
-        <p className="mb-3">rahmanshakiqur@gmail.com</p>
+        <p className="mb-3">{info?.email}</p>
         <h2 className="font-semibold">Account Holder Name</h2>
-        <p className="mb-3">John A. Doe</p>
+        <p className="mb-3">{info?.accountHolderName}</p>
         <h2 className="font-semibold">Bank Name</h2>
-        <p className="mb-3">Global Bank</p>
+        <p className="mb-3">{info?.bankName}</p>
         <h2 className="font-semibold">Account Number / IBAN</h2>
-        <p className="mb-3">123456789</p>
+        <p className="mb-3">{info?.accountNumber}</p>
         <h2 className="font-semibold">SWIFT / BIC Code</h2>
-        <p className="mb-3">GBL123456</p>
+        <p className="mb-3">{info?.SWIFTCode}</p>
         <h2 className="font-semibold">Bank Address</h2>
-        <p className="mb-3">123 Bank Street, Financial City, Country</p>
+        <p className="mb-3">{info?.bankAddress}</p>
         <h2 className="font-semibold">Recipient Address</h2>
-        <p className="mb-3">456 Main Street, Suburb City, Country</p>
+        <p className="mb-3">{info?.recipientAddress}</p>
       </div>
     </div>
   );
