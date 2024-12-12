@@ -584,6 +584,8 @@ const ChatBox = ({ openToggle }) => {
         const res = await sendAMessage({
           recipientId: isAdmin ? conversationUser : null,
           ...submitForm,
+          isAdminSeen: isAdmin ? true : false,
+          isClientSeen: isAdmin ? false : true,
         }).unwrap();
 
         // setMessages((prev) => prev.map((msg) =>
