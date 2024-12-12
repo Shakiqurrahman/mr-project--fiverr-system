@@ -39,8 +39,6 @@ const AllConversation = ({ closeToggle }) => {
     pollingInterval: 60000,
   });
 
-  console.log("chatList", chatList);
-
   // getAllMessages
   const [triggerGetAllMessages, { data: getAllMessages }] =
     useLazyGetAllMessagesQuery();
@@ -187,6 +185,13 @@ const AllConversation = ({ closeToggle }) => {
     });
     closeToggle(false);
   };
+
+  useEffect(() => {
+    // Cleanup function to reset conversationUser
+    return () => {
+      dispatch(setConversationUser(""));
+    };
+  }, [dispatch]);
 
   return (
     <div className="flex h-full flex-col">

@@ -104,7 +104,7 @@ const MultiProject = () => {
               name,
             };
           } else {
-            throw new Error("Image upload failed");
+            toast.error("Image upload failed");
           }
         } else {
           // If no new image, use existing image

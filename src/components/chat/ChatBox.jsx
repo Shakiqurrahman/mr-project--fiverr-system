@@ -584,6 +584,8 @@ const ChatBox = ({ openToggle }) => {
         const res = await sendAMessage({
           recipientId: isAdmin ? conversationUser : null,
           ...submitForm,
+          isAdminSeen: isAdmin ? true : false,
+          isClientSeen: isAdmin ? false : true,
         }).unwrap();
 
         // setMessages((prev) => prev.map((msg) =>
@@ -767,13 +769,11 @@ const ChatBox = ({ openToggle }) => {
       socket?.emit("seen", {
         userId: user.id,
         recipientId: conversationUser,
-        // seenBy: [user.id],
       });
     } else {
       socket?.emit("seen", {
         userId: user.id,
         recipientId: user?.id,
-        // seenBy: [user.id],
       });
     }
   }, [user.id, socket, messages, conversationUser, isAdmin]);
