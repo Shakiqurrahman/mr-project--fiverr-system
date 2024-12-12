@@ -767,13 +767,11 @@ const ChatBox = ({ openToggle }) => {
       socket?.emit("seen", {
         userId: user.id,
         recipientId: conversationUser,
-        // seenBy: [user.id],
       });
     } else {
       socket?.emit("seen", {
         userId: user.id,
         recipientId: user?.id,
-        // seenBy: [user.id],
       });
     }
   }, [user.id, socket, messages, conversationUser, isAdmin]);
