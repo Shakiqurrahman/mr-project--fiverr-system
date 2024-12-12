@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FiChevronRight } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { useSaveWithdrawInfoMutation } from "../Redux/api/affiliateApiSlice";
+import {
+  useGetWithdrawInfoQuery,
+  useSaveWithdrawInfoMutation,
+} from "../Redux/api/affiliateApiSlice";
 
 const AffiliatePaymentMethods = () => {
   const navigate = useNavigate();
@@ -11,6 +14,8 @@ const AffiliatePaymentMethods = () => {
   const [saveWithdrawInfo] = useSaveWithdrawInfoMutation();
 
   const { user } = useSelector((state) => state.user);
+
+  const { data } = useGetWithdrawInfoQuery();
 
   const [form, setForm] = useState({
     fullName: user?.fullName || "",
@@ -22,6 +27,20 @@ const AffiliatePaymentMethods = () => {
     bankAddress: "",
     recipientAddress: "",
   });
+
+  useEffect(() => {
+    if (data) {
+      setForm((prev) => ({
+        ...prev,
+        accountHolderName: data?.accountHolderName || "",
+        bankName: data?.bankName || "",
+        accountNumber: data?.accountNumber || "",
+        swiftCode: data?.SWIFTCode || "",
+        bankAddress: data?.bankAddress || "",
+        recipientAddress: data?.recipientAddress || "",
+      }));
+    }
+  }, [data]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
