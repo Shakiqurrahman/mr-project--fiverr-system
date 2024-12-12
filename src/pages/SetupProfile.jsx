@@ -22,15 +22,16 @@ function SetupProfile({ from_profile }) {
     fullName: "",
     userName: "",
     industryName: "",
-    country: "",
+    country: "Afghanistan",
     city: "",
     address: "",
     email: "",
     number: "",
     language: "",
     description: "",
-    countryCode: "",
+    countryCode: "+93",
   });
+  
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -57,6 +58,8 @@ function SetupProfile({ from_profile }) {
       setUploading(false);
       setLoading(false);
     }
+
+    console.log(form);
   };
 
   const token = Cookies.get("authToken");
@@ -76,9 +79,9 @@ function SetupProfile({ from_profile }) {
         dispatch(setUser({ user: apiData, token }));
         // Update the form with either API data or fallback to localStorage data
         setForm({
-          country: (apiData?.country ?? dataFromLocalStorage?.country) || "",
+          country: (apiData?.country ?? dataFromLocalStorage?.country) || "Afghanistan",
           countryCode:
-            (apiData?.countryCode ?? dataFromLocalStorage?.countryCode) || "",
+            (apiData?.countryCode ?? dataFromLocalStorage?.countryCode) || "+93",
           email: (apiData?.email ?? dataFromLocalStorage?.email) || "",
           userName: (apiData?.userName ?? dataFromLocalStorage?.userName) || "",
           fullName: (apiData?.fullName ?? dataFromLocalStorage?.fullName) || "",

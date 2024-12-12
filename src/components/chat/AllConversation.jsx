@@ -39,8 +39,6 @@ const AllConversation = ({ closeToggle }) => {
     pollingInterval: 60000,
   });
 
-  console.log("chatList", chatList);
-
   // getAllMessages
   const [triggerGetAllMessages, { data: getAllMessages }] =
     useLazyGetAllMessagesQuery();
