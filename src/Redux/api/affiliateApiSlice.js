@@ -68,6 +68,12 @@ export const affiliateApiSlice = createApi({
       }),
       invalidatesTags: ["affiliate"],
     }),
+
+    getWithdrawInfo: builder.query({
+      query: () => `affiliate/paymentMethod-profile`,
+      transformResponse: (response) => response.data,
+      providesTags: ["affiliate"],
+    }),
   }),
 });
 
@@ -79,4 +85,5 @@ export const {
   useWithdrawRequestMutation,
   useSaveWithdrawInfoMutation,
   useGetAllWithdrawRequestsQuery,
+  useGetWithdrawInfoQuery,
 } = affiliateApiSlice;
