@@ -571,6 +571,8 @@ const ChatBox = ({ openToggle }) => {
         {
           ...submitForm,
           recipientId: isAdmin ? conversationUser : "",
+          isAdminSeen: isAdmin ? true : false,
+          isClientSeen: isAdmin ? false : true,
         },
       ]);
 
