@@ -38,6 +38,9 @@ const CreateOfferModal = ({
     deliveryWay: "hours",
     price: "",
     desc: "",
+    isAccepted: false,
+    isRejected: false,
+    isWithdrawn: false,
   });
   const fileInputRef = useRef(null);
   const formRef = useRef(null);
@@ -134,6 +137,9 @@ const CreateOfferModal = ({
             deliveryWay: "hours",
             price: "",
             desc: "",
+            isAccepted: false,
+            isRejected: false,
+            isWithdrawn: false,
           });
           setReplyTo(null);
         } catch (error) {
