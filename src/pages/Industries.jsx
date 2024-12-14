@@ -64,7 +64,7 @@ function Industries() {
         if (sortedBy === "NewestDesigns") {
           setDesigns(prevDesigns);
         } else if (sortedBy === "OldestDesigns") {
-          setDesigns(prevDesigns);
+          setDesigns([...prevDesigns].reverse());
         } else {
           setDesigns(prevDesigns);
         }
