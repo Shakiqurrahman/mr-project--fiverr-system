@@ -29,7 +29,7 @@ const useGetSubFolderDesigns = ({ folderSlug, subFolderSlug }) => {
         });
       }
     }
-  }, [categories, folderSlug, subFolderSlug]);
+  }, [categories, folderSlug, subFolderSlug, getAllDesignByFolderSubFolder]);
 
   useEffect(() => {
     if (uploadDesigns?.length > 0 && allSubFolderdesignsData?.length > 0) {

@@ -39,10 +39,12 @@ function Header() {
   const [getDesignsBySearch, { data: searchResults }] =
     useLazyGetDesignsBySearchQuery();
 
-  const { data: inboxBubbleCount } = useInboxBubbleCountingQuery();
-
   const { user } = useSelector((state) => state.user);
   const { items: cartItems } = useSelector((state) => state.cart);
+
+  const { data: inboxBubbleCount } = useInboxBubbleCountingQuery(null, {
+    skip: !user,
+  });
 
   const [activeMenu, setActiveMenu] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
