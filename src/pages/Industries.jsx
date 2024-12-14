@@ -215,17 +215,18 @@ function Industries() {
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {currentPageData?.map((design, idx) => {
-            const thumbnail = design.images.find((i) => i.thumbnail);
+            const thumbnail = design?.images?.find((i) => i?.thumbnail);
+            console.log(thumbnail);
             return (
               <ProjectCard
                 cart={true}
                 key={idx}
-                thumbnail={thumbnail.url}
+                thumbnail={thumbnail?.url}
                 watermark={thumbnail?.watermark}
-                thumbnailName={thumbnail.name}
-                title={design.title}
+                thumbnailName={thumbnail?.name}
+                title={design?.title}
                 design={design}
-                slug={`/design/${design.designId}`}
+                slug={`/design/${design?.designId}`}
               />
             );
           })}
