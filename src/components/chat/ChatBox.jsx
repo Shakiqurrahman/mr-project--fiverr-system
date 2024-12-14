@@ -1129,7 +1129,7 @@ const ChatBox = ({ openToggle }) => {
                           <div className="flex items-center justify-between gap-3 bg-primary/20 p-3">
                             <div className="flex items-center gap-3">
                               <img
-                                src={msg?.customOffer.thumbnail}
+                                src={msg?.customOffer?.thumbnail}
                                 className="w-[40px] cursor-pointer object-cover sm:w-[80px]"
                                 alt=""
                                 onClick={(e) =>
@@ -1140,11 +1140,11 @@ const ChatBox = ({ openToggle }) => {
                                 }
                               />
                               <h1 className="text-sm font-semibold sm:text-2xl">
-                                {msg?.customOffer.title}
+                                {msg?.customOffer?.title}
                               </h1>
                             </div>
                             <span className="shrink-0 text-base font-semibold text-primary sm:px-3 sm:text-3xl">
-                              ${msg.customOffer.price}
+                              ${msg?.customOffer?.price}
                             </span>
                           </div>
                           <div className="p-3 text-sm sm:text-base">
@@ -1154,9 +1154,9 @@ const ChatBox = ({ openToggle }) => {
                             <div className="flex items-center gap-2 font-medium">
                               <FaCheckCircle className="text-primary" />
                               <span>
-                                {msg.customOffer.deliveryCount +
+                                {msg?.customOffer?.deliveryCount +
                                   " " +
-                                  msg.customOffer.deliveryWay}{" "}
+                                  msg?.customOffer?.deliveryWay}{" "}
                                 delivery
                               </span>
                             </div>

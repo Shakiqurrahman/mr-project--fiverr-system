@@ -117,6 +117,7 @@ const CreateOfferModal = ({
         timeAndDate,
         replyTo: reply || null,
         seenBy: [user?.id],
+        isAdminSeen: true,
         uniqueId,
       };
       if (isAuthorized) {

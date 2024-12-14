@@ -112,7 +112,7 @@ const InboxDrawerModal = ({ close }) => {
               <div>
                 <h1 className="font-bold">{msg?.userName}</h1>
                 <p
-                  className={`truncate ${msg?.lastmessageinfo?.totalUnseenMessage > 0 ? "font-bold" : "font-medium"}`}
+                  className={`line-clamp-3 max-w-full ${msg?.lastmessageinfo?.totalUnseenMessage > 0 ? "font-bold" : "font-medium"}`}
                 >
                   {msg?.lastmessageinfo?.senderUserName &&
                     `${
@@ -121,7 +121,7 @@ const InboxDrawerModal = ({ close }) => {
                         : msg?.lastmessageinfo?.senderUserName
                     }: ${
                       msg?.lastmessageinfo?.customOffer
-                        ? `${msg?.lastmessageinfo?.senderUserName} just sent you a new Custom Offer.`
+                        ? `You just sent a new Custom Offer.`
                         : msg?.lastmessageinfo?.attachment?.length > 0 &&
                             !msg?.lastmessageinfo?.messageText
                           ? `${msg?.lastmessageinfo?.senderUserName} just sent you some attachments.`
