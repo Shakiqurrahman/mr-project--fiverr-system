@@ -8,7 +8,7 @@ import {
 } from "../Redux/api/uploadDesignApiSlice";
 
 const useGetCategory = () => {
-  const { data: uploadDesigns, error, loading } = useFetchGetUploadQuery();
+  const { data: uploadDesigns, error } = useFetchGetUploadQuery();
   const { data: folders } = useFetchGetAllFoldersQuery();
   const [getAllSubFoldersData] =
     useLazyFetchGetAllSubFoldersByFolderSlugQuery();
@@ -16,11 +16,13 @@ const useGetCategory = () => {
     useLazyFetchGetAllDesignsByFolderSubFolderQuery();
 
   const [categories, setCategories] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchSubFoldersData = async () => {
       if (folders) {
         try {
+          setIsLoading(true);
           const subFoldersDataResult = await Promise.all(
             folders.map((f) => getAllSubFoldersData({ slug: f.slug })),
           );
@@ -29,30 +31,34 @@ const useGetCategory = () => {
             return [...subfolders]?.sort((a, b) => a?.order - b?.order);
           });
           const resultOfSubFolderDesign = await Promise.all(
-            subFoldersData?.map(async (subArr) => {
-              const resolvedData = await Promise.all(
-                subArr?.map((s) =>
-                  getAllDesignByFolderSubFolder({
-                    folderName: s.folderName,
-                    subFolderName: s.subFolder,
+            subFoldersData?.map(async (subArr, index) => {
+              try {
+                const resolvedData = await Promise.all(
+                  subArr?.map((s, innerIndex) => {
+                    return getAllDesignByFolderSubFolder({
+                      folderName: s.folderName,
+                      subFolderName: s.subFolder,
+                    });
                   }),
-                ),
-              );
-              const resolvedDataArr = resolvedData?.map((i) => {
-                if (typeof i === "object" && i?.data) {
-                  // Initialize with the first item in the data array as the starting point
-                  return i?.data?.reduce((min, current) => {
-                    // Check if current order is less than the minimum order value
-                    if (min === undefined || current?.order < min?.order) {
-                      return current; // Return the whole object, not just the designId
-                    }
-                    return min; // Keep the current minimum
-                  }); // After reduce, return only the designId
-                }
-                // If the item is a string, return it as is
-                return i;
-              });
-              return resolvedDataArr;
+                );
+
+                const resolvedDataArr = resolvedData?.map((i) => {
+                  if (typeof i === "object" && i?.data && i?.data.length > 0) {
+                    return i?.data?.reduce((min, current) => {
+                      if (min === undefined || current?.order < min?.order) {
+                        return current;
+                      }
+                      return min;
+                    });
+                  }
+                  return i;
+                });
+
+                return resolvedDataArr;
+              } catch (error) {
+                // console.error(`Error processing subArr ${index}:`, error); // Catch and log any error
+                return []; // Return an empty array in case of error
+              }
             }),
           );
 
@@ -101,6 +107,7 @@ const useGetCategory = () => {
               subFolders: resultOfSubFolderDesignsData[i],
             }));
             setCategories(finalArray);
+            setIsLoading(false);
           }
         } catch (error) {
           toast.error("Something Want Wrong!");
@@ -109,9 +116,14 @@ const useGetCategory = () => {
     };
 
     fetchSubFoldersData();
-  }, [folders, uploadDesigns]);
+  }, [
+    folders,
+    uploadDesigns,
+    getAllDesignByFolderSubFolder,
+    getAllSubFoldersData,
+  ]);
 
-  return { categories, error, loading };
+  return { categories, error, isLoading };
 };
 
 export default useGetCategory;

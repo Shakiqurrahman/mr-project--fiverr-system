@@ -30,7 +30,7 @@ const useGetSubFolders = ({ slug }) => {
           }),
         );
         const data = result?.map((i) => {
-          if (typeof i === "object" && i?.data) {
+          if (typeof i === "object" && i?.data && i?.data?.length > 0) {
             // Initialize with the first item in the data array as the starting point
             return i?.data?.reduce((min, current) => {
               // Check if current order is less than the minimum order value
@@ -82,7 +82,7 @@ const useGetSubFolders = ({ slug }) => {
     };
 
     fetchData();
-  }, [allSubFoldersData, uploadDesigns]);
+  }, [allSubFoldersData, uploadDesigns, getAllDesignByFolderSubFolder]);
 
   return { subFolders, folderObject };
 };
