@@ -109,6 +109,16 @@ export const inboxApiSlice = createApi({
       invalidatesTags: ["getAllMessages"],
     }),
 
+    // update custom offer withdraw and reject button value message
+    customOfferMsgUpdate: builder.mutation({
+      query: (body) => ({
+        url: `message/customOfferUpdate`,
+        method: "PATCH",
+        body: body,
+      }),
+      invalidatesTags: ["getAllMessages"],
+    }),
+
     // delete a conversation
     deleteAConversation: builder.mutation({
       query: (userId) => ({
@@ -181,7 +191,7 @@ export const inboxApiSlice = createApi({
     inboxBubbleCounting: builder.query({
       query: () => "notification/inbox",
       transformResponse: (response) => response?.data?.total,
-      providesTags : ["bubble"]
+      providesTags: ["bubble"],
     }),
   }),
 });
@@ -207,4 +217,5 @@ export const {
   useSendMessageFromProfileMutation,
   useUpdateUnseenMessageMutation,
   useInboxBubbleCountingQuery,
+  useCustomOfferMsgUpdateMutation,
 } = inboxApiSlice;

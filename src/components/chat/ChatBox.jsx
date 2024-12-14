@@ -29,6 +29,7 @@ import {
   useArchiveAUserConversationMutation,
   useBlockAUserConversationMutation,
   useBookmarkAUserConversationMutation,
+  useCustomOfferMsgUpdateMutation,
   useDeleteAConversationMutation,
   useDeleteAMessageMutation,
   useDeleteQuickResMsgMutation,
@@ -85,6 +86,7 @@ const ChatBox = ({ openToggle }) => {
   const [blockingAUserConversation] = useBlockAUserConversationMutation();
   const [archiveUserConversation] = useArchiveAUserConversationMutation();
   const [bookmarkUserConversation] = useBookmarkAUserConversationMutation();
+  const [updateCustomOffer] = useCustomOfferMsgUpdateMutation();
 
   const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
 
@@ -500,6 +502,25 @@ const ChatBox = ({ openToggle }) => {
           : null,
     };
     navigate("/payment", { state: data });
+  };
+
+  const handleUpdateCustomOffer = async (msg, status) => {
+    if (msg?.customOffer && status) {
+      const { id, ...rest } = msg;
+      const data = {
+        ...rest,
+        customOffer: {
+          ...rest?.customOffer,
+          isWithdrawn: status === "WITHDRAWN" ? true : false,
+          isRejected: status === "REJECTED" ? true : false,
+        },
+      };
+      try {
+        const res = await updateCustomOffer(data).unwrap();
+      } catch (error) {
+        toast.error("Something went wrong!!!");
+      }
+    }
   };
 
   // click outside the box it will be toggled
@@ -1043,14 +1064,6 @@ const ChatBox = ({ openToggle }) => {
                                 {msg?.contactForm?.exampleDesign?.map(
                                   (att, i) => (
                                     <div key={i}>
-                                      {/* <img
-                                      src={att?.url}
-                                      alt=""
-                                      className="h-[180px] w-full cursor-pointer object-cover"
-                                      onClick={(e) =>
-                                        handlePreviewImage(e, att?.url)
-                                      }
-                                    /> */}
                                       <PreviewChatFiles
                                         file={att}
                                         handlePreviewImage={handlePreviewImage}
@@ -1147,34 +1160,65 @@ const ChatBox = ({ openToggle }) => {
                                 delivery
                               </span>
                             </div>
-                            <div className="mt-4">
-                              {isAdmin ? (
-                                <button
-                                  type="button"
-                                  className="block w-full bg-primary p-2 text-center text-sm font-semibold text-white sm:text-base"
-                                >
-                                  Withdraw Offer
-                                </button>
-                              ) : (
-                                <div className="flex flex-wrap gap-3 sm:flex-nowrap">
-                                  <button
-                                    type="button"
-                                    className="block w-full bg-primary p-2 text-center text-sm font-semibold text-white sm:w-1/2 sm:text-base"
-                                    onClick={(e) =>
-                                      handleCustomOffer(e, msg?.customOffer)
-                                    }
-                                  >
-                                    Accept
-                                  </button>
-                                  <button
-                                    type="button"
-                                    className="block w-full bg-gray-400 p-2 text-center text-sm font-semibold text-white sm:w-1/2 sm:text-base"
-                                  >
-                                    Decline
-                                  </button>
+                            {!msg?.customOffer?.isAccepted &&
+                              !msg?.customOffer?.isRejected &&
+                              !msg?.customOffer?.isWithdrawn && (
+                                <div className="mt-4">
+                                  {isAdmin ? (
+                                    <button
+                                      onClick={() =>
+                                        handleUpdateCustomOffer(
+                                          msg,
+                                          "WITHDRAWN",
+                                        )
+                                      }
+                                      type="button"
+                                      className="block w-full bg-primary p-2 text-center text-sm font-semibold text-white sm:text-base"
+                                    >
+                                      Withdraw Offer
+                                    </button>
+                                  ) : (
+                                    <div className="flex flex-wrap gap-3 sm:flex-nowrap">
+                                      <button
+                                        type="button"
+                                        className="block w-full bg-primary p-2 text-center text-sm font-semibold text-white sm:w-1/2 sm:text-base"
+                                        onClick={(e) =>
+                                          handleCustomOffer(e, msg?.customOffer)
+                                        }
+                                      >
+                                        Accept
+                                      </button>
+                                      <button
+                                        onClick={() =>
+                                          handleUpdateCustomOffer(
+                                            msg,
+                                            "REJECTED",
+                                          )
+                                        }
+                                        type="button"
+                                        className="block w-full bg-gray-400 p-2 text-center text-sm font-semibold text-white sm:w-1/2 sm:text-base"
+                                      >
+                                        Decline
+                                      </button>
+                                    </div>
+                                  )}
                                 </div>
                               )}
-                            </div>
+                            {msg?.customOffer?.isAccepted && (
+                              <p className="text-center font-semibold">
+                                Offer Accepted
+                              </p>
+                            )}
+                            {msg?.customOffer?.isRejected && (
+                              <p className="text-center font-semibold">
+                                Offer Declined
+                              </p>
+                            )}
+                            {msg?.customOffer?.isWithdrawn && (
+                              <p className="text-center font-semibold">
+                                Offer Withdrawn
+                              </p>
+                            )}
                           </div>
                         </div>
                       </div>
