@@ -104,6 +104,7 @@ const PaymentPage = () => {
       totalQuantity: totalQuantity,
       orderFrom: user?.country,
       from: state?.from,
+      updatedMessage: state?.updatedMessage || null,
     };
 
     try {
@@ -145,10 +146,10 @@ const PaymentPage = () => {
             )}
             {(state?.from === "multipleProject" ||
               state?.from === "customOffer") && (
-              <h3 className="text-3xl font-bold">
-                ${designs?.totalAmount || designs?.subTotal}
-              </h3>
-            )}
+                <h3 className="text-3xl font-bold">
+                  ${designs?.totalAmount || designs?.subTotal}
+                </h3>
+              )}
           </div>
           {state?.from !== "multipleProject" &&
             state?.from !== "customOffer" && (

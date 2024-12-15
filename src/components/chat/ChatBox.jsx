@@ -476,32 +476,37 @@ const ChatBox = ({ openToggle }) => {
   };
 
   // Custom Offer handler
-  const handleCustomOffer = (e, offerObj) => {
+  const handleCustomOffer = (e, msg) => {
     e.preventDefault();
-    const data = {
-      title: offerObj?.title,
-      selectedQuantity: 1,
-      subTotal: parseInt(offerObj?.price),
-      requirements: offerObj?.requirements,
-      image: {
-        url: offerObj?.thumbnail,
-      },
-      from: "customOffer",
-      deliveryDuration:
-        offerObj?.deliveryWay !== "hours"
-          ? parseInt(offerObj?.deliveryCount)
-          : null,
-      desc: offerObj?.desc,
-      isFastDelivery: false,
-      projectImage: offerObj?.thumbnail,
-      projectType: "CUSTOM",
-      deliveryWay: offerObj?.deliveryWay,
-      durationHours:
-        offerObj?.deliveryWay === "hours"
-          ? parseInt(offerObj?.deliveryCount)
-          : null,
-    };
-    navigate("/payment", { state: data });
+    if (msg?.customOffer) {
+      const offerObj = msg?.customOffer;
+      const updatedMessage = { ...msg, customOffer: { ...offerObj, isAccepted: true } };
+      const data = {
+        title: offerObj?.title,
+        selectedQuantity: 1,
+        subTotal: parseInt(offerObj?.price),
+        requirements: offerObj?.requirements,
+        image: {
+          url: offerObj?.thumbnail,
+        },
+        from: "customOffer",
+        deliveryDuration:
+          offerObj?.deliveryWay !== "hours"
+            ? parseInt(offerObj?.deliveryCount)
+            : null,
+        desc: offerObj?.desc,
+        isFastDelivery: false,
+        projectImage: offerObj?.thumbnail,
+        projectType: "CUSTOM",
+        deliveryWay: offerObj?.deliveryWay,
+        durationHours:
+          offerObj?.deliveryWay === "hours"
+            ? parseInt(offerObj?.deliveryCount)
+            : null,
+        updatedMessage: updatedMessage
+      };
+      navigate("/payment", { state: data });
+    }
   };
 
   const handleUpdateCustomOffer = async (msg, status) => {
@@ -1183,7 +1188,7 @@ const ChatBox = ({ openToggle }) => {
                                         type="button"
                                         className="block w-full bg-primary p-2 text-center text-sm font-semibold text-white sm:w-1/2 sm:text-base"
                                         onClick={(e) =>
-                                          handleCustomOffer(e, msg?.customOffer)
+                                          handleCustomOffer(e, msg)
                                         }
                                       >
                                         Accept
@@ -1425,14 +1430,14 @@ const ChatBox = ({ openToggle }) => {
                   <h1 className="font-semibold">
                     {(replyTo?.replySenderUserRole === "USER" ||
                       replyTo?.replySenderUserRole !== "USER") &&
-                    replyTo?.replySenderUserName === replyTo?.msgSenderUserName
+                      replyTo?.replySenderUserName === replyTo?.msgSenderUserName
                       ? "You"
                       : replyTo?.replySenderUserName !==
-                            replyTo?.msgSenderUserName && user?.role !== "USER"
+                        replyTo?.msgSenderUserName && user?.role !== "USER"
                         ? replyTo?.msgSenderUserName
                         : replyTo?.replySenderUserName !==
-                              replyTo?.msgSenderUserName &&
-                            user?.role === "USER"
+                          replyTo?.msgSenderUserName &&
+                          user?.role === "USER"
                           ? "Mahfujurrahm535"
                           : ""}
                   </h1>
