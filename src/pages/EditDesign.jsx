@@ -534,6 +534,12 @@ function EditDesign() {
         industries,
         designs,
       };
+      const isThumbnailHasTrue = images?.find((i) => i.thumbnail) || false;
+      if (images?.length === 0 && isThumbnailHasTrue) {
+        toast.error("At least 1 Image Must be selected!");
+        setSubmitLoading(false);
+        return;
+      }
       if (
         !form.title ||
         !content ||
@@ -541,7 +547,6 @@ function EditDesign() {
         !selectedSubCategory ||
         !form.fileFormat ||
         !form.size ||
-        images?.length === 0 ||
         tags?.length === 0 ||
         !newFolder ||
         !newSubFolder ||
