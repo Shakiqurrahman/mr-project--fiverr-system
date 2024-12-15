@@ -778,11 +778,11 @@ const ChatBox = ({ openToggle }) => {
 
   // message unseen to seen
   useEffect(() => {
-    if (conversationUser && isAdmin) {
+    if (conversationUser && isAdmin) {      
       unseenMessageHandler({
         userId: conversationUser,
       });
-    } else {
+    } else if (!isAdmin) {
       unseenMessageHandler({
         userId: user?.id,
       });
