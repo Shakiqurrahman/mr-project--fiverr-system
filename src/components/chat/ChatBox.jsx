@@ -783,30 +783,30 @@ const ChatBox = ({ openToggle }) => {
 
   // message unseen to seen
   useEffect(() => {
-    if (conversationUser) {
+    if (conversationUser && isAdmin) {
       unseenMessageHandler({
         userId: conversationUser,
       });
+    } else {
+      unseenMessageHandler({
+        userId: user?.id,
+      });
     }
-  }, [conversationUser]);
+  }, [conversationUser, messages]);
 
   useEffect(() => {
-    // console.log("i am calling");
-
     if (isAdmin) {
       socket?.emit("seen", {
-        userId: user.id,
+        userId: user?.id,
         recipientId: conversationUser,
       });
     } else {
       socket?.emit("seen", {
-        userId: user.id,
+        userId: user?.id,
         recipientId: user?.id,
       });
     }
   }, [user.id, socket, messages, conversationUser, isAdmin]);
-
-  // console.log(messages);
 
   return (
     <div className="flex h-full flex-col">
