@@ -43,6 +43,14 @@ export const affiliateApiSlice = createApi({
       invalidatesTags: ["affiliate"],
     }),
 
+    autoAffiliate: builder.mutation({
+      query: () => ({
+        url: `affiliate/auto`,
+        method: "POST",
+      }),
+      invalidatesTags: ["affiliate"],
+    }),
+
     deleteAffiliate: builder.mutation({
       query: ({ affLink, userId }) => ({
         url: `affiliate/delete?affiliate_link=${affLink}&user_id=${userId}`,
@@ -96,6 +104,7 @@ export const {
   useLazyGetAllAffiliatesQuery,
   useGetAUserAffiliatesQuery,
   useCreateAffiliateMutation,
+  useAutoAffiliateMutation,
   useDeleteAffiliateMutation,
   useWithdrawRequestMutation,
   useSaveWithdrawInfoMutation,

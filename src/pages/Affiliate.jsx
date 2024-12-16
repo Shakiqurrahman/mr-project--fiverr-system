@@ -4,6 +4,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
+  useAutoAffiliateMutation,
   useCreateAffiliateMutation,
   useDeleteAffiliateMutation,
   useGetAUserAffiliatesQuery,
@@ -20,6 +21,7 @@ function Affiliate() {
   const [openWithdrawModal, setOpenWithdrawModal] = useState(false);
 
   const [createAffiliate] = useCreateAffiliateMutation();
+  const [autoAffiliate] = useAutoAffiliateMutation();
   const [deleteAffiliate] = useDeleteAffiliateMutation();
 
   const { data: affiliateData } = useGetAUserAffiliatesQuery();
@@ -38,20 +40,15 @@ function Affiliate() {
 
   const copyAffiliateLink = async () => {
     const textToCopy = `https://mahfujurrahm535.com/?aff-${user?.userName}`;
-    navigator.clipboard
-      .writeText(textToCopy)
-      .then(() => {
-        toast.success("Text copied successfully!");
-      })
-      .catch((err) => {
-        toast.error("Failed to copy text");
-      });
-
     try {
-      const res = await createAffiliate({
-        link: `aff-${user?.userName}`,
-      }).unwrap();
-    } catch (error) {}
+      // Copy the affiliate link to the clipboard
+      await navigator.clipboard.writeText(textToCopy);
+      toast.success("Text copied successfully!");
+
+      await autoAffiliate().unwrap();
+    } catch (err) {
+      toast.error("Failed to copy text");
+    }
   };
 
   const createAffiliateHandler = async () => {
@@ -87,9 +84,6 @@ function Affiliate() {
     }
   };
 
-  const autoGenerateLinkData = affiliateData?.formattedAffiliates?.find(
-    (link) => link?.links === `aff-${user?.userName}`,
-  );
   return (
     <>
       <PageHeaderWithText
@@ -183,7 +177,7 @@ function Affiliate() {
             </div>
             <div>
               {affiliateData?.formattedAffiliates
-                ?.filter((aff) => aff.links !== `aff-${user?.userName}`)
+                ?.filter((aff) => !aff.links.startsWith("aff-auto"))
                 .map((aff, index) => (
                   <div key={index} className="mt-3 flex">
                     <p className="flex-shrink-1 w-full select-none border-[2px] p-2 text-sm outline-none">{`https://mahfujurrahm535.com/?${aff?.links}`}</p>
@@ -207,54 +201,26 @@ function Affiliate() {
                 <h1 className="w-[18%] sm:w-[15%]">Sales</h1>
                 <h1 className="w-[6%] sm:w-[5%]"></h1>
               </li>
-              {autoGenerateLinkData && (
-                <li className="mt-3 flex items-center gap-1 border-b border-gray-500 p-1 text-center text-sm sm:gap-2">
+              {affiliateData?.formattedAffiliates?.map((aff, idx) => (
+                <li
+                  key={idx}
+                  className="mt-3 flex items-center gap-1 border-b border-gray-500 p-1 text-center text-sm sm:gap-2"
+                >
                   <p className="w-[40%] break-words text-start sm:w-[50%]">
-                    {`https://mahfujurrahm535.com/?${autoGenerateLinkData?.links}`}
+                    {`https://mahfujurrahm535.com/?${aff?.links}`}
                   </p>
-                  <p className="w-[18%] sm:w-[15%]">
-                    {autoGenerateLinkData?.totalClicks}
-                  </p>
-                  <p className="w-[18%] sm:w-[15%]">
-                    {autoGenerateLinkData?.join}
-                  </p>
-                  <p className="w-[18%] sm:w-[15%]">
-                    {autoGenerateLinkData?.sales}
-                  </p>
+                  <p className="w-[18%] sm:w-[15%]">{aff?.totalClicks}</p>
+                  <p className="w-[18%] sm:w-[15%]">{aff?.join}</p>
+                  <p className="w-[18%] sm:w-[15%]">{aff?.sales}</p>
                   <button
                     className="w-[6%] sm:w-[5%]"
                     type="button"
-                    onClick={() =>
-                      deleteAffiliateHandler(autoGenerateLinkData?.links)
-                    }
+                    onClick={() => deleteAffiliateHandler(aff?.links)}
                   >
                     <RiDeleteBin6Line className="text-sm" />
                   </button>
                 </li>
-              )}
-              {affiliateData?.formattedAffiliates
-                ?.filter((link) => link?.links !== `aff-${user?.userName}`)
-                .map((aff, idx) => (
-                  <li
-                    key={idx}
-                    className="mt-3 flex items-center gap-1 border-b border-gray-500 p-1 text-center text-sm sm:gap-2"
-                  >
-                    <p className="w-[40%] break-words text-start sm:w-[50%]">
-                      {`https://mahfujurrahm535.com/?${aff?.links}`}
-                    </p>
-                    <p className="w-[18%] sm:w-[15%]">{aff?.totalClicks}</p>
-                    <p className="w-[18%] sm:w-[15%]">{aff?.join}</p>
-                    <p className="w-[18%] sm:w-[15%]">{aff?.sales}</p>
-                    <button
-                      className="w-[6%] sm:w-[5%]"
-                      type="button"
-                      onClick={() => deleteAffiliateHandler(aff?.links)}
-                    >
-                      <RiDeleteBin6Line className="text-sm" />
-                    </button>
-                  </li>
-                ))
-                .reverse()}
+              ))}
             </ul>
           </div>
 
