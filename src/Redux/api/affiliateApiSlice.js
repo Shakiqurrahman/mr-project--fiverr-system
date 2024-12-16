@@ -14,6 +14,7 @@ export const affiliateApiSlice = createApi({
       return headers;
     },
   }),
+  refetchOnMountOrArgChange: true,
   tagTypes: ["affiliate"],
   endpoints: (builder) => ({
     getAllAffiliates: builder.query({
