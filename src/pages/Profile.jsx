@@ -18,6 +18,15 @@ import { FaXTwitter } from "react-icons/fa6";
 import { LiaEditSolid } from "react-icons/lia";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import Nextdoor from "../assets/svg/Nextdoor";
+import ActiveProjects from "../components/customer-profile/ActiveProjects";
+import AllReviews from "../components/customer-profile/AllReviews";
+import CompletedProjects from "../components/customer-profile/CompletedProjects";
+import ProfileInfo from "../components/customer-profile/ProfileInfo";
+import { configApi } from "../libs/configApi";
+import { connectSocket } from "../libs/socketService";
+import { timeAgoTracker } from "../libs/timeAgoTracker";
+import { useGetMahfujurDetailsQuery } from "../Redux/api/dashboardApiSlice";
 import {
   useLazyGetAllMessagesQuery,
   useSendMessageFromProfileMutation,
@@ -29,14 +38,6 @@ import {
 } from "../Redux/api/orderApiSlice";
 import { setChatData, setConversationUser } from "../Redux/features/chatSlice";
 import { setOnlineUsers, setUser } from "../Redux/features/userSlice";
-import Nextdoor from "../assets/svg/Nextdoor";
-import ActiveProjects from "../components/customer-profile/ActiveProjects";
-import AllReviews from "../components/customer-profile/AllReviews";
-import CompletedProjects from "../components/customer-profile/CompletedProjects";
-import ProfileInfo from "../components/customer-profile/ProfileInfo";
-import { configApi } from "../libs/configApi";
-import { connectSocket } from "../libs/socketService";
-import { timeAgoTracker } from "../libs/timeAgoTracker";
 
 function Profile({ user = {}, slug }) {
   const { data: usersProjects } = useUsersAllProjectsQuery({
@@ -70,6 +71,8 @@ function Profile({ user = {}, slug }) {
     [usersProjects],
   );
   const [sendMessageFromProfile] = useSendMessageFromProfileMutation();
+
+  const { data: adminProfileData } = useGetMahfujurDetailsQuery();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -167,9 +170,7 @@ function Profile({ user = {}, slug }) {
 
   // after clicking on the message button
   const [triggerGetAllMessages, { data: getAllMessages }] =
-    useLazyGetAllMessagesQuery({
-      // pollingInterval: 500,
-    });
+    useLazyGetAllMessagesQuery();
 
   useEffect(() => {
     if (getAllMessages) {
@@ -267,28 +268,69 @@ function Profile({ user = {}, slug }) {
           </div>
 
           <div className="space-y-3 border-b border-gray-300 py-4">
-            <div className="flex justify-between gap-1 text-sm">
-              <span>Completed Projects</span>
-              <p className="font-semibold">
-                {filteredCompletedProjects?.length}
-              </p>
-            </div>
-            <div className="flex justify-between gap-1 text-sm">
-              <span>Project Completion Rate</span>
-              <p className="font-semibold">100%</p>
-            </div>
-            <div className="flex justify-between gap-1 text-sm">
-              <span>Avg. Rating Taken</span>
-              <p className="font-semibold">4.9 Stars</p>
-            </div>
-            <div className="flex justify-between gap-1 text-sm">
-              <span>Avg. Rating Given</span>
-              <p className="font-semibold">5 Stars</p>
-            </div>
-            <div className="flex justify-between gap-1 text-sm">
-              <span>Last Project on</span>
-              <p className="font-semibold">May 27, 2024</p>
-            </div>
+            {user?.role === "USER" ? (
+              <div className="flex justify-between gap-1 text-sm">
+                <span>Completed Projects</span>
+                <p className="font-semibold">
+                  {filteredCompletedProjects?.length}
+                </p>
+              </div>
+            ) : (
+              <div className="flex justify-between gap-1 text-sm">
+                <span>Avg. Response Time</span>
+                <p className="font-semibold">1 hour</p>
+              </div>
+            )}
+            {user?.role === "USER" ? (
+              <div className="flex justify-between gap-1 text-sm">
+                <span>Project Completion Rate</span>
+                <p className="font-semibold">100%</p>
+              </div>
+            ) : (
+              <div className="flex justify-between gap-1 text-sm">
+                <span>Avg. Rating</span>
+                <p className="font-semibold">
+                  {adminProfileData?.Avg_Rating?.toFixed(1)}
+                </p>
+              </div>
+            )}
+            {user?.role === "USER" ? (
+              <div className="flex justify-between gap-1 text-sm">
+                <span>Avg. Rating Taken</span>
+                <p className="font-semibold">4.9 Stars</p>
+              </div>
+            ) : (
+              <div className="flex justify-between gap-1 text-sm">
+                <span>On-Time Delivery</span>
+                <p className="font-semibold">
+                  100%
+                </p>
+              </div>
+            )}
+            {user?.role === "USER" ? (
+              <div className="flex justify-between gap-1 text-sm">
+                <span>Avg. Rating Given</span>
+                <p className="font-semibold">5 Stars</p>
+              </div>
+            ) : (
+              <div className="flex justify-between gap-1 text-sm">
+                <span>Active Projects</span>
+                <p className="font-semibold">{adminProfileData?.Active_Projects}</p>
+              </div>
+            )}
+            {user?.role === "USER" ? (
+              <div className="flex justify-between gap-1 text-sm">
+                <span>Last Project on</span>
+                <p className="font-semibold">May 27, 2024</p>
+              </div>
+            ) : (
+              <div className="flex justify-between gap-1 text-sm">
+                <span>Last Project Completed</span>
+                <p className="font-semibold">
+                  {adminProfileData?.LastProjectCompleted?.date}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* social medias icons  */}
