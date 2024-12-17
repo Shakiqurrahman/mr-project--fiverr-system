@@ -178,6 +178,7 @@ function Affiliate() {
             <div>
               {affiliateData?.formattedAffiliates
                 ?.filter((aff) => !aff.links.startsWith("aff-auto"))
+                .slice(0, 1) // Get only the first item
                 .map((aff, index) => (
                   <div key={index} className="mt-3 flex">
                     <p className="flex-shrink-1 w-full select-none border-[2px] p-2 text-sm outline-none">{`https://mahfujurrahm535.com/?${aff?.links}`}</p>
