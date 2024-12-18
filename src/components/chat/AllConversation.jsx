@@ -302,7 +302,7 @@ const AllConversation = ({ closeToggle }) => {
                       {/* -----for user name printing in user last message----- */}
                       {senderUserName
                         ? `${sameUser ? "Me" : senderUserName} :
-                       ${customOffer ? "You just sent a new Custom Offer" : attachment ? `Attachment!` : messageText}`
+                       ${customOffer ? "You just sent a new Custom Offer" : attachment ? `Attachment...` : messageText}`
                         : messageText}
                     </p>
                   </div>
