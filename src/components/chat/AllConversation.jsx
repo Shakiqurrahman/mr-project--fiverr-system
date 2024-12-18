@@ -59,7 +59,6 @@ const AllConversation = ({ closeToggle }) => {
     }
   }, [availableUsers]);
 
-
   useEffect(() => {
     const handleSeenBy = (msg) => {
       // console.log("updated message", msg);
@@ -193,6 +192,8 @@ const AllConversation = ({ closeToggle }) => {
     };
   }, [dispatch]);
 
+  console.log(chatList);
+
   return (
     <div className="flex h-full flex-col">
       <div className="flex h-[70px] items-center justify-between bg-primary/20 px-4">
@@ -222,7 +223,7 @@ const AllConversation = ({ closeToggle }) => {
         <select
           name="conversationList"
           id="conversationList"
-          className={`border border-gray-300 p-2 font-medium outline-none bg-white ${openSearch && "hidden"}`}
+          className={`border border-gray-300 bg-white p-2 font-medium outline-none ${openSearch && "hidden"}`}
           value={selectedOption}
           onChange={handleSelectChange}
         >
@@ -245,6 +246,8 @@ const AllConversation = ({ closeToggle }) => {
             const {
               senderUserName,
               messageText,
+              customOffer,
+              attachment,
               totalUnseenMessage,
               createdAt,
             } = chat?.lastmessageinfo || {};
@@ -265,7 +268,7 @@ const AllConversation = ({ closeToggle }) => {
                       />
                     ) : (
                       <div className="flex size-8 items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-xl font-bold text-[#3b3b3b]/50">
-                        {chat?.userName?.trim().charAt(0).toUpperCase()}
+                        {chat?.userName?.trim()?.charAt(0)?.toUpperCase()}
                       </div>
                     )}
                     {chat?.status === "Repeated Client" && (
@@ -287,13 +290,19 @@ const AllConversation = ({ closeToggle }) => {
                       </span>
                     </p>
                     <p
-                      title={messageText}
+                      title={
+                        customOffer
+                          ? "You just sent a new Custom Offer"
+                          : attachment
+                            ? `Attachment!`
+                            : messageText
+                      }
                       className={`${totalUnseenMessage > 0 && "font-bold"} max-w-[180px] truncate text-[12px] sm:max-w-[250px] md:max-w-[80px] lg:max-w-[150px]`}
                     >
                       {/* -----for user name printing in user last message----- */}
                       {senderUserName
                         ? `${sameUser ? "Me" : senderUserName} :
-                       ${messageText}`
+                       ${customOffer ? "You just sent a new Custom Offer" : attachment ? `Attachment!` : messageText}`
                         : messageText}
                     </p>
                   </div>
