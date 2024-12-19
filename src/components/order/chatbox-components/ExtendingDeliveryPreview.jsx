@@ -53,8 +53,8 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
 
         {!value?.isAccepted &&
           !value?.isRejected &&
-          (projectDetails?.projectStatus !== "Completed" ||
-            projectDetails?.projectStatus !== "Canceled") && (
+          projectDetails?.projectStatus !== "Completed" &&
+          projectDetails?.projectStatus !== "Canceled" && (
             <div className="flex justify-center gap-8 border-t pt-6">
               <button
                 type="submit"

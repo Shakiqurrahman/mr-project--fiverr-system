@@ -75,7 +75,7 @@ export const orderApiSlice = createApi({
     getNoteData: builder.query({
       query: ({ orderId }) => `order/find-order-note/${orderId}`,
       transformResponse: (response) => response?.data,
-      providesTags: ["notes"],
+      providesTags: ["notes", "cancel"],
     }),
 
     // order review api's
@@ -110,7 +110,7 @@ export const orderApiSlice = createApi({
       query: ({ userId, projectNumber }) =>
         `order-message/get?userId=${userId}&projectNumber=${projectNumber}`,
       transformResponse: (response) => response?.data,
-      providesTags: ["messages"],
+      providesTags: ["messages", "cancel"],
     }),
 
     sendAOrderMessageReply: builder.mutation({

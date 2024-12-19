@@ -55,8 +55,8 @@ const CancellingProjectPreview = ({ messageObj, value }) => {
       </div>
       {!messageObj?.isCancelled &&
         !value?.isRejected &&
-        (projectDetails?.projectStatus !== "Completed" ||
-          projectDetails?.projectStatus !== "Canceled") && (
+        projectDetails?.projectStatus !== "Completed" &&
+        projectDetails?.projectStatus !== "Canceled" && (
           <div className="flex flex-wrap justify-center gap-2 border-t pb-6 pt-6 sm:flex-nowrap sm:gap-8">
             <button
               type="submit"

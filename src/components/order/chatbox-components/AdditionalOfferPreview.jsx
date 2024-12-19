@@ -119,8 +119,8 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
           {!value?.isAccepted &&
             !value?.isRejected &&
             !value?.isWithdrawn &&
-            (projectDetails?.projectStatus !== "Completed" ||
-              projectDetails?.projectStatus !== "Canceled") && (
+            projectDetails?.projectStatus !== "Completed" &&
+            projectDetails?.projectStatus !== "Canceled" && (
               <div className="flex items-center justify-center gap-5">
                 {user?.role === "USER" ? (
                   <>
