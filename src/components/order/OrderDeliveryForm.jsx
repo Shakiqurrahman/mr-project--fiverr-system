@@ -9,6 +9,7 @@ import {
 } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
+import shortid from "shortid";
 import {
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
@@ -312,6 +313,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
         timeAndDate,
         replyTo,
         projectNumber: projectDetails?.projectNumber,
+        uniqueId: shortid(),
       };
 
       if (isAdmin) {

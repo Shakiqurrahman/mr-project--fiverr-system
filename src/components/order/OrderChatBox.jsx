@@ -400,6 +400,7 @@ const OrderChatBox = () => {
         timeAndDate,
         replyTo,
         projectNumber: projectDetails?.projectNumber,
+        uniqueId: shortid(),
       };
 
       if (isAdmin) {

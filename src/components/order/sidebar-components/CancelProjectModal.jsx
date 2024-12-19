@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { IoCloseSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
+import shortid from "shortid";
 import { useSendAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
 import { setMessages, setReplyTo } from "../../../Redux/features/orderSlice";
 import useOutsideClick from "../../../hooks/useOutsideClick";
@@ -59,6 +60,7 @@ const CancelProjectModal = ({ handleClose }) => {
       timeAndDate,
       replyTo,
       projectNumber: projectDetails?.projectNumber,
+      uniqueId: shortid(),
     };
 
     if (isAdmin) {

@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import shortid from "shortid";
 import { useSendAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
 import { setMessages, setReplyTo } from "../../../Redux/features/orderSlice";
 import useOutsideClick from "../../../hooks/useOutsideClick";
@@ -49,6 +50,7 @@ const AdditionalOfferModal = ({ handleClose, onOfferSubmit }) => {
       timeAndDate,
       replyTo,
       projectNumber: projectDetails?.projectNumber,
+      uniqueId: shortid(),
     };
 
     if (isAdmin) {
