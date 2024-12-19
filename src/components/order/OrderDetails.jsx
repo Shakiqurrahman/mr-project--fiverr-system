@@ -63,7 +63,11 @@ const OrderDetails = () => {
   const totalDuration = items?.reduce((accumulator, item) => {
     let duration = item?.isFastDelivery
       ? parseInt(item?.fastDeliveryDuration || item?.fastDeliveryDays)
-      : parseInt(item?.deliveryDuration || item?.regularDeliveryDays);
+      : parseInt(
+          item?.deliveryDuration ||
+            item?.regularDeliveryDays ||
+            item?.durationHours,
+        );
     return accumulator + duration;
   }, 0);
   const totalAmount = items?.reduce((accumulator, item) => {
@@ -73,6 +77,8 @@ const OrderDetails = () => {
     }
     return accumulator + price;
   }, 0);
+
+  console.log(items);
 
   return (
     <>
@@ -245,7 +251,7 @@ const OrderDetails = () => {
                 : totalQuantity}
             </div>
             <div className="w-1/6 shrink-0 border-l border-gray-300 p-3 text-center">
-              {totalDuration} days
+              {totalDuration} {items[0]?.durationHours ? "hours" : "days"}
             </div>
             <div className="w-1/6 shrink-0 border-l border-gray-300 p-3 text-center">
               ${totalAmount}
