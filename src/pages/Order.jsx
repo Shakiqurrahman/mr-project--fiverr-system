@@ -137,7 +137,7 @@ const Order = () => {
               <select
                 value={selectedTabButton}
                 onChange={(e) => setSelectedTabButton(e.target.value)}
-                className="block w-full border border-gray-300 p-3 font-medium sm:hidden bg-white"
+                className="block w-full border border-gray-300 bg-white p-3 font-medium sm:hidden"
               >
                 {tabButtons.map((btn, i) => (
                   <option key={i} value={btn}>

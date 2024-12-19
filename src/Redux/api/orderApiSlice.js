@@ -14,7 +14,7 @@ export const orderApiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ["requirements", "notes", "messages"],
+  tagTypes: ["requirements", "notes", "messages", "cancel"],
   endpoints: (builder) => ({
     requirementByProjectNumber: builder.query({
       query: ({ projectNumber }) => `find-order?projectNumber=${projectNumber}`,
@@ -140,12 +140,12 @@ export const orderApiSlice = createApi({
     }),
 
     cancelOrderProject: builder.mutation({
-      query: ({ orderId, orderMessageId }) => ({
+      query: ({ orderId, orderMessageId, piId }) => ({
         url: `cancel-order`,
         method: "POST",
-        body: { orderId, orderMessageId },
+        body: { orderId, orderMessageId, piId },
       }),
-      invalidatesTags: ["messages"],
+      invalidatesTags: ["messages", "cancel"],
     }),
   }),
 });

@@ -1,15 +1,33 @@
 import React from "react";
 import toast from "react-hot-toast";
-import { useUpdateAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
+import { useSelector } from "react-redux";
+import {
+  useCancelOrderProjectMutation,
+  useUpdateAOrderMessageMutation,
+} from "../../../Redux/api/orderApiSlice";
 
 const CancellingProjectPreview = ({ messageObj, value }) => {
+  const { projectDetails } = useSelector((state) => state?.order);
   const [updateAOrderMessage] = useUpdateAOrderMessageMutation();
-  const handleAccept = (e) => {
+  const [acceptCancelRequest] = useCancelOrderProjectMutation();
+  const handleAccept = async (e) => {
     e.preventDefault();
+    if (messageObj?.uniqueId) {
+      const data = {
+        orderId: projectDetails?.id,
+        orderMessageId: messageObj?.uniqueId,
+        piId: projectDetails?.piId,
+      };
+      try {
+        const res = await acceptCancelRequest(data).unwrap();
+      } catch (error) {
+        toast.error("Something went wrong!");
+      }
+    }
   };
   const handleReject = async (e) => {
     e.preventDefault();
-    if (messageObj?.commonKey) {
+    if (messageObj?.uniqueId) {
       const data = {
         ...messageObj,
         cancelProject: {
@@ -35,25 +53,28 @@ const CancellingProjectPreview = ({ messageObj, value }) => {
         </p>
         <p className="text-sm sm:text-base">{value?.explainWhyCancel}</p>
       </div>
-      {!value?.isAccepted && !value?.isRejected && (
-        <div className="flex flex-wrap justify-center gap-2 border-t pb-6 pt-6 sm:flex-nowrap sm:gap-8">
-          <button
-            type="submit"
-            onClick={handleAccept}
-            className="w-[150px] bg-primary px-5 py-2 text-sm font-semibold text-white outline-none duration-300 hover:bg-primary/80 sm:text-lg"
-          >
-            Accept
-          </button>
-          <button
-            type="button"
-            onClick={handleReject}
-            className="w-[150px] bg-gray-500 px-5 py-2 text-sm font-semibold text-white outline-none duration-300 hover:bg-gray-500/80 sm:text-lg"
-          >
-            Decline
-          </button>
-        </div>
-      )}
-      {value?.isAccepted && (
+      {!messageObj?.isCancelled &&
+        !value?.isRejected &&
+        (projectDetails?.projectStatus !== "Completed" ||
+          projectDetails?.projectStatus !== "Canceled") && (
+          <div className="flex flex-wrap justify-center gap-2 border-t pb-6 pt-6 sm:flex-nowrap sm:gap-8">
+            <button
+              type="submit"
+              onClick={handleAccept}
+              className="w-[150px] bg-primary px-5 py-2 text-sm font-semibold text-white outline-none duration-300 hover:bg-primary/80 sm:text-lg"
+            >
+              Accept
+            </button>
+            <button
+              type="button"
+              onClick={handleReject}
+              className="w-[150px] bg-gray-500 px-5 py-2 text-sm font-semibold text-white outline-none duration-300 hover:bg-gray-500/80 sm:text-lg"
+            >
+              Decline
+            </button>
+          </div>
+        )}
+      {messageObj?.isCancelled && (
         <p className="mb-5 text-center">Cancel Request Accepted</p>
       )}
       {value?.isRejected && (

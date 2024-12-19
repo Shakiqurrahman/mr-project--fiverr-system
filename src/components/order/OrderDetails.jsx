@@ -78,8 +78,6 @@ const OrderDetails = () => {
     return accumulator + price;
   }, 0);
 
-  console.log(items);
-
   return (
     <>
       <h1 className="mb-5 text-xl font-bold text-primary">PROJECT DETAILS</h1>
