@@ -45,58 +45,62 @@ const CancelProjectModal = ({ handleClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = { ...form, extendType };
+    if (form.explainWhyCancel) {
+      const data = { ...form, extendType };
 
-    const submitForm = {
-      messageText: "",
-      senderUserName: user?.userName,
-      userImage: user?.image,
-      attachment: [],
-      additionalOffer: null,
-      extendDeliveryTime: null,
-      deliverProject: null,
-      cancelProject: data,
-      imageComments: [],
-      timeAndDate,
-      replyTo,
-      projectNumber: projectDetails?.projectNumber,
-      uniqueId: shortid(),
-    };
+      const submitForm = {
+        messageText: "",
+        senderUserName: user?.userName,
+        userImage: user?.image,
+        attachment: [],
+        additionalOffer: null,
+        extendDeliveryTime: null,
+        deliverProject: null,
+        cancelProject: data,
+        imageComments: [],
+        timeAndDate,
+        replyTo,
+        projectNumber: projectDetails?.projectNumber,
+        uniqueId: shortid(),
+      };
 
-    if (isAdmin) {
-      socket?.emit("order:admin-message", {
-        userId: projectDetails?.userId,
-        ...submitForm,
+      if (isAdmin) {
+        socket?.emit("order:admin-message", {
+          userId: projectDetails?.userId,
+          ...submitForm,
+        });
+      } else {
+        socket?.emit("order:user-message", {
+          ...submitForm,
+        });
+      }
+
+      dispatch(
+        setMessages({
+          ...submitForm,
+          recipientId: isAdmin ? projectDetails?.userId : "",
+        }),
+      );
+
+      dispatch(setReplyTo(null));
+
+      setForm({
+        explainWhyCancel: "",
       });
+      handleClose(false);
+
+      try {
+        const res = await sendAOrderMessage({
+          recipientId: isAdmin ? projectDetails?.userId : null,
+          ...submitForm,
+        }).unwrap();
+
+        // setReplyTo(null);
+      } catch (error) {
+        toast.error("Something went wrong!");
+      }
     } else {
-      socket?.emit("order:user-message", {
-        ...submitForm,
-      });
-    }
-
-    dispatch(
-      setMessages({
-        ...submitForm,
-        recipientId: isAdmin ? projectDetails?.userId : "",
-      }),
-    );
-
-    dispatch(setReplyTo(null));
-
-    setForm({
-      explainWhyCancel: "",
-    });
-    handleClose(false);
-
-    try {
-      const res = await sendAOrderMessage({
-        recipientId: isAdmin ? projectDetails?.userId : null,
-        ...submitForm,
-      }).unwrap();
-
-      // setReplyTo(null);
-    } catch (error) {
-      toast.error("Something went wrong!");
+      toast.error("Provide a reason for cancel request!");
     }
   };
 
