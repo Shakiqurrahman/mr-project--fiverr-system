@@ -110,8 +110,6 @@ const PaymentPage = () => {
       updatedMessage: state?.updatedMessage || null,
     };
 
-    console.log(data);
-
     try {
       const response = await axios.post(
         `${configApi.api}api/checkout-session`,
