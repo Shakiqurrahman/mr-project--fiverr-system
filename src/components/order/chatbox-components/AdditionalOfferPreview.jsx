@@ -116,36 +116,40 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
             <div className="grow font-semibold">Total</div>
             <div className="shrink-0 font-semibold">${value?.price}</div>
           </div>
-          {!value?.isAccepted && !value?.isRejected && !value?.isWithdrawn && (
-            <div className="flex items-center justify-center gap-5">
-              {user?.role === "USER" ? (
-                <>
+          {!value?.isAccepted &&
+            !value?.isRejected &&
+            !value?.isWithdrawn &&
+            (projectDetails?.projectStatus !== "Completed" ||
+              projectDetails?.projectStatus !== "Canceled") && (
+              <div className="flex items-center justify-center gap-5">
+                {user?.role === "USER" ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={handleAcceptOffer}
+                      className="bg-primary px-10 py-2 text-sm font-semibold text-white sm:text-base"
+                    >
+                      Accept
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleRejectOffer}
+                      className="bg-gray-400 px-10 py-2 text-sm font-semibold text-white sm:text-base"
+                    >
+                      Decline
+                    </button>
+                  </>
+                ) : (
                   <button
                     type="button"
-                    onClick={handleAcceptOffer}
+                    onClick={handleWithdrawOffer}
                     className="bg-primary px-10 py-2 text-sm font-semibold text-white sm:text-base"
                   >
-                    Accept
+                    Withdraw Offer
                   </button>
-                  <button
-                    type="button"
-                    onClick={handleRejectOffer}
-                    className="bg-gray-400 px-10 py-2 text-sm font-semibold text-white sm:text-base"
-                  >
-                    Decline
-                  </button>
-                </>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleWithdrawOffer}
-                  className="bg-primary px-10 py-2 text-sm font-semibold text-white sm:text-base"
-                >
-                  Withdraw Offer
-                </button>
-              )}
-            </div>
-          )}
+                )}
+              </div>
+            )}
           {value?.isWithdrawn && <p className="text-center">Offer Withdrawn</p>}
           {value?.isAccepted && <p className="text-center">Offer Accepted</p>}
           {value?.isRejected && <p className="text-center">Offer Rejected</p>}

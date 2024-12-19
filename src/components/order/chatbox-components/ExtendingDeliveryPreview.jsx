@@ -1,8 +1,10 @@
 import React from "react";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 import { useUpdateAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
 
 const ExtendingDeliveryPreview = ({ messageObj, value }) => {
+  const { projectDetails } = useSelector((state) => state.order);
   const [updateAOrderMessage] = useUpdateAOrderMessageMutation();
   const handleAccept = (e) => {
     e.preventDefault();
@@ -49,24 +51,27 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
           )}
         </div>
 
-        {!value?.isAccepted && !value?.isRejected && (
-          <div className="flex justify-center gap-8 border-t pt-6">
-            <button
-              type="submit"
-              onClick={handleAccept}
-              className="w-[150px] bg-primary px-5 py-2 text-lg font-semibold text-white outline-none duration-300 hover:bg-primary/80"
-            >
-              Accept
-            </button>
-            <button
-              type="button"
-              onClick={handleReject}
-              className="w-[150px] bg-gray-500 px-5 py-2 text-lg font-semibold text-white outline-none duration-300 hover:bg-gray-500/80"
-            >
-              Decline
-            </button>
-          </div>
-        )}
+        {!value?.isAccepted &&
+          !value?.isRejected &&
+          (projectDetails?.projectStatus !== "Completed" ||
+            projectDetails?.projectStatus !== "Canceled") && (
+            <div className="flex justify-center gap-8 border-t pt-6">
+              <button
+                type="submit"
+                onClick={handleAccept}
+                className="w-[150px] bg-primary px-5 py-2 text-lg font-semibold text-white outline-none duration-300 hover:bg-primary/80"
+              >
+                Accept
+              </button>
+              <button
+                type="button"
+                onClick={handleReject}
+                className="w-[150px] bg-gray-500 px-5 py-2 text-lg font-semibold text-white outline-none duration-300 hover:bg-gray-500/80"
+              >
+                Decline
+              </button>
+            </div>
+          )}
         {value?.isAccepted && (
           <p className="text-center">Extend Delivery Request Accepted</p>
         )}
