@@ -48,6 +48,21 @@ const OrderProjectDetails = () => {
       }
     }
   }, [projectDetails]);
+
+  const convertHoursToDays = (hours) => {
+    if (hours < 24) {
+      return `${hours} Hours`;
+    } else {
+      const days = Math.floor(hours / 24); // Calculate full days
+      const remainingHours = hours % 24; // Remaining hours after full days
+
+      if (remainingHours === 0) {
+        return `${days} Day${days === 1 ? "" : "s"}`;
+      } else {
+        return `${days} Day${days === 1 ? "" : "s"} ${remainingHours} Hour${remainingHours === 1 ? "" : "s"}`;
+      }
+    }
+  };
   return (
     <div className="bg-lightskyblue p-3">
       <h1 className="text-xl font-semibold">Project Details</h1>
@@ -68,12 +83,12 @@ const OrderProjectDetails = () => {
         <li className="my-2 flex items-center justify-between gap-3 text-base">
           Duration{" "}
           <b className="text-base">
-            {projectDetails?.duration || projectDetails?.durationHours}{" "}
-            {parseInt(projectDetails?.durationHours)
-              ? "Hours"
-              : parseInt(projectDetails?.duration) > 1
-                ? "Days"
-                : "Day"}
+            {projectDetails?.duration &&
+              `${projectDetails?.duration} ${
+                parseInt(projectDetails?.duration) > 1 ? "Days" : "Day"
+              }`}
+            {projectDetails?.durationHours &&
+              `${convertHoursToDays(parseInt(projectDetails?.durationHours))}`}
           </b>
         </li>
         <li className="my-2 flex items-center justify-between gap-3 text-base">
