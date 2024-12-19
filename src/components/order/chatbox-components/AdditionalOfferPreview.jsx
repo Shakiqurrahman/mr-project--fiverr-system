@@ -15,7 +15,7 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
 
   const handleAcceptOffer = async (e) => {
     e.preventDefault();
-    if (messageObj?.commonKey) {
+    if (messageObj?.uniqueId) {
       const updatedMessage = {
         ...messageObj,
         additionalOffer: {
