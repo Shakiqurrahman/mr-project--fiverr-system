@@ -250,11 +250,19 @@ export const router = createBrowserRouter([
       // Mahdi's created routes start
       {
         path: "/tips",
-        element: <Tips />,
+        element: (
+          <PrivateRoute>
+            <Tips />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/feedback",
-        element: <Feedback />,
+        element: (
+          <PrivateRoute>
+            <Feedback />
+          </PrivateRoute>
+        ),
       },
       // Mahdi's created routes end
       {

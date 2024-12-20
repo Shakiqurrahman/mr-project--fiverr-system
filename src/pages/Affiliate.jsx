@@ -8,6 +8,7 @@ import {
   useCreateAffiliateMutation,
   useDeleteAffiliateMutation,
   useGetAUserAffiliatesQuery,
+  useGetWithdrawInfoQuery,
 } from "../Redux/api/affiliateApiSlice";
 import cashWithdrawal from "../assets/images/icons/cash-withdrawal.png";
 import creditCard from "../assets/images/icons/credit-card.png";
@@ -25,6 +26,7 @@ function Affiliate() {
   const [deleteAffiliate] = useDeleteAffiliateMutation();
 
   const { data: affiliateData } = useGetAUserAffiliatesQuery();
+  const { data: userPaymentInfo } = useGetWithdrawInfoQuery();
 
   const handleCopyLink = (link) => {
     const textToCopy = `https://mahfujurrahm535.com/?${link}`;
@@ -77,6 +79,10 @@ function Affiliate() {
   };
 
   const handleWithdrawRequest = () => {
+    if (!userPaymentInfo) {
+      toast.error("Please Setup your payment method first!!!");
+      return;
+    }
     if (affiliateData?.totalEarnings >= 10) {
       setOpenWithdrawModal(true);
     } else {

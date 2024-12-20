@@ -8,6 +8,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { BiDownload } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   useAcceptDeliveryMutation,
   useAcceptRevisionMutation,
@@ -19,8 +20,9 @@ import Divider from "../../Divider";
 
 const OrderDeliveryPreview = ({ messageObj, data }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const { projectDetails } = useSelector((state) => state.order);
+  const { projectDetails, clientDetails } = useSelector((state) => state.order);
 
   const [acceptRevision] = useAcceptRevisionMutation();
   const [acceptDelivery] = useAcceptDeliveryMutation();
@@ -137,6 +139,13 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
       };
       try {
         const res = await acceptDelivery(data).unwrap();
+        if (res?.success) {
+          const data = {
+            projectDetails: res?.data,
+            clientDetails,
+          };
+          navigate(`/feedback`, { state: data });
+        }
       } catch (error) {
         toast.error("Something went wrong!");
       }

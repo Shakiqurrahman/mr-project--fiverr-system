@@ -58,8 +58,6 @@ const PaymentPage = () => {
     }
   }, [designs, fastDelivery, totalAmount]);
 
-  console.log(designs);
-
   const handlePayment = async () => {
     const itemsData = items?.map((item) => ({
       name: item.title,
