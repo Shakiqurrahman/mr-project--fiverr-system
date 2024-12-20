@@ -92,10 +92,10 @@ const OrderProjectDetails = () => {
           </b>
         </li>
         <li className="my-2 flex items-center justify-between gap-3 text-base">
-          Project started <b className="text-base">{startTime}</b>
+          Project started <b className="text-sm">{startTime}</b>
         </li>
         <li className="my-2 flex items-center justify-between gap-3 text-base">
-          Project delivery <b className="text-base">{deliveryTime}</b>
+          Project delivery <b className="text-sm">{deliveryTime}</b>
         </li>
         <li className="my-2 flex items-center justify-between gap-3 text-base">
           Total price <b className="text-base">${projectDetails?.totalPrice}</b>
