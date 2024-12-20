@@ -41,7 +41,7 @@ function Affiliate() {
   };
 
   const copyAffiliateLink = async () => {
-    const textToCopy = `https://mahfujurrahm535.com/?aff-${user?.userName}`;
+    const textToCopy = `https://mahfujurrahm535.com/?aff-auto/${user?.userName}`;
     try {
       // Copy the affiliate link to the clipboard
       await navigator.clipboard.writeText(textToCopy);
@@ -151,7 +151,7 @@ function Affiliate() {
               Affiliate link auto generated
             </h3>
             <div className="mt-3 flex">
-              <p className="flex-shrink-1 w-full select-none border-[2px] p-2 text-sm outline-none">{`https://mahfujurrahm535.com/?aff-${user?.userName}`}</p>
+              <p className="flex-shrink-1 w-full select-none border-[2px] p-2 text-sm outline-none">{`https://mahfujurrahm535.com/?aff-auto/${user?.userName}`}</p>
               <button
                 className="min-w-[100px] bg-secondary p-2 text-white"
                 onClick={copyAffiliateLink}
