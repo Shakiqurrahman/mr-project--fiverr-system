@@ -174,14 +174,6 @@ export const orderApiSlice = createApi({
       }),
       invalidatesTags: ["messages"],
     }),
-
-    sendATip: builder.mutation({
-      query: ({ data }) => ({
-        url: `payment/tip`,
-        method: "POST",
-        body: { data },
-      }),
-    }),
   }),
 });
 
@@ -208,5 +200,4 @@ export const {
   useSubmitDeliveryMutation,
   useAcceptRevisionMutation,
   useAcceptDeliveryMutation,
-  useSendATipMutation,
 } = orderApiSlice;
