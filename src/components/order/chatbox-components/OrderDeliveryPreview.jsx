@@ -157,8 +157,6 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
     data?.attachments?.filter((file) => file?.format?.startsWith("image/"))
       .length > 0;
 
-  console.log(projectDetails);
-
   return (
     <>
       <div
@@ -180,13 +178,15 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
                           onClick={(e) =>
                             handlePreviewImage(
                               e,
-                              projectDetails?.projectStatus === "Completed"
+                              projectDetails?.projectStatus === "Completed" &&
+                                data?.isAccepted
                                 ? att?.url
                                 : att?.watermark,
                             )
                           }
                           src={
-                            projectDetails?.projectStatus === "Completed"
+                            projectDetails?.projectStatus === "Completed" &&
+                            data?.isAccepted
                               ? att?.url
                               : att?.watermark
                           }
@@ -196,7 +196,8 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
                         <div className="mt-4 text-center">
                           <a
                             href={
-                              projectDetails?.projectStatus === "Completed"
+                              projectDetails?.projectStatus === "Completed" &&
+                              data?.isAccepted
                                 ? att?.url
                                 : att?.watermark
                             }
