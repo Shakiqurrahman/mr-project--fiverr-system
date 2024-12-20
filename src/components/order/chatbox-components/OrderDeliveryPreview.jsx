@@ -5,17 +5,25 @@ import LeftArrowIcon from "../../../assets/images/icons/Left Arrow.svg";
 import RightArrowIcon from "../../../assets/images/icons/Right Arrow.svg";
 
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { BiDownload } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  useAcceptDeliveryMutation,
+  useAcceptRevisionMutation,
+} from "../../../Redux/api/orderApiSlice";
 import { setPreviewImage } from "../../../Redux/features/previewImageSlice";
 import formatFileSize from "../../../libs/formatFileSize";
 import CommentPage from "../../../pages/CommentPage";
 import Divider from "../../Divider";
 
-const OrderDeliveryPreview = ({ data }) => {
+const OrderDeliveryPreview = ({ messageObj, data }) => {
   const dispatch = useDispatch();
 
   const { projectDetails } = useSelector((state) => state.order);
+
+  const [acceptRevision] = useAcceptRevisionMutation();
+  const [acceptDelivery] = useAcceptDeliveryMutation();
 
   const [openCommentBox, setOpenCommentBox] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -99,6 +107,40 @@ const OrderDeliveryPreview = ({ data }) => {
         },
       },
     ],
+  };
+
+  const handleRevision = async (e) => {
+    e.preventDefault();
+    if (messageObj?.uniqueId) {
+      const { id, ...updatedMessage } = messageObj;
+      const data = {
+        projectNumber: projectDetails?.projectNumber,
+        uniqueId: messageObj?.uniqueId,
+        updatedMessage,
+      };
+      try {
+        const res = await acceptRevision(data).unwrap();
+      } catch (error) {
+        toast.error("Something went wrong!");
+      }
+    }
+  };
+
+  const handleAccept = async (e) => {
+    e.preventDefault();
+    if (messageObj?.uniqueId) {
+      const { id, ...updatedMessage } = messageObj;
+      const data = {
+        projectNumber: projectDetails?.projectNumber,
+        uniqueId: messageObj?.uniqueId,
+        updatedMessage,
+      };
+      try {
+        const res = await acceptDelivery(data).unwrap();
+      } catch (error) {
+        toast.error("Something went wrong!");
+      }
+    }
   };
 
   const handleOpenComment = (att) => {
@@ -283,12 +325,14 @@ const OrderDeliveryPreview = ({ data }) => {
               <button
                 type="button"
                 className="rounded-[30px] bg-primary px-10 py-2 text-center font-semibold text-white"
+                onClick={handleAccept}
               >
                 Accept
               </button>
               <button
                 type="button"
                 className="rounded-[30px] bg-revision px-10 py-2 text-center font-semibold text-white"
+                onClick={handleRevision}
               >
                 Revision
               </button>

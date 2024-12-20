@@ -147,6 +147,24 @@ export const orderApiSlice = createApi({
       }),
       invalidatesTags: ["messages", "cancel"],
     }),
+
+    acceptRevision: builder.mutation({
+      query: ({ projectNumber, uniqueId, updatedMessage }) => ({
+        url: `delivery/revision`,
+        method: "POST",
+        body: { projectNumber, uniqueId, updatedMessage },
+      }),
+      invalidatesTags: ["messages", "cancel"],
+    }),
+
+    acceptDelivery: builder.mutation({
+      query: ({ projectNumber, uniqueId, updatedMessage }) => ({
+        url: `delivery/accept`,
+        method: "POST",
+        body: { projectNumber, uniqueId, updatedMessage },
+      }),
+      invalidatesTags: ["messages", "cancel"],
+    }),
   }),
 });
 
@@ -170,4 +188,6 @@ export const {
   useLazyGetOrderUserMessagesQuery,
   useCancelOrderProjectMutation,
   useGetAUserReviewsQuery,
+  useAcceptRevisionMutation,
+  useAcceptDeliveryMutation,
 } = orderApiSlice;
