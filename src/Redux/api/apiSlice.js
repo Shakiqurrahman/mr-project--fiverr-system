@@ -39,6 +39,12 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["socialMedia"],
     }),
+
+    getUsersProjectStatus: builder.query({
+      query: ({ userId }) => `profile/${userId}`,
+      transformResponse: (response) => response?.data,
+      providesTags: ["user"],
+    }),
   }),
 });
 
@@ -46,4 +52,5 @@ export const {
   useFetchUserDataQuery,
   useFetchSocialMediasQuery,
   useUpdateSocialMediasMutation,
+  useLazyGetUsersProjectStatusQuery,
 } = apiSlice;
