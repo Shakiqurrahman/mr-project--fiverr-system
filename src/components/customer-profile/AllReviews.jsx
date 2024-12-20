@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { IoIosStar } from "react-icons/io";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import { setPreviewImage } from "../../Redux/features/previewImageSlice";
 import logo from "../../assets/images/MR Logo Icon.png";
 import downArrow from "../../assets/images/icons/Down Arrow.svg";
@@ -55,11 +56,18 @@ const AllReviews = ({ user, allReviews }) => {
                     className="size-10 rounded-full object-cover"
                   />
                 )}
-                <h4 className="text-lg font-semibold">
+                <Link
+                  to={`/${
+                    review?.sender?.role === "USER"
+                      ? review?.sender?.userName
+                      : "mahfujurrahm535"
+                  }`}
+                  className="text-lg font-semibold"
+                >
                   {review?.sender?.role === "USER"
                     ? review?.sender?.userName
                     : "Mahfujurrahm535"}
-                </h4>
+                </Link>
               </div>
               <div className="flex items-start justify-between gap-3">
                 <p className="mb-2 text-gray-600">{review?.message}</p>
