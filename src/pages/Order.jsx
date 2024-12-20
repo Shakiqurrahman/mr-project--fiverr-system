@@ -97,8 +97,6 @@ const Order = () => {
     (r) => r.senderType === "OWNER",
   );
 
-  console.log(projectDetails);
-
   return (
     projectDetails && (
       <div className="max-width my-10">

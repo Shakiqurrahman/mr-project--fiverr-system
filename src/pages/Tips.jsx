@@ -1,24 +1,25 @@
+import { loadStripe } from "@stripe/stripe-js";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useSendATipMutation } from "../Redux/api/orderApiSlice";
+import { Link, useLocation } from "react-router-dom";
+import { STRIPE_PUBLIC_KEY, configApi } from "../libs/configApi";
+
+const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 
 let initialValue = 1000;
 
 export default function Tips() {
   const { state } = useLocation();
-  const navigate = useNavigate();
 
   const { user } = useSelector((state) => state?.user);
 
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
   const [tip, setTip] = useState(0);
   const [tip2, setTip2] = useState(0);
   const [clickBtn, setClickBtn] = useState("");
   const [custom, setCustom] = useState(0);
-
-  const [sendATip] = useSendATipMutation();
 
   const handleClickBtn = (e) => {
     setClickBtn(e.target.name);
@@ -66,9 +67,18 @@ export default function Tips() {
         totalAmount: amount,
         projectNumber: projectDetails?.projectNumber,
       };
-      const res = await sendATip({ data }).unwrap();
-      if (res?.success) {
-        navigate(`/order/${projectDetails?.projectNumber}`);
+
+      try {
+        const response = await axios.post(`${configApi.api}payment/tip`, {
+          data,
+        });
+
+        const sessionId = response?.data?.data?.id;
+        // Redirect to Stripe Checkout
+        const stripe = await stripePromise;
+        await stripe.redirectToCheckout({ sessionId });
+      } catch (error) {
+        toast.error("Something went wrong!");
       }
     } else {
       toast.error("Atleast Send a small amount!");
