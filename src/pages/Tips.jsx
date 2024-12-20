@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { STRIPE_PUBLIC_KEY, configApi } from "../libs/configApi";
 
 const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
@@ -228,12 +228,12 @@ export default function Tips() {
             </div>
           </div>
         </div>
-        <Link
-          to={`/order/${projectDetails?.projectNumber}`}
+        <button
+          onClick={() => navigate(`/order/${projectDetails?.projectNumber}`)}
           className="mt-6 text-center font-semibold text-[#000]"
         >
           Back to the project page
-        </Link>
+        </button>
       </div>
     </div>
   );

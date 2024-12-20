@@ -196,12 +196,12 @@ function Feedback() {
               </div>
             </div>
           </div>
-          <Link
-            to={`/order/${projectDetails?.projectNumber}`}
+          <button
+            onClick={() => navigate(`/order/${projectDetails?.projectNumber}`)}
             className="mt-6 text-center font-semibold text-[#000]"
           >
             Back to the project page
-          </Link>
+          </button>
         </div>
       </div>
     </div>
