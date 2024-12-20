@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { FaFolderOpen } from "react-icons/fa6";
 import { GiShoppingCart } from "react-icons/gi";
 import { MdClose } from "react-icons/md";
@@ -22,6 +23,16 @@ function ProjectCard({
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const { items: cartItems } = useSelector((state) => state.cart);
+
+  const [clientRefHeight, setClientRefHeight] = useState(0);
+
+  const clientRef = useRef(null);
+
+  useEffect(() => {
+    if (clientRef?.current) {
+      setClientRefHeight(clientRef?.current?.clientHeight);
+    }
+  }, []);
 
   const handlePreviewImage = (e) => {
     e.preventDefault();
@@ -57,7 +68,11 @@ function ProjectCard({
             <FaFolderOpen className="text-black/50" />
           </Link>
         )}
-        <Link to={slug} className="block h-full cursor-pointer border bg-white">
+        <Link
+          to={slug}
+          className="block cursor-pointer border bg-white"
+          style={{ height: `calc(100% - ${clientRefHeight}px)` }}
+        >
           {clientName ? (
             <div
               className="relative"
@@ -87,7 +102,10 @@ function ProjectCard({
           </h1>
         </Link>
         {clientName && (
-          <div className="mt-3 flex items-center justify-between px-3">
+          <div
+            className="mt-3 flex items-center justify-between px-3"
+            ref={clientRef}
+          >
             <div className="flex items-center gap-1">
               {clientLogo ? (
                 <img

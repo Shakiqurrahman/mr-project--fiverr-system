@@ -41,7 +41,7 @@ function AllCompletedProjects() {
             {currentPageData?.map((project, index) => (
               <ProjectCard
                 key={index}
-                thumbnail={project?.projectImage}
+                thumbnail={project?.projectThumbnail}
                 clientLogo={project?.user?.image}
                 title={project?.projectName}
                 clientName={project?.user?.userName}

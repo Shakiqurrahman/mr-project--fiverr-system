@@ -5,7 +5,6 @@ import { setPreviewImage } from "../../Redux/features/previewImageSlice";
 import logo from "../../assets/images/MR Logo Icon.png";
 import downArrow from "../../assets/images/icons/Down Arrow.svg";
 import upperArrow from "../../assets/images/icons/Upper Arrow.svg";
-import thumbnail from "../../assets/images/project-thumbnail.jpg";
 import { timeAgoTracker } from "../../libs/timeAgoTracker";
 
 const AllReviews = ({ user, allReviews }) => {
@@ -66,10 +65,10 @@ const AllReviews = ({ user, allReviews }) => {
                 <p className="mb-2 text-gray-600">{review?.message}</p>
                 {review?.isThumbnail && (
                   <img
-                    src={thumbnail}
+                    src={review?.thumbnail}
                     alt=""
                     className="w-[120px] cursor-pointer rounded"
-                    onClick={(e) => handlePreviewImage(e, thumbnail)}
+                    onClick={(e) => handlePreviewImage(e, review?.thumbnail)}
                   />
                 )}
               </div>

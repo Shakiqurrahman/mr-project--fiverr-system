@@ -33,7 +33,7 @@ function Feedback() {
     if (text && value) {
       const data = {
         orderId: projectDetails?.id,
-        thumbnail: Image,
+        thumbnail: projectDetails?.projectThumbnail,
         isThumbnail: thumbnail,
         rating: value,
         message: text,

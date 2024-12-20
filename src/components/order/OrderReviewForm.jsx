@@ -5,7 +5,6 @@ import { GiCheckMark } from "react-icons/gi";
 import { IoStarOutline, IoStarSharp } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { useCreateAReviewMutation } from "../../Redux/api/orderApiSlice";
-import Image from "../../assets/images/project-thumbnail.jpg";
 import Divider from "../Divider";
 
 const OrderReviewForm = () => {
@@ -22,7 +21,7 @@ const OrderReviewForm = () => {
       const getThumbnailTrueOrFalse = projectDetails?.review?.find(
         (r) => r?.senderType === "CLIENT",
       );
-      setIsThumbnail(getThumbnailTrueOrFalse?.isThumbnail || true);
+      setIsThumbnail(getThumbnailTrueOrFalse?.isThumbnail);
     }
   }, [projectDetails]);
 
@@ -35,7 +34,7 @@ const OrderReviewForm = () => {
     if (text && value) {
       const data = {
         orderId: projectDetails?.id,
-        thumbnail: Image,
+        thumbnail: projectDetails?.projectThumbnail,
         isThumbnail: isThumbnail,
         rating: value,
         message: text,
@@ -79,9 +78,9 @@ const OrderReviewForm = () => {
         <div className="relative select-none">
           <span className="block text-center">Add your review</span>
           <img
-            src={Image}
+            src={projectDetails?.projectThumbnail}
             alt=""
-            className="h-full w-full sm:h-[150px] sm:w-[150px]"
+            className="w-full object-cover sm:w-[150px]"
           />
           <input
             type="checkbox"

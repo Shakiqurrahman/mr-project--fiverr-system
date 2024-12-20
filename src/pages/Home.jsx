@@ -1,17 +1,31 @@
-import FeatureCategory from "../components/categories/FeatureCategory";
+import { useEffect, useState } from "react";
+import { useGetAllProjectsQuery } from "../Redux/api/dashboardApiSlice";
+import { useGetAllAdminReviewsQuery } from "../Redux/api/orderApiSlice";
 import CompletedProject from "../components/CompletedProject";
 import Hero from "../components/Hero";
 import HomeActivityCards from "../components/HomeActivityCards";
 import HomeKeywords from "../components/HomeKeywords";
 import Testimonials from "../components/Testimonials";
-import { useGetAllProjectsQuery } from "../Redux/api/dashboardApiSlice";
-import { useGetAllAdminReviewsQuery } from "../Redux/api/orderApiSlice";
+import FeatureCategory from "../components/categories/FeatureCategory";
 
 function Home() {
   const { data: reviews } = useGetAllAdminReviewsQuery();
   const { data: completedProjects } = useGetAllProjectsQuery({
     status: "Completed",
   });
+  const [filteredProjects, setFilteredProjects] = useState([]);
+
+  useEffect(() => {
+    if (completedProjects?.length > 0) {
+      const filterData = completedProjects?.filter((order) =>
+        order?.review?.find(
+          (r) => r?.isThumbnail && r?.senderType === "CLIENT",
+        ),
+      );
+      setFilteredProjects(filterData);
+    }
+  }, [completedProjects]);
+
   return (
     <>
       {/* hero section */}
@@ -37,7 +51,7 @@ function Home() {
       <HomeActivityCards />
 
       {/* Completed Project Card section */}
-      {completedProjects?.length > 0 && <CompletedProject />}
+      {filteredProjects?.length > 0 && <CompletedProject />}
 
       {/* Testimonial section */}
       {reviews?.length > 0 && <Testimonials />}
