@@ -575,13 +575,29 @@ const OrderChatBox = () => {
                 {/* Final Delivery or First Delivery Attempt Text */}
                 {msg?.deliverProject && (
                   <div className="mt-10 text-center">
-                    <h1 className="text-xl font-semibold text-primary">
-                      FINAL DELIVERY
-                    </h1>
-                    <p className="mx-auto mb-10 mt-2 w-3/4">
-                      If you don&apos;t accept this delivery, this project will
-                      automatically completed within the next 48 hours.
-                    </p>
+                    {projectDetails?.deliveryAttempt === 0 && (
+                      <>
+                        <h1 className="text-xl font-semibold text-primary">
+                          FIRST DELIVERY
+                        </h1>
+                        <p className="mx-auto mb-10 mt-2 w-3/4">
+                          Within next 48 hours you have to choose Revision or
+                          Accept. If you don&apos;t choose any, then after 48
+                          hours this project will be completed automatically.
+                        </p>
+                      </>
+                    )}
+                    {projectDetails?.deliveryAttempt > 0 && (
+                      <>
+                        <h1 className="text-xl font-semibold text-primary">
+                          FINAL DELIVERY
+                        </h1>
+                        <p className="mx-auto mb-10 mt-2 w-3/4">
+                          If you don&apos;t accept this delivery, this project
+                          will automatically completed within the next 48 hours.
+                        </p>
+                      </>
+                    )}
                   </div>
                 )}
                 {/* A conversation message Ui */}

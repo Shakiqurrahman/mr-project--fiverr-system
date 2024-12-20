@@ -47,7 +47,7 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
 
     // Fetch and add files to the zip
     for (const file of files) {
-      const response = await fetch(file.url);
+      const response = await fetch(file?.url);
       const blob = await response.blob();
       zip.file(file.name || file.url.split("/").pop(), blob); // Use file.name or fallback to the URL's last segment
     }
@@ -157,6 +157,8 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
     data?.attachments?.filter((file) => file?.format?.startsWith("image/"))
       .length > 0;
 
+  console.log(projectDetails);
+
   return (
     <>
       <div
@@ -218,7 +220,7 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
           }
         >
           <h1
-            className={`mb-2 ${projectDetails?.projectStatus === "Completed" ? "ms-6" : ""} text-lg font-semibold`}
+            className={`mb-2 ${projectDetails?.projectStatus === "Completed" && data?.isAccepted ? "ms-6" : ""} text-lg font-semibold`}
           >
             Final Files
           </h1>
@@ -227,20 +229,24 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
               <>
                 <a
                   href={
-                    projectDetails?.projectStatus === "Completed"
+                    projectDetails?.projectStatus === "Completed" &&
+                    data?.isAccepted
                       ? data?.thumbnailImage?.url
                       : undefined
                   }
                   download={
-                    projectDetails?.projectStatus === "Completed"
+                    projectDetails?.projectStatus === "Completed" &&
+                    data?.isAccepted
                       ? data?.thumbnailImage?.name
                       : undefined
                   }
-                  className="flex flex-wrap items-start gap-2 text-sm"
+                  className="flex items-start gap-2 text-sm"
+                  target="_blank"
                 >
-                  {projectDetails?.projectStatus === "Completed" && (
-                    <BiDownload className="shrink-0 text-lg text-primary" />
-                  )}
+                  {projectDetails?.projectStatus === "Completed" &&
+                    data?.isAccepted && (
+                      <BiDownload className="shrink-0 text-lg text-primary" />
+                    )}
                   <p>
                     {data?.thumbnailImage?.name}{" "}
                     <span className="text-black/50">
@@ -258,21 +264,25 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
                 <a
                   key={index}
                   href={
-                    projectDetails?.projectStatus === "Completed"
+                    projectDetails?.projectStatus === "Completed" &&
+                    data?.isAccepted
                       ? att?.url
                       : undefined
                   }
                   download={
-                    projectDetails?.projectStatus === "Completed"
+                    projectDetails?.projectStatus === "Completed" &&
+                    data?.isAccepted
                       ? att?.name
                       : undefined
                   }
-                  className="flex flex-wrap items-start gap-2 text-sm"
+                  target="_blank"
+                  className="flex items-start gap-2 text-sm"
                 >
-                  {projectDetails?.projectStatus === "Completed" && (
-                    <BiDownload className="shrink-0 text-lg text-primary" />
-                  )}
-                  <p>
+                  {projectDetails?.projectStatus === "Completed" &&
+                    data?.isAccepted && (
+                      <BiDownload className="shrink-0 text-lg text-primary" />
+                    )}
+                  <p className="w-full break-words">
                     {att?.name}{" "}
                     <span className="text-black/50">
                       ({formatFileSize(att?.size)})
@@ -283,10 +293,12 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
           </div>
         </div>
       </div>
-      {projectDetails?.projectStatus === "Completed" && (
+      {projectDetails?.projectStatus === "Completed" && data?.isAccepted && (
         <div
           className={
-            foundImages ? "flex w-full gap-3 xl:w-2/3" : "flex w-full gap-3"
+            foundImages
+              ? "mt-5 flex w-full gap-3 xl:w-2/3"
+              : "mt-5 flex w-full gap-3"
           }
         >
           <button
@@ -315,27 +327,37 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
             }
           >
             <p>
-              {foundImages
+              {foundImages && !data?.isAccepted && !data?.isRevision
                 ? `The watermark will no longer show after accepting the delivery
               file. Please accept your final file first, then download the
               files.`
-                : `To get the files download link please accept your final file first, then download the files.`}
+                : `${
+                    !data?.isAccepted && !data?.isRevision
+                      ? "To get the files download link please accept your final file first, then download the files."
+                      : ""
+                  }`}
             </p>
-            <div className="my-10 flex justify-center gap-5">
-              <button
-                type="button"
-                className="rounded-[30px] bg-primary px-10 py-2 text-center font-semibold text-white"
-                onClick={handleAccept}
-              >
-                Accept
-              </button>
-              <button
-                type="button"
-                className="rounded-[30px] bg-revision px-10 py-2 text-center font-semibold text-white"
-                onClick={handleRevision}
-              >
-                Revision
-              </button>
+            <div className="my-5 flex justify-center gap-5">
+              {projectDetails?.deliveryAttempt !== 2 &&
+                !data?.isAccepted &&
+                !data?.isRevision && (
+                  <button
+                    type="button"
+                    className="rounded-[30px] bg-primary px-10 py-2 text-center font-semibold text-white"
+                    onClick={handleAccept}
+                  >
+                    Accept
+                  </button>
+                )}
+              {projectDetails?.deliveryAttempt !== 1 && !data?.isRevision && (
+                <button
+                  type="button"
+                  className="rounded-[30px] bg-revision px-10 py-2 text-center font-semibold text-white"
+                  onClick={handleRevision}
+                >
+                  Revision
+                </button>
+              )}
             </div>
           </div>
         )}

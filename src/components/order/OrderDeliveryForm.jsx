@@ -14,7 +14,7 @@ import {
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
 } from "../../Redux/api/inboxApiSlice";
-import { useSendAOrderMessageMutation } from "../../Redux/api/orderApiSlice";
+import { useSendAOrderMessageMutation, useSubmitDeliveryMutation } from "../../Redux/api/orderApiSlice";
 import { setMessages, setReplyTo } from "../../Redux/features/orderSlice";
 import { useLocalStorageObject } from "../../hooks/useLocalStorageObject";
 import useOutsideClick from "../../hooks/useOutsideClick";
@@ -30,7 +30,7 @@ import AddQuickMsgModal from "../chat/AddQuickMsgModal";
 import EditQuickMsgModal from "../chat/EditQuickMsgModal";
 
 const OrderDeliveryForm = ({ handleClose }) => {
-  const [sendAOrderMessage] = useSendAOrderMessageMutation();
+  
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.user);
   const { projectDetails, replyTo } = useSelector((state) => state.order);
@@ -48,6 +48,8 @@ const OrderDeliveryForm = ({ handleClose }) => {
   // Redux query imports here
   const { data: quickMsgs } = useFetchQuickResMsgQuery();
   const [deleteQuickResMsg] = useDeleteQuickResMsgMutation();
+  const [sendAOrderMessage] = useSendAOrderMessageMutation();
+  const [submitDelivry] = useSubmitDeliveryMutation()
 
   //   all states here
   const [textValue, setTextValue] = useState("");
@@ -354,6 +356,11 @@ const OrderDeliveryForm = ({ handleClose }) => {
       };
       localStorage.setItem("deliveryDraft", JSON.stringify(resetStorage));
       handleClose(false);
+      try {
+        const res = await submitDelivry({projectNumber: projectDetails?.projectNumber}).unwrap();
+      } catch (error) {
+        toast.error("Something went wrong!")
+      }
     }
   };
 
