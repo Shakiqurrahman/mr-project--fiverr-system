@@ -53,7 +53,7 @@ function SignUpForm({ handleClick }) {
   } = useForm({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      country: "",
+      country: "Afghanistan",
       name: "",
       username: "",
       email: "",
@@ -63,6 +63,8 @@ function SignUpForm({ handleClick }) {
   });
 
   const onSubmit = async (data) => {
+    console.log(data);
+    
     try {
       setLoading(true);
       const affiliateURL = localStorage.getItem("aff-query") || "";
@@ -106,6 +108,9 @@ function SignUpForm({ handleClick }) {
         setError("Something went wrong!");
       }
     }
+    finally {
+      localStorage.removeItem("aff-query");
+    }
   };
 
   return (
@@ -114,9 +119,12 @@ function SignUpForm({ handleClick }) {
         <Controller
           name="country"
           control={control}
-          render={({ field }) => (
+          render={({ field }) => {
+            console.log('field', field);
+            
+            return (
             <CountryList country={field.value} handleChange={field.onChange} />
-          )}
+          )}}
         />
         <label className="block px-2 pt-4">Full Name</label>
         <input
