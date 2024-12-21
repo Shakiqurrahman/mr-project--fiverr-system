@@ -167,10 +167,10 @@ export const orderApiSlice = createApi({
     }),
 
     acceptDelivery: builder.mutation({
-      query: ({ projectNumber, uniqueId, updatedMessage }) => ({
+      query: ({ projectNumber, uniqueId, updatedMessage, userId }) => ({
         url: `delivery/accept`,
         method: "POST",
-        body: { projectNumber, uniqueId, updatedMessage },
+        body: { projectNumber, uniqueId, updatedMessage, userId },
       }),
       invalidatesTags: ["messages"],
     }),

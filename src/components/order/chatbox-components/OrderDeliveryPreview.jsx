@@ -134,6 +134,7 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
       const { id, ...updatedMessage } = messageObj;
       const data = {
         projectNumber: projectDetails?.projectNumber,
+        userId: projectDetails?.userId,
         uniqueId: messageObj?.uniqueId,
         updatedMessage,
       };
