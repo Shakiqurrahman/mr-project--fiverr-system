@@ -13,6 +13,8 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
   const { user } = useSelector((state) => state.user);
   const { projectDetails } = useSelector((state) => state.order);
 
+  const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
+
   const handleAcceptOffer = async (e) => {
     e.preventDefault();
     if (messageObj?.uniqueId) {
@@ -116,7 +118,8 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
             <div className="grow font-semibold">Total</div>
             <div className="shrink-0 font-semibold">${value?.price}</div>
           </div>
-          {!value?.isAccepted &&
+          {!isAdmin &&
+            !value?.isAccepted &&
             !value?.isRejected &&
             !value?.isWithdrawn &&
             projectDetails?.projectStatus !== "Completed" &&

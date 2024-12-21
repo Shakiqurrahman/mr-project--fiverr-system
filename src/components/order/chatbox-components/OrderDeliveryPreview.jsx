@@ -23,6 +23,9 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
   const navigate = useNavigate();
 
   const { projectDetails, clientDetails } = useSelector((state) => state.order);
+  const { user } = useSelector((state) => state.user);
+
+  const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
 
   const [acceptRevision] = useAcceptRevisionMutation();
   const [acceptDelivery] = useAcceptDeliveryMutation();
@@ -324,31 +327,34 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
           </div>
         </div>
       </div>
-      {projectDetails?.projectStatus === "Completed" && data?.isAccepted && (
-        <div
-          className={
-            foundImages
-              ? "mt-5 flex w-full gap-3 xl:w-2/3"
-              : "mt-5 flex w-full gap-3"
-          }
-        >
-          <button
-            type="button"
-            className="w-1/2 rounded-[30px] bg-primary p-2 text-center font-semibold text-white"
-            onClick={() => handleDownloadZip(data?.attachments)}
+      {!isAdmin &&
+        projectDetails?.projectStatus === "Completed" &&
+        data?.isAccepted && (
+          <div
+            className={
+              foundImages
+                ? "mt-5 flex w-full gap-3 xl:w-2/3"
+                : "mt-5 flex w-full gap-3"
+            }
           >
-            Zip Download
-          </button>
-          <button
-            type="button"
-            className="w-1/2 rounded-[30px] bg-revision p-2 text-center font-semibold text-white"
-            onClick={() => handleDownloadAll(data?.attachments)}
-          >
-            Individual Download
-          </button>
-        </div>
-      )}
-      {projectDetails?.projectStatus !== "Completed" &&
+            <button
+              type="button"
+              className="w-1/2 rounded-[30px] bg-primary p-2 text-center font-semibold text-white"
+              onClick={() => handleDownloadZip(data?.attachments)}
+            >
+              Zip Download
+            </button>
+            <button
+              type="button"
+              className="w-1/2 rounded-[30px] bg-revision p-2 text-center font-semibold text-white"
+              onClick={() => handleDownloadAll(data?.attachments)}
+            >
+              Individual Download
+            </button>
+          </div>
+        )}
+      {!isAdmin &&
+        projectDetails?.projectStatus !== "Completed" &&
         projectDetails?.projectStatus !== "Canceled" && (
           <div
             className={

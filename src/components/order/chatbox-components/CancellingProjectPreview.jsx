@@ -8,6 +8,10 @@ import {
 
 const CancellingProjectPreview = ({ messageObj, value }) => {
   const { projectDetails } = useSelector((state) => state?.order);
+  const { user } = useSelector((state) => state.user);
+
+  const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
+
   const [updateAOrderMessage] = useUpdateAOrderMessageMutation();
   const [acceptCancelRequest] = useCancelOrderProjectMutation();
   const handleAccept = async (e) => {
@@ -53,7 +57,8 @@ const CancellingProjectPreview = ({ messageObj, value }) => {
         </p>
         <p className="text-sm sm:text-base">{value?.explainWhyCancel}</p>
       </div>
-      {!messageObj?.isCancelled &&
+      {!isAdmin &&
+        !messageObj?.isCancelled &&
         !value?.isRejected &&
         projectDetails?.projectStatus !== "Completed" &&
         projectDetails?.projectStatus !== "Canceled" && (
