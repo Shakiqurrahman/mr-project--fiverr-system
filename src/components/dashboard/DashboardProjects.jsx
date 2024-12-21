@@ -231,13 +231,13 @@ const DashboardProjects = () => {
                     </div>
                     <div className="w-[50%] text-center text-sm">
                       <p className="font-medium text-gray-500">
-                        {project?.finishedDate ? "Date" : "Time"}
+                        {project?.completedDate ? "Date" : "Time"}
                       </p>
                       <p
                         className={`font-bold ${color === "red" ? "text-red-500" : "text-black"}`}
                       >
-                        {project?.finishedDate
-                          ? new Date(project?.finishedDate)?.toLocaleDateString()
+                        {project?.completedDate
+                          ? new Date(project?.completedDate)?.toLocaleDateString()
                           : time || "Not Determined"}
                       </p>
                     </div>

@@ -11,7 +11,7 @@ const AuthWrapper = ({ children }) => {
   const dispatch = useDispatch();
   const { data: user, error } = useFetchUserDataQuery(null, {
     skip: !Cookies.get("authToken"),
-    pollingInterval: 10000,
+    pollingInterval: 60000,
   });
 
   useEffect(() => {
