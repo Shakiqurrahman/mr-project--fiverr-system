@@ -66,52 +66,54 @@ const AffiliateRequests = () => {
               </tr>
             </thead>
             <tbody className="even:*:bg-gray-200">
-              {data?.map((item, i) => (
-                <tr key={i}>
-                  <td className="p-3">
-                    <button
-                      className="rounded-[30px] bg-primary px-8 py-1 font-semibold text-white"
-                      onClick={() => handleDetails(item?.AffiliateProfile)}
-                    >
-                      Details
-                    </button>
-                  </td>
-                  <td className="p-3">{convertDateTime(item?.createdAt)}</td>
-                  <td className="p-3 font-semibold">${item?.ammount}</td>
-                  <td className="p-3">
-                    {item?.status === "PENDING" && (
-                      <div className="flex gap-2">
-                        <button
-                          className="rounded-[30px] bg-primary px-8 py-1 font-semibold text-white"
-                          onClick={() =>
-                            handleRequestAction(item?.id, "APPROVED")
-                          }
-                        >
-                          Accept
-                        </button>
-                        <button
-                          className="rounded-[30px] bg-revision px-8 py-1 font-semibold text-white"
-                          onClick={() =>
-                            handleRequestAction(item?.id, "REJECTED")
-                          }
-                        >
-                          Reject
-                        </button>
-                      </div>
-                    )}
-                    {item?.status === "APPROVED" && (
-                      <button className="w-[120px] cursor-default rounded-[30px] border border-ongoing bg-ongoing/20 py-1 text-center text-sm font-semibold text-ongoing">
-                        Approved
+              {data?.length === 0 && <p className="p-3">No Requests found!</p>}
+              {data?.length > 0 &&
+                data?.map((item, i) => (
+                  <tr key={i}>
+                    <td className="p-3">
+                      <button
+                        className="rounded-[30px] bg-primary px-8 py-1 font-semibold text-white"
+                        onClick={() => handleDetails(item?.AffiliateProfile)}
+                      >
+                        Details
                       </button>
-                    )}
-                    {item?.status === "REJECTED" && (
-                      <button className="w-[120px] cursor-default rounded-[30px] border border-revision bg-revision/20 py-1 text-center text-sm font-semibold text-revision">
-                        Rejected
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="p-3">{convertDateTime(item?.createdAt)}</td>
+                    <td className="p-3 font-semibold">${item?.ammount}</td>
+                    <td className="p-3">
+                      {item?.status === "PENDING" && (
+                        <div className="flex gap-2">
+                          <button
+                            className="rounded-[30px] bg-primary px-8 py-1 font-semibold text-white"
+                            onClick={() =>
+                              handleRequestAction(item?.id, "APPROVED")
+                            }
+                          >
+                            Accept
+                          </button>
+                          <button
+                            className="rounded-[30px] bg-revision px-8 py-1 font-semibold text-white"
+                            onClick={() =>
+                              handleRequestAction(item?.id, "REJECTED")
+                            }
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      )}
+                      {item?.status === "APPROVED" && (
+                        <button className="w-[120px] cursor-default rounded-[30px] border border-ongoing bg-ongoing/20 py-1 text-center text-sm font-semibold text-ongoing">
+                          Approved
+                        </button>
+                      )}
+                      {item?.status === "REJECTED" && (
+                        <button className="w-[120px] cursor-default rounded-[30px] border border-revision bg-revision/20 py-1 text-center text-sm font-semibold text-revision">
+                          Rejected
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

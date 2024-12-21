@@ -7,7 +7,7 @@ const WithdrawRequestModal = ({ handleClose }) => {
   const modalRef = useRef(null);
   const [withDrawAmount, setWithDrawAmount] = useState("");
 
-  const [widthRequest] = useWithdrawRequestMutation();
+  const [widthRequest, { isLoading }] = useWithdrawRequestMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,7 +16,9 @@ const WithdrawRequestModal = ({ handleClose }) => {
         ammount: parseInt(withDrawAmount),
       };
       try {
-        const res = await widthRequest(data);
+        await widthRequest(data).unwrap();
+        handleClose(false);
+        toast.success("Withdraw request successfull!");
       } catch (error) {
         toast.error("Something went wrong!");
       }
@@ -56,7 +58,8 @@ const WithdrawRequestModal = ({ handleClose }) => {
           </button>
           <button
             type="submit"
-            className="w-[110px] rounded bg-primary px-5 py-2 text-lg font-semibold text-white outline-none duration-300 hover:bg-primary/80"
+            disabled={isLoading}
+            className="w-[110px] rounded bg-primary px-5 py-2 text-lg font-semibold text-white outline-none duration-300 hover:bg-primary/80 disabled:bg-primary/50"
           >
             Send
           </button>
