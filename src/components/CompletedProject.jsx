@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick.css";
 import { useGetAllProjectsQuery } from "../Redux/api/dashboardApiSlice";
 import LeftArrowIcon from "../assets/images/icons/Left Arrow.svg";
 import RightArrowIcon from "../assets/images/icons/Right Arrow.svg";
+import { timeAgoTracker } from "../libs/timeAgoTracker";
 import CategoryLayout from "./categories/CategoryLayout";
 import ProjectCard from "./categories/ProjectCard";
 
@@ -73,12 +74,14 @@ function CompletedProject() {
               {data?.map((project, index) => (
                 <ProjectCard
                   key={index}
-                  thumbnail={project?.projectImage}
-                  watermark={project?.projectImage}
+                  thumbnail={project?.projectThumbnail}
+                  watermark={project?.projectThumbnail}
                   clientLogo={project?.user?.image}
                   title={project?.projectName}
                   clientName={project?.user?.userName}
-                  timeStamp={"5 days ago"}
+                  timeStamp={
+                    timeAgoTracker(project?.completedDate) || "5 days ago"
+                  }
                 />
               ))}
             </Slider>

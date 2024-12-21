@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { STRIPE_PUBLIC_KEY, configApi } from "../libs/configApi";
 
 const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
@@ -12,6 +12,7 @@ let initialValue = 1000;
 
 export default function Tips() {
   const { state } = useLocation();
+  const navigate = useNavigate();
 
   const { user } = useSelector((state) => state?.user);
 
@@ -154,12 +155,14 @@ export default function Tips() {
             </div>
           </div>
           <div className="mt-5 flex items-center justify-center gap-5 py-2 lg:justify-end">
-            <Link
-              to={`/order/${projectDetails?.projectNumber}`}
+            <button
+              onClick={() =>
+                navigate(`/order/${projectDetails?.projectNumber}`)
+              }
               className="decoration-solid hover:text-red-500 hover:underline"
             >
               No Thanks
-            </Link>
+            </button>
             <button
               className="w-[200px] rounded-[5px] bg-primary py-1 font-semibold text-white hover:bg-blue-400"
               onClick={handleSubmit}
@@ -225,12 +228,12 @@ export default function Tips() {
             </div>
           </div>
         </div>
-        <Link
-          to={`/order/${projectDetails?.projectNumber}`}
+        <button
+          onClick={() => navigate(`/order/${projectDetails?.projectNumber}`)}
           className="mt-6 text-center font-semibold text-[#000]"
         >
           Back to the project page
-        </Link>
+        </button>
       </div>
     </div>
   );

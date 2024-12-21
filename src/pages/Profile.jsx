@@ -18,14 +18,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import { LiaEditSolid } from "react-icons/lia";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import Nextdoor from "../assets/svg/Nextdoor";
-import ActiveProjects from "../components/customer-profile/ActiveProjects";
-import AllReviews from "../components/customer-profile/AllReviews";
-import CompletedProjects from "../components/customer-profile/CompletedProjects";
-import ProfileInfo from "../components/customer-profile/ProfileInfo";
-import { configApi } from "../libs/configApi";
-import { connectSocket } from "../libs/socketService";
-import { timeAgoTracker } from "../libs/timeAgoTracker";
+import { useLazyGetUsersProjectStatusQuery } from "../Redux/api/apiSlice";
 import { useGetMahfujurDetailsQuery } from "../Redux/api/dashboardApiSlice";
 import {
   useLazyGetAllMessagesQuery,
@@ -38,6 +31,14 @@ import {
 } from "../Redux/api/orderApiSlice";
 import { setChatData, setConversationUser } from "../Redux/features/chatSlice";
 import { setOnlineUsers, setUser } from "../Redux/features/userSlice";
+import Nextdoor from "../assets/svg/Nextdoor";
+import ActiveProjects from "../components/customer-profile/ActiveProjects";
+import AllReviews from "../components/customer-profile/AllReviews";
+import CompletedProjects from "../components/customer-profile/CompletedProjects";
+import ProfileInfo from "../components/customer-profile/ProfileInfo";
+import { configApi } from "../libs/configApi";
+import { connectSocket } from "../libs/socketService";
+import { timeAgoTracker } from "../libs/timeAgoTracker";
 
 function Profile({ user = {}, slug }) {
   const { data: usersProjects } = useUsersAllProjectsQuery({
@@ -73,6 +74,8 @@ function Profile({ user = {}, slug }) {
   const [sendMessageFromProfile] = useSendMessageFromProfileMutation();
 
   const { data: adminProfileData } = useGetMahfujurDetailsQuery();
+  const [getUserProfileData, { data: userProfileData }] =
+    useLazyGetUsersProjectStatusQuery();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -86,6 +89,12 @@ function Profile({ user = {}, slug }) {
   const [profileInfo, setProfileInfo] = useState(false);
   const [showDesqEdit, setShowDesqEdit] = useState(false);
   const [description, setDescription] = useState(user?.description || "");
+
+  useEffect(() => {
+    if (user?.id) {
+      getUserProfileData({ userId: user?.id });
+    }
+  }, [user, getUserProfileData]);
 
   useEffect(() => {
     // Update the state when the user prop changes
@@ -191,6 +200,31 @@ function Profile({ user = {}, slug }) {
     }
   };
 
+  const timeFormatter = (datetime) => {
+    const date = new Date(datetime); // Convert the ISO string into a Date object
+
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    const month = months[date.getMonth()]; // Get the month name
+    const day = date.getDate(); // Get the day of the month
+    const year = date.getFullYear(); // Get the full year
+
+    return `${month} ${day}, ${year}`;
+  };
+
   return (
     <section className="max-width mt-10 flex flex-col gap-10 md:flex-row lg:gap-16">
       <div className="min-w-[260px] md:w-1/4">
@@ -284,7 +318,9 @@ function Profile({ user = {}, slug }) {
             {user?.role === "USER" ? (
               <div className="flex justify-between gap-1 text-sm">
                 <span>Project Completion Rate</span>
-                <p className="font-semibold">100%</p>
+                <p className="font-semibold">
+                  {Math.round(userProfileData?.ProjectCompletedRate)}%
+                </p>
               </div>
             ) : (
               <div className="flex justify-between gap-1 text-sm">
@@ -297,31 +333,37 @@ function Profile({ user = {}, slug }) {
             {user?.role === "USER" ? (
               <div className="flex justify-between gap-1 text-sm">
                 <span>Avg. Rating Taken</span>
-                <p className="font-semibold">4.9 Stars</p>
+                <p className="font-semibold">
+                  {userProfileData?.AvgRatingTaken?.toFixed(1)} Stars
+                </p>
               </div>
             ) : (
               <div className="flex justify-between gap-1 text-sm">
                 <span>On-Time Delivery</span>
-                <p className="font-semibold">
-                  100%
-                </p>
+                <p className="font-semibold">100%</p>
               </div>
             )}
             {user?.role === "USER" ? (
               <div className="flex justify-between gap-1 text-sm">
                 <span>Avg. Rating Given</span>
-                <p className="font-semibold">5 Stars</p>
+                <p className="font-semibold">
+                  {userProfileData?.AvgRatingGiven?.toFixed(1)} Stars
+                </p>
               </div>
             ) : (
               <div className="flex justify-between gap-1 text-sm">
                 <span>Active Projects</span>
-                <p className="font-semibold">{adminProfileData?.Active_Projects}</p>
+                <p className="font-semibold">
+                  {adminProfileData?.Active_Projects}
+                </p>
               </div>
             )}
             {user?.role === "USER" ? (
               <div className="flex justify-between gap-1 text-sm">
                 <span>Last Project on</span>
-                <p className="font-semibold">May 27, 2024</p>
+                <p className="font-semibold">
+                  {timeFormatter(userProfileData?.LastProjectOn)}
+                </p>
               </div>
             ) : (
               <div className="flex justify-between gap-1 text-sm">

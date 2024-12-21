@@ -31,15 +31,35 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
   const [selectedImage, setSelectedImage] = useState(null);
 
   // handle download all button
+  // const handleDownloadAll = (files) => {
+  //   files.forEach((file) => {
+  //     const link = document.createElement("a");
+  //     link.href = file.url; // Ensure this points to the file's URL
+  //     link.setAttribute("download", file.name); // Set the filename
+  //     link.target = "_blank";
+  //     document.body.appendChild(link);
+  //     link.click(); // Simulate click to download
+  //     document.body.removeChild(link); // Clean up
+  //   });
+  // };
   const handleDownloadAll = (files) => {
     files.forEach((file) => {
-      const link = document.createElement("a");
-      link.href = file.url; // Ensure this points to the file's URL
-      link.setAttribute("download", file.name); // Set the filename
-      link.target = "_blank";
-      document.body.appendChild(link);
-      link.click(); // Simulate click to download
-      document.body.removeChild(link); // Clean up
+      // Use fetch to download the file as a Blob
+      fetch(file.url, { mode: "no-cors" })
+        .then((response) => response.blob()) // Convert response to a Blob
+        .then((blob) => {
+          const link = document.createElement("a");
+          const url = URL.createObjectURL(blob); // Create a URL for the Blob
+          link.href = url;
+          link.setAttribute("download", file.name); // Set the filename for download
+          document.body.appendChild(link);
+          link.click(); // Trigger the download
+          document.body.removeChild(link); // Clean up after download
+          URL.revokeObjectURL(url); // Clean up the object URL
+        })
+        .catch((error) => {
+          console.error("Download failed:", error);
+        });
     });
   };
 
@@ -49,7 +69,7 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
 
     // Fetch and add files to the zip
     for (const file of files) {
-      const response = await fetch(file?.url);
+      const response = await fetch(file?.url, { mode: "no-cors" });
       const blob = await response.blob();
       zip.file(file.name || file.url.split("/").pop(), blob); // Use file.name or fallback to the URL's last segment
     }
