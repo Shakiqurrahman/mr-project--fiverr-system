@@ -245,7 +245,7 @@ function Profile({ user = {}, slug }) {
             <div className="relative mx-auto flex size-32 items-center justify-center rounded-full border border-gray-300 bg-[#ffefef]/30">
               {user?.image ? (
                 <img
-                  className="h-full w-full rounded-full object-cover"
+                  className="h-full w-full rounded-full object-cover select-none"
                   src={user?.image}
                   alt={user?.fullName}
                 />
