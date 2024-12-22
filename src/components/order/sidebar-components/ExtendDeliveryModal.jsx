@@ -1,3 +1,5 @@
+import { loadStripe } from "@stripe/stripe-js";
+import axios from "axios";
 import React, { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { IoCloseSharp } from "react-icons/io5";
@@ -6,8 +8,10 @@ import shortid from "shortid";
 import { useSendAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
 import { setMessages, setReplyTo } from "../../../Redux/features/orderSlice";
 import useOutsideClick from "../../../hooks/useOutsideClick";
-import { configApi } from "../../../libs/configApi";
+import { STRIPE_PUBLIC_KEY, configApi } from "../../../libs/configApi";
 import { connectSocket } from "../../../libs/socketService";
+
+const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 
 const ExtendDeliveryModal = ({ handleClose }) => {
   const [sendAOrderMessage] = useSendAOrderMessageMutation();
@@ -45,8 +49,21 @@ const ExtendDeliveryModal = ({ handleClose }) => {
     e.preventDefault();
     const data =
       extendType === "requestByMe"
-        ? { ...form, extendType, isAccepted: false, isRejected: false }
-        : { ...form, extendType, amount, isAccepted: false, isRejected: false };
+        ? {
+            ...form,
+            extendType,
+            isAccepted: false,
+            isRejected: false,
+            isSubmittedByAdmin: isAdmin ? true : false,
+          }
+        : {
+            ...form,
+            extendType,
+            amount,
+            isAccepted: false,
+            isRejected: false,
+            isSubmittedByAdmin: isAdmin ? true : false,
+          };
 
     const submitForm = {
       messageText: "",
@@ -84,7 +101,6 @@ const ExtendDeliveryModal = ({ handleClose }) => {
 
     dispatch(setReplyTo(null));
     // onNoteSubmit(form);
-    handleClose(false);
 
     try {
       const res = await sendAOrderMessage({
@@ -94,6 +110,34 @@ const ExtendDeliveryModal = ({ handleClose }) => {
     } catch (error) {
       toast.error("Something went wrong!");
     }
+    if (!isAdmin) {
+      const data = {
+        totalAmount: amount,
+        paymentType: "ExtendDelivery",
+        updatedMessage: submitForm,
+        duration: form.days,
+        orderId: projectDetails?.id,
+        requestedByClient: true,
+        userId: user?.id,
+        projectNumber: projectDetails?.projectNumber,
+      };
+      try {
+        const response = await axios.post(
+          `${configApi.api}payment/extendad-delivery`,
+          {
+            data,
+          },
+        );
+
+        const sessionId = response?.data?.data?.id;
+        // Redirect to Stripe Checkout
+        const stripe = await stripePromise;
+        await stripe.redirectToCheckout({ sessionId });
+      } catch (error) {
+        toast.error("Something went wrong!");
+      }
+    }
+    handleClose(false);
   };
 
   useOutsideClick(modalRef, () => handleClose(false));
