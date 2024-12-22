@@ -148,6 +148,15 @@ export const orderApiSlice = createApi({
       invalidatesTags: ["messages", "cancel"],
     }),
 
+    acceptExtendDelivery: builder.mutation({
+      query: ({ orderMessageId, approvedByAdmin, orderId }) => ({
+        url: `order/approve-extension`,
+        method: "POST",
+        body: { orderMessageId, approvedByAdmin, orderId },
+      }),
+      invalidatesTags: ["messages"],
+    }),
+
     submitDelivery: builder.mutation({
       query: ({ projectNumber }) => ({
         url: `delivery/deliverd`,
@@ -200,4 +209,5 @@ export const {
   useSubmitDeliveryMutation,
   useAcceptRevisionMutation,
   useAcceptDeliveryMutation,
+  useAcceptExtendDeliveryMutation,
 } = orderApiSlice;

@@ -3,7 +3,10 @@ import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { useUpdateAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
+import {
+  useAcceptExtendDeliveryMutation,
+  useUpdateAOrderMessageMutation,
+} from "../../../Redux/api/orderApiSlice";
 import { STRIPE_PUBLIC_KEY, configApi } from "../../../libs/configApi";
 
 const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
@@ -12,19 +15,31 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
   const { user } = useSelector((state) => state?.user);
   const { projectDetails } = useSelector((state) => state.order);
 
+  const [acceptExtend] = useAcceptExtendDeliveryMutation();
+
   const [isLoading, setIsLoading] = useState(false);
 
   // Checking Admin
   const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
 
   const [updateAOrderMessage] = useUpdateAOrderMessageMutation();
-  const handleAccept = (e) => {
+  const handleAccept = async (e) => {
     e.preventDefault();
-    console.log("accept");
+    if (messageObj?.uniqueId) {
+      const data = {
+        orderMessageId: messageObj?.uniqueId,
+        approvedByAdmin: isAdmin ? true : false,
+        orderId: projectDetails?.id,
+      };
+      try {
+        const res = await acceptExtend(data).unwrap();
+      } catch (error) {
+        toast.error("Something went wrong!!!");
+      }
+    }
   };
   const handleAcceptWithPayment = async (e) => {
     e.preventDefault();
-    console.log("accept payment");
     if (messageObj?.uniqueId) {
       setIsLoading(true);
       const { id, ...updateMessage } = messageObj;
@@ -73,7 +88,6 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
       }
     }
   };
-  console.log(value);
   return (
     <div className="mt-5 border bg-lightskyblue">
       <div className="flex items-center border-b bg-[#CCE5FB] p-4 text-lg font-semibold">
