@@ -25,6 +25,8 @@ const ExtendDeliveryModal = ({ handleClose }) => {
     explainWhyExtend: "",
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
   // Socket Connection
   const socket = connectSocket(`${configApi.socket}`, token);
 
@@ -47,97 +49,103 @@ const ExtendDeliveryModal = ({ handleClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data =
-      extendType === "requestByMe"
-        ? {
-            ...form,
-            extendType,
-            isAccepted: false,
-            isRejected: false,
-            isSubmittedByAdmin: isAdmin ? true : false,
-          }
-        : {
-            ...form,
-            extendType,
-            amount,
-            isAccepted: false,
-            isRejected: false,
-            isSubmittedByAdmin: isAdmin ? true : false,
-          };
+    if (form?.explainWhyExtend) {
+      setIsLoading(true);
+      const data =
+        extendType === "requestByMe"
+          ? {
+              ...form,
+              extendType,
+              isAccepted: false,
+              isRejected: false,
+              isSubmittedByAdmin: isAdmin ? true : false,
+            }
+          : {
+              ...form,
+              extendType,
+              amount,
+              isAccepted: false,
+              isRejected: false,
+              isSubmittedByAdmin: isAdmin ? true : false,
+            };
 
-    const submitForm = {
-      messageText: "",
-      senderUserName: user?.userName,
-      userImage: user?.image,
-      attachment: [],
-      additionalOffer: null,
-      extendDeliveryTime: data,
-      deliverProject: null,
-      cancelProject: null,
-      imageComments: [],
-      timeAndDate,
-      replyTo,
-      projectNumber: projectDetails?.projectNumber,
-      uniqueId: shortid(),
-    };
-
-    if (isAdmin) {
-      socket?.emit("order:admin-message", {
-        userId: projectDetails?.userId,
-        ...submitForm,
-      });
-    } else {
-      socket?.emit("order:user-message", {
-        ...submitForm,
-      });
-    }
-
-    dispatch(
-      setMessages({
-        ...submitForm,
-        recipientId: isAdmin ? projectDetails?.userId : "",
-      }),
-    );
-
-    dispatch(setReplyTo(null));
-    // onNoteSubmit(form);
-
-    try {
-      const res = await sendAOrderMessage({
-        recipientId: isAdmin ? projectDetails?.userId : null,
-        ...submitForm,
-      }).unwrap();
-    } catch (error) {
-      toast.error("Something went wrong!");
-    }
-    if (!isAdmin) {
-      const data = {
-        totalAmount: amount,
-        paymentType: "ExtendDelivery",
-        updatedMessage: submitForm,
-        duration: form.days,
-        orderId: projectDetails?.id,
-        requestedByClient: true,
-        userId: user?.id,
+      const submitForm = {
+        messageText: "",
+        senderUserName: user?.userName,
+        userImage: user?.image,
+        attachment: [],
+        additionalOffer: null,
+        extendDeliveryTime: data,
+        deliverProject: null,
+        cancelProject: null,
+        imageComments: [],
+        timeAndDate,
+        replyTo,
         projectNumber: projectDetails?.projectNumber,
+        uniqueId: shortid(),
       };
-      try {
-        const response = await axios.post(
-          `${configApi.api}payment/extendad-delivery`,
-          {
-            data,
-          },
-        );
 
-        const sessionId = response?.data?.data?.id;
-        // Redirect to Stripe Checkout
-        const stripe = await stripePromise;
-        await stripe.redirectToCheckout({ sessionId });
+      if (isAdmin) {
+        socket?.emit("order:admin-message", {
+          userId: projectDetails?.userId,
+          ...submitForm,
+        });
+      } else {
+        socket?.emit("order:user-message", {
+          ...submitForm,
+        });
+      }
+
+      dispatch(
+        setMessages({
+          ...submitForm,
+          recipientId: isAdmin ? projectDetails?.userId : "",
+        }),
+      );
+
+      dispatch(setReplyTo(null));
+      // onNoteSubmit(form);
+
+      try {
+        const res = await sendAOrderMessage({
+          recipientId: isAdmin ? projectDetails?.userId : null,
+          ...submitForm,
+        }).unwrap();
       } catch (error) {
         toast.error("Something went wrong!");
       }
+      if (!isAdmin) {
+        const data = {
+          totalAmount: amount,
+          paymentType: "ExtendDelivery",
+          updatedMessage: submitForm,
+          duration: form.days,
+          orderId: projectDetails?.id,
+          requestedByClient: true,
+          userId: user?.id,
+          projectNumber: projectDetails?.projectNumber,
+        };
+        try {
+          const response = await axios.post(
+            `${configApi.api}payment/extendad-delivery`,
+            {
+              data,
+            },
+          );
+
+          const sessionId = response?.data?.data?.id;
+          // Redirect to Stripe Checkout
+          const stripe = await stripePromise;
+          await stripe.redirectToCheckout({ sessionId });
+        } catch (error) {
+          toast.error("Something went wrong!");
+        }
+      }
+      handleClose(false);
+      setIsLoading(false);
+    } else {
+      toast.error("Please provide a reason!!!");
     }
-    handleClose(false);
   };
 
   useOutsideClick(modalRef, () => handleClose(false));
@@ -211,7 +219,7 @@ const ExtendDeliveryModal = ({ handleClose }) => {
             </div>
             <button
               type="submit"
-              disabled={form.days <= 0}
+              disabled={form.days <= 0 || isLoading}
               className="rounded bg-primary px-5 py-2 text-base font-semibold text-white outline-none duration-300 hover:bg-primary/80 disabled:bg-primary/60"
             >
               Confirm Extend
