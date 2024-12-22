@@ -157,10 +157,10 @@ export const orderApiSlice = createApi({
       invalidatesTags: ["messages"],
     }),
     updateExtendDelivery: builder.mutation({
-      query: ({ orderMessageId, approvedByAdmin, orderId }) => ({
+      query: ({ updateMessageId, days, orderId }) => ({
         url: `extend/delivery`,
         method: "POST",
-        body: { orderMessageId, approvedByAdmin, orderId },
+        body: { updateMessageId, days, orderId },
       }),
       invalidatesTags: ["messages"],
     }),
@@ -218,4 +218,5 @@ export const {
   useAcceptRevisionMutation,
   useAcceptDeliveryMutation,
   useAcceptExtendDeliveryMutation,
+  useUpdateExtendDeliveryMutation,
 } = orderApiSlice;

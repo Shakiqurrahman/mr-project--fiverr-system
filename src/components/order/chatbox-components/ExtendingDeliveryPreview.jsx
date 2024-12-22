@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import {
   useAcceptExtendDeliveryMutation,
   useUpdateAOrderMessageMutation,
+  useUpdateExtendDeliveryMutation,
 } from "../../../Redux/api/orderApiSlice";
 import { STRIPE_PUBLIC_KEY, configApi } from "../../../libs/configApi";
 
@@ -16,6 +17,7 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
   const { projectDetails } = useSelector((state) => state.order);
 
   const [acceptExtend] = useAcceptExtendDeliveryMutation();
+  const [updateExtend] = useUpdateExtendDeliveryMutation();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -38,6 +40,23 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
       }
     }
   };
+
+  const handleAcceptByUser = async (e) => {
+    e.preventDefault();
+    if (messageObj?.uniqueId) {
+      const data = {
+        orderMessageId: messageObj?.uniqueId,
+        days: value?.days,
+        orderId: projectDetails?.id,
+      };
+      try {
+        const res = await updateExtend(data).unwrap();
+      } catch (error) {
+        toast.error("Something went wrong!!!");
+      }
+    }
+  };
+
   const handleAcceptWithPayment = async (e) => {
     e.preventDefault();
     if (messageObj?.uniqueId) {
@@ -125,7 +144,7 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
                 onClick={
                   value?.extendType === "requestByClient"
                     ? handleAcceptWithPayment
-                    : handleAccept
+                    : handleAcceptByUser
                 }
                 disabled={isLoading}
                 className="w-[150px] bg-primary px-5 py-2 text-lg font-semibold text-white outline-none duration-300 hover:bg-primary/80 disabled:bg-primary/50"
