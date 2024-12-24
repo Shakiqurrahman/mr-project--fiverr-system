@@ -227,7 +227,7 @@ function Profile({ user = {}, slug }) {
 
   return (
     <section className="max-width mt-10 flex flex-col gap-10 md:flex-row lg:gap-16">
-      <div className="min-w-[260px] md:w-1/4">
+      <div className="min-w-[300px] md:w-1/4">
         <div className="relative border border-gray-300 bg-[#edf7fd] p-4 py-6">
           {/* profile info  */}
           <BsInfoCircle
@@ -245,7 +245,7 @@ function Profile({ user = {}, slug }) {
             <div className="relative mx-auto flex size-32 items-center justify-center rounded-full border border-gray-300 bg-[#ffefef]/30">
               {user?.image ? (
                 <img
-                  className="h-full w-full rounded-full object-cover select-none"
+                  className="h-full w-full select-none rounded-full object-cover"
                   src={user?.image}
                   alt={user?.fullName}
                 />
@@ -367,9 +367,9 @@ function Profile({ user = {}, slug }) {
                 </p>
               </div>
             ) : (
-              <div className="flex justify-between gap-1 text-sm">
+              <div className="flex items-center justify-between gap-1 text-sm">
                 <span>Last Project Completed</span>
-                <p className="font-semibold">
+                <p className="text-nowrap font-semibold">
                   {adminProfileData?.LastProjectCompleted?.date}
                 </p>
               </div>
