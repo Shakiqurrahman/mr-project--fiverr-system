@@ -1,9 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
+import { useSelector } from "react-redux";
+import { configApi } from "../../libs/configApi";
+import { connectSocket } from "../../libs/socketService";
+import { setOnlineUsers } from "../../Redux/features/userSlice";
+import GetNotificationTitle from "./GetNotificationTitle";
 
-const NotificationPopper = ({ logo, type, userName, onClose, isOnline }) => {
+const NotificationPopper = ({ logo, type, userName, onClose }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+
+  const { onlineUsers, token } = useSelector((state) => state.user);
+  const socket = connectSocket(`${configApi.socket}`, token);
+
+  const [notification, setNotification] = useState(null);
 
   const letterLogo = userName?.trim().charAt(0).toUpperCase();
 
@@ -26,6 +36,33 @@ const NotificationPopper = ({ logo, type, userName, onClose, isOnline }) => {
     setTimeout(onClose, 300);
   };
 
+  // Listen to new notifications from the server
+  useEffect(() => {
+    socket?.on("get:notification", (notification) => {
+      console.log("notification", notification);
+      setNotification(notification);
+    });
+  }, [socket]);
+
+  const notificationTitle = GetNotificationTitle({
+    type: notification?.type,
+    message: notification?.message,
+    rating: notification?.rating,
+    commentQuantity: notification?.commentQuantity,
+  });
+
+  // all avaliable users
+  useEffect(() => {
+    socket?.emit("view-online-users");
+    socket?.on("online-users", (onlineUsers) => {
+      dispatch(setOnlineUsers(onlineUsers));
+    });
+  }, [socket, dispatch]);
+
+  const isUserOnline = (userId) => {
+    return onlineUsers.some((onlineUser) => onlineUser.userId === userId);
+  };
+
   return (
     <div
       className={`fixed bottom-4 right-4 z-[999] flex max-w-80 items-center rounded-lg bg-white p-4 shadow-xl sm:max-w-[400px] ${
@@ -35,10 +72,10 @@ const NotificationPopper = ({ logo, type, userName, onClose, isOnline }) => {
       onMouseLeave={handleMouseLeave}
     >
       <div className="relative mx-auto flex size-10 items-center justify-center rounded-full border border-gray-300 bg-[#ffefef]/30 sm:size-14">
-        {logo ? (
+        {notification?.avatar ? (
           <img
             className="h-full w-full rounded-full object-cover"
-            src={logo}
+            src={notification?.avatar}
             alt="Sender Logo"
           />
         ) : (
@@ -46,19 +83,13 @@ const NotificationPopper = ({ logo, type, userName, onClose, isOnline }) => {
             {letterLogo}
           </div>
         )}
-        <span
-          className={`absolute bottom-0 right-1 size-3 rounded-full border border-white ${isOnline ? "bg-primary" : "bg-gray-400"}`}
-        ></span>
+        {notification?.userId && (
+          <span
+            className={`absolute bottom-0 right-1 size-3 rounded-full border border-white ${isUserOnline(notification?.userId) ? "bg-primary" : "bg-gray-400"}`}
+          ></span>
+        )}
       </div>
-      <div className="ml-4 flex-1">
-        <p className="text-sm font-medium sm:text-base">
-          {`You have a new `}
-          <span className="font-bold">{type}</span>
-          {` from `}
-          <span className="font-bold">{userName}</span>
-          {`. Get Started.`}
-        </p>
-      </div>
+      <div className="ml-4 flex-1">{notificationTitle}</div>
       <button
         className="ml-4 text-gray-600 hover:text-gray-800"
         onClick={handleMouseLeave}

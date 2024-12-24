@@ -1,9 +1,13 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { IoClose } from "react-icons/io5";
 import { MdOutlineNotifications } from "react-icons/md";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useOutsideClick from "../../hooks/useOutsideClick";
+import { configApi } from "../../libs/configApi";
+import { connectSocket } from "../../libs/socketService";
+import { formatTimeAgo } from "../../libs/timeFormatter";
 import { useGetNotificationQuery } from "../../Redux/api/apiSlice";
+import { setOnlineUsers } from "../../Redux/features/userSlice";
 import GetNotificationTitle from "./GetNotificationTitle";
 
 const NotificationModal = ({ close }) => {
@@ -12,6 +16,20 @@ const NotificationModal = ({ close }) => {
   const unReadNotifications = 0;
 
   const { data: notificationData } = useGetNotificationQuery();
+  const { onlineUsers, token } = useSelector((state) => state.user);
+
+  const socket = connectSocket(`${configApi.socket}`, token);
+  // all avaliable users
+  useEffect(() => {
+    socket?.emit("view-online-users");
+    socket?.on("online-users", (onlineUsers) => {
+      dispatch(setOnlineUsers(onlineUsers));
+    });
+  }, [socket, dispatch]);
+
+  const isUserOnline = (userId) => {
+    return onlineUsers.some((onlineUser) => onlineUser.userId === userId);
+  };
 
   useOutsideClick(notificalModal, () => dispatch(close(false)));
   return (
@@ -55,10 +73,10 @@ const NotificationModal = ({ close }) => {
                 <div className="flex items-center gap-2">
                   {/* avatar  */}
                   <div className="relative mx-auto flex size-10 items-center justify-center rounded-full border border-gray-300 bg-[#ffefef]/30 sm:size-14">
-                    {notification?.avatar ? (
+                    {notification?.payload?.avatar ? (
                       <img
                         className="h-full w-full rounded-full object-cover"
-                        src={notification?.avatar}
+                        src={notification?.payload?.avatar}
                         alt="Sender Logo"
                       />
                     ) : (
@@ -67,16 +85,18 @@ const NotificationModal = ({ close }) => {
                       </div>
                     )}
                     <span
-                      className={`absolute bottom-0 right-1 size-3 rounded-full border border-white ${notification?.isOnline ? "bg-primary" : "bg-gray-400"}`}
+                      className={`absolute bottom-0 right-1 size-3 rounded-full border border-white ${isUserOnline(notification?.payload?.userId) ? "bg-primary" : "bg-gray-400"}`}
                     ></span>
                   </div>
 
                   {/* msg  */}
                   <div className="flex flex-1 flex-col gap-2">
                     <div>{notificationTitle}</div>
-                    <p className="text-sm text-gray-600">
-                      {notification?.date}
-                    </p>
+                    {notification?.payload?.createdAt && (
+                      <p className="text-sm text-gray-600">
+                        {formatTimeAgo(notification?.payload?.createdAt)}
+                      </p>
+                    )}
                   </div>
                 </div>
                 {notification?.payload?.thumbnailUrl && (
