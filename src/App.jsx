@@ -6,7 +6,6 @@ import { RouterProvider } from "react-router-dom";
 import Layout from "./AllRoutes/Layout";
 import { router } from "./AllRoutes/Routes";
 import store from "./Redux/store";
-import NotificationPopper from "./components/Notifications/NotificationPopper";
 import AuthWrapper from "./libs/AuthWrapper";
 import { configApi } from "./libs/configApi";
 import { connectSocket } from "./libs/socketService";
@@ -31,7 +30,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    socket.on("get:notification", (notification) => {
+    socket?.on("get:notification", (notification) => {
       console.log("notification", notification);
     });
   }, [socket]);
