@@ -21,7 +21,7 @@ const OrderReviewForm = () => {
       const getThumbnailTrueOrFalse = projectDetails?.review?.find(
         (r) => r?.senderType === "CLIENT",
       );
-      setIsThumbnail(getThumbnailTrueOrFalse?.isThumbnail);
+      setIsThumbnail(getThumbnailTrueOrFalse?.isThumbnail || true);
     }
   }, [projectDetails]);
 

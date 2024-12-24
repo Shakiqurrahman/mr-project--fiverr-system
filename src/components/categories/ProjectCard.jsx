@@ -36,7 +36,11 @@ function ProjectCard({
 
   const handlePreviewImage = (e) => {
     e.preventDefault();
-    dispatch(setPreviewImage(watermark));
+    if (clientName) {
+      dispatch(setPreviewImage(thumbnail));
+    } else {
+      dispatch(setPreviewImage(watermark));
+    }
   };
   return (
     <>
