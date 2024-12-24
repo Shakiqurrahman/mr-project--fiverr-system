@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { IoClose } from "react-icons/io5";
 import { MdOutlineNotifications } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { configApi } from "../../libs/configApi";
 import { connectSocket } from "../../libs/socketService";
@@ -64,6 +65,8 @@ const NotificationModal = ({ close }) => {
               message: notification?.message,
               rating: notification?.rating,
               commentQuantity: notification?.commentQuantity,
+              hours: notification?.payload?.hours,
+              days: notification?.payload?.days,
             });
             return (
               <div
@@ -100,11 +103,17 @@ const NotificationModal = ({ close }) => {
                   </div>
                 </div>
                 {notification?.payload?.thumbnailUrl && (
-                  <img
-                    className="size-10 flex-grow-0 rounded-lg object-cover"
-                    src={notification?.payload?.thumbnailUrl}
-                    alt="ordered image"
-                  />
+                  <Link
+                    className="w-24 flex-grow-0"
+                    to={`/order/${notification?.payload?.projectNumber}`}
+                    onClick={() => dispatch(close(false))}
+                  >
+                    <img
+                      className="w-full rounded-lg object-cover"
+                      src={notification?.payload?.thumbnailUrl}
+                      alt="ordered image"
+                    />
+                  </Link>
                 )}
               </div>
             );
