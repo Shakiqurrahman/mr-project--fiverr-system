@@ -1,21 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { configApi } from "../../libs/configApi";
 import { connectSocket } from "../../libs/socketService";
 import { setOnlineUsers } from "../../Redux/features/userSlice";
 import GetNotificationTitle from "./GetNotificationTitle";
 
-const NotificationPopper = ({ logo, type, userName, onClose }) => {
+const NotificationPopper = ({
+  logo,
+  type,
+  userName,
+  onClose,
+  notification,
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+  const dispatch = useDispatch();
 
   const { onlineUsers, token } = useSelector((state) => state.user);
   const socket = connectSocket(`${configApi.socket}`, token);
 
-  const [notification, setNotification] = useState(null);
+  // const [notification, setNotification] = useState(null);
 
-  const letterLogo = userName?.trim().charAt(0).toUpperCase();
+  const letterLogo = notification?.userName?.trim().charAt(0).toUpperCase();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -37,13 +44,6 @@ const NotificationPopper = ({ logo, type, userName, onClose }) => {
   };
 
   // Listen to new notifications from the server
-  useEffect(() => {
-    socket?.on("get:notification", (notification) => {
-      console.log("notification", notification);
-      setNotification(notification);
-    });
-  }, [socket]);
-
   const notificationTitle = GetNotificationTitle({
     type: notification?.type,
     message: notification?.message,
