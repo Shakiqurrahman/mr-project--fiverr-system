@@ -1,6 +1,6 @@
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useUpdateAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
@@ -13,10 +13,13 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
   const { user } = useSelector((state) => state.user);
   const { projectDetails } = useSelector((state) => state.order);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
 
   const handleAcceptOffer = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     if (messageObj?.uniqueId) {
       const updatedMessage = {
         ...messageObj,
@@ -50,9 +53,11 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
         toast.error("Something went wrong!");
       }
     }
+    setIsLoading(false);
   };
   const handleRejectOffer = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     if (messageObj?.commonKey) {
       const data = {
         ...messageObj,
@@ -67,9 +72,11 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
         toast.error("Something went wrong!");
       }
     }
+    setIsLoading(false);
   };
   const handleWithdrawOffer = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     if (messageObj?.commonKey) {
       const data = {
         ...messageObj,
@@ -84,6 +91,7 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
         toast.error("Something went wrong!");
       }
     }
+    setIsLoading(false);
   };
   return (
     <div className="mt-3">
@@ -130,14 +138,16 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
                     <button
                       type="button"
                       onClick={handleAcceptOffer}
-                      className="bg-primary px-10 py-2 text-sm font-semibold text-white sm:text-base"
+                      disabled={isLoading}
+                      className="bg-primary px-10 py-2 text-sm font-semibold text-white disabled:bg-primary/50 sm:text-base"
                     >
                       Accept
                     </button>
                     <button
                       type="button"
                       onClick={handleRejectOffer}
-                      className="bg-gray-400 px-10 py-2 text-sm font-semibold text-white sm:text-base"
+                      disabled={isLoading}
+                      className="bg-gray-400 px-10 py-2 text-sm font-semibold text-white disabled:bg-gray-400/50 sm:text-base"
                     >
                       Decline
                     </button>
@@ -146,7 +156,8 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
                   <button
                     type="button"
                     onClick={handleWithdrawOffer}
-                    className="bg-primary px-10 py-2 text-sm font-semibold text-white sm:text-base"
+                    disabled={isLoading}
+                    className="bg-primary px-10 py-2 text-sm font-semibold text-white disabled:bg-primary/50 sm:text-base"
                   >
                     Withdraw Offer
                   </button>

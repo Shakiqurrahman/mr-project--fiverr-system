@@ -45,7 +45,7 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
     e.preventDefault();
     if (messageObj?.uniqueId) {
       const data = {
-        orderMessageId: messageObj?.uniqueId,
+        updateMessageId: messageObj?.uniqueId,
         days: value?.days,
         orderId: projectDetails?.id,
       };

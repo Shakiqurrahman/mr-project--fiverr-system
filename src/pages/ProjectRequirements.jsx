@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { FaSpinner } from "react-icons/fa";
+import { ImSpinner9 } from "react-icons/im";
 import { IoMdAttach } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -317,145 +318,151 @@ const ProjectRequirements = () => {
             complete the Project Requirements page, your project will not start
             and your project&apos;s timer will not start.
           </p>
-          <form
-            className="mx-auto max-w-[800px] border bg-lightskyblue"
-            onSubmit={handleSubmit}
-          >
-            <h1 className="tex-lg bg-primary p-4 text-center font-medium text-white sm:text-[22px]">
-              Project Requirements
-            </h1>
-            <div className="px-3">
-              {requirements?.map((item, i) => (
-                <div key={i} className="mt-6">
-                  <label className="mb-3 flex items-start gap-1 px-2 text-sm font-semibold sm:text-base">
-                    <span className="text-primary">{i + 1}.</span>{" "}
-                    {item.question}
-                  </label>
-                  <div
-                    className={`border bg-white ${item.answer.length > 5000 ? "border-canceled" : "border-solid"}`}
-                  >
-                    <textarea
-                      className="block h-[80px] w-full resize-none p-3 text-sm outline-none sm:h-[100px] sm:text-base"
-                      placeholder="Type here"
-                      value={item.answer}
-                      onChange={(e) => handleChangeAnswer(e, item.id)}
-                      required
-                      ref={(el) => (textareasRef.current[i] = el)}
-                    ></textarea>
-                    <div className="flex items-center justify-end gap-3 p-3">
-                      <span
-                        className={`text-sm font-medium ${item.answer.length > 5000 ? "text-canceled" : "text-black/50"}`}
-                      >
-                        {item.answer.length}/5,000
-                      </span>
-                      <EmojiPicker
-                        onEmojiSelect={(emoji) =>
-                          handleEmojiSelect(emoji, i, item.id)
-                        }
-                        emojiSize={"text-lg"}
-                        style={{ transform: "translateX(-70%)" }}
-                      />
-                      <Divider className={"h-[20px] w-[2px] !bg-black/20"} />
-                      <div>
-                        <input
-                          type="file"
-                          id={i}
-                          hidden
-                          ref={(el) => (fileInputsRef.current[item.id] = el)}
-                          onChange={(e) =>
-                            handleChangeSelectedImage(e, item.id)
+          {requirements?.length > 0 ? (
+            <form
+              className="mx-auto max-w-[800px] border bg-lightskyblue"
+              onSubmit={handleSubmit}
+            >
+              <h1 className="tex-lg bg-primary p-4 text-center font-medium text-white sm:text-[22px]">
+                Project Requirements
+              </h1>
+              <div className="px-3">
+                {requirements?.map((item, i) => (
+                  <div key={i} className="mt-6">
+                    <label className="mb-3 flex items-start gap-1 px-2 text-sm font-semibold sm:text-base">
+                      <span className="text-primary">{i + 1}.</span>{" "}
+                      {item.question}
+                    </label>
+                    <div
+                      className={`border bg-white ${item.answer.length > 5000 ? "border-canceled" : "border-solid"}`}
+                    >
+                      <textarea
+                        className="block h-[80px] w-full resize-none p-3 text-sm outline-none sm:h-[100px] sm:text-base"
+                        placeholder="Type here"
+                        value={item.answer}
+                        onChange={(e) => handleChangeAnswer(e, item.id)}
+                        required
+                        ref={(el) => (textareasRef.current[i] = el)}
+                      ></textarea>
+                      <div className="flex items-center justify-end gap-3 p-3">
+                        <span
+                          className={`text-sm font-medium ${item.answer.length > 5000 ? "text-canceled" : "text-black/50"}`}
+                        >
+                          {item.answer.length}/5,000
+                        </span>
+                        <EmojiPicker
+                          onEmojiSelect={(emoji) =>
+                            handleEmojiSelect(emoji, i, item.id)
                           }
-                          multiple
+                          emojiSize={"text-lg"}
+                          style={{ transform: "translateX(-70%)" }}
                         />
-                        <label htmlFor={i} className="cursor-pointer">
-                          <IoMdAttach size={20} />
-                        </label>
+                        <Divider className={"h-[20px] w-[2px] !bg-black/20"} />
+                        <div>
+                          <input
+                            type="file"
+                            id={i}
+                            hidden
+                            ref={(el) => (fileInputsRef.current[item.id] = el)}
+                            onChange={(e) =>
+                              handleChangeSelectedImage(e, item.id)
+                            }
+                            multiple
+                          />
+                          <label htmlFor={i} className="cursor-pointer">
+                            <IoMdAttach size={20} />
+                          </label>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  {item?.attachments?.length > 0 && (
-                    <>
-                      {uploadFilesLength[i] !== item?.attachments?.length && (
-                        <p className="mt-4 text-xs">
-                          Uploaded {item?.attachments?.length}/
-                          {uploadFilesLength[i]}
-                        </p>
-                      )}
-                      <div className="preview-scroll-overflow-x mt-4 flex gap-4">
-                        {item?.attachments?.map((att, idx) => (
-                          <div key={idx} className="w-[120px] shrink-0">
-                            <div className="group relative">
-                              {att?.url ? (
-                                <FilePreview file={att} />
-                              ) : (
-                                <div className="flex h-[80px] w-full items-center justify-center bg-lightcream">
-                                  <CircleProgressBar
-                                    precentage={att?.progress}
-                                    circleWidth={50}
-                                  />
-                                </div>
-                              )}
-                              {(att?.url || att?.progress === 100) && (
-                                <button
-                                  type="button"
-                                  className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
-                                  onClick={() =>
-                                    handleImageRemove(idx, item.id)
-                                  }
-                                >
-                                  <RiDeleteBin6Line size={20} />
-                                </button>
-                              )}
+                    {item?.attachments?.length > 0 && (
+                      <>
+                        {uploadFilesLength[i] !== item?.attachments?.length && (
+                          <p className="mt-4 text-xs">
+                            Uploaded {item?.attachments?.length}/
+                            {uploadFilesLength[i]}
+                          </p>
+                        )}
+                        <div className="preview-scroll-overflow-x mt-4 flex gap-4">
+                          {item?.attachments?.map((att, idx) => (
+                            <div key={idx} className="w-[120px] shrink-0">
+                              <div className="group relative">
+                                {att?.url ? (
+                                  <FilePreview file={att} />
+                                ) : (
+                                  <div className="flex h-[80px] w-full items-center justify-center bg-lightcream">
+                                    <CircleProgressBar
+                                      precentage={att?.progress}
+                                      circleWidth={50}
+                                    />
+                                  </div>
+                                )}
+                                {(att?.url || att?.progress === 100) && (
+                                  <button
+                                    type="button"
+                                    className="absolute right-1 top-1 rounded-full bg-black bg-opacity-50 p-1 text-white"
+                                    onClick={() =>
+                                      handleImageRemove(idx, item.id)
+                                    }
+                                  >
+                                    <RiDeleteBin6Line size={20} />
+                                  </button>
+                                )}
+                              </div>
+                              <h1
+                                className="truncate text-xs font-medium"
+                                title={att?.name}
+                              >
+                                {att?.name}
+                              </h1>
+                              <span className="text-xs">
+                                ({formatFileSize(att?.size)})
+                              </span>
                             </div>
-                            <h1
-                              className="truncate text-xs font-medium"
-                              title={att?.name}
-                            >
-                              {att?.name}
-                            </h1>
-                            <span className="text-xs">
-                              ({formatFileSize(att?.size)})
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </>
-                  )}
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                ))}
+                <div className="flex justify-end">
+                  <button type="button" className="mt-5 font-semibold">
+                    Save Requirements
+                  </button>
                 </div>
-              ))}
-              <div className="flex justify-end">
-                <button type="button" className="mt-5 font-semibold">
-                  Save Requirements
-                </button>
+                <div className="mt-5 flex justify-center gap-5">
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/order/${projectNumber}`)}
+                    disabled={submitLoading}
+                    className="mt-5 flex h-[45px] w-1/2 items-center justify-center bg-gray-400 text-base font-semibold text-white disabled:cursor-not-allowed sm:text-lg"
+                  >
+                    Skip
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={submitLoading}
+                    className="mt-5 flex h-[45px] w-1/2 items-center justify-center bg-primary text-base font-semibold text-white disabled:cursor-not-allowed sm:text-lg"
+                  >
+                    {submitLoading ? (
+                      <span className="animate-spin text-xl">
+                        <FaSpinner />
+                      </span>
+                    ) : (
+                      "Start Now"
+                    )}
+                  </button>
+                </div>
+                <p className="py-6 text-center text-sm sm:text-base">
+                  Start your project now by clicking &quot;Start Now&quot;
+                </p>
               </div>
-              <div className="mt-5 flex justify-center gap-5">
-                <button
-                  type="button"
-                  onClick={() => navigate(`/order/${projectNumber}`)}
-                  disabled={submitLoading}
-                  className="mt-5 flex h-[45px] w-1/2 items-center justify-center bg-gray-400 text-base font-semibold text-white disabled:cursor-not-allowed sm:text-lg"
-                >
-                  Skip
-                </button>
-                <button
-                  type="submit"
-                  disabled={submitLoading}
-                  className="mt-5 flex h-[45px] w-1/2 items-center justify-center bg-primary text-base font-semibold text-white disabled:cursor-not-allowed sm:text-lg"
-                >
-                  {submitLoading ? (
-                    <span className="animate-spin text-xl">
-                      <FaSpinner />
-                    </span>
-                  ) : (
-                    "Start Now"
-                  )}
-                </button>
-              </div>
-              <p className="py-6 text-center text-sm sm:text-base">
-                Start your project now by clicking &quot;Start Now&quot;
-              </p>
+            </form>
+          ) : (
+            <div className="mt-20">
+              <ImSpinner9 className="mx-auto animate-spin text-4xl text-primary" />
             </div>
-          </form>
+          )}
         </div>
         <div className="w-full shrink-0 sm:w-1/3 md:w-1/4 lg:w-1/5">
           <div className="overflow-hidden rounded-lg border border-solid border-primary">

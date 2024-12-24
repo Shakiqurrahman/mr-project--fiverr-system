@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import Check from "../assets/svg/Check";
-import PaymentTabs from "../components/PaymentTabs";
+import stripe from "../assets/svg/stripe.svg";
 import { ToggleSwitch } from "../libs/ToggleSwitch";
 import { STRIPE_PUBLIC_KEY, configApi } from "../libs/configApi";
 
@@ -15,6 +15,7 @@ const PaymentPage = () => {
   const { state } = useLocation();
 
   const [activeTab, setActiveTab] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [isAcceptingCondition, SetIsAcceptingCondition] = useState(false);
   const [fastDelivery, setFastDelivery] = useState(
     state?.isFastDelivery || false,
@@ -59,6 +60,7 @@ const PaymentPage = () => {
   }, [designs, fastDelivery, totalAmount]);
 
   const handlePayment = async () => {
+    setIsLoading(true);
     const itemsData = items?.map((item) => ({
       name: item.title,
       baseAmount: parseInt(item.subTotal),
@@ -121,6 +123,7 @@ const PaymentPage = () => {
     } catch (error) {
       toast.error("Something went wrong!");
     }
+    setIsLoading(false);
   };
 
   return (
@@ -179,7 +182,7 @@ const PaymentPage = () => {
         </div>
 
         {/* Tab Navigation */}
-        <PaymentTabs handleTabClick={handleTabClick} activeTab={activeTab} />
+        {/* <PaymentTabs handleTabClick={handleTabClick} activeTab={activeTab} /> */}
         <div className="border bg-lightskyblue p-4 sm:p-6">
           <div className="flex items-center gap-x-2 text-sm font-medium sm:text-base">
             <input
@@ -273,11 +276,13 @@ const PaymentPage = () => {
               </ul>
 
               <div className="w-full">
+                <img src={stripe} alt="Stripe Logo" className="mx-auto w-16" />
                 <p className="mb-4 text-center">Single Payment</p>
                 <button
                   type="submit"
                   onClick={handlePayment}
-                  disabled={!(activeTab && isAcceptingCondition)}
+                  // disabled={!(activeTab && isAcceptingCondition) || isLoading}
+                  disabled={!isAcceptingCondition || isLoading}
                   className="w-full rounded-2xl bg-primary py-4 text-xl font-semibold text-white transition-colors duration-300 disabled:cursor-not-allowed disabled:bg-primary/50"
                 >
                   Pay Now
