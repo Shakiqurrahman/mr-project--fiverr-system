@@ -3,6 +3,7 @@ import { IoClose } from "react-icons/io5";
 import { MdOutlineNotifications } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import useOutsideClick from "../../hooks/useOutsideClick";
+import { useGetNotificationQuery } from "../../Redux/api/apiSlice";
 import GetNotificationTitle from "./GetNotificationTitle";
 
 const NotificationModal = ({ close }) => {
@@ -10,54 +11,8 @@ const NotificationModal = ({ close }) => {
   const notificalModal = useRef(null);
   const unReadNotifications = 0;
 
-  // Note: client told me to make temporary blank
-  // const notifications = [
-  //   {
-  //     id: 1,
-  //     userName: "shake75",
-  //     avatar: "",
-  //     date: "15d",
-  //     orderedImage: "",
-  //     isOnline: true,
-  //     type: "order",
-  //   },
-  //   {
-  //     id: 2,
-  //     userName: "shakil",
-  //     avatar: "",
-  //     date: "1h",
-  //     orderedImage:
-  //       "https://media.vanityfair.com/photos/5f5245d91e10df7a77868af6/master/pass/avatar-the-last-airbender.jpg",
-  //     isOnline: false,
-  //     type: "instructions",
-  //   },
-  //   {
-  //     id: 3,
-  //     userName: "shakil",
-  //     avatar:
-  //       "https://media.gq.com/photos/627d37fbbad17dc46fce8158/4:3/w_2507,h_1880,c_limit/MCDAVAT_FE021.jpg",
-  //     date: "15min",
-  //     orderedImage:
-  //       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_gaxAkYYDw8UfNleSC2Viswv3xSmOa4bIAQ&s",
-  //     isOnline: false,
-  //     type: "review",
-  //     rating: 5,
-  //   },
-  //   {
-  //     id: 4,
-  //     userName: "Soumik",
-  //     avatar:
-  //       "https://media.gq.com/photos/627d37fbbad17dc46fce8158/4:3/w_2507,h_1880,c_limit/MCDAVAT_FE021.jpg",
-  //     message: "Red is the logos Yellow is the verbiage",
-  //     date: "15min",
-  //     type: "orderMessage",
-  //     orderedImage:
-  //       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_gaxAkYYDw8UfNleSC2Viswv3xSmOa4bIAQ&s",
-  //     isOnline: false,
-  //   },
-  // ];
+  const { data: notificationData } = useGetNotificationQuery();
 
-  const notifications = [];
   useOutsideClick(notificalModal, () => dispatch(close(false)));
   return (
     <div
@@ -79,15 +34,15 @@ const NotificationModal = ({ close }) => {
 
         {/* List of unread notifications */}
         <div className="max-h-[400px] overflow-y-auto">
-          {notifications?.map((notification) => {
-            const letterLogo = notification?.userName
+          {notificationData?.map((notification) => {
+            const letterLogo = notification?.payload?.userName
               ?.trim()
               ?.charAt(0)
               ?.toUpperCase();
 
             const notificationTitle = GetNotificationTitle({
-              type: notification?.type,
-              userName: notification?.userName,
+              type: notification?.payload?.type,
+              userName: notification?.payload?.userName,
               message: notification?.message,
               rating: notification?.rating,
               commentQuantity: notification?.commentQuantity,
@@ -124,17 +79,17 @@ const NotificationModal = ({ close }) => {
                     </p>
                   </div>
                 </div>
-                {notification?.orderedImage && (
+                {notification?.payload?.thumbnailUrl && (
                   <img
                     className="size-10 flex-grow-0 rounded-lg object-cover"
-                    src={notification?.orderedImage}
+                    src={notification?.payload?.thumbnailUrl}
                     alt="ordered image"
                   />
                 )}
               </div>
             );
           })}
-          {notifications?.length === 0 && (
+          {notificationData?.length === 0 && (
             <p className="py-3 text-center text-black">
               No notifications found.
             </p>

@@ -77,6 +77,7 @@ const store = configureStore({
     [analyticsApiSlice.reducerPath]: analyticsApiSlice.reducer,
     [affiliateApiSlice.reducerPath]: affiliateApiSlice.reducer,
   },
+  devTools : false, // Note: make sure in prod it should be false
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // To allow non-serializable values

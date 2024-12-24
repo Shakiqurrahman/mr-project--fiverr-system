@@ -8,7 +8,7 @@ const GetNotificationTitle = ({
   commentQuantity,
 }) => {
   const notificationTemplates = {
-    order: (
+    Order: (
       <div className="flex-1">
         <p className="text-sm font-medium sm:text-base text-gray-900 line-clamp-3">
           {`You have a new `}
@@ -19,7 +19,7 @@ const GetNotificationTitle = ({
         </p>
       </div>
     ),
-    review: (
+    Review: (
       <div className="flex-1">
         <p className="text-sm font-medium sm:text-base text-gray-900 line-clamp-3">
           <span className="font-bold">{userName}</span>
@@ -28,7 +28,7 @@ const GetNotificationTitle = ({
         </p>
       </div>
     ),
-    revision: (
+    Revision: (
       <div className="flex-1">
         <p className="text-sm font-medium sm:text-base text-gray-900 line-clamp-3">
           <span className="font-bold">{userName}: requested </span>a change to
@@ -36,7 +36,7 @@ const GetNotificationTitle = ({
         </p>
       </div>
     ),
-    reminder: (
+    Reminder: (
       <div className="flex-1">
         <p className="text-sm font-medium sm:text-base text-gray-900 line-clamp-3">
           <span className="font-bold">Reminder: </span>
@@ -45,7 +45,7 @@ const GetNotificationTitle = ({
         </p>
       </div>
     ),
-    orderMessage: (
+    OrderMessage: (
       <div className="flex-1">
         <p className="text-sm font-medium sm:text-base text-gray-900 line-clamp-3">
           <span className="font-bold">{userName}: </span>
@@ -53,14 +53,14 @@ const GetNotificationTitle = ({
         </p>
       </div>
     ),
-    orderStart: (
+    OrderStart: (
       <div className="flex-1">
         <p className="text-sm font-medium sm:text-base text-gray-900 line-clamp-3">
           {`Your order has started! The designer is now working on your order.`}
         </p>
       </div>
     ),
-    instructions: (
+    Instructions: (
       <div className="flex-1">
         <p className="text-sm font-medium sm:text-base text-gray-900 line-clamp-3">
           {`You have a new `}
@@ -71,7 +71,7 @@ const GetNotificationTitle = ({
         </p>
       </div>
     ),
-    comment: (
+    Comment: (
       <div className="flex-1">
         <p className="text-sm font-medium sm:text-base text-gray-900 line-clamp-3">
           <span className="font-bold">{userName}: </span>

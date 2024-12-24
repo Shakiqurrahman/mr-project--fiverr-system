@@ -45,6 +45,12 @@ export const apiSlice = createApi({
       transformResponse: (response) => response?.data,
       providesTags: ["user"],
     }),
+
+    getNotification: builder.query({
+      query: () => `notification/get`,
+      transformResponse: (response) => response?.data?.allNotifications,
+      providesTags: ["user"],
+    }),
   }),
 });
 
@@ -53,4 +59,5 @@ export const {
   useFetchSocialMediasQuery,
   useUpdateSocialMediasMutation,
   useLazyGetUsersProjectStatusQuery,
+  useGetNotificationQuery
 } = apiSlice;
