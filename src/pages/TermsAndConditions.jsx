@@ -9,13 +9,13 @@ function TermsAndConditions() {
   };
 
   return (
-    <div className="max-width leading-[26px]">
+    <div className="mx-auto max-w-[900px] px-4 leading-[26px]">
       <div className="heading flex justify-around">
         <button
           value="terms-condition"
           className={`${
             tos === "terms-condition" ? "text-primary underline" : "text[#000]"
-          } mb-8 mt-[50px] text-base font-medium underline-offset-4 sm:text-2xl lg:text-4xl`}
+          } mb-8 mt-[50px] text-base font-medium underline-offset-4 sm:text-2xl lg:text-3xl`}
           onClick={handleClick}
         >
           Terms & Conditions
@@ -24,7 +24,7 @@ function TermsAndConditions() {
           value="refund-policy"
           className={`${
             tos !== "terms-condition" ? "text-primary underline" : "text[#000]"
-          } mb-8 mt-[50px] text-base font-medium sm:text-2xl lg:text-4xl`}
+          } mb-8 mt-[50px] text-base font-medium sm:text-2xl lg:text-3xl`}
           onClick={handleClick}
         >
           Refund Policy
@@ -34,10 +34,10 @@ function TermsAndConditions() {
 
       {tos === "terms-condition" ? (
         <div className="p-2">
-          <h2 className="mb-6 mt-10 text-lg font-medium text-primary sm:text-3xl">
+          <h2 className="mb-6 mt-10 text-lg font-medium text-primary sm:text-2xl">
             Terms & Conditions
           </h2>
-          <ul className="flex list-disc flex-col gap-3 pl-5 marker:text-primary">
+          <ul className="flex list-disc flex-col gap-3 pl-5 *:leading-[2] marker:text-primary">
             <li>
               To contact us or purchase any of our designs you must first create
               an account. You can create an account for FREE. You must keep your
@@ -92,12 +92,12 @@ function TermsAndConditions() {
             </li>
             <li>
               How we will work on the project:
-              <h4>Start work</h4>
+              <h4 className="mt-3 font-semibold">Start work</h4>
               <p>
                 After completing the customer requirement page we will start the
                 design work.
               </p>
-              <h4>First concept</h4>
+              <h4 className="mt-3 font-semibold">First concept</h4>
               <p>
                 The customer gives us the time to create his design, we will
                 create it and show it to him within that time.
@@ -107,7 +107,7 @@ function TermsAndConditions() {
                 this design, then we will correct the changes if the customer
                 informs us about the changes.)
               </p>
-              <h4>Final delivery</h4>
+              <h4 className="mt-3 font-semibold">Final delivery</h4>
               <p>
                 After the design work is completed we will deliver the final
                 file according to the package selected by the customer.
@@ -159,7 +159,7 @@ function TermsAndConditions() {
         </div>
       ) : (
         <div>
-          <h2 className="mb-6 mt-10 text-lg font-medium text-primary sm:text-3xl">
+          <h2 className="mb-6 mt-10 text-lg font-medium text-primary sm:text-2xl">
             Refund Policy
           </h2>
           <ul className="flex list-disc flex-col gap-3 pl-5 marker:text-primary">
