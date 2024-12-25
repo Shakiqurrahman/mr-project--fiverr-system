@@ -101,8 +101,8 @@ function Designs() {
     // Check if both design and industry keywords are selected
     else if (selectedValue && industrySelectedValue) {
       // updateKeywordsData(filterBothData, designKeyWordsData, industryKeyWordsData);
-      setDesigns(filterBothData);
-      selectedOption(filterBothData);
+      setDesigns([...filterBothData].reverse());
+      selectedOption([...filterBothData].reverse());
       setCurrentPage(1);
     }
     // Check if only design keyword is selected

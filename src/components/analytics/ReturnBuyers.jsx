@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useLazyGetReturnBuyersQuery } from "../../Redux/api/analyticsApiSlice";
 import DownArrow from "../../assets/svg/DownArrow";
 import UpArrow from "../../assets/svg/UpArrow";
-import { useLazyGetReturnBuyersQuery } from "../../Redux/api/analyticsApiSlice";
 
 const ReturnBuyers = () => {
   const [expend, setExpend] = useState(false);
@@ -67,12 +67,12 @@ const ReturnBuyers = () => {
       <div className="border border-gray-300 bg-lightcream">
         <div className="flex flex-wrap items-center gap-5 p-3">
           <h1 className="grow text-base font-semibold text-primary sm:text-lg">
-            Repeated Buyers
+            Repeat Buyers
           </h1>
           <select
             value={selectedFilterOption}
             onChange={(e) => setSelectedFilterOption(e.target.value)}
-            className="shrink-0 border px-2 py-1 text-sm outline-none sm:text-base bg-white"
+            className="shrink-0 border bg-white px-2 py-1 text-sm outline-none sm:text-base"
           >
             {keywordFilterOptions?.map((key, i) => (
               <option value={key} key={i}>
@@ -83,7 +83,7 @@ const ReturnBuyers = () => {
           <select
             value={selectedTimeOption}
             onChange={(e) => setSelectedTimeOption(e.target.value)}
-            className="shrink-0 border px-2 py-1 text-sm outline-none sm:text-base bg-white"
+            className="shrink-0 border bg-white px-2 py-1 text-sm outline-none sm:text-base"
           >
             {filterTimes?.map((key, i) => (
               <option value={key} key={i}>
@@ -97,7 +97,7 @@ const ReturnBuyers = () => {
             <thead>
               <tr className="bg-white">
                 <th className="w-[50%] border-collapse border border-gray-300 px-3 py-2 text-start font-semibold">
-                  UserName
+                  Username
                 </th>
                 <th className="w-[25%] border-collapse border border-gray-300 px-3 py-2 font-semibold">
                   Projects

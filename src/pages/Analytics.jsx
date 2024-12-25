@@ -13,7 +13,7 @@ const Analytics = () => {
     "Project Details",
     "World Domination",
     // "Top Keywords",
-    "Repeated Buyers",
+    "Repeat Buyers",
     "Categories",
     "Affiliate",
     "Visitors",
@@ -36,7 +36,7 @@ const Analytics = () => {
         return <WorldDomination />;
       case "Top Keywords":
         return <TopKeywords />;
-      case "Repeated Buyers":
+      case "Repeat Buyers":
         return <ReturnBuyers />;
       case "Categories":
         return <CategoriesData />;
