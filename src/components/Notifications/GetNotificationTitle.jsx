@@ -90,6 +90,71 @@ const GetNotificationTitle = ({
         </p>
       </div>
     ),
+
+    CancelAccept: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+          <span className="font-bold">Order Canceled: </span>
+          {`${userName} has been canceled the order.`}
+        </p>
+      </div>
+    ),
+
+    CancelAcceptUser: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+          <span className="font-bold">Your order has been canceled. </span>
+          Your payment will be refunded within 24 to 48 hours.
+        </p>
+      </div>
+    ),
+
+    FileDelivered: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+          <span className="font-bold">Your files are ready! </span>
+          You can now access and download them.
+        </p>
+      </div>
+    ),
+
+    CompleteOrder: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+          <span className="font-bold">{userName}</span>
+          {` marked his order as complete`}
+        </p>
+      </div>
+    ),
+
+    CompleteOrderUser :(
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+          {`You marked your order as complete`}
+        </p>
+      </div>
+    ),
+
+    AutoCompleteOrder: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+          <span className="font-bold">{userName}'s </span>
+          {`order was automatically marked as complete`}
+        </p>
+      </div>
+    ),
+
+    AutoCompleteOrderUser: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+          {`Your order was automatically marked as complete`}
+        </p>
+      </div>
+    ),
+
+
+
+    
   };
 
   return notificationTemplates[type] || "";
