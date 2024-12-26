@@ -4,6 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.active {
+  @apply text-gray-300;
+}
+
 /* Custom Scroll bar */
 ::-webkit-scrollbar {
   width: 10px;
