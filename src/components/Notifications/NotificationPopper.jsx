@@ -22,7 +22,10 @@ const NotificationPopper = ({
 
   // const [notification, setNotification] = useState(null);
 
-  const letterLogo = notification?.userName?.trim().charAt(0).toUpperCase();
+  const letterLogo = notification?.senderUserName
+    ?.trim()
+    .charAt(0)
+    .toUpperCase();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -49,6 +52,9 @@ const NotificationPopper = ({
     message: notification?.message,
     rating: notification?.rating,
     commentQuantity: notification?.commentQuantity,
+    userName: notification?.senderUserName,
+    hours: notification?.hours,
+    days: notification?.days,
   });
 
   // all avaliable users

@@ -54,14 +54,14 @@ const NotificationModal = ({ close }) => {
         {/* List of unread notifications */}
         <div className="max-h-[400px] overflow-y-auto">
           {notificationData?.map((notification) => {
-            const letterLogo = notification?.payload?.userName
+            const letterLogo = notification?.payload?.senderUserName
               ?.trim()
               ?.charAt(0)
               ?.toUpperCase();
 
             const notificationTitle = GetNotificationTitle({
               type: notification?.payload?.type,
-              userName: notification?.payload?.userName,
+              userName: notification?.payload?.senderUserName,
               message: notification?.message,
               rating: notification?.rating,
               commentQuantity: notification?.commentQuantity,
@@ -117,7 +117,7 @@ const NotificationModal = ({ close }) => {
                 )}
               </div>
             );
-          })}
+          }).reverse()}
           {notificationData?.length === 0 && (
             <p className="py-3 text-center text-black">
               No notifications found.
