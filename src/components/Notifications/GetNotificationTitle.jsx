@@ -90,6 +90,14 @@ const GetNotificationTitle = ({
         </p>
       </div>
     ),
+    OrderExtendAdmin: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+          <span className="font-bold">Update: </span>
+          {`You extended your order's delivery period by ${days ? `${days} days` : `${hours} hours`} `}
+        </p>
+      </div>
+    ),
 
     CancelAccept: (
       <div className="flex-1">
