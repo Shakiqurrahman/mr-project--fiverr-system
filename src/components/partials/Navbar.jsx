@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import DownArrow from "../../libs/DownArrow";
 import DropDownMenu from "./DropDownMenu";
 
@@ -15,44 +15,44 @@ const Navbar = () => {
         {isAuthorized && (
           <>
             <li className="duration-300 hover:text-gray-300 lg:py-4">
-              <Link to="/upload-design">Upload</Link>
+              <NavLink to="/upload-design">Upload</NavLink>
             </li>
             <li className="duration-300 hover:text-gray-300 lg:py-4">
-              <Link to="/analytics">Analytics</Link>
+              <NavLink to="/analytics">Analytics</NavLink>
             </li>
             <li className="duration-300 hover:text-gray-300 lg:py-4">
-              <Link to="/admin-dashboard">Dashboard</Link>
+              <NavLink to="/admin-dashboard">Dashboard</NavLink>
             </li>
             <li className="duration-300 hover:text-gray-300 lg:py-4">
-              <Link to="/multi-project">M-D Project</Link>
+              <NavLink to="/multi-project">M-D Project</NavLink>
             </li>
           </>
         )}
         <li className="group duration-300 hover:text-gray-300 lg:py-4">
-          <Link to="/designs" className="flex items-center gap-1.5">
+          <NavLink to="/designs" className="flex items-center gap-1.5">
             Designs
             <DownArrow className="hidden fill-white duration-300 group-hover:fill-gray-300 sm:block sm:size-4 md:group-hover:rotate-180" />
-          </Link>
+          </NavLink>
           <DropDownMenu
             className="invisible z-[-1] -translate-y-full duration-300 sm:group-hover:visible sm:group-hover:translate-y-0"
             isDesign={true}
           />
         </li>
         <li className="group duration-300 hover:text-gray-300 lg:py-4">
-          <Link to="/industries" className="flex items-center gap-1.5">
+          <NavLink to="/industries" className="flex items-center gap-1.5">
             Industries
             <DownArrow className="hidden fill-white duration-300 group-hover:fill-gray-300 sm:block sm:size-4 md:group-hover:rotate-180" />
-          </Link>
+          </NavLink>
           <DropDownMenu
             className="invisible z-[-1] -translate-y-full duration-300 sm:group-hover:visible sm:group-hover:translate-y-0"
             isIndustry={true}
           />
         </li>
         <li className="duration-300 hover:text-gray-300 lg:py-4">
-          <Link to="/pricelist">Price List</Link>
+          <NavLink to="/pricelist">Price List</NavLink>
         </li>
         <li className="duration-300 hover:text-gray-300 lg:py-4">
-          <Link to="/project">Project</Link>
+          <NavLink to="/project">Project</NavLink>
         </li>
       </ul>
     </nav>
