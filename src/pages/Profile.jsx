@@ -340,7 +340,9 @@ function Profile({ user = {}, slug }) {
             ) : (
               <div className="flex justify-between gap-1 text-sm">
                 <span>On-Time Delivery</span>
-                <p className="font-semibold">100%</p>
+                <p className="font-semibold">
+                  {parseInt(adminProfileData?.OnTimeDelivery)}%
+                </p>
               </div>
             )}
             {user?.role === "USER" ? (
