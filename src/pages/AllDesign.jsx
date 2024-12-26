@@ -6,6 +6,7 @@ import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import Stack from "@mui/material/Stack";
 import { useEffect, useMemo, useState } from "react";
+import { ImSpinner9 } from "react-icons/im";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import prevBtn from "../assets/images/icons/Left Arrow.svg";
@@ -120,22 +121,28 @@ function AllDesign() {
             onSortChange={handleSortChange}
           />
         </div>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {currentPageData?.map((design) => {
-            const thumbnail = design?.images?.find((img) => img.thumbnail);
-            return (
-              <ProjectCard
-                cart={true}
-                key={design?.id}
-                thumbnail={thumbnail?.url}
-                watermark={thumbnail?.watermark}
-                title={design?.title}
-                design={design}
-                slug={`/design/${design?.designId}`}
-              />
-            );
-          })}
-        </div>
+        {allFilteredDesigns?.length > 0 ? (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {currentPageData?.map((design) => {
+              const thumbnail = design?.images?.find((img) => img.thumbnail);
+              return (
+                <ProjectCard
+                  cart={true}
+                  key={design?.id}
+                  thumbnail={thumbnail?.url}
+                  watermark={thumbnail?.watermark}
+                  title={design?.title}
+                  design={design}
+                  slug={`/design/${design?.designId}`}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <div className="mt-10">
+            <ImSpinner9 className="mx-auto animate-spin text-4xl text-primary" />
+          </div>
+        )}
 
         {subFolderDesigns?.length > 20 && (
           <div className="mt-10 flex justify-center">
