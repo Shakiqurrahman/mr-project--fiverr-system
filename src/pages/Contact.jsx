@@ -136,7 +136,7 @@ function Contact() {
   };
   return (
     <div className="max-width">
-      <h1 className="mx-auto mt-[40px] max-w-[700px] text-center text-2xl">
+      <h1 className="mx-auto mt-5 max-w-[700px] text-center text-2xl">
         If you have any questions or inquiries about our services, please feel
         free to contact us by filling out this form.
       </h1>

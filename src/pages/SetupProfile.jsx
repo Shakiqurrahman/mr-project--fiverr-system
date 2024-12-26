@@ -6,11 +6,11 @@ import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { setUser } from "../Redux/features/userSlice";
 import Avatar from "../assets/images/camera.jpg";
 import CountryCode from "../components/CountryCode";
 import CountryList from "../components/CountryList";
 import { configApi } from "../libs/configApi";
-import { setUser } from "../Redux/features/userSlice";
 
 function SetupProfile({ from_profile }) {
   const dispatch = useDispatch();
@@ -31,7 +31,6 @@ function SetupProfile({ from_profile }) {
     description: "",
     countryCode: "+93",
   });
-  
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -60,8 +59,7 @@ function SetupProfile({ from_profile }) {
     }
   };
 
-  console.log('form', form);
-  
+  console.log("form", form);
 
   const token = Cookies.get("authToken");
 
@@ -80,9 +78,12 @@ function SetupProfile({ from_profile }) {
         dispatch(setUser({ user: apiData, token }));
         // Update the form with either API data or fallback to localStorage data
         setForm({
-          country: (apiData?.country ?? dataFromLocalStorage?.country) || "Afghanistan",
+          country:
+            (apiData?.country ?? dataFromLocalStorage?.country) ||
+            "Afghanistan",
           countryCode:
-            (apiData?.countryCode ?? dataFromLocalStorage?.countryCode) || "+93",
+            (apiData?.countryCode ?? dataFromLocalStorage?.countryCode) ||
+            "+93",
           email: (apiData?.email ?? dataFromLocalStorage?.email) || "",
           userName: (apiData?.userName ?? dataFromLocalStorage?.userName) || "",
           fullName: (apiData?.fullName ?? dataFromLocalStorage?.fullName) || "",
@@ -139,6 +140,7 @@ function SetupProfile({ from_profile }) {
         setForm((prevForm) => ({ ...prevForm, image: imageUrl }));
         localStorage.setItem("profileData", JSON.stringify(form));
       } catch (error) {
+        toast.error("Image upload failed!!!");
       } finally {
         setUploading(false);
       }

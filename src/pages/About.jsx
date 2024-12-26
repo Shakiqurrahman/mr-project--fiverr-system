@@ -5,7 +5,7 @@ import Divider from "../components/Divider";
 function About() {
   return (
     <div className="mx-auto max-w-[900px] px-4">
-      <h1 className="mb-8 mt-[50px] text-2xl font-semibold text-primary md:text-4xl">
+      <h1 className="my-8 text-2xl font-semibold text-primary md:text-4xl">
         About
       </h1>
       <p>

@@ -16,7 +16,9 @@ function SidebarProfileStatus() {
         {data?.Avg_Rating?.toFixed(1)}
       </span>
       <p className="text-sm">On-Time Delivery</p>
-      <span className="mb-3 block text-lg font-semibold">100%</span>
+      <span className="mb-3 block text-lg font-semibold">
+        {parseInt(data?.OnTimeDelivery)}%
+      </span>
       <p className="text-sm">Last Project Completed</p>
       <span className="mb-3 block text-lg font-semibold">
         {data?.LastProjectCompleted?.date}

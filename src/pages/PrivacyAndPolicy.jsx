@@ -4,7 +4,7 @@ import Divider from "../components/Divider";
 function PrivacyAndPolicy() {
   return (
     <div className="mx-auto max-w-[900px] px-4">
-      <h1 className="mb-8 mt-[70px] text-2xl font-semibold text-primary sm:text-4xl">
+      <h1 className="mb-8 mt-8 text-2xl font-semibold text-primary sm:text-4xl">
         Privacy Policy
       </h1>
       <p className="mt-5 leading-[30px]">

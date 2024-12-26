@@ -188,7 +188,7 @@ textarea:placeholder-shown {
 
 /* Testimonial review sorting button active design */
 .sortingBtn.active {
-  @apply border-black bg-[#FFEFEF];
+  @apply border-black bg-[#FFEFEF] text-black;
 }
 
 /* homeactivitycard slider design */

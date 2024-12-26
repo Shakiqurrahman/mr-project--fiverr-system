@@ -278,13 +278,13 @@ function CreateOfferProject() {
   };
 
   return (
-    <div className="max-width mt-10 sm:mt-20">
+    <div className="max-width mt-5">
       <h1 className="text-center text-[28px] font-semibold uppercase">
         Offer Project Details
       </h1>
       <form className="mx-auto w-full max-w-[800px]" onSubmit={handleSubmit}>
         {/* Image */}
-        <div className="mt-10 bg-lightskyblue">
+        <div className="mt-5 bg-lightskyblue">
           <h1 className="flex items-center justify-between bg-primary p-3 text-white">
             Image{" "}
             <button type="button" onClick={handleOpenPreviewImage}>
@@ -446,9 +446,7 @@ function CreateOfferProject() {
                       {variant}{" "}
                       <RxCross2
                         className="text-red-600"
-                        onClick={() =>
-                          removeVariant(design.designId, variant)
-                        }
+                        onClick={() => removeVariant(design.designId, variant)}
                       />
                     </small>
                   ))}
