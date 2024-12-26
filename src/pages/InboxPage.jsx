@@ -2,13 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { useGetAvailableChatUsersQuery } from "../Redux/api/inboxApiSlice";
+import { setOnlineUsers } from "../Redux/features/userSlice";
 import loading from "../assets/svg/loading.gif";
 import AllConversation from "../components/chat/AllConversation";
 import ChatBox from "../components/chat/ChatBox";
 import { configApi } from "../libs/configApi";
 import { connectSocket } from "../libs/socketService";
-import { useGetAvailableChatUsersQuery } from "../Redux/api/inboxApiSlice";
-import { setOnlineUsers } from "../Redux/features/userSlice";
 
 const InboxPage = () => {
   const dispatch = useDispatch();
@@ -66,7 +66,7 @@ const InboxPage = () => {
   return (
     <section
       ref={sectionRef}
-      className="max-width py-10"
+      className="max-width py-5"
       style={{ height: `calc(100vh - ${offSetTop}px)` }}
     >
       {isLoading ? (
