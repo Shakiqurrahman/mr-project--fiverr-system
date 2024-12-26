@@ -908,7 +908,7 @@ function UploadDesign() {
                 {designs.map((item, index) => (
                   <span
                     key={index}
-                    className="flex items-center gap-2 rounded-full bg-[#FFEFEF] px-2 py-1 text-sm"
+                    className="flex items-center gap-2 rounded-full bg-[#e7e7e7] px-2 py-1 text-sm"
                   >
                     {item}
                     <button
@@ -940,7 +940,7 @@ function UploadDesign() {
                 {allDesignsShow?.map((v, i) => (
                   <button
                     key={i}
-                    className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
+                    className="rounded-[30px] bg-[#e7e7e7] px-3 py-1 text-xs"
                     value={v}
                     onClick={addDesign}
                   >
@@ -949,7 +949,7 @@ function UploadDesign() {
                 ))}
                 {allDesigns?.length > 10 && (
                   <button
-                    className="rounded-[30px] bg-lightcream px-3 py-1 text-xs"
+                    className="rounded-[30px] bg-[#e7e7e7] px-3 py-1 text-xs"
                     onClick={(e) => {
                       e.preventDefault();
                       setDesignExtend(!designExtend);

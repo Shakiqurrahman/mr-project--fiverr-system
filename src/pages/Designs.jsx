@@ -30,6 +30,9 @@ function Designs() {
 
   const { searchedText, searchResult } = useSelector((state) => state.utils);
 
+  const [toggleDesignBtns, setToggleDesignBtns] = useState(false);
+  const [toggleIndustryBtns, setToggleIndustryBtns] = useState(false);
+
   const [designs, setDesigns] = useState([]);
   const [designKeywords, setDesignKeywords] = useState([]);
   const [industryKeywords, setIndustryKeywords] = useState([]);
@@ -101,9 +104,15 @@ function Designs() {
     // Check if both design and industry keywords are selected
     else if (selectedValue && industrySelectedValue) {
       // updateKeywordsData(filterBothData, designKeyWordsData, industryKeyWordsData);
-      setDesigns(filterBothData);
-      selectedOption(filterBothData);
-      setCurrentPage(1);
+      if (filterBothData?.length > 0) {
+        setDesigns([...filterBothData].reverse());
+        selectedOption([...filterBothData].reverse());
+        setCurrentPage(1);
+      } else {
+        setDesigns([]);
+        selectedOption([]);
+        setCurrentPage(1);
+      }
     }
     // Check if only design keyword is selected
     else if (filterDesignData && selectedValue) {
@@ -204,6 +213,16 @@ function Designs() {
     setSelectedValue(state);
   }, [state]);
 
+  const designBtnsData =
+    designKeywords?.length > 30 && !toggleDesignBtns
+      ? designKeywords?.slice(0, 30)
+      : designKeywords;
+
+  const industryBtnsData =
+    industryKeywords?.length > 30 && !toggleIndustryBtns
+      ? industryKeywords?.slice(0, 30)
+      : industryKeywords;
+
   return (
     <>
       <div className="max-width">
@@ -212,7 +231,7 @@ function Designs() {
           <br className="hidden md:block" /> And see your selected items below.
         </h1>
         <div className="flex flex-wrap gap-3">
-          {designKeywords?.map((btn) => (
+          {designBtnsData?.map((btn) => (
             <ButtonPrimary
               key={Math.random()}
               items={btn.quantity}
@@ -223,10 +242,18 @@ function Designs() {
               {btn.name}
             </ButtonPrimary>
           ))}
+          {designKeywords?.length > 30 && (
+            <button
+              onClick={() => setToggleDesignBtns(!toggleDesignBtns)}
+              className={`rounded-[30px] bg-[#edf7fd] px-2 py-1 text-sm font-medium duration-300 hover:bg-primary hover:text-white sm:px-4 sm:py-2 sm:text-base`}
+            >
+              {toggleDesignBtns ? "See Less" : "See More"}
+            </button>
+          )}
         </div>
         <Divider className={"my-10 h-px w-full !bg-primary"} />
         <div className="flex flex-wrap gap-3">
-          {industryKeywords?.map((btn) => (
+          {industryBtnsData?.map((btn) => (
             <ButtonSecondary
               key={Math.random()}
               items={btn.quantity}
@@ -237,6 +264,14 @@ function Designs() {
               {btn.name}
             </ButtonSecondary>
           ))}
+          {industryKeywords?.length > 30 && (
+            <button
+              onClick={() => setToggleIndustryBtns(!toggleIndustryBtns)}
+              className={`rounded-[30px] bg-[#ffefef] px-2 py-1 text-sm font-medium duration-300 hover:bg-secondary hover:text-white sm:px-4 sm:py-2 sm:text-base`}
+            >
+              {toggleIndustryBtns ? "See Less" : "See More"}
+            </button>
+          )}
         </div>
         <div className="my-10 flex flex-wrap items-center justify-between gap-6 md:flex-nowrap md:gap-2">
           <div className="w-full md:w-3/4">
