@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { FaSkype, FaTelegramPlane, FaWhatsapp } from "react-icons/fa";
+import { FaTelegramPlane, FaWhatsapp } from "react-icons/fa";
 import { PiDotsSixBold } from "react-icons/pi";
 import { RiPlayLargeFill, RiPlayReverseLargeFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
@@ -51,9 +51,9 @@ function SocialMediaLinks() {
           >
             <FaWhatsapp className="text-green-500" />
           </Link>
-          <Link className="flex h-[30px] w-[30px] items-center justify-center rounded-full border-[3px] border-solid border-blue-500">
+          {/* <Link className="flex h-[30px] w-[30px] items-center justify-center rounded-full border-[3px] border-solid border-blue-500">
             <FaSkype className="text-blue-500" />
-          </Link>
+          </Link> */}
           <Link
             to={"mailto:mahfujurrahm535@gmail.com"}
             className="flex h-[30px] w-[30px] items-center justify-center rounded-full border-[3px] border-solid border-red-500"
