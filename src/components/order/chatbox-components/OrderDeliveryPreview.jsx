@@ -91,18 +91,18 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
     className: "order-slider",
     arrows: true,
     // autoplay: true,
-    autoplaySpeed: 2000,
+    // autoplaySpeed: 2000,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
     responsive: [
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 3,
+          slidesToShow: 1,
           slidesToScroll: 1,
           arrows: true,
           // autoplay: true,
-          autoplaySpeed: 2000,
+          // autoplaySpeed: 2000,
           nextArrow: <NextArrow />,
           prevArrow: <PrevArrow />,
         },
@@ -110,11 +110,11 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
       {
         breakpoint: 768,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 1,
           slidesToScroll: 1,
-          arrows: true,
+          arrows: false,
           // autoplay: true,
-          autoplaySpeed: 2000,
+          // autoplaySpeed: 2000,
           nextArrow: <NextArrow />,
           prevArrow: <PrevArrow />,
         },
@@ -122,11 +122,11 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
       {
         breakpoint: 576,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 1,
           slidesToScroll: 1,
-          arrows: true,
+          arrows: false,
           // autoplay: true,
-          autoplaySpeed: 2000,
+          // autoplaySpeed: 2000,
           nextArrow: <NextArrow />,
           prevArrow: <PrevArrow />,
         },
