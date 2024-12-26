@@ -17,6 +17,7 @@ import Drawer from "react-modern-drawer";
 import "react-modern-drawer/dist/index.css";
 
 import { IoSearch } from "react-icons/io5";
+import useSyncCart from "../../hooks/useSyncCart";
 import { useInboxBubbleCountingQuery } from "../../Redux/api/inboxApiSlice";
 import { useLazyGetDesignsBySearchQuery } from "../../Redux/api/uploadDesignApiSlice";
 import {
@@ -25,9 +26,8 @@ import {
   setSearchedText,
   setSearchResult,
 } from "../../Redux/features/utilSlice";
-import useSyncCart from "../../hooks/useSyncCart";
-import NotificationModal from "../Notifications/NotificationModal";
 import InboxDrawerModal from "../chat/InboxDrawerModal";
+import NotificationModal from "../Notifications/NotificationModal";
 import SearchBox from "./SearchBox";
 
 function Header() {
@@ -169,24 +169,22 @@ function Header() {
                     </Badge>
                   </li>
                 ) : (
-                  user && (
-                    <li
-                      className="text-white hover:text-gray-300"
-                      onClick={handleClose}
+                  <li
+                    className="text-white hover:text-gray-300"
+                    onClick={handleClose}
+                  >
+                    <Badge
+                      badgeContent={inboxBubbleCount ? inboxBubbleCount : 0}
+                      sx={{
+                        "& .MuiBadge-badge": {
+                          backgroundColor: "#1b8cdc",
+                          color: "white",
+                        },
+                      }}
                     >
-                      <Badge
-                        badgeContent={inboxBubbleCount ? inboxBubbleCount : 0}
-                        sx={{
-                          "& .MuiBadge-badge": {
-                            backgroundColor: "#1b8cdc",
-                            color: "white",
-                          },
-                        }}
-                      >
-                        <NavLink to="/inbox">Inbox</NavLink>
-                      </Badge>
-                    </li>
-                  )
+                      <NavLink to="/inbox">Inbox</NavLink>
+                    </Badge>
+                  </li>
                 )}
                 <li className="hidden md:block">
                   <Badge
