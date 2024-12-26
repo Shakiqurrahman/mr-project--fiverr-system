@@ -22,7 +22,7 @@ function Footer() {
         className="!right-5 !h-[40px] !w-[40px] !rounded-full"
         component={<img src={UpArrow} />}
       />
-      <div className="mt-10 bg-black text-white sm:mt-20">
+      <div className="mt-5 bg-black text-white">
         <div className="max-width">
           <div className="flex flex-wrap items-center pt-10 sm:flex-nowrap">
             <div className="w-full pr-0 sm:w-1/3 sm:pr-16">

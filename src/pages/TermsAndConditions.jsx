@@ -15,7 +15,7 @@ function TermsAndConditions() {
           value="terms-condition"
           className={`${
             tos === "terms-condition" ? "text-primary underline" : "text[#000]"
-          } mb-8 mt-[50px] text-base font-medium underline-offset-4 sm:text-2xl lg:text-3xl`}
+          } mb-8 mt-8 text-base font-medium underline-offset-4 sm:text-2xl lg:text-3xl`}
           onClick={handleClick}
         >
           Terms & Conditions
@@ -24,7 +24,7 @@ function TermsAndConditions() {
           value="refund-policy"
           className={`${
             tos !== "terms-condition" ? "text-primary underline" : "text[#000]"
-          } mb-8 mt-[50px] text-base font-medium sm:text-2xl lg:text-3xl`}
+          } mb-8 mt-8 text-base font-medium sm:text-2xl lg:text-3xl`}
           onClick={handleClick}
         >
           Refund Policy

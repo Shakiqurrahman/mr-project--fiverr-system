@@ -247,7 +247,7 @@ function Testimonials() {
 
   return (
     <div className="max-width">
-      <div className="relative mt-20 bg-[#E7F4FC] p-5 pt-0">
+      <div className="relative mb-10 mt-20 bg-[#E7F4FC] p-5 pt-0">
         <div className="text-center">
           <h1 className="relative inline-block -translate-y-1/2 rounded-[50px] bg-[#FFEFEF] px-10 py-3 text-lg font-bold sm:px-20 sm:text-2xl">
             TESTIMONIALS

@@ -576,7 +576,7 @@ function EditDesign() {
   };
 
   return (
-    <div className="max-width mt-10 sm:mt-20">
+    <div className="max-width mt-5">
       <div className="mx-auto max-w-[1000px] bg-lightskyblue py-5">
         <h1 className="m-auto block w-56 rounded-full border border-primary px-4 py-2 text-center text-lg font-bold text-primary">
           Upload Design

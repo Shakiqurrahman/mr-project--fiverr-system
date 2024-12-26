@@ -6,10 +6,10 @@ import { ImPlus } from "react-icons/im";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { configApi } from "../libs/configApi";
 import { useFetchMultiProjectQuery } from "../Redux/api/multiProjectApiSlice";
 import { useCreateMultipleProjectMutation } from "../Redux/api/uploadDesignApiSlice";
 import { setPreviewImage } from "../Redux/features/previewImageSlice";
+import { configApi } from "../libs/configApi";
 
 const MultiProject = () => {
   const dispatch = useDispatch();
@@ -136,10 +136,10 @@ const MultiProject = () => {
   };
 
   return (
-    <div className="max-width mt-10 sm:mt-20">
+    <div className="max-width mt-5">
       <form className="mx-auto w-full max-w-[800px]" onSubmit={handleSubmit}>
         {/* Project Title */}
-        <div className="mt-10 bg-lightskyblue">
+        <div className="bg-lightskyblue">
           <h1 className="bg-primary p-3 text-white">Project Title</h1>
           <div className="p-3">
             <input

@@ -181,10 +181,10 @@ function EditCategory() {
   };
 
   return (
-    <div className="max-width mt-10 sm:mt-20">
+    <div className="max-width mt-5">
       <form className="mx-auto w-full max-w-[800px]" onSubmit={handleSubmit}>
         {/* Category */}
-        <div className="mt-10 bg-lightskyblue">
+        <div className="bg-lightskyblue">
           <h1 className="bg-primary p-3 text-white">Category</h1>
           <div className="p-3">
             <input

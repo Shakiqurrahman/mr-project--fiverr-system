@@ -11,7 +11,7 @@ const Project = () => {
   return (
     <div className="max-width">
       {user?.block_for_chat ? (
-        <p className="mb-[300px] mt-10 text-center text-lg font-semibold text-revision">
+        <p className="mb-[300px] mt-5 text-center text-lg font-semibold text-revision">
           You Are not able to start a project!!!
         </p>
       ) : (
