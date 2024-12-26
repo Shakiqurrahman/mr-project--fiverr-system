@@ -643,7 +643,7 @@ const OrderChatBox = () => {
                       </div>
                     )}
                   </div>
-                  <div className="grow">
+                  <div className="max-w-[calc(100%_-_42px)] grow">
                     <div className="mt-1 flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <h1 className="text-sm font-semibold sm:text-base">

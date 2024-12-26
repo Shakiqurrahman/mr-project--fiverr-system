@@ -224,7 +224,7 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
                               : att?.watermark
                           }
                           alt={att?.name}
-                          className="block w-full cursor-pointer object-cover"
+                          className="block w-full max-w-full cursor-pointer object-cover"
                         />
                         <div className="mt-4 text-center">
                           <a
