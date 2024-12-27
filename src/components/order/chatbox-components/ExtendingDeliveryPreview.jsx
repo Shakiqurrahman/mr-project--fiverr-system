@@ -92,7 +92,7 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
   };
   const handleReject = async (e) => {
     e.preventDefault();
-    if (messageObj?.commonKey) {
+    if (messageObj?.uniqueId) {
       const data = {
         ...messageObj,
         extendDeliveryTime: {
