@@ -454,11 +454,11 @@ const OrderChatBox = () => {
   };
 
   // handle delete a order message
-  const handleDeleteAMessage = async (e, commonKey, projectNumber) => {
+  const handleDeleteAMessage = async (e, uniqueId, projectNumber) => {
     e.preventDefault();
     try {
       const res = await deleteAOrderMessage({
-        commonKey,
+        uniqueId,
         projectNumber,
       }).unwrap();
 
@@ -672,7 +672,7 @@ const OrderChatBox = () => {
                             onClick={(e) =>
                               handleDeleteAMessage(
                                 e,
-                                msg?.commonKey,
+                                msg?.uniqueId,
                                 msg?.projectNumber,
                               )
                             }

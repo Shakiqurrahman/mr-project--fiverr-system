@@ -123,8 +123,8 @@ export const orderApiSlice = createApi({
     }),
 
     deleteAOrderMessage: builder.mutation({
-      query: ({ commonKey, projectNumber }) => ({
-        url: `order-message/${commonKey}/${projectNumber}`,
+      query: ({ uniqueId, projectNumber }) => ({
+        url: `order-message/${uniqueId}/${projectNumber}`,
         method: "DELETE",
       }),
       invalidatesTags: ["messages"],
