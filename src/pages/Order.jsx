@@ -196,7 +196,7 @@ const Order = () => {
             className={`${openSidePanel ? "absolute right-0 top-0 !block" : ""} hidden w-[300px] shrink-0 bg-white lg:block`}
           >
             <button
-              className="absolute right-4 top-4 z-10 block lg:hidden"
+              className="absolute right-4 top-6 z-[11] block lg:hidden"
               onClick={() => setOpenSidePanel(false)}
             >
               <IoClose className="text-2xl" />
