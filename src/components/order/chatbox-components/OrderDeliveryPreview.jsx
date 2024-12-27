@@ -322,20 +322,20 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
           <div
             className={
               foundImages
-                ? "mt-5 flex w-full gap-3 xl:w-2/3"
-                : "mt-5 flex w-full gap-3"
+                ? "mt-5 flex w-full flex-wrap gap-3 sm:flex-nowrap xl:w-2/3"
+                : "mt-5 flex w-full flex-wrap gap-3 sm:flex-nowrap"
             }
           >
             <button
               type="button"
-              className="w-1/2 rounded-[30px] bg-primary p-2 text-center font-semibold text-white"
+              className="w-full rounded-[30px] bg-primary p-2 text-center text-sm font-semibold text-white sm:w-1/2 sm:text-base"
               onClick={() => handleDownloadZip(data?.attachments)}
             >
               Zip Download
             </button>
             <button
               type="button"
-              className="w-1/2 rounded-[30px] bg-revision p-2 text-center font-semibold text-white"
+              className="w-full rounded-[30px] bg-revision p-2 text-center text-sm font-semibold text-white sm:w-1/2 sm:text-base"
               onClick={() => handleDownloadAll(data?.attachments)}
             >
               Individual Download
@@ -363,13 +363,13 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
                       : ""
                   }`}
             </p>
-            <div className="my-5 flex justify-center gap-5">
+            <div className="my-5 flex flex-wrap justify-center gap-5 sm:flex-nowrap">
               {projectDetails?.deliveryAttempt !== 2 &&
                 !data?.isAccepted &&
                 !data?.isRevision && (
                   <button
                     type="button"
-                    className="rounded-[30px] bg-primary px-10 py-2 text-center font-semibold text-white"
+                    className="rounded-[30px] bg-primary px-10 py-2 text-center text-sm font-semibold text-white sm:text-base"
                     onClick={handleAccept}
                   >
                     Accept
@@ -378,7 +378,7 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
               {projectDetails?.deliveryAttempt !== 1 && !data?.isRevision && (
                 <button
                   type="button"
-                  className="rounded-[30px] bg-revision px-10 py-2 text-center font-semibold text-white"
+                  className="rounded-[30px] bg-revision px-10 py-2 text-center text-sm font-semibold text-white sm:text-base"
                   onClick={handleRevision}
                 >
                   Revision
