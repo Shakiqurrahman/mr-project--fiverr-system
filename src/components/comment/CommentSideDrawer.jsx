@@ -5,6 +5,7 @@ import { MdEdit, MdReply } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TfiShiftRight } from "react-icons/tfi";
 import { useDispatch, useSelector } from "react-redux";
+import shortid from "shortid";
 import { useSendAOrderMessageMutation } from "../../Redux/api/orderApiSlice";
 import {
   deleteComment,
@@ -132,6 +133,7 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
       timeAndDate,
       replyTo,
       projectNumber: projectDetails?.projectNumber,
+      uniqueId: shortid(),
     };
 
     if (isAdmin) {
