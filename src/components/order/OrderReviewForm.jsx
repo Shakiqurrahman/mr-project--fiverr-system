@@ -17,11 +17,11 @@ const OrderReviewForm = () => {
   const [text, setText] = useState("");
 
   useEffect(() => {
-    if (projectDetails) {
+    if (projectDetails?.review?.length > 0) {
       const getThumbnailTrueOrFalse = projectDetails?.review?.find(
         (r) => r?.senderType === "CLIENT",
       );
-      setIsThumbnail(getThumbnailTrueOrFalse?.isThumbnail || true);
+      setIsThumbnail(getThumbnailTrueOrFalse?.isThumbnail);
     }
   }, [projectDetails]);
 
