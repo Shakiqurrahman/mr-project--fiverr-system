@@ -58,7 +58,7 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
   const handleRejectOffer = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    if (messageObj?.commonKey) {
+    if (messageObj?.uniqueId) {
       const data = {
         ...messageObj,
         additionalOffer: {
@@ -77,7 +77,7 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
   const handleWithdrawOffer = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    if (messageObj?.commonKey) {
+    if (messageObj?.uniqueId) {
       const data = {
         ...messageObj,
         additionalOffer: {
@@ -132,38 +132,43 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
             !value?.isWithdrawn &&
             projectDetails?.projectStatus !== "Completed" &&
             projectDetails?.projectStatus !== "Canceled" && (
-              <div className="flex items-center justify-center gap-5">
-                {user?.role === "USER" ? (
-                  <>
-                    <button
-                      type="button"
-                      onClick={handleAcceptOffer}
-                      disabled={isLoading}
-                      className="bg-primary px-10 py-2 text-sm font-semibold text-white disabled:bg-primary/50 sm:text-base"
-                    >
-                      Accept
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleRejectOffer}
-                      disabled={isLoading}
-                      className="bg-gray-400 px-10 py-2 text-sm font-semibold text-white disabled:bg-gray-400/50 sm:text-base"
-                    >
-                      Decline
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleWithdrawOffer}
-                    disabled={isLoading}
-                    className="bg-primary px-10 py-2 text-sm font-semibold text-white disabled:bg-primary/50 sm:text-base"
-                  >
-                    Withdraw Offer
-                  </button>
-                )}
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:flex-nowrap sm:gap-5">
+                <button
+                  type="button"
+                  onClick={handleAcceptOffer}
+                  disabled={isLoading}
+                  className="w-full bg-primary px-10 py-2 text-sm font-semibold text-white disabled:bg-primary/50 sm:w-auto sm:text-base"
+                >
+                  Accept
+                </button>
+                <button
+                  type="button"
+                  onClick={handleRejectOffer}
+                  disabled={isLoading}
+                  className="w-full bg-gray-400 px-10 py-2 text-sm font-semibold text-white disabled:bg-gray-400/50 sm:w-auto sm:text-base"
+                >
+                  Decline
+                </button>
               </div>
             )}
+          {isAdmin &&
+            !value?.isAccepted &&
+            !value?.isRejected &&
+            !value?.isWithdrawn &&
+            projectDetails?.projectStatus !== "Completed" &&
+            projectDetails?.projectStatus !== "Canceled" && (
+              <div className="text-center">
+                <button
+                  type="button"
+                  onClick={handleWithdrawOffer}
+                  disabled={isLoading}
+                  className="bg-primary px-10 py-2 text-sm font-semibold text-white disabled:bg-primary/50 sm:text-base"
+                >
+                  Withdraw Offer
+                </button>
+              </div>
+            )}
+
           {value?.isWithdrawn && <p className="text-center">Offer Withdrawn</p>}
           {value?.isAccepted && <p className="text-center">Offer Accepted</p>}
           {value?.isRejected && <p className="text-center">Offer Rejected</p>}
