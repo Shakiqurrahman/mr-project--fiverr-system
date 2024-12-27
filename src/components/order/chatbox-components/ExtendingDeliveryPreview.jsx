@@ -109,26 +109,40 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
   };
   return (
     <div className="mt-5 border bg-lightskyblue">
-      <div className="flex items-center border-b bg-[#CCE5FB] p-4 text-lg font-semibold">
-        <div className={`${value?.amount ? "w-4/6" : "w-5/6"}`}>
+      <div className="flex items-center border-b bg-[#CCE5FB] p-2 text-sm font-semibold sm:p-4 sm:text-lg">
+        <div
+          className={`${value?.amount ? "w-3/6 sm:w-4/6" : "w-4/6 sm:w-5/6"}`}
+        >
           Extended Delivery Date
         </div>
-        <div className="w-1/6 text-center">Duration</div>
-        {value?.amount && <div className="w-1/6 text-end">Price</div>}
+        <div
+          className={`${value?.amount ? "w-[25%]" : "shrink-0 grow"} text-center sm:w-1/6`}
+        >
+          Duration
+        </div>
+        {value?.amount && (
+          <div className="w-[25%] text-end sm:w-1/6">Price</div>
+        )}
       </div>
-      <div className="p-4 py-6">
-        <div className="mb-6 flex items-center">
-          <div className={`${value?.amount ? "w-4/6" : "w-5/6"} pr-4`}>
+      <div className="p-2 py-6 sm:p-4">
+        <div className="mb-6 flex items-center text-sm sm:text-base">
+          <div
+            className={`${value?.amount ? "w-3/6 sm:w-4/6" : "w-4/6 sm:w-5/6"} pr-4`}
+          >
             {value?.explainWhyExtend}
           </div>
 
-          <div className="w-1/6 text-center">
+          <div
+            className={`${value?.amount ? "w-[25%]" : "shrink-0 grow"} text-center sm:w-1/6`}
+          >
             {parseInt(value?.days) > 1
               ? value?.days + " Days"
               : value?.days + " Day"}
           </div>
           {value?.amount && (
-            <div className="w-1/6 text-end font-semibold">${value?.amount}</div>
+            <div className="w-[25%] text-end font-semibold sm:w-1/6">
+              ${value?.amount}
+            </div>
           )}
         </div>
 
@@ -138,7 +152,7 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
           user?.role === "USER" &&
           projectDetails?.projectStatus !== "Completed" &&
           projectDetails?.projectStatus !== "Canceled" && (
-            <div className="flex justify-center gap-8 border-t pt-6">
+            <div className="flex flex-wrap justify-center gap-2 border-t pt-6 sm:flex-nowrap sm:gap-8">
               <button
                 type="submit"
                 onClick={
@@ -147,14 +161,14 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
                     : handleAcceptByUser
                 }
                 disabled={isLoading}
-                className="w-[150px] bg-primary px-5 py-2 text-lg font-semibold text-white outline-none duration-300 hover:bg-primary/80 disabled:bg-primary/50"
+                className="w-full bg-primary px-5 py-2 text-lg font-semibold text-white outline-none duration-300 hover:bg-primary/80 disabled:bg-primary/50 sm:w-[150px]"
               >
                 Accept
               </button>
               <button
                 type="button"
                 onClick={handleReject}
-                className="w-[150px] bg-gray-500 px-5 py-2 text-lg font-semibold text-white outline-none duration-300 hover:bg-gray-500/80"
+                className="w-full bg-gray-500 px-5 py-2 text-lg font-semibold text-white outline-none duration-300 hover:bg-gray-500/80 sm:w-[150px]"
               >
                 Decline
               </button>
@@ -171,14 +185,14 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
                 type="submit"
                 onClick={handleAccept}
                 disabled={isLoading}
-                className="w-[150px] bg-primary px-5 py-2 text-lg font-semibold text-white outline-none duration-300 hover:bg-primary/80 disabled:bg-primary/50"
+                className="w-full bg-primary px-5 py-2 text-lg font-semibold text-white outline-none duration-300 hover:bg-primary/80 disabled:bg-primary/50 sm:w-[150px]"
               >
                 Accept
               </button>
               <button
                 type="button"
                 onClick={handleReject}
-                className="w-[150px] bg-gray-500 px-5 py-2 text-lg font-semibold text-white outline-none duration-300 hover:bg-gray-500/80"
+                className="w-full bg-gray-500 px-5 py-2 text-lg font-semibold text-white outline-none duration-300 hover:bg-gray-500/80 sm:w-[150px]"
               >
                 Decline
               </button>
