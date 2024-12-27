@@ -580,7 +580,7 @@ const OrderChatBox = () => {
                         <h1 className="text-xl font-semibold text-primary">
                           FIRST DELIVERY
                         </h1>
-                        <p className="mx-auto mb-10 mt-2 w-3/4">
+                        <p className="mx-auto mb-10 mt-2 w-3/4 text-sm sm:text-base">
                           Within next 48 hours you have to choose Revision or
                           Accept. If you don&apos;t choose any, then after 48
                           hours this project will be completed automatically.
@@ -592,7 +592,7 @@ const OrderChatBox = () => {
                         <h1 className="text-xl font-semibold text-primary">
                           FINAL DELIVERY
                         </h1>
-                        <p className="mx-auto mb-10 mt-2 w-3/4">
+                        <p className="mx-auto mb-10 mt-2 w-3/4 text-sm sm:text-base">
                           If you don&apos;t accept this delivery, this project
                           will automatically completed within the next 48 hours.
                         </p>

@@ -137,7 +137,7 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
                   type="button"
                   onClick={handleAcceptOffer}
                   disabled={isLoading}
-                  className="w-full bg-primary px-10 py-2 text-sm font-semibold text-white disabled:bg-primary/50 sm:w-auto sm:text-base"
+                  className="bg-primary px-10 py-2 text-sm font-semibold text-white disabled:bg-primary/50 sm:text-base"
                 >
                   Accept
                 </button>
@@ -145,7 +145,7 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
                   type="button"
                   onClick={handleRejectOffer}
                   disabled={isLoading}
-                  className="w-full bg-gray-400 px-10 py-2 text-sm font-semibold text-white disabled:bg-gray-400/50 sm:w-auto sm:text-base"
+                  className="bg-gray-400 px-10 py-2 text-sm font-semibold text-white disabled:bg-gray-400/50 sm:text-base"
                 >
                   Decline
                 </button>
@@ -162,16 +162,22 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
                   type="button"
                   onClick={handleWithdrawOffer}
                   disabled={isLoading}
-                  className="bg-primary px-10 py-2 text-sm font-semibold text-white disabled:bg-primary/50 sm:text-base"
+                  className="bg-primary px-5 py-2 text-sm font-semibold text-white disabled:bg-primary/50 sm:px-10 sm:text-base"
                 >
                   Withdraw Offer
                 </button>
               </div>
             )}
 
-          {value?.isWithdrawn && <p className="text-center">Offer Withdrawn</p>}
-          {value?.isAccepted && <p className="text-center">Offer Accepted</p>}
-          {value?.isRejected && <p className="text-center">Offer Rejected</p>}
+          {value?.isWithdrawn && (
+            <p className="text-center text-sm sm:text-base">Offer Withdrawn</p>
+          )}
+          {value?.isAccepted && (
+            <p className="text-center text-sm sm:text-base">Offer Accepted</p>
+          )}
+          {value?.isRejected && (
+            <p className="text-center text-sm sm:text-base">Offer Rejected</p>
+          )}
         </div>
       </div>
     </div>

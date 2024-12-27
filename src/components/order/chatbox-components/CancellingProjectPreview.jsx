@@ -80,10 +80,14 @@ const CancellingProjectPreview = ({ messageObj, value }) => {
           </div>
         )}
       {messageObj?.isCancelled && (
-        <p className="mb-5 text-center">Cancel Request Accepted</p>
+        <p className="mb-5 text-center text-sm sm:text-base">
+          Cancel Request Accepted
+        </p>
       )}
       {value?.isRejected && (
-        <p className="mb-5 text-center">Cancel Request Rejected</p>
+        <p className="mb-5 text-center text-sm sm:text-base">
+          Cancel Request Rejected
+        </p>
       )}
     </div>
   );

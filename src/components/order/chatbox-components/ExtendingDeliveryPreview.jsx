@@ -161,14 +161,14 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
                     : handleAcceptByUser
                 }
                 disabled={isLoading}
-                className="w-full bg-primary px-5 py-2 text-lg font-semibold text-white outline-none duration-300 hover:bg-primary/80 disabled:bg-primary/50 sm:w-[150px]"
+                className="w-[150px] bg-primary px-5 py-2 text-sm font-semibold text-white outline-none duration-300 hover:bg-primary/80 disabled:bg-primary/50 sm:text-lg"
               >
                 Accept
               </button>
               <button
                 type="button"
                 onClick={handleReject}
-                className="w-full bg-gray-500 px-5 py-2 text-lg font-semibold text-white outline-none duration-300 hover:bg-gray-500/80 sm:w-[150px]"
+                className="w-[150px] bg-gray-500 px-5 py-2 text-sm font-semibold text-white outline-none duration-300 hover:bg-gray-500/80 sm:text-lg"
               >
                 Decline
               </button>
@@ -185,24 +185,28 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
                 type="submit"
                 onClick={handleAccept}
                 disabled={isLoading}
-                className="w-full bg-primary px-5 py-2 text-lg font-semibold text-white outline-none duration-300 hover:bg-primary/80 disabled:bg-primary/50 sm:w-[150px]"
+                className="w-[150px] bg-primary px-5 py-2 text-sm font-semibold text-white outline-none duration-300 hover:bg-primary/80 disabled:bg-primary/50 sm:text-lg"
               >
                 Accept
               </button>
               <button
                 type="button"
                 onClick={handleReject}
-                className="w-full bg-gray-500 px-5 py-2 text-lg font-semibold text-white outline-none duration-300 hover:bg-gray-500/80 sm:w-[150px]"
+                className="w-[150px] bg-gray-500 px-5 py-2 text-sm font-semibold text-white outline-none duration-300 hover:bg-gray-500/80 sm:text-lg"
               >
                 Decline
               </button>
             </div>
           )}
         {value?.isAccepted && (
-          <p className="text-center">Extend Delivery Request Accepted</p>
+          <p className="text-center text-sm sm:text-base">
+            Extend Delivery Request Accepted
+          </p>
         )}
         {value?.isRejected && (
-          <p className="text-center">Extend Delivery Request Rejected</p>
+          <p className="text-center text-sm sm:text-base">
+            Extend Delivery Request Rejected
+          </p>
         )}
       </div>
     </div>

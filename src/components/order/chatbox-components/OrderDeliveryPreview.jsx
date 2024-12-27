@@ -34,17 +34,6 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
   const [selectedImage, setSelectedImage] = useState(null);
 
   // handle download all button
-  // const handleDownloadAll = (files) => {
-  //   files.forEach((file) => {
-  //     const link = document.createElement("a");
-  //     link.href = file.url; // Ensure this points to the file's URL
-  //     link.setAttribute("download", file.name); // Set the filename
-  //     link.target = "_blank";
-  //     document.body.appendChild(link);
-  //     link.click(); // Simulate click to download
-  //     document.body.removeChild(link); // Clean up
-  //   });
-  // };
   const handleDownloadAll = (files) => {
     files.forEach((file) => {
       // Use fetch to download the file as a Blob
@@ -236,7 +225,7 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
                             }
                             download={att?.name}
                             target="_blank"
-                            className="inline-block rounded-[30px] border border-gray-400 px-5 py-2 text-lg font-medium text-black/50"
+                            className="inline-block rounded-[30px] border border-gray-400 px-5 py-2 text-sm font-medium text-black/50 sm:text-lg"
                           >
                             Download
                           </a>
