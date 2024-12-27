@@ -341,7 +341,7 @@ function Profile({ user = {}, slug }) {
               <div className="flex justify-between gap-1 text-sm">
                 <span>On-Time Delivery</span>
                 <p className="font-semibold">
-                  {parseInt(adminProfileData?.OnTimeDelivery)}%
+                  {parseInt(adminProfileData?.OnTimeDelivery) || 100}%
                 </p>
               </div>
             )}
