@@ -58,9 +58,6 @@ function SetupProfile({ from_profile }) {
       setLoading(false);
     }
   };
-
-  console.log("form", form);
-
   const token = Cookies.get("authToken");
 
   // Parse local storage data once at the top
