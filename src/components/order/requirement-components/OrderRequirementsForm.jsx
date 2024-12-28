@@ -32,21 +32,23 @@ const OrderRequirementsForm = () => {
   // Initial stage Update requirements state
   useEffect(() => {
     if (!projectDetails?.isRequirementsFullFilled) {
-      const updateRequirements = projectDetails?.requirements?.map((item) => ({
-        id: shortid.generate(),
-        question: item.question,
-        answer: "",
-        attachments: [],
-      }));
+      const updateRequirements = projectDetails?.requirements
+        ?.filter((item) => item?.question)
+        ?.map((item) => ({
+          id: shortid.generate(),
+          question: item.question,
+          answer: "",
+          attachments: [],
+        }));
       setRequirements(updateRequirements);
     }
   }, [projectDetails?.isRequirementsFullFilled, projectDetails?.requirements]);
 
   useEffect(() => {
     if (projectDetails) {
-      const allAnswers = projectDetails?.requirements?.every(
-        (item) => item?.answer,
-      );
+      const allAnswers = projectDetails?.requirements
+        ?.filter((item) => item?.question)
+        ?.every((item) => item?.answer);
       if (!allAnswers && projectDetails?.isRequirementsFullFilled) {
         setIsOrderStartByAdmin(true);
       }
