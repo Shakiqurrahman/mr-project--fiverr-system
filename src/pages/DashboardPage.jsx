@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import AllTimeStats from "../components/dashboard/AllTimeStats";
 import AllUsers from "../components/dashboard/AllUsers";
 import CurrentMonthStats from "../components/dashboard/CurrentMonthStats";
@@ -7,6 +8,8 @@ import SearchBox from "../components/dashboard/SearchBox";
 import TotalVisitors from "../components/dashboard/TotalVisitors";
 
 const DashboardPage = () => {
+  const { user } = useSelector((state) => state.user);
+  const isAdmin = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
   return (
     <section className="max-width justify-betwee my-10 flex flex-col gap-4 md:flex-row">
       <div className="w-full md:w-[calc(100%_-_330px)]">
@@ -18,7 +21,7 @@ const DashboardPage = () => {
         <CurrentMonthStats />
 
         {/* -----All Times statistics-----  */}
-        <AllTimeStats />
+        {isAdmin && <AllTimeStats />}
 
         {/* -----Search Project-----  */}
         <SearchBox />

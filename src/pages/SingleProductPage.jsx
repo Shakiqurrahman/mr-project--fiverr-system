@@ -187,13 +187,15 @@ function SingleProductPage() {
                 >
                   Edit
                 </Link>
-                <button
-                  type="button"
-                  onClick={() => handleDelete(design?.id)}
-                  className="w-full px-3 py-2 hover:bg-slate-100"
-                >
-                  Delete
-                </button>
+                {user?.role === "SUPER_ADMIN" && (
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(design?.id)}
+                    className="w-full px-3 py-2 hover:bg-slate-100"
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
             )}
           </div>

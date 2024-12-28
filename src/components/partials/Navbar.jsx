@@ -1,12 +1,15 @@
 import { useSelector } from "react-redux";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import DownArrow from "../../libs/DownArrow";
 import DropDownMenu from "./DropDownMenu";
 
 const Navbar = () => {
   const { user } = useSelector((state) => state.user);
 
-  const isAuthorized = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
+  const isAdmin = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
+  const isAuthorized = ["SUB_ADMIN", "ADMIN", "SUPER_ADMIN"].includes(
+    user?.role,
+  );
   // const userRole = user?.role === "USER";
 
   return (
@@ -17,15 +20,19 @@ const Navbar = () => {
             <li className="duration-300 hover:text-gray-300 lg:py-4">
               <NavLink to="/upload-design">Upload</NavLink>
             </li>
-            <li className="duration-300 hover:text-gray-300 lg:py-4">
-              <NavLink to="/analytics">Analytics</NavLink>
-            </li>
+            {isAdmin && (
+              <li className="duration-300 hover:text-gray-300 lg:py-4">
+                <NavLink to="/analytics">Analytics</NavLink>
+              </li>
+            )}
             <li className="duration-300 hover:text-gray-300 lg:py-4">
               <NavLink to="/admin-dashboard">Dashboard</NavLink>
             </li>
-            <li className="duration-300 hover:text-gray-300 lg:py-4">
-              <NavLink to="/multi-project">M-D Project</NavLink>
-            </li>
+            {isAdmin && (
+              <li className="duration-300 hover:text-gray-300 lg:py-4">
+                <NavLink to="/multi-project">M-D Project</NavLink>
+              </li>
+            )}
           </>
         )}
         <li className="group duration-300 hover:text-gray-300 lg:py-4">

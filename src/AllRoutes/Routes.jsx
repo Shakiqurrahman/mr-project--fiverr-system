@@ -284,9 +284,9 @@ export const router = createBrowserRouter([
       {
         path: "/upload-design",
         element: (
-          <AdminRoute>
+          <AllAdminRoute>
             <UploadDesign />
-          </AdminRoute>
+          </AllAdminRoute>
         ),
       },
       {
@@ -304,9 +304,9 @@ export const router = createBrowserRouter([
       {
         path: "/admin-dashboard",
         element: (
-          <AdminRoute>
+          <AllAdminRoute>
             <DashboardPage />
-          </AdminRoute>
+          </AllAdminRoute>
         ),
       },
       {
