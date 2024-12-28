@@ -22,14 +22,11 @@ const CommentPage = ({ close }) => {
           openDrawer={setSideDrawer}
         />
       </div>
-      {projectDetails?.projectStatus !== "Completed" &&
-        projectDetails?.projectStatus !== "Canceled" && (
-          <div
-            className={`w-full ${sideDrawer ? "block" : "hidden"} shrink-0 md:w-[320px]`}
-          >
-            <CommentSideDrawer close={close} drawerClose={setSideDrawer} />
-          </div>
-        )}
+      <div
+        className={`w-full ${sideDrawer ? "block" : "hidden"} shrink-0 md:w-[320px]`}
+      >
+        <CommentSideDrawer close={close} drawerClose={setSideDrawer} />
+      </div>
     </div>
   );
 };

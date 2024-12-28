@@ -279,34 +279,37 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
                           <p className="text-sm font-medium text-gray-500">
                             {comment?.commentText}
                           </p>
-                          <div className="flex w-full items-center justify-between gap-1 pb-2">
-                            <button
-                              onClick={() =>
-                                setShowCommentReply(comment.commentId)
-                              }
-                              type="button"
-                              className="flex items-center gap-1 text-sm font-semibold text-gray-400"
-                            >
-                              <MdReply className="text-lg" />
-                              Reply
-                            </button>
-                            <div className="hidden items-center gap-2 duration-300 group-hover:flex">
-                              <button
-                                onClick={() => handleEditComment(comment)}
-                                type="button"
-                                className="text-lg text-gray-400 duration-300 hover:text-black"
-                              >
-                                <MdEdit />
-                              </button>
-                              <button
-                                onClick={() => handleCommentDelete(comment)}
-                                type="button"
-                                className="text-lg text-gray-400 duration-300 hover:text-black"
-                              >
-                                <RiDeleteBin6Line />
-                              </button>
-                            </div>
-                          </div>
+                          {projectDetails?.projectStatus !== "Completed" &&
+                            projectDetails?.projectStatus !== "Canceled" && (
+                              <div className="flex w-full items-center justify-between gap-1 pb-2">
+                                <button
+                                  onClick={() =>
+                                    setShowCommentReply(comment.commentId)
+                                  }
+                                  type="button"
+                                  className="flex items-center gap-1 text-sm font-semibold text-gray-400"
+                                >
+                                  <MdReply className="text-lg" />
+                                  Reply
+                                </button>
+                                <div className="hidden items-center gap-2 duration-300 group-hover:flex">
+                                  <button
+                                    onClick={() => handleEditComment(comment)}
+                                    type="button"
+                                    className="text-lg text-gray-400 duration-300 hover:text-black"
+                                  >
+                                    <MdEdit />
+                                  </button>
+                                  <button
+                                    onClick={() => handleCommentDelete(comment)}
+                                    type="button"
+                                    className="text-lg text-gray-400 duration-300 hover:text-black"
+                                  >
+                                    <RiDeleteBin6Line />
+                                  </button>
+                                </div>
+                              </div>
+                            )}
                         </div>
 
                         {/* Replies */}
@@ -347,41 +350,46 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
                                 <p className="text-sm font-medium text-gray-500">
                                   {reply?.replyText}
                                 </p>
-                                <div className="flex w-full items-center justify-between gap-1">
-                                  <button
-                                    onClick={() =>
-                                      setShowCommentReply(comment.commentId)
-                                    }
-                                    type="button"
-                                    className="flex items-center gap-1 text-sm font-semibold text-gray-400"
-                                  >
-                                    <MdReply className="text-lg" />
-                                    Reply
-                                  </button>
-                                  <div className="hidden items-center gap-2 duration-300 group-hover:flex">
-                                    <button
-                                      onClick={() =>
-                                        handleEditComment(comment, reply)
-                                      }
-                                      type="button"
-                                      className="text-lg text-gray-400 duration-300 hover:text-black"
-                                    >
-                                      <MdEdit />
-                                    </button>
-                                    <button
-                                      onClick={() =>
-                                        handleCommentDelete(
-                                          comment,
-                                          reply?.replyId,
-                                        )
-                                      }
-                                      type="button"
-                                      className="text-lg text-gray-400 duration-300 hover:text-black"
-                                    >
-                                      <RiDeleteBin6Line />
-                                    </button>
-                                  </div>
-                                </div>
+                                {projectDetails?.projectStatus !==
+                                  "Completed" &&
+                                  projectDetails?.projectStatus !==
+                                    "Canceled" && (
+                                    <div className="flex w-full items-center justify-between gap-1">
+                                      <button
+                                        onClick={() =>
+                                          setShowCommentReply(comment.commentId)
+                                        }
+                                        type="button"
+                                        className="flex items-center gap-1 text-sm font-semibold text-gray-400"
+                                      >
+                                        <MdReply className="text-lg" />
+                                        Reply
+                                      </button>
+                                      <div className="hidden items-center gap-2 duration-300 group-hover:flex">
+                                        <button
+                                          onClick={() =>
+                                            handleEditComment(comment, reply)
+                                          }
+                                          type="button"
+                                          className="text-lg text-gray-400 duration-300 hover:text-black"
+                                        >
+                                          <MdEdit />
+                                        </button>
+                                        <button
+                                          onClick={() =>
+                                            handleCommentDelete(
+                                              comment,
+                                              reply?.replyId,
+                                            )
+                                          }
+                                          type="button"
+                                          className="text-lg text-gray-400 duration-300 hover:text-black"
+                                        >
+                                          <RiDeleteBin6Line />
+                                        </button>
+                                      </div>
+                                    </div>
+                                  )}
                               </div>
                             </div>
                           </div>
@@ -389,59 +397,72 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
                       </div>
                     </div>
                     {/* Reply input box */}
-                    {showCommentReply === comment?.commentId && (
-                      <div className="p-4 pt-2">
-                        <ReplyCommentBox
-                          setShowCommentReply={setShowCommentReply}
-                          comment={comment}
-                          autoFocus={true}
-                        />
-                      </div>
-                    )}
+                    {projectDetails?.projectStatus !== "Completed" &&
+                      projectDetails?.projectStatus !== "Canceled" &&
+                      showCommentReply === comment?.commentId && (
+                        <div className="p-4 pt-2">
+                          <ReplyCommentBox
+                            setShowCommentReply={setShowCommentReply}
+                            comment={comment}
+                            autoFocus={true}
+                          />
+                        </div>
+                      )}
                   </div>
                 ))}
             </div>
           </div>
         )}
         {/* write a comment  */}
-        {!showCommentEdit && !showCommentReply && !showReplyEdit && (
-          <CommentInputBox
-            comments={comments}
-            focusWriteComment={focusWriteComment}
-            setFocusWriteComment={setFocusWriteComment}
-          />
-        )}
+        {projectDetails?.projectStatus !== "Completed" &&
+          projectDetails?.projectStatus !== "Canceled" &&
+          !showCommentEdit &&
+          !showCommentReply &&
+          !showReplyEdit && (
+            <CommentInputBox
+              comments={comments}
+              focusWriteComment={focusWriteComment}
+              setFocusWriteComment={setFocusWriteComment}
+            />
+          )}
         {/* edit a comment  */}
-        {showCommentEdit && (
-          <EditCommentBox
-            comment={showCommentEdit}
-            focusWriteComment={focusWriteComment}
-            setFocusWriteComment={setFocusWriteComment}
-            setShowCommentEdit={setShowCommentEdit}
-          />
-        )}
+        {projectDetails?.projectStatus !== "Completed" &&
+          projectDetails?.projectStatus !== "Canceled" &&
+          showCommentEdit && (
+            <EditCommentBox
+              comment={showCommentEdit}
+              focusWriteComment={focusWriteComment}
+              setFocusWriteComment={setFocusWriteComment}
+              setShowCommentEdit={setShowCommentEdit}
+            />
+          )}
         {/* edit a reply comment  */}
-        {showReplyEdit && (
-          <EditReplyBox
-            reply={showReplyEdit}
-            focusWriteComment={focusWriteComment}
-            setFocusWriteComment={setFocusWriteComment}
-            setShowReplyEdit={setShowReplyEdit}
-          />
-        )}
+        {projectDetails?.projectStatus !== "Completed" &&
+          projectDetails?.projectStatus !== "Canceled" &&
+          showReplyEdit && (
+            <EditReplyBox
+              reply={showReplyEdit}
+              focusWriteComment={focusWriteComment}
+              setFocusWriteComment={setFocusWriteComment}
+              setShowReplyEdit={setShowReplyEdit}
+            />
+          )}
       </div>
 
       {/* submit button  */}
-      <div className="sticky bottom-0 border-t bg-white p-4">
-        <button
-          onClick={handleCommentSubmit}
-          disabled={totalUnsubmitted === 0}
-          type="button"
-          className="w-full rounded-md bg-primary px-5 py-4 text-sm font-semibold text-white disabled:bg-primary/50"
-        >
-          Submit {totalUnsubmitted > 0 && totalUnsubmitted} Comments
-        </button>
-      </div>
+      {projectDetails?.projectStatus !== "Completed" &&
+        projectDetails?.projectStatus !== "Canceled" && (
+          <div className="sticky bottom-0 border-t bg-white p-4">
+            <button
+              onClick={handleCommentSubmit}
+              disabled={totalUnsubmitted === 0}
+              type="button"
+              className="w-full rounded-md bg-primary px-5 py-4 text-sm font-semibold text-white disabled:bg-primary/50"
+            >
+              Submit {totalUnsubmitted > 0 && totalUnsubmitted} Comments
+            </button>
+          </div>
+        )}
     </div>
   );
 };
