@@ -1,21 +1,18 @@
+import Cookies from "js-cookie";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../../Redux/features/userSlice";
-import Cookies from 'js-cookie'
 
 const AdminRoute = ({ children }) => {
   const { user } = useSelector((state) => state.user);
-  const isAuthorized = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);  
+  const isAuthorized = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   useEffect(() => {
-    const token = Cookies.get('authToken');
+    const token = Cookies.get("authToken");
     if (!isAuthorized || !token) {
-      dispatch(logout());
       navigate("/not-found");
     }
-  }, [isAuthorized, navigate, dispatch]);
+  }, [isAuthorized, navigate]);
 
   return children;
 };
