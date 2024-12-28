@@ -107,6 +107,25 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
       }
     }
   };
+  const handleWithdrawOffer = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    if (messageObj?.uniqueId) {
+      const data = {
+        ...messageObj,
+        extendDeliveryTime: {
+          ...messageObj?.extendDeliveryTime,
+          isWithdrawn: true,
+        },
+      };
+      try {
+        const res = await updateAOrderMessage(data).unwrap();
+      } catch (error) {
+        toast.error("Something went wrong!");
+      }
+    }
+    setIsLoading(false);
+  };
   return (
     <div className="mt-5 border bg-lightskyblue">
       <div className="flex items-center border-b bg-[#CCE5FB] p-2 text-sm font-semibold sm:p-4 sm:text-lg">
@@ -198,6 +217,47 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
               </button>
             </div>
           )}
+        {!value?.isAccepted &&
+          !value?.isRejected &&
+          !value?.isWithdrawn &&
+          !value?.isSubmittedByAdmin &&
+          user?.role === "USER" &&
+          projectDetails?.projectStatus !== "Completed" &&
+          projectDetails?.projectStatus !== "Canceled" && (
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={handleWithdrawOffer}
+                disabled={isLoading}
+                className="bg-primary px-5 py-2 text-sm font-semibold text-white disabled:bg-primary/50 sm:px-10 sm:text-base"
+              >
+                Withdraw Offer
+              </button>
+            </div>
+          )}
+        {isAdmin &&
+          !value?.isAccepted &&
+          !value?.isRejected &&
+          !value?.isWithdrawn &&
+          value?.isSubmittedByAdmin &&
+          projectDetails?.projectStatus !== "Completed" &&
+          projectDetails?.projectStatus !== "Canceled" && (
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={handleWithdrawOffer}
+                disabled={isLoading}
+                className="bg-primary px-5 py-2 text-sm font-semibold text-white disabled:bg-primary/50 sm:px-10 sm:text-base"
+              >
+                Withdraw Offer
+              </button>
+            </div>
+          )}
+        {value?.isWithdrawn && (
+          <p className="text-center text-sm sm:text-base">
+            Extend Delivery Request Withdrawn
+          </p>
+        )}
         {value?.isAccepted && (
           <p className="text-center text-sm sm:text-base">
             Extend Delivery Request Accepted

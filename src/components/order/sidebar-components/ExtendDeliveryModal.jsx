@@ -58,6 +58,7 @@ const ExtendDeliveryModal = ({ handleClose }) => {
               extendType,
               isAccepted: false,
               isRejected: false,
+              isWithdrawn: false,
               isSubmittedByAdmin: isAdmin ? true : false,
             }
           : {
@@ -66,6 +67,7 @@ const ExtendDeliveryModal = ({ handleClose }) => {
               amount,
               isAccepted: false,
               isRejected: false,
+              isWithdrawn: false,
               isSubmittedByAdmin: isAdmin ? true : false,
             };
 
