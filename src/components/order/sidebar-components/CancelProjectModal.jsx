@@ -33,6 +33,7 @@ const CancelProjectModal = ({ handleClose }) => {
     explainWhyCancel: "",
     isAccepted: false,
     isRejected: false,
+    isWithdrawn: false,
   });
 
   const handleChange = (e) => {

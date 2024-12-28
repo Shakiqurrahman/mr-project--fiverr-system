@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import {
@@ -9,6 +9,8 @@ import {
 const CancellingProjectPreview = ({ messageObj, value }) => {
   const { projectDetails } = useSelector((state) => state?.order);
   const { user } = useSelector((state) => state.user);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
 
@@ -22,11 +24,13 @@ const CancellingProjectPreview = ({ messageObj, value }) => {
         orderMessageId: messageObj?.uniqueId,
         piId: projectDetails?.piId,
       };
+      setIsLoading(true);
       try {
         const res = await acceptCancelRequest(data).unwrap();
       } catch (error) {
         toast.error("Something went wrong!");
       }
+      setIsLoading(false);
     }
   };
   const handleReject = async (e) => {
@@ -39,12 +43,33 @@ const CancellingProjectPreview = ({ messageObj, value }) => {
           isRejected: true,
         },
       };
+      setIsLoading(true);
+      try {
+        const res = await updateAOrderMessage(data).unwrap();
+      } catch (error) {
+        toast.error("Something went wrong!");
+      }
+      setIsLoading(false);
+    }
+  };
+  const handleWithdrawOffer = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    if (messageObj?.uniqueId) {
+      const data = {
+        ...messageObj,
+        cancelProject: {
+          ...messageObj?.cancelProject,
+          isWithdrawn: true,
+        },
+      };
       try {
         const res = await updateAOrderMessage(data).unwrap();
       } catch (error) {
         toast.error("Something went wrong!");
       }
     }
+    setIsLoading(false);
   };
   return (
     <div className="border bg-lightskyblue">
@@ -66,19 +91,44 @@ const CancellingProjectPreview = ({ messageObj, value }) => {
             <button
               type="submit"
               onClick={handleAccept}
-              className="w-[150px] bg-primary px-5 py-2 text-sm font-semibold text-white outline-none duration-300 hover:bg-primary/80 sm:text-lg"
+              disabled={isLoading}
+              className="w-[150px] bg-primary px-5 py-2 text-sm font-semibold text-white outline-none duration-300 hover:bg-primary/80 disabled:bg-primary/50 sm:text-lg"
             >
               Accept
             </button>
             <button
               type="button"
               onClick={handleReject}
-              className="w-[150px] bg-gray-500 px-5 py-2 text-sm font-semibold text-white outline-none duration-300 hover:bg-gray-500/80 sm:text-lg"
+              className="w-[150px] bg-gray-500 px-5 py-2 text-sm font-semibold text-white outline-none duration-300 hover:bg-gray-500/80 disabled:bg-gray-500/50 sm:text-lg"
             >
               Decline
             </button>
           </div>
         )}
+      {isAdmin &&
+        !messageObj?.isCancelled &&
+        !value?.isRejected &&
+        !value?.isWithdrawn &&
+        projectDetails?.projectStatus !== "Completed" &&
+        projectDetails?.projectStatus !== "Canceled" && (
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={handleWithdrawOffer}
+              disabled={isLoading}
+              className="bg-primary px-5 py-2 text-sm font-semibold text-white disabled:bg-primary/50 sm:px-10 sm:text-base"
+            >
+              Withdraw Offer
+            </button>
+          </div>
+        )}
+
+      {value?.isWithdrawn && (
+        <p className="mb-5 text-center text-sm sm:text-base">
+          Cancel Request Withdrawn
+        </p>
+      )}
+
       {messageObj?.isCancelled && (
         <p className="mb-5 text-center text-sm sm:text-base">
           Cancel Request Accepted
