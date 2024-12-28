@@ -462,7 +462,10 @@ function Testimonials() {
                   </div>
                   {review?.isThumbnail && (
                     <img
-                      src={review?.thumbnail}
+                      src={review?.thumbnail?.replaceAll(
+                        "-watermark-resized",
+                        "",
+                      )}
                       alt=""
                       className="w-[150px] cursor-pointer rounded-xl object-cover"
                       onClick={(e) => handlePreviewImage(e, review?.thumbnail)}

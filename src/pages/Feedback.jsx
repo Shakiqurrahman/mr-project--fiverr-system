@@ -67,7 +67,7 @@ function Feedback() {
 
   return (
     <div className="max-width">
-      <div className="mt-10 flex flex-col justify-center gap-10 md:flex-row">
+      <div className="mt-5 flex flex-col items-center justify-center gap-10 md:flex-row">
         <div className="w-full md:w-2/4 lg:w-3/4">
           <h1 className="text-center text-xl font-semibold md:text-start lg:text-2xl">
             Public Feedback
@@ -93,7 +93,7 @@ function Feedback() {
 
             <div className="flex flex-col items-stretch gap-3 sm:flex-row">
               <textarea
-                className="block h-[200px] flex-grow resize-none border-2 border-solid px-4 py-3 outline-none sm:h-auto"
+                className="block h-[200px] flex-grow resize-none border-2 border-solid px-4 py-3 outline-none sm:h-auto sm:min-h-[200px]"
                 value={text}
                 onChange={handleText}
                 name=""
@@ -140,7 +140,7 @@ function Feedback() {
             </div>
           </form>
         </div>
-        <div className="flex w-full flex-col items-center justify-center md:w-1/4 lg:mt-[-80px]">
+        <div className="flex w-full flex-col items-center justify-center md:w-1/4">
           <div className="w-full bg-lightskyblue p-5 md:w-auto">
             <h4 className="my-2 text-xl font-semibold text-black">
               Project Details

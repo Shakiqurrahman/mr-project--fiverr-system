@@ -73,7 +73,10 @@ const AllReviews = ({ user, allReviews }) => {
                 <p className="mb-2 text-gray-600">{review?.message}</p>
                 {review?.isThumbnail && (
                   <img
-                    src={review?.thumbnail}
+                    src={review?.thumbnail?.replaceAll(
+                      "-watermark-resized",
+                      "",
+                    )}
                     alt=""
                     className="w-[120px] cursor-pointer rounded"
                     onClick={(e) => handlePreviewImage(e, review?.thumbnail)}

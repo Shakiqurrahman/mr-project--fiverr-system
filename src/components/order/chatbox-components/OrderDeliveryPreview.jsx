@@ -50,7 +50,7 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
           URL.revokeObjectURL(url); // Clean up the object URL
         })
         .catch((error) => {
-          console.error("Download failed:", error);
+          console.error("Download failed");
         });
     });
   };
@@ -179,7 +179,7 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
     file?.format?.startsWith("image/"),
   );
 
-  const showImages = [...attImages, data?.thumbnailImage];
+  const showImages = [data?.thumbnailImage, ...attImages];
 
   const foundImages =
     data?.attachments?.filter((file) => file?.format?.startsWith("image/"))

@@ -20,7 +20,13 @@ function CompletedProject() {
           (r) => r?.isThumbnail && r?.senderType === "CLIENT",
         ),
       );
-      setData(filteredData);
+      const sortedData = filteredData?.sort((a, b) => {
+        return (
+          new Date(b?.completedDate).getTime() -
+          new Date(a?.completedDate).getTime()
+        );
+      });
+      setData(sortedData);
     }
   }, [orderData]);
 
@@ -74,7 +80,10 @@ function CompletedProject() {
               {data?.map((project, index) => (
                 <ProjectCard
                   key={index}
-                  thumbnail={project?.projectThumbnail}
+                  thumbnail={project?.projectThumbnail?.replaceAll(
+                    "-watermark-resized",
+                    "",
+                  )}
                   watermark={project?.projectThumbnail}
                   clientLogo={project?.user?.image}
                   title={project?.projectName}
