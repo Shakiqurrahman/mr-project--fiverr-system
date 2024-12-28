@@ -60,7 +60,7 @@ const AllTimeStats = () => {
           <select
             name="filterStatistics"
             id="filterStatistics"
-            className="border p-1 px-2 text-sm font-medium outline-none bg-white"
+            className="border bg-white p-1 px-2 text-sm font-medium outline-none"
             onChange={handleStatsTypeChange}
           >
             {statsType.map((type, idx) => (
@@ -88,7 +88,12 @@ const AllTimeStats = () => {
           </div>
           <div className="flex flex-wrap justify-between gap-1 text-sm">
             <span>Avg. Selling Price</span>
-            <p className="font-semibold">${stats?.averageOrderValue}</p>
+            <p className="font-semibold">
+              $
+              {stats?.averageOrderValue
+                ? Math.round(stats?.averageOrderValue)
+                : 0}
+            </p>
           </div>
         </div>
       </div>

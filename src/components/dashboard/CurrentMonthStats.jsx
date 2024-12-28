@@ -28,7 +28,12 @@ const CurrentMonthStats = () => {
         </div>
         <div className="flex justify-between gap-1 text-sm">
           <span>Avg. Selling Price</span>
-          <p className="font-semibold">${stats?.averageOrderValue}</p>
+          <p className="font-semibold">
+            $
+            {stats?.averageOrderValue
+              ? Math.round(stats?.averageOrderValue)
+              : 0}
+          </p>
         </div>
       </div>
     </div>
