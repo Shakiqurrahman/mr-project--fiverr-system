@@ -45,7 +45,7 @@ const TrackProject = () => {
     <div className="bg-lightskyblue p-3">
       <h1 className="text-xl font-semibold">Track Project</h1>
       <div className="my-5 space-y-6">
-        {trackingOptions.map((option, idx) => {
+        {trackingOptions?.map((option, idx) => {
           const status =
             idx <= currentStatusIndex
               ? "Completed"
@@ -80,7 +80,12 @@ const TrackProject = () => {
                   )}
                 </span>
               )}
-              <p className="text-base font-medium">{option?.name}</p>
+              {status === "Ongoing" &&
+              projectDetails?.projectStatus === "Canceled" ? (
+                <p className="text-base font-medium">Project Canceled</p>
+              ) : (
+                <p className="text-base font-medium">{option?.name}</p>
+              )}
             </div>
           );
         })}
