@@ -8,8 +8,6 @@ import { STRIPE_PUBLIC_KEY, configApi } from "../libs/configApi";
 
 const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 
-let initialValue = 1000;
-
 export default function Tips() {
   const { state } = useLocation();
   const navigate = useNavigate();
@@ -21,6 +19,9 @@ export default function Tips() {
   const [tip2, setTip2] = useState(0);
   const [clickBtn, setClickBtn] = useState("");
   const [custom, setCustom] = useState(0);
+  const [initialValue, setInitialValue] = useState(
+    parseInt(state?.projectDetails?.totalPrice) || 1000,
+  );
 
   const handleClickBtn = (e) => {
     setClickBtn(e.target.name);
@@ -37,24 +38,24 @@ export default function Tips() {
   const clientDetails = state?.clientDetails;
 
   const handleDonation = () => {
-    if (initialValue <= 100) {
+    if (initialValue <= 50) {
       setTip(5);
       setTip2(10);
+    } else if (initialValue <= 150) {
+      setTip(8);
+      setTip2(19);
     } else if (initialValue <= 300) {
-      setTip(7);
-      setTip2(15);
-    } else if (initialValue <= 500) {
-      setTip(10);
-      setTip2(20);
-    } else if (initialValue <= 750) {
-      setTip(15);
-      setTip2(25);
-    } else if (initialValue <= 1000) {
-      setTip(20);
+      setTip(17);
       setTip2(35);
+    } else if (initialValue <= 500) {
+      setTip(29);
+      setTip2(55);
+    } else if (initialValue <= 1000) {
+      setTip(59);
+      setTip2(99);
     } else {
-      setTip(30);
-      setTip2(50);
+      setTip(89);
+      setTip2(149);
     }
   };
 
