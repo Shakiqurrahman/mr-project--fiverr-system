@@ -88,6 +88,8 @@ function PriceList() {
     });
   };
 
+  const isAdmin = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
+
   return (
     <div className="max-width">
       <div className="mx-auto mt-10 max-w-[800px]">
@@ -144,15 +146,14 @@ function PriceList() {
           >
             PRICE LIST
           </h1>
-          {user?.role === "ADMIN" ||
-            (user?.role === "SUPER_ADMIN" && (
-              <Link
-                to={"/create-category"}
-                className="rounded-[30px] border border-solid border-primary bg-lightskyblue px-4 py-1 duration-300 hover:bg-primary hover:text-white"
-              >
-                CREATE
-              </Link>
-            ))}
+          {isAdmin && (
+            <Link
+              to={"/create-category"}
+              className="rounded-[30px] border border-solid border-primary bg-lightskyblue px-4 py-1 duration-300 hover:bg-primary hover:text-white"
+            >
+              CREATE
+            </Link>
+          )}
         </div>
         <Reorder.Group
           axis="y"
@@ -177,39 +178,38 @@ function PriceList() {
                 >
                   <div className="flex items-center justify-between bg-lightcream p-2">
                     <div className="relative flex items-center gap-1 sm:gap-4">
-                      {user?.role === "ADMIN" ||
-                        (user?.role === "SUPER_ADMIN" && (
-                          <>
-                            <button
-                              className="text-lg text-gray-600 sm:text-3xl"
-                              onClick={() => handleController(category.id)}
+                      {isAdmin && (
+                        <>
+                          <button
+                            className="text-lg text-gray-600 sm:text-3xl"
+                            onClick={() => handleController(category.id)}
+                          >
+                            <BsThreeDotsVertical />
+                          </button>
+                          {controller === category.id && (
+                            <div
+                              className="absolute left-10 top-0 z-10 min-w-[150px] rounded-lg border border-solid bg-white py-2 text-center *:block *:p-[5px_15px]"
+                              ref={menuRef}
                             >
-                              <BsThreeDotsVertical />
-                            </button>
-                            {controller === category.id && (
-                              <div
-                                className="absolute left-10 top-0 z-10 min-w-[150px] rounded-lg border border-solid bg-white py-2 text-center *:block *:p-[5px_15px]"
-                                ref={menuRef}
+                              <Link
+                                to="/edit-category"
+                                state={category}
+                                className="text-sm hover:bg-gray-200"
                               >
-                                <Link
-                                  to="/edit-category"
-                                  state={category}
-                                  className="text-sm hover:bg-gray-200"
+                                Edit
+                              </Link>
+                              {user?.role === "SUPER_ADMIN" && (
+                                <button
+                                  onClick={() => handleDelete(category.id)}
+                                  className="w-full text-sm hover:bg-gray-200"
                                 >
-                                  Edit
-                                </Link>
-                                {user?.role === "SUPER_ADMIN" && (
-                                  <button
-                                    onClick={() => handleDelete(category.id)}
-                                    className="w-full text-sm hover:bg-gray-200"
-                                  >
-                                    Delete
-                                  </button>
-                                )}
-                              </div>
-                            )}
-                          </>
-                        ))}
+                                  Delete
+                                </button>
+                              )}
+                            </div>
+                          )}
+                        </>
+                      )}
                       <h1 className="text-sm font-semibold sm:text-lg">
                         {category.categoryName}
                       </h1>
