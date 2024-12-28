@@ -8,8 +8,6 @@ import Divider from "../Divider";
 
 const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 
-let initialValue = 1000;
-
 const OrderTipsForm = () => {
   const [amount, setAmount] = useState("");
   const [tip, setTip] = useState(0);
@@ -20,6 +18,14 @@ const OrderTipsForm = () => {
   const { user } = useSelector((state) => state?.user);
   const { projectDetails } = useSelector((state) => state?.order);
 
+  const [initialValue, setInitialValue] = useState(1000);
+
+  useEffect(() => {
+    if (projectDetails?.totalPrice) {
+      setInitialValue(parseInt(projectDetails?.totalPrice));
+    }
+  }, [projectDetails]);
+
   const handleClickBtn = (e) => {
     setClickBtn(e.target.name);
     setAmount(e.target.value);
@@ -29,28 +35,6 @@ const OrderTipsForm = () => {
   const handleChange = (e) => {
     setCustom(e.target.value);
     setAmount(e.target.value);
-  };
-
-  const handleDonation = () => {
-    if (initialValue <= 100) {
-      setTip(5);
-      setTip2(10);
-    } else if (initialValue <= 300) {
-      setTip(7);
-      setTip2(15);
-    } else if (initialValue <= 500) {
-      setTip(10);
-      setTip2(20);
-    } else if (initialValue <= 750) {
-      setTip(15);
-      setTip2(25);
-    } else if (initialValue <= 1000) {
-      setTip(20);
-      setTip2(35);
-    } else {
-      setTip(30);
-      setTip2(50);
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -82,8 +66,27 @@ const OrderTipsForm = () => {
   };
 
   useEffect(() => {
-    handleDonation();
-  }, []);
+    if (initialValue <= 50) {
+      setTip(5);
+      setTip2(10);
+    } else if (initialValue <= 150) {
+      setTip(8);
+      setTip2(19);
+    } else if (initialValue <= 300) {
+      setTip(17);
+      setTip2(35);
+    } else if (initialValue <= 500) {
+      setTip(29);
+      setTip2(55);
+    } else if (initialValue <= 1000) {
+      setTip(59);
+      setTip2(99);
+    } else {
+      setTip(89);
+      setTip2(149);
+    }
+  }, [initialValue]);
+
   return (
     <div className="mx-auto mt-5 w-full sm:max-w-[80%]">
       <h1 className="text-center text-2xl font-semibold text-primary">
