@@ -192,10 +192,15 @@ const AllConversation = ({ closeToggle }) => {
     };
   }, [dispatch]);
 
+  const unreadCount = chatList.filter(
+    (chat) => chat?.lastmessageinfo?.totalUnseenMessage > 0,
+  ).length;
   const archivedCount = chatList.reduce(
     (count, chat) => count + (chat.isArchived ? 1 : 0),
     0,
   );
+
+  console.log(chatList);
 
   return (
     <div className="flex h-full flex-col">
@@ -231,7 +236,7 @@ const AllConversation = ({ closeToggle }) => {
           onChange={handleSelectChange}
         >
           <option value="AllConversations">All Conversations</option>
-          <option value="unread">Unread</option>
+          <option value="unread">Unread {unreadCount > 0 && `- ${unreadCount}`}</option>
           <option value="starred">Starred</option>
           <option value="blockList">Block List</option>
           <option value="archived">

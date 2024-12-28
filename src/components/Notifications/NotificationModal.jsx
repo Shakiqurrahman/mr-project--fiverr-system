@@ -64,8 +64,8 @@ const NotificationModal = ({ close }) => {
                 type: notification?.payload?.type,
                 userName: notification?.payload?.senderUserName,
                 message: notification?.message,
-                rating: notification?.rating,
-                commentQuantity: notification?.commentQuantity,
+                rating: notification?.payload?.rating,
+                commentQuantity: notification?.payload?.commentQuantity,
                 hours: notification?.payload?.hours,
                 days: notification?.payload?.days,
               });
