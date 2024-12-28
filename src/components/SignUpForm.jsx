@@ -62,9 +62,7 @@ function SignUpForm({ handleClick }) {
     },
   });
 
-  const onSubmit = async (data) => {
-    console.log(data);
-    
+  const onSubmit = async (data) => {    
     try {
       setLoading(true);
       const affiliateURL = localStorage.getItem("aff-query") || "";
