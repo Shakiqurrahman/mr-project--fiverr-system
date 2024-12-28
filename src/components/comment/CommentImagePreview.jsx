@@ -13,6 +13,7 @@ import {
   updateImageArray,
 } from "../../Redux/features/commentsSlice";
 import formatFileSize from "../../libs/formatFileSize";
+import GenerateName from "../GenerateName";
 
 const CommentImagePreview = ({ selected, close, openDrawer, drawer }) => {
   const dispatch = useDispatch();
@@ -45,6 +46,24 @@ const CommentImagePreview = ({ selected, close, openDrawer, drawer }) => {
     dispatch(setCommentObj(newMarker));
     dispatch(setHighlight(id));
     dispatch(setMarkersData(newMarker));
+  };
+
+  const handleSingleDownload = (fileUrl, fileName) => {
+    fetch(fileUrl, { mode: "no-cors" })
+      .then((response) => response.blob()) // Convert response to a Blob
+      .then((blob) => {
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob); // Create a URL for the Blob
+        link.href = url;
+        link.setAttribute("download", fileName); // Set the filename for download
+        document.body.appendChild(link);
+        link.click(); // Trigger the download
+        document.body.removeChild(link); // Clean up after download
+        URL.revokeObjectURL(url); // Clean up the object URL
+      })
+      .catch((error) => {
+        console.error("Download failed");
+      });
   };
 
   useEffect(() => {
@@ -86,13 +105,13 @@ const CommentImagePreview = ({ selected, close, openDrawer, drawer }) => {
             ({formatFileSize(selectedImage?.size)})
           </span>
         </p>
-        <a
-          href={selectedImage?.url}
-          download={selectedImage?.name}
-          target="_blank"
+        <button
+          onClick={() =>
+            handleSingleDownload(selectedImage?.url, selectedImage?.name)
+          }
         >
           <LiaDownloadSolid className="text-xl text-primary" />
-        </a>
+        </button>
         <div className="ms-auto flex gap-2">
           {user?.image ? (
             <img
@@ -149,7 +168,9 @@ const CommentImagePreview = ({ selected, close, openDrawer, drawer }) => {
                 alt={img?.name}
                 className={`h-2/3 object-contain opacity-50 ${img.imageId === selectedImage.imageId && "scale-105 !opacity-100"}`}
               />
-              <h1 className="line-clamp-1 text-xs text-white">{img?.name}</h1>
+              <h1 className="line-clamp-1 text-xs text-white">
+                <GenerateName name={img?.name} />
+              </h1>
             </button>
           ))}
         </div>
