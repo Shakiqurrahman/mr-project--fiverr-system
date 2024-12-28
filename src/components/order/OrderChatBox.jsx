@@ -575,7 +575,8 @@ const OrderChatBox = () => {
                 {/* Final Delivery or First Delivery Attempt Text */}
                 {msg?.deliverProject && (
                   <div className="mt-10 text-center">
-                    {projectDetails?.deliveryAttempt === 0 && (
+                    {(projectDetails?.deliveryAttempt === 0 ||
+                      msg?.deliverProject?.firstAttempt) && (
                       <>
                         <h1 className="text-xl font-semibold text-primary">
                           FIRST DELIVERY
@@ -587,17 +588,19 @@ const OrderChatBox = () => {
                         </p>
                       </>
                     )}
-                    {projectDetails?.deliveryAttempt > 0 && (
-                      <>
-                        <h1 className="text-xl font-semibold text-primary">
-                          FINAL DELIVERY
-                        </h1>
-                        <p className="mx-auto mb-10 mt-2 w-3/4 text-sm sm:text-base">
-                          If you don&apos;t accept this delivery, this project
-                          will automatically completed within the next 48 hours.
-                        </p>
-                      </>
-                    )}
+                    {projectDetails?.deliveryAttempt > 0 &&
+                      !msg?.deliverProject?.firstAttempt && (
+                        <>
+                          <h1 className="text-xl font-semibold text-primary">
+                            FINAL DELIVERY
+                          </h1>
+                          <p className="mx-auto mb-10 mt-2 w-3/4 text-sm sm:text-base">
+                            If you don&apos;t accept this delivery, this project
+                            will automatically completed within the next 48
+                            hours.
+                          </p>
+                        </>
+                      )}
                   </div>
                 )}
                 {/* A conversation message Ui */}

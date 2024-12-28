@@ -175,6 +175,12 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
     dispatch(setPreviewImage(url));
   };
 
+  const attImages = data?.attachments?.filter((file) =>
+    file?.format?.startsWith("image/"),
+  );
+
+  const showImages = [...attImages, data?.thumbnailImage];
+
   const foundImages =
     data?.attachments?.filter((file) => file?.format?.startsWith("image/"))
       .length > 0;
@@ -192,46 +198,44 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
               <h1 className="mb-2 text-lg font-semibold">Preview Image</h1>
               <div>
                 <Slider {...settings}>
-                  {data?.attachments
-                    ?.filter((file) => file?.format?.startsWith("image/"))
-                    ?.map((att, index) => (
-                      <div key={index} className="w-full">
-                        <img
-                          onClick={(e) =>
-                            handlePreviewImage(
-                              e,
-                              projectDetails?.projectStatus === "Completed" &&
-                                data?.isAccepted
-                                ? att?.url
-                                : att?.watermark,
-                            )
-                          }
-                          src={
+                  {showImages?.map((att, index) => (
+                    <div key={index} className="w-full">
+                      <img
+                        onClick={(e) =>
+                          handlePreviewImage(
+                            e,
+                            projectDetails?.projectStatus === "Completed" &&
+                              data?.isAccepted
+                              ? att?.url
+                              : att?.watermark,
+                          )
+                        }
+                        src={
+                          projectDetails?.projectStatus === "Completed" &&
+                          data?.isAccepted
+                            ? att?.url
+                            : att?.watermark
+                        }
+                        alt={att?.name}
+                        className="block w-full max-w-full cursor-pointer object-cover"
+                      />
+                      <div className="mt-4 text-center">
+                        <a
+                          href={
                             projectDetails?.projectStatus === "Completed" &&
                             data?.isAccepted
                               ? att?.url
                               : att?.watermark
                           }
-                          alt={att?.name}
-                          className="block w-full max-w-full cursor-pointer object-cover"
-                        />
-                        <div className="mt-4 text-center">
-                          <a
-                            href={
-                              projectDetails?.projectStatus === "Completed" &&
-                              data?.isAccepted
-                                ? att?.url
-                                : att?.watermark
-                            }
-                            download={att?.name}
-                            target="_blank"
-                            className="inline-block rounded-[30px] border border-gray-400 px-5 py-2 text-sm font-medium text-black/50 sm:text-lg"
-                          >
-                            Download
-                          </a>
-                        </div>
+                          download={att?.name}
+                          target="_blank"
+                          className="inline-block rounded-[30px] border border-gray-400 px-5 py-2 text-sm font-medium text-black/50 sm:text-lg"
+                        >
+                          Download
+                        </a>
                       </div>
-                    ))}
+                    </div>
+                  ))}
                 </Slider>
               </div>
             </>
@@ -270,7 +274,7 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
                     data?.isAccepted && (
                       <BiDownload className="shrink-0 text-lg text-primary" />
                     )}
-                  <p>
+                  <p className="w-full break-words">
                     {data?.thumbnailImage?.name}{" "}
                     <span className="text-black/50">
                       ({formatFileSize(parseInt(data?.thumbnailImage?.size))})
