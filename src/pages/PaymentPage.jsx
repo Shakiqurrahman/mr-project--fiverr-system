@@ -96,9 +96,10 @@ const PaymentPage = () => {
       totalAmount: designs?.totalAmount || totalAmount,
       requirements: requirementsArray,
       bulletPoint: state?.bulletPoint,
-      deliveryDuration: designs?.deliveryWay
-        ? null
-        : deliveryDuration || state?.duration,
+      deliveryDuration:
+        designs?.deliveryWay !== "hours"
+          ? deliveryDuration || state?.duration || state?.deliveryDuration
+          : null,
       durationHours:
         designs?.deliveryWay === "hours" ? designs?.durationHours : null,
       title: state?.title,
