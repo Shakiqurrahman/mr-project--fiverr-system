@@ -167,6 +167,7 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
 
         {!value?.isAccepted &&
           !value?.isRejected &&
+          !value?.isWithdrawn &&
           value?.isSubmittedByAdmin &&
           user?.role === "USER" &&
           projectDetails?.projectStatus !== "Completed" &&
@@ -195,6 +196,7 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
           )}
         {!value?.isAccepted &&
           !value?.isRejected &&
+          !value?.isWithdrawn &&
           !value?.isSubmittedByAdmin &&
           isAdmin &&
           projectDetails?.projectStatus !== "Completed" &&
