@@ -192,6 +192,11 @@ const AllConversation = ({ closeToggle }) => {
     };
   }, [dispatch]);
 
+  const archivedCount = chatList.reduce(
+    (count, chat) => count + (chat.isArchived ? 1 : 0),
+    0,
+  );
+
   return (
     <div className="flex h-full flex-col">
       <div className="flex h-[70px] items-center justify-between bg-primary/20 px-4">
@@ -229,7 +234,9 @@ const AllConversation = ({ closeToggle }) => {
           <option value="unread">Unread</option>
           <option value="starred">Starred</option>
           <option value="blockList">Block List</option>
-          <option value="archived">Archived</option>
+          <option value="archived">
+            Archived {archivedCount > 0 && `- ${archivedCount}`}
+          </option>
           <option value="customOffers">Custom Offers</option>
         </select>
       </div>
