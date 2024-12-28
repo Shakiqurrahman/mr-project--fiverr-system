@@ -135,7 +135,10 @@ const OrderDetails = () => {
                     {item?.selectedQuantity || item?.quantity}
                   </div>
                   <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
-                    {item?.deliveryDuration || item?.regularDeliveryDays}
+                    {item?.deliveryDuration || item?.regularDeliveryDays}{" "}
+                    {item?.deliveryDuration > 1 || item?.regularDeliveryDays > 1
+                      ? "Days"
+                      : "Day"}
                   </div>
                   <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
                     {item?.subCategory?.subAmount || item?.subTotal}
@@ -249,7 +252,11 @@ const OrderDetails = () => {
                 : totalQuantity}
             </div>
             <div className="w-1/6 shrink-0 border-l border-gray-300 p-3 text-center">
-              {totalDuration} {items[0]?.durationHours ? "hours" : "days"}
+              {totalDuration} {items[0]?.durationHours && "hours"}
+              {items[0]?.deliveryDuration > 1 ||
+              items[0]?.regularDeliveryDays > 1
+                ? "Days"
+                : "Day"}
             </div>
             <div className="w-1/6 shrink-0 border-l border-gray-300 p-3 text-center">
               ${totalAmount}

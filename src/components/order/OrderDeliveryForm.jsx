@@ -14,7 +14,10 @@ import {
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
 } from "../../Redux/api/inboxApiSlice";
-import { useSendAOrderMessageMutation, useSubmitDeliveryMutation } from "../../Redux/api/orderApiSlice";
+import {
+  useSendAOrderMessageMutation,
+  useSubmitDeliveryMutation,
+} from "../../Redux/api/orderApiSlice";
 import { setMessages, setReplyTo } from "../../Redux/features/orderSlice";
 import { useLocalStorageObject } from "../../hooks/useLocalStorageObject";
 import useOutsideClick from "../../hooks/useOutsideClick";
@@ -30,7 +33,6 @@ import AddQuickMsgModal from "../chat/AddQuickMsgModal";
 import EditQuickMsgModal from "../chat/EditQuickMsgModal";
 
 const OrderDeliveryForm = ({ handleClose }) => {
-  
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.user);
   const { projectDetails, replyTo } = useSelector((state) => state.order);
@@ -49,7 +51,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
   const { data: quickMsgs } = useFetchQuickResMsgQuery();
   const [deleteQuickResMsg] = useDeleteQuickResMsgMutation();
   const [sendAOrderMessage] = useSendAOrderMessageMutation();
-  const [submitDelivry] = useSubmitDeliveryMutation()
+  const [submitDelivry] = useSubmitDeliveryMutation();
 
   //   all states here
   const [textValue, setTextValue] = useState("");
@@ -292,11 +294,16 @@ const OrderDeliveryForm = ({ handleClose }) => {
   //   submitting form data
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (textValue.length <= 5000 && selectedImages && thumbnailImage) {
+    if (
+      textValue.length <= 5000 &&
+      selectedImages?.length > 0 &&
+      thumbnailImage
+    ) {
       const filteredImages = selectedImages?.filter(
         (i) => i?.url && i?.name && i?.size,
       );
       const formData = {
+        firstAttempt: projectDetails?.deliveryAttempt > 0 ? false : true,
         attachments: filteredImages,
         thumbnailImage,
         isRevision: false,
@@ -357,9 +364,11 @@ const OrderDeliveryForm = ({ handleClose }) => {
       localStorage.setItem("deliveryDraft", JSON.stringify(resetStorage));
       handleClose(false);
       try {
-        const res = await submitDelivry({projectNumber: projectDetails?.projectNumber}).unwrap();
+        const res = await submitDelivry({
+          projectNumber: projectDetails?.projectNumber,
+        }).unwrap();
       } catch (error) {
-        toast.error("Something went wrong!")
+        toast.error("Something went wrong!");
       }
     }
   };

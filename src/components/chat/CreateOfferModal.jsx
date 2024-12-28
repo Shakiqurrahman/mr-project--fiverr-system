@@ -105,7 +105,7 @@ const CreateOfferModal = ({
       };
       const formData = {
         ...form,
-        requirements,
+        requirements: requirements?.filter((item) => item),
       };
       const uniqueId = shortid();
       const offerMessage = {

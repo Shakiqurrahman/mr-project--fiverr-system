@@ -83,12 +83,14 @@ const ProjectRequirements = () => {
   // Initial stage Update requirements state
   useEffect(() => {
     if (projectDetails?.requirements) {
-      const updateRequirements = projectDetails?.requirements?.map((item) => ({
-        id: shortid.generate(),
-        question: item.question,
-        answer: "",
-        attachments: [],
-      }));
+      const updateRequirements = projectDetails?.requirements
+        ?.filter((item) => item?.question)
+        ?.map((item) => ({
+          id: shortid.generate(),
+          question: item.question,
+          answer: "",
+          attachments: [],
+        }));
       setRequirements(updateRequirements);
     }
   }, [projectDetails?.requirements]);

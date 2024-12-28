@@ -3,7 +3,10 @@ import toast from "react-hot-toast";
 import { IoCloseSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import shortid from "shortid";
-import { useSendAOrderMessageMutation } from "../../../Redux/api/orderApiSlice";
+import {
+  useCancelOrderProjectMutation,
+  useSendAOrderMessageMutation,
+} from "../../../Redux/api/orderApiSlice";
 import { setMessages, setReplyTo } from "../../../Redux/features/orderSlice";
 import useOutsideClick from "../../../hooks/useOutsideClick";
 import { configApi } from "../../../libs/configApi";
@@ -20,6 +23,8 @@ const CancelProjectModal = ({ handleClose }) => {
 
   // Checking Admin
   const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
+
+  const [acceptCancelRequest] = useCancelOrderProjectMutation();
 
   const modalRef = useRef(null);
   const [extendType, setExtendType] = useState("requestByClient");
@@ -46,7 +51,11 @@ const CancelProjectModal = ({ handleClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (form.explainWhyCancel) {
-      const data = { ...form, extendType };
+      const data = {
+        ...form,
+        isAccepted: extendType === "requestByMe" || false,
+        extendType,
+      };
 
       const submitForm = {
         messageText: "",
@@ -58,6 +67,7 @@ const CancelProjectModal = ({ handleClose }) => {
         deliverProject: null,
         cancelProject: data,
         imageComments: [],
+        isCancelled: extendType === "requestByMe" || false,
         timeAndDate,
         replyTo,
         projectNumber: projectDetails?.projectNumber,
@@ -94,6 +104,15 @@ const CancelProjectModal = ({ handleClose }) => {
           recipientId: isAdmin ? projectDetails?.userId : null,
           ...submitForm,
         }).unwrap();
+
+        if (extendType === "requestByMe") {
+          const data = {
+            orderId: projectDetails?.id,
+            orderMessageId: submitForm?.uniqueId,
+            piId: projectDetails?.piId,
+          };
+          const res = await acceptCancelRequest(data).unwrap();
+        }
 
         // setReplyTo(null);
       } catch (error) {
