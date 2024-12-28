@@ -812,7 +812,7 @@ const ChatBox = ({ openToggle }) => {
     <div className="flex h-full flex-col">
       {/* Header Part */}
       <div className="flex h-[70px] items-center justify-between rounded-tl-lg rounded-tr-lg bg-[#efefef] p-4 md:rounded-tl-none">
-        <div className="">
+        <div>
           <h1 className="text-base font-semibold sm:text-lg">
             {isAdmin ? (
               <Link to={`/${recipientUserName}`}>{recipientUserName}</Link>
@@ -1027,7 +1027,7 @@ const ChatBox = ({ openToggle }) => {
                     {/* Here is the message text to preview */}
                     {msg?.messageText && (
                       <div className="mt-1 w-11/12">
-                        <p className="text-sm sm:text-base">
+                        <p className="text-sm sm:text-base whitespace-pre-wrap">
                           {msg?.messageText}
                         </p>
                       </div>
@@ -1038,17 +1038,17 @@ const ChatBox = ({ openToggle }) => {
                         <h1 className="font-semibold">Contact Form</h1>
                         <p className="my-1">
                           <span className="font-semibold">Name: </span>{" "}
-                          {msg.contactForm.name}
+                          {msg?.contactForm?.name}
                         </p>
                         <p className="my-1">
                           <span className="font-semibold">Email: </span>{" "}
-                          {msg.contactForm.email}
+                          {msg?.contactForm?.email}
                         </p>
                         <p className="my-1">
                           <span className="font-semibold">
                             Website/Facebook:{" "}
                           </span>{" "}
-                          {msg.contactForm.website}
+                          {msg?.contactForm?.website}
                         </p>
                         {msg?.contactForm?.exampleDesign?.length > 0 && (
                           <p className="my-1">
