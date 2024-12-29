@@ -89,7 +89,7 @@ const AttachmentsPreview = ({ files }) => {
               />
               <Link
                 onClick={() => handleSingleDownload(att?.url, att?.name)}
-                className="mt-2 flex items-center justify-center text-xs"
+                className="mt-2 flex items-center justify-start text-xs"
               >
                 <BiDownload className="shrink-0 text-lg text-primary" />
                 <div
@@ -98,7 +98,7 @@ const AttachmentsPreview = ({ files }) => {
                 >
                   <GenerateName name={att?.name} />
                 </div>
-                <span className="shrink-0 text-black/50">
+                <span className="ml-auto shrink-0 text-black/50">
                   ({formatFileSize(att?.size)})
                 </span>
               </Link>

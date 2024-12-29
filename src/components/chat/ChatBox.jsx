@@ -1125,7 +1125,7 @@ const ChatBox = ({ openToggle }) => {
                                             att?.name,
                                           )
                                         }
-                                        className="mt-2 flex items-center justify-center text-xs"
+                                        className="mt-2 flex items-center justify-start text-xs"
                                       >
                                         <BiDownload className="shrink-0 text-lg text-primary" />
                                         <div
@@ -1134,7 +1134,7 @@ const ChatBox = ({ openToggle }) => {
                                         >
                                           <GenerateName name={att.name} />
                                         </div>
-                                        <span className="shrink-0 text-black/50">
+                                        <span className="ml-auto shrink-0 text-black/50">
                                           ({formatFileSize(att?.size)})
                                         </span>
                                       </Link>
@@ -1300,16 +1300,16 @@ const ChatBox = ({ openToggle }) => {
                                 onClick={() =>
                                   handleSingleDownload(att?.url, att?.name)
                                 }
-                                className="mt-2 flex items-center justify-center text-xs"
+                                className="mt-2 flex items-center justify-start text-xs"
                               >
-                                <BiDownload className="shrink-0 grow text-lg text-primary" />
+                                <BiDownload className="shrink-0 text-lg text-primary" />
                                 <div
                                   className="mx-[2px] max-w-[30%] shrink font-medium md:mx-2 md:max-w-[50%]"
                                   title={att.name}
                                 >
                                   <GenerateName name={att.name} />
                                 </div>
-                                <span className="shrink-0 grow text-black/50">
+                                <span className="ml-auto shrink-0 text-black/50">
                                   ({formatFileSize(att.size)})
                                 </span>
                               </Link>
