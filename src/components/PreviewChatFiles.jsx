@@ -1,10 +1,36 @@
 import React from "react";
 import { SlPicture } from "react-icons/sl";
 
-const PreviewChatFiles = ({ file, handlePreviewImage }) => {
+const PreviewChatFiles = ({
+  file,
+  handlePreviewImage,
+  files,
+  setSliderData,
+}) => {
   const isImage = file?.format?.startsWith("image/");
+  const isImages = files?.filter((file) => file?.format?.startsWith("image/"));
+
+  const handleOpenSlider = (e) => {
+    e.preventDefault();
+    const data = {
+      openSlider: true,
+      images: isImages,
+      selectedImage: file,
+    };
+    setSliderData(data);
+  };
+
   const renderPreview = () => {
-    if (isImage) {
+    if (isImages?.length > 0 && isImage) {
+      return (
+        <img
+          src={file.url}
+          alt=""
+          className="h-[100px] w-full cursor-pointer object-cover sm:h-[180px]"
+          onClick={handleOpenSlider}
+        />
+      );
+    } else if (isImage) {
       return (
         <img
           src={file.url}

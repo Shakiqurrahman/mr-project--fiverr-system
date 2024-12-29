@@ -44,15 +44,12 @@ const CreateOfferModal = ({
   });
   const fileInputRef = useRef(null);
   const formRef = useRef(null);
-  const [requirements, setRequirements] = useState([
-    "Which industry do you work in?",
-    "Do you have your own company logo?",
-    "",
-  ]);
+  const [requirements, setRequirements] = useState([""]);
 
   useEffect(() => {
     if (imageObject) {
-      setForm((prev) => ({ ...prev, thumbnail: imageObject.url }));
+      setForm((prev) => ({ ...prev, thumbnail: imageObject?.image?.url }));
+      setRequirements(imageObject?.requirements || [""]);
     }
   }, [imageObject]);
 
@@ -126,7 +123,10 @@ const CreateOfferModal = ({
           ...offerMessage,
         });
         try {
-          await updateImage(imageObj);
+          await updateImage({
+            image: imageObj,
+            requirements: requirements?.filter((item) => item),
+          });
           const res = await sendAMessage({
             recipientId: conversationUser,
             ...offerMessage,
