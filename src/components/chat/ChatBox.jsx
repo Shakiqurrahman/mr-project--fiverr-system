@@ -52,6 +52,7 @@ import { timeAgoTracker } from "../../libs/timeAgoTracker";
 import CircleProgressBar from "../CircleProgressBar";
 import FilePreview from "../FilePreview";
 import GenerateName from "../GenerateName";
+import ImagesSlider from "../ImagesSlider";
 import PreviewChatFiles from "../PreviewChatFiles";
 
 const ChatBox = ({ openToggle }) => {
@@ -99,6 +100,7 @@ const ChatBox = ({ openToggle }) => {
   const [openAddMsgModal, setOpenAddMsgModal] = useState(false);
   const [openEditMsgModal, setOpenEditMsgModal] = useState(null);
   const [openOfferModal, setOpenOfferModal] = useState(false);
+  const [openImageSlider, setOpenImageSlider] = useState(null);
 
   // messages state
   const [messages, setMessages] = useState([]);
@@ -1113,6 +1115,8 @@ const ChatBox = ({ openToggle }) => {
                                     <div key={i}>
                                       <PreviewChatFiles
                                         file={att}
+                                        files={msg?.contactForm?.exampleDesign}
+                                        setSliderData={setOpenImageSlider}
                                         handlePreviewImage={handlePreviewImage}
                                       />
                                       <Link
@@ -1289,6 +1293,8 @@ const ChatBox = ({ openToggle }) => {
                             <div key={i}>
                               <PreviewChatFiles
                                 file={att}
+                                files={msg?.attachment}
+                                setSliderData={setOpenImageSlider}
                                 handlePreviewImage={handlePreviewImage}
                               />
                               <Link
@@ -1563,6 +1569,12 @@ const ChatBox = ({ openToggle }) => {
           values={messages}
           reply={replyTo}
           setReplyTo={setReplyTo}
+        />
+      )}
+      {openImageSlider?.openSlider && (
+        <ImagesSlider
+          handleClose={setOpenImageSlider}
+          files={openImageSlider}
         />
       )}
     </div>
