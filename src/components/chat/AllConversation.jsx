@@ -200,8 +200,6 @@ const AllConversation = ({ closeToggle }) => {
     0,
   );
 
-  console.log(chatList);
-
   return (
     <div className="flex h-full flex-col">
       <div className="flex h-[70px] items-center justify-between bg-primary/20 px-4">
