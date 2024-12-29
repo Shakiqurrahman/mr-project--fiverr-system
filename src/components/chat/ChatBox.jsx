@@ -207,7 +207,6 @@ const ChatBox = ({ openToggle }) => {
       if (!isAdmin && data.userId === user?.id) {
         // dispatch(setTypingStatus(`Typing...`));
       }
-      // console.log(data);
     });
 
     // Listen for stop typing
