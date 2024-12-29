@@ -253,7 +253,7 @@ const StartMultipleProject = ({ items }) => {
             below
           </p>
         )}
-        <div className="flex gap-3 overflow-x-auto">
+        <div className="flex flex-wrap gap-3">
           {choosenItems.map((i) => (
             <button
               className="border"
@@ -263,7 +263,7 @@ const StartMultipleProject = ({ items }) => {
               <img
                 src={i.designImage}
                 alt=""
-                className={`${selectedItem === i?.id ? "opacity-100" : "opacity-50"} w-[80px] object-cover sm:w-[100px]`}
+                className={`${selectedItem === i?.id ? "opacity-100" : "opacity-50"} w-[80px] shrink-0 object-cover sm:w-[100px]`}
               />
             </button>
           ))}

@@ -8,7 +8,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { BiDownload } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   useAcceptDeliveryMutation,
   useAcceptRevisionMutation,
@@ -69,6 +69,24 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
     // Generate the zip file
     const content = await zip.generateAsync({ type: "blob" });
     saveAs(content, "files.zip"); // Save the zip file
+  };
+
+  const handleSingleDownload = (fileUrl, fileName) => {
+    fetch(fileUrl, { mode: "no-cors" })
+      .then((response) => response.blob()) // Convert response to a Blob
+      .then((blob) => {
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob); // Create a URL for the Blob
+        link.href = url;
+        link.setAttribute("download", fileName); // Set the filename for download
+        document.body.appendChild(link);
+        link.click(); // Trigger the download
+        document.body.removeChild(link); // Clean up after download
+        URL.revokeObjectURL(url); // Clean up the object URL
+      })
+      .catch((error) => {
+        console.error("Download failed");
+      });
   };
 
   const settings = {
@@ -220,19 +238,20 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
                         className="block w-full max-w-full cursor-pointer object-cover"
                       />
                       <div className="mt-4 text-center">
-                        <a
-                          href={
-                            projectDetails?.projectStatus === "Completed" &&
-                            data?.isAccepted
-                              ? att?.url
-                              : att?.watermark
+                        <Link
+                          onClick={() =>
+                            handleSingleDownload(
+                              projectDetails?.projectStatus === "Completed" &&
+                                data?.isAccepted
+                                ? att?.url
+                                : att?.watermark,
+                              att?.name,
+                            )
                           }
-                          download={att?.name}
-                          target="_blank"
                           className="inline-block rounded-[30px] border border-gray-400 px-5 py-2 text-sm font-medium text-black/50 sm:text-lg"
                         >
                           Download
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   ))}
@@ -254,21 +273,16 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
           <div>
             {data?.thumbnailImage && (
               <>
-                <a
-                  href={
+                <button
+                  onClick={() =>
                     projectDetails?.projectStatus === "Completed" &&
-                    data?.isAccepted
-                      ? data?.thumbnailImage?.url
-                      : undefined
-                  }
-                  download={
-                    projectDetails?.projectStatus === "Completed" &&
-                    data?.isAccepted
-                      ? data?.thumbnailImage?.name
-                      : undefined
+                    data?.isAccepted &&
+                    handleSingleDownload(
+                      data?.thumbnailImage?.url,
+                      data?.thumbnailImage?.name,
+                    )
                   }
                   className="flex items-start gap-2 text-sm"
-                  target="_blank"
                 >
                   {projectDetails?.projectStatus === "Completed" &&
                     data?.isAccepted && (
@@ -280,7 +294,7 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
                       ({formatFileSize(parseInt(data?.thumbnailImage?.size))})
                     </span>
                   </p>
-                </a>
+                </button>
                 <Divider
                   className={`my-5 ${projectDetails?.projectStatus === "Completed" ? "ms-6" : ""} h-px w-[50px] !bg-black`}
                 />
@@ -288,21 +302,13 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
             )}
             {data?.attachments?.length > 0 &&
               data?.attachments?.map((att, index) => (
-                <a
+                <button
                   key={index}
-                  href={
+                  onClick={() =>
                     projectDetails?.projectStatus === "Completed" &&
-                    data?.isAccepted
-                      ? att?.url
-                      : undefined
+                    data?.isAccepted &&
+                    handleSingleDownload(att?.url, att?.name)
                   }
-                  download={
-                    projectDetails?.projectStatus === "Completed" &&
-                    data?.isAccepted
-                      ? att?.name
-                      : undefined
-                  }
-                  target="_blank"
                   className="flex items-start gap-2 text-sm"
                 >
                   {projectDetails?.projectStatus === "Completed" &&
@@ -315,7 +321,7 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
                       ({formatFileSize(att?.size)})
                     </span>
                   </p>
-                </a>
+                </button>
               ))}
           </div>
         </div>

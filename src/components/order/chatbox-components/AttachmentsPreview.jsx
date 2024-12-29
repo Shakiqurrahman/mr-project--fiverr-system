@@ -23,13 +23,41 @@ const AttachmentsPreview = ({ files }) => {
   // handle download all button
   const handleDownloadAll = (downloadFiles) => {
     downloadFiles.forEach((file) => {
-      const link = document.createElement("a");
-      link.href = file.url; // Ensure this points to the file's URL
-      link.setAttribute("download", file.name); // Set the filename
-      document.body.appendChild(link);
-      link.click(); // Simulate click to download
-      document.body.removeChild(link); // Clean up
+      // Use fetch to download the file as a Blob
+      fetch(file?.url, { mode: "no-cors" })
+        .then((response) => response.blob()) // Convert response to a Blob
+        .then((blob) => {
+          const link = document.createElement("a");
+          const url = URL.createObjectURL(blob); // Create a URL for the Blob
+          link.href = url;
+          link.setAttribute("download", file?.name); // Set the filename for download
+          document.body.appendChild(link);
+          link.click(); // Trigger the download
+          document.body.removeChild(link); // Clean up after download
+          URL.revokeObjectURL(url); // Clean up the object URL
+        })
+        .catch((error) => {
+          console.error("Download failed");
+        });
     });
+  };
+
+  const handleSingleDownload = (fileUrl, fileName) => {
+    fetch(fileUrl, { mode: "no-cors" })
+      .then((response) => response.blob()) // Convert response to a Blob
+      .then((blob) => {
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob); // Create a URL for the Blob
+        link.href = url;
+        link.setAttribute("download", fileName); // Set the filename for download
+        document.body.appendChild(link);
+        link.click(); // Trigger the download
+        document.body.removeChild(link); // Clean up after download
+        URL.revokeObjectURL(url); // Clean up the object URL
+      })
+      .catch((error) => {
+        console.error("Download failed");
+      });
   };
 
   const handleOpenComment = (att) => {
@@ -47,7 +75,7 @@ const AttachmentsPreview = ({ files }) => {
         {files?.length > 3 && (
           <Link
             className="font-medium text-primary"
-            onClick={() => handleDownloadAll()}
+            onClick={() => handleDownloadAll(files)}
           >
             Download All
           </Link>
@@ -59,10 +87,8 @@ const AttachmentsPreview = ({ files }) => {
                 file={att}
                 handlePreviewImage={() => handleOpenComment(att)}
               />
-              <a
-                href={att?.url}
-                download={att?.name}
-                target="_blank"
+              <Link
+                onClick={() => handleSingleDownload(att?.url, att?.name)}
                 className="mt-2 flex items-center justify-center text-xs"
               >
                 <BiDownload className="shrink-0 text-lg text-primary" />
@@ -75,7 +101,7 @@ const AttachmentsPreview = ({ files }) => {
                 <span className="shrink-0 text-black/50">
                   ({formatFileSize(att?.size)})
                 </span>
-              </a>
+              </Link>
             </div>
           ))}
         </div>
