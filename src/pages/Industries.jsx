@@ -183,13 +183,13 @@ function Industries() {
   const currentPageData = designs?.slice(startIndex, startIndex + limit);
 
   const designBtnsData =
-    designKeywords?.length > 30 && !toggleDesignBtns
-      ? designKeywords?.slice(0, 30)
+    designKeywords?.length > 25 && !toggleDesignBtns
+      ? designKeywords?.slice(0, 25)
       : designKeywords;
 
   const industryBtnsData =
-    industryKeywords?.length > 30 && !toggleIndustryBtns
-      ? industryKeywords?.slice(0, 30)
+    industryKeywords?.length > 25 && !toggleIndustryBtns
+      ? industryKeywords?.slice(0, 25)
       : industryKeywords;
 
   return (
@@ -211,7 +211,7 @@ function Industries() {
               {btn.name}
             </ButtonSecondary>
           ))}
-          {industryKeywords?.length > 30 && (
+          {industryKeywords?.length > 25 && (
             <button
               onClick={() => setToggleIndustryBtns(!toggleIndustryBtns)}
               className={`rounded-[30px] bg-[#ffefef] px-2 py-1 text-sm font-medium duration-300 hover:bg-secondary hover:text-white sm:px-4 sm:py-2 sm:text-base`}
@@ -233,7 +233,7 @@ function Industries() {
               {btn.name}
             </ButtonPrimary>
           ))}
-          {designKeywords?.length > 30 && (
+          {designKeywords?.length > 25 && (
             <button
               onClick={() => setToggleDesignBtns(!toggleDesignBtns)}
               className={`rounded-[30px] bg-[#edf7fd] px-2 py-1 text-sm font-medium duration-300 hover:bg-primary hover:text-white sm:px-4 sm:py-2 sm:text-base`}
