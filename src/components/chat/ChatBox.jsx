@@ -480,7 +480,10 @@ const ChatBox = ({ openToggle }) => {
     e.preventDefault();
     if (msg?.customOffer) {
       const offerObj = msg?.customOffer;
-      const updatedMessage = { ...msg, customOffer: { ...offerObj, isAccepted: true } };
+      const updatedMessage = {
+        ...msg,
+        customOffer: { ...offerObj, isAccepted: true },
+      };
       const data = {
         title: offerObj?.title,
         selectedQuantity: 1,
@@ -503,7 +506,7 @@ const ChatBox = ({ openToggle }) => {
           offerObj?.deliveryWay === "hours"
             ? parseInt(offerObj?.deliveryCount)
             : null,
-        updatedMessage: updatedMessage
+        updatedMessage: updatedMessage,
       };
       navigate("/payment", { state: data });
     }
@@ -637,13 +640,41 @@ const ChatBox = ({ openToggle }) => {
   // handle download all button
   const handleDownloadAll = (files) => {
     files.forEach((file) => {
-      const link = document.createElement("a");
-      link.href = file.url; // Ensure this points to the file's URL
-      link.setAttribute("download", file.name); // Set the filename
-      document.body.appendChild(link);
-      link.click(); // Simulate click to download
-      document.body.removeChild(link); // Clean up
+      // Use fetch to download the file as a Blob
+      fetch(file?.url, { mode: "no-cors" })
+        .then((response) => response.blob()) // Convert response to a Blob
+        .then((blob) => {
+          const link = document.createElement("a");
+          const url = URL.createObjectURL(blob); // Create a URL for the Blob
+          link.href = url;
+          link.setAttribute("download", file?.name); // Set the filename for download
+          document.body.appendChild(link);
+          link.click(); // Trigger the download
+          document.body.removeChild(link); // Clean up after download
+          URL.revokeObjectURL(url); // Clean up the object URL
+        })
+        .catch((error) => {
+          console.error("Download failed");
+        });
     });
+  };
+
+  const handleSingleDownload = (fileUrl, fileName) => {
+    fetch(fileUrl, { mode: "no-cors" })
+      .then((response) => response.blob()) // Convert response to a Blob
+      .then((blob) => {
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob); // Create a URL for the Blob
+        link.href = url;
+        link.setAttribute("download", fileName); // Set the filename for download
+        document.body.appendChild(link);
+        link.click(); // Trigger the download
+        document.body.removeChild(link); // Clean up after download
+        URL.revokeObjectURL(url); // Clean up the object URL
+      })
+      .catch((error) => {
+        console.error("Download failed");
+      });
   };
 
   // Handle user typing
@@ -783,7 +814,7 @@ const ChatBox = ({ openToggle }) => {
 
   // message unseen to seen
   useEffect(() => {
-    if (conversationUser && isAdmin) {      
+    if (conversationUser && isAdmin) {
       unseenMessageHandler({
         userId: conversationUser,
       });
@@ -1027,7 +1058,7 @@ const ChatBox = ({ openToggle }) => {
                     {/* Here is the message text to preview */}
                     {msg?.messageText && (
                       <div className="mt-1 w-11/12">
-                        <p className="text-sm sm:text-base whitespace-pre-wrap">
+                        <p className="whitespace-pre-wrap text-sm sm:text-base">
                           {msg?.messageText}
                         </p>
                       </div>
@@ -1050,6 +1081,10 @@ const ChatBox = ({ openToggle }) => {
                           </span>{" "}
                           {msg?.contactForm?.website}
                         </p>
+                        <p className="my-1">
+                          <span className="font-semibold">Message: </span>{" "}
+                          {msg.contactForm.messageText}
+                        </p>
                         {msg?.contactForm?.exampleDesign?.length > 0 && (
                           <p className="my-1">
                             <span className="font-semibold">
@@ -1061,7 +1096,14 @@ const ChatBox = ({ openToggle }) => {
                           msg?.contactForm?.exampleDesign?.length > 0 && (
                             <div className="relative mt-2">
                               {msg?.contactForm?.exampleDesign?.length > 3 && (
-                                <Link className="mb-2 inline-block text-sm font-medium text-primary">
+                                <Link
+                                  onClick={() =>
+                                    handleDownloadAll(
+                                      msg?.contactForm?.exampleDesign,
+                                    )
+                                  }
+                                  className="mb-2 inline-block text-sm font-medium text-primary"
+                                >
                                   Download All
                                 </Link>
                               )}
@@ -1073,14 +1115,22 @@ const ChatBox = ({ openToggle }) => {
                                         file={att}
                                         handlePreviewImage={handlePreviewImage}
                                       />
-                                      <Link className="mt-2 flex items-center justify-center text-xs">
+                                      <Link
+                                        onClick={() =>
+                                          handleSingleDownload(
+                                            att?.url,
+                                            att?.name,
+                                          )
+                                        }
+                                        className="mt-2 flex items-center justify-center text-xs"
+                                      >
                                         <BiDownload className="shrink-0 text-lg text-primary" />
-                                        <p
+                                        <div
                                           className="mx-2 line-clamp-1 font-medium"
                                           title={att?.name}
                                         >
-                                          {att?.name}
-                                        </p>
+                                          <GenerateName name={att.name} />
+                                        </div>
                                         <span className="shrink-0 text-black/50">
                                           ({formatFileSize(att?.size)})
                                         </span>
@@ -1119,11 +1169,6 @@ const ChatBox = ({ openToggle }) => {
                                 ))}
                             </div>
                           )}
-
-                        <p className="mt-5">
-                          <span className="font-semibold">Message: </span>{" "}
-                          {msg.contactForm.messageText}
-                        </p>
                       </div>
                     )}
                     {/* Here is the offer template to preview */}
@@ -1233,7 +1278,7 @@ const ChatBox = ({ openToggle }) => {
                       <div className="relative mt-2">
                         {msg?.attachment.length > 3 && (
                           <Link
-                            onClick={() => handleDownloadAll(msg.attachment)}
+                            onClick={() => handleDownloadAll(msg?.attachment)}
                             className="mb-2 inline-block text-sm font-medium text-primary"
                           >
                             Download All
@@ -1246,9 +1291,10 @@ const ChatBox = ({ openToggle }) => {
                                 file={att}
                                 handlePreviewImage={handlePreviewImage}
                               />
-                              <a
-                                href={att.url}
-                                download={att.name}
+                              <Link
+                                onClick={() =>
+                                  handleSingleDownload(att?.url, att?.name)
+                                }
                                 className="mt-2 flex items-center justify-center text-xs"
                               >
                                 <BiDownload className="shrink-0 grow text-lg text-primary" />
@@ -1261,7 +1307,7 @@ const ChatBox = ({ openToggle }) => {
                                 <span className="shrink-0 grow text-black/50">
                                   ({formatFileSize(att.size)})
                                 </span>
-                              </a>
+                              </Link>
                             </div>
                           ))}
                         </div>
@@ -1430,14 +1476,14 @@ const ChatBox = ({ openToggle }) => {
                   <h1 className="font-semibold">
                     {(replyTo?.replySenderUserRole === "USER" ||
                       replyTo?.replySenderUserRole !== "USER") &&
-                      replyTo?.replySenderUserName === replyTo?.msgSenderUserName
+                    replyTo?.replySenderUserName === replyTo?.msgSenderUserName
                       ? "You"
                       : replyTo?.replySenderUserName !==
-                        replyTo?.msgSenderUserName && user?.role !== "USER"
+                            replyTo?.msgSenderUserName && user?.role !== "USER"
                         ? replyTo?.msgSenderUserName
                         : replyTo?.replySenderUserName !==
-                          replyTo?.msgSenderUserName &&
-                          user?.role === "USER"
+                              replyTo?.msgSenderUserName &&
+                            user?.role === "USER"
                           ? "Mahfujurrahm535"
                           : ""}
                   </h1>

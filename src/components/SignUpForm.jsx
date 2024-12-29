@@ -7,14 +7,14 @@ import { FaEye, FaEyeSlash, FaSpinner } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
-import { configApi } from "../libs/configApi";
-import { connectSocket } from "../libs/socketService";
 import {
   clearPasswordVisibility,
   toggleShowConfirmPassword,
   toggleShowNewPassword,
 } from "../Redux/features/passwordVisibilitySlice";
 import { setUser } from "../Redux/features/userSlice";
+import { configApi } from "../libs/configApi";
+import { connectSocket } from "../libs/socketService";
 import CountryList from "./CountryList";
 
 // Define the validation schema using Zod
@@ -62,7 +62,7 @@ function SignUpForm({ handleClick }) {
     },
   });
 
-  const onSubmit = async (data) => {    
+  const onSubmit = async (data) => {
     try {
       setLoading(true);
       const affiliateURL = localStorage.getItem("aff-query") || "";
@@ -105,8 +105,7 @@ function SignUpForm({ handleClick }) {
       } else {
         setError("Something went wrong!");
       }
-    }
-    finally {
+    } finally {
       localStorage.removeItem("aff-query");
     }
   };
@@ -118,11 +117,13 @@ function SignUpForm({ handleClick }) {
           name="country"
           control={control}
           render={({ field }) => {
-            console.log('field', field);
-            
             return (
-            <CountryList country={field.value} handleChange={field.onChange} />
-          )}}
+              <CountryList
+                country={field.value}
+                handleChange={field.onChange}
+              />
+            );
+          }}
         />
         <label className="block px-2 pt-4">Full Name</label>
         <input

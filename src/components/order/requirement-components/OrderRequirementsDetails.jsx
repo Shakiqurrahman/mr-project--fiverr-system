@@ -35,13 +35,41 @@ const OrderRequirementsDetails = () => {
   // handle download all button
   const handleDownloadAll = (files) => {
     files.forEach((file) => {
-      const link = document.createElement("a");
-      link.href = file.url; // Ensure this points to the file's URL
-      link.setAttribute("download", file.name); // Set the filename
-      document.body.appendChild(link);
-      link.click(); // Simulate click to download
-      document.body.removeChild(link); // Clean up
+      // Use fetch to download the file as a Blob
+      fetch(file.url, { mode: "no-cors" })
+        .then((response) => response.blob()) // Convert response to a Blob
+        .then((blob) => {
+          const link = document.createElement("a");
+          const url = URL.createObjectURL(blob); // Create a URL for the Blob
+          link.href = url;
+          link.setAttribute("download", file.name); // Set the filename for download
+          document.body.appendChild(link);
+          link.click(); // Trigger the download
+          document.body.removeChild(link); // Clean up after download
+          URL.revokeObjectURL(url); // Clean up the object URL
+        })
+        .catch((error) => {
+          console.error("Download failed");
+        });
     });
+  };
+
+  const handleSingleDownload = (fileUrl, fileName) => {
+    fetch(fileUrl, { mode: "no-cors" })
+      .then((response) => response.blob()) // Convert response to a Blob
+      .then((blob) => {
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob); // Create a URL for the Blob
+        link.href = url;
+        link.setAttribute("download", fileName); // Set the filename for download
+        document.body.appendChild(link);
+        link.click(); // Trigger the download
+        document.body.removeChild(link); // Clean up after download
+        URL.revokeObjectURL(url); // Clean up the object URL
+      })
+      .catch((error) => {
+        console.error("Download failed");
+      });
   };
 
   return (
@@ -61,9 +89,9 @@ const OrderRequirementsDetails = () => {
                 <p className="my-1">{faq?.answer}</p>
                 {faq?.attachments?.length > 0 && (
                   <div>
-                    {faq.attachments.length > 3 && (
+                    {faq?.attachments?.length > 3 && (
                       <Link
-                        onClick={() => handleDownloadAll(faq.attachments)}
+                        onClick={() => handleDownloadAll(faq?.attachments)}
                         className="mt-2 font-medium text-primary"
                       >
                         Download All
@@ -73,26 +101,27 @@ const OrderRequirementsDetails = () => {
                       {faq?.attachments?.map((att, index) => (
                         <div key={index}>
                           <img
-                            src={att.url}
+                            src={att?.url}
                             alt=""
                             className="h-[100px] w-full object-cover sm:h-[180px]"
                           />
-                          <a
-                            href={att.url}
-                            download={att.name}
+                          <button
+                            onClick={() =>
+                              handleSingleDownload(att?.url, att?.name)
+                            }
                             className="mt-2 flex items-center justify-center text-xs"
                           >
                             <BiDownload className="shrink-0 text-lg text-primary" />
                             <p
                               className="mx-2 line-clamp-1 font-medium"
-                              title={att.name}
+                              title={att?.name}
                             >
                               {att.name}
                             </p>
                             <span className="shrink-0 text-black/50">
                               ({formatFileSize(att.size)})
                             </span>
-                          </a>
+                          </button>
                         </div>
                       ))}
                     </div>
