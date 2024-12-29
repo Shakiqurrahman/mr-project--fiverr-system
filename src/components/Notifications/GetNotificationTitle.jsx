@@ -30,6 +30,14 @@ const GetNotificationTitle = ({
         </p>
       </div>
     ),
+    Message: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+          <span className="font-bold">{userName}:</span>
+          {message}.
+        </p>
+      </div>
+    ),
     Revision: (
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
@@ -135,7 +143,7 @@ const GetNotificationTitle = ({
       </div>
     ),
 
-    CompleteOrderUser :(
+    CompleteOrderUser: (
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
           {`You marked your order as complete`}
@@ -159,10 +167,6 @@ const GetNotificationTitle = ({
         </p>
       </div>
     ),
-
-
-
-    
   };
 
   return notificationTemplates[type] || "";
