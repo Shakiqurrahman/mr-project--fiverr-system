@@ -460,15 +460,13 @@ function EditDesign() {
       .filter((file) => !file.file)
       ?.map(({ value, ...rest }) => rest);
 
-    const withFiles = updatedMatchingImages
-      .filter((file) => file.file)
-      .map((file) => file.file);
+    const withFiles = updatedMatchingImages.filter((file) => file);
 
     let withFilesRes = null;
     if (withFiles?.length > 0) {
       try {
         const formData = new FormData();
-        withFiles.forEach((file) => {
+        withFiles.forEach(({ file, ...rest }) => {
           formData.append("files", file);
         });
         const uploadUrl = `${configApi.api}upload-attachment-optimized`;
@@ -518,7 +516,7 @@ function EditDesign() {
         ? [...withoutFiles, ...imagesArrWithFiles]
         : [...withoutFiles];
 
-    if (images) {
+    if (images?.length > 0) {
       const data = {
         title: form.title,
         description: content,
@@ -534,6 +532,7 @@ function EditDesign() {
         industries,
         designs,
       };
+
       const isThumbnailHasTrue = images?.find((i) => i.thumbnail) || false;
       if (images?.length === 0 && isThumbnailHasTrue) {
         toast.error("At least 1 Image Must be selected!");
