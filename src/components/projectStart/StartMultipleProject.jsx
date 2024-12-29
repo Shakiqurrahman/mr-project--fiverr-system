@@ -75,7 +75,11 @@ const StartMultipleProject = ({ items }) => {
           );
           const subCategoryObj = categories
             ?.filter((cat) => cat.categoryName === item.category)[0]
-            ?.subCategory?.find((sub) => sub.subTitle === item.subCategory);
+            ?.subCategory?.find(
+              (sub) =>
+                sub?.subTitle?.toLowerCase()?.trim() ===
+                item?.subCategory?.toLowerCase()?.trim(),
+            );
 
           return {
             ...item,
