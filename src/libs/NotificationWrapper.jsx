@@ -54,8 +54,6 @@ const NotificationWrapper = ({ children }) => {
         setShowNotification(true);
       }
     });
-    setNotification(notification);
-    setShowNotification(true);
   }, [socket, conversationUser, notification]);
 
   return (
