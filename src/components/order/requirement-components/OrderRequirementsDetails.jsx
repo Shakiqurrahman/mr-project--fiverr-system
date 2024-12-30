@@ -36,7 +36,7 @@ const OrderRequirementsDetails = () => {
   const handleDownloadAll = (files) => {
     files.forEach((file) => {
       // Use fetch to download the file as a Blob
-      fetch(file.url, { mode: "no-cors" })
+      fetch(file.url)
         .then((response) => response.blob()) // Convert response to a Blob
         .then((blob) => {
           const link = document.createElement("a");
@@ -55,7 +55,7 @@ const OrderRequirementsDetails = () => {
   };
 
   const handleSingleDownload = (fileUrl, fileName) => {
-    fetch(fileUrl, { mode: "no-cors" })
+    fetch(fileUrl)
       .then((response) => response.blob()) // Convert response to a Blob
       .then((blob) => {
         const link = document.createElement("a");

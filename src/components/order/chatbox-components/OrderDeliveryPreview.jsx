@@ -37,7 +37,7 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
   const handleDownloadAll = (files) => {
     files.forEach((file) => {
       // Use fetch to download the file as a Blob
-      fetch(file.url, { mode: "no-cors" })
+      fetch(file.url)
         .then((response) => response.blob()) // Convert response to a Blob
         .then((blob) => {
           const link = document.createElement("a");
@@ -61,7 +61,7 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
 
     // Fetch and add files to the zip
     for (const file of files) {
-      const response = await fetch(file?.url, { mode: "no-cors" });
+      const response = await fetch(file?.url);
       const blob = await response.blob();
       zip.file(file.name || file.url.split("/").pop(), blob); // Use file.name or fallback to the URL's last segment
     }
@@ -72,7 +72,7 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
   };
 
   const handleSingleDownload = (fileUrl, fileName) => {
-    fetch(fileUrl, { mode: "no-cors" })
+    fetch(fileUrl)
       .then((response) => response.blob()) // Convert response to a Blob
       .then((blob) => {
         const link = document.createElement("a");

@@ -49,7 +49,7 @@ const CommentImagePreview = ({ selected, close, openDrawer, drawer }) => {
   };
 
   const handleSingleDownload = (fileUrl, fileName) => {
-    fetch(fileUrl, { mode: "no-cors" })
+    fetch(fileUrl)
       .then((response) => response.blob()) // Convert response to a Blob
       .then((blob) => {
         const link = document.createElement("a");
