@@ -193,6 +193,16 @@ export const inboxApiSlice = createApi({
       transformResponse: (response) => response?.data?.total,
       providesTags: ["bubble"],
     }),
+
+    // Inbox make unread message
+    makeUnreadMessage: builder.mutation({
+      query: ({ userId }) => ({
+        url: `seen/update`,
+        method: "PUT",
+        body: { userId },
+      }),
+      invalidatesTags: ["getAllMessages", "availablechatusers", "bubble"],
+    }),
   }),
 });
 
@@ -218,4 +228,5 @@ export const {
   useUpdateUnseenMessageMutation,
   useInboxBubbleCountingQuery,
   useCustomOfferMsgUpdateMutation,
+  useMakeUnreadMessageMutation,
 } = inboxApiSlice;

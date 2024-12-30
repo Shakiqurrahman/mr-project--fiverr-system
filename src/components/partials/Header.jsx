@@ -143,6 +143,8 @@ function Header() {
                   >
                     <Badge
                       badgeContent={inboxBubbleCount ? inboxBubbleCount : 0}
+                      // invisible={inboxBubbleCount ? false : true}
+                      // variant="dot"
                       sx={{
                         "& .MuiBadge-badge": {
                           backgroundColor: "#1b8cdc",
