@@ -167,6 +167,24 @@ const GetNotificationTitle = ({
         </p>
       </div>
     ),
+
+    AdditionalOfferAccept: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+        <span className="font-bold">{userName}: </span>
+          {`has accepted the offer`}
+        </p>
+      </div>
+    ),
+
+    AdditionalOffer: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+        <span className="font-bold">mahfujurrahm535 </span>
+          {`has sent you an additional offer.`}
+        </p>
+      </div>
+    ),
   };
 
   return notificationTemplates[type] || "";
