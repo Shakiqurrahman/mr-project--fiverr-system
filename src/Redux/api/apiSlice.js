@@ -48,7 +48,7 @@ export const apiSlice = createApi({
 
     getNotification: builder.query({
       query: () => `notification/get`,
-      transformResponse: (response) => response?.data?.allNotifications,
+      transformResponse: (response) => response?.data?.filteredNotifications,
       providesTags: ["user"],
     }),
   }),

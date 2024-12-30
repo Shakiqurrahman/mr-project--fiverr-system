@@ -36,6 +36,7 @@ import {
   useFetchQuickResMsgQuery,
   useGetAdminAllMessagesQuery,
   useGetAvailableChatUsersQuery,
+  useMakeUnreadMessageMutation,
   useSendAMessageMutation,
   useUpdateUnseenMessageMutation,
 } from "../../Redux/api/inboxApiSlice";
@@ -840,6 +841,14 @@ const ChatBox = ({ openToggle }) => {
     }
   }, [user.id, socket, messages, conversationUser, isAdmin]);
 
+  const [makeUnchange] = useMakeUnreadMessageMutation();
+  const handleMakeUnreadMessage = async () => {
+    dispatch(setConversationUser(null));
+    try {
+      await makeUnchange({ userId: recipientUserId }).unwrap();
+    } catch (error) {}
+  };
+
   return (
     <div className="flex h-full flex-col">
       {/* Header Part */}
@@ -915,7 +924,7 @@ const ChatBox = ({ openToggle }) => {
                   <button
                     type="button"
                     className="w-full text-xs hover:bg-gray-200"
-                    onClick={() => dispatch(setConversationUser(null))}
+                    onClick={handleMakeUnreadMessage}
                   >
                     Unread
                   </button>
