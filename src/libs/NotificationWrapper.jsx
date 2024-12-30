@@ -1,14 +1,12 @@
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
 import NotificationPopper from "../components/Notifications/NotificationPopper";
 import { configApi } from "./configApi";
 import { connectSocket } from "./socketService";
 
 const NotificationWrapper = ({ children }) => {
-  const location = useLocation();
-  const path = location?.pathname;
+  const path = window.location.pathname;
   const { conversationUser } = useSelector((state) => state.chat);
   const token = Cookies.get("authToken");
   const socket = connectSocket(`${configApi.socket}`, token);

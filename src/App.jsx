@@ -4,10 +4,10 @@ import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
 import Layout from "./AllRoutes/Layout";
 import { router } from "./AllRoutes/Routes";
-import AuthWrapper from "./libs/AuthWrapper";
-import { configApi } from "./libs/configApi";
-import NotificationWrapper from "./libs/NotificationWrapper";
 import store from "./Redux/store";
+import AuthWrapper from "./libs/AuthWrapper";
+import NotificationWrapper from "./libs/NotificationWrapper";
+import { configApi } from "./libs/configApi";
 function App() {
   useEffect(() => {
     const hasVisited = JSON.parse(localStorage.getItem("hasVisited"));
@@ -27,13 +27,13 @@ function App() {
 
   return (
     <Provider store={store}>
-      <RouterProvider router={router}>
-        <NotificationWrapper>
-          <AuthWrapper>
+      <NotificationWrapper>
+        <AuthWrapper>
+          <RouterProvider router={router}>
             <Layout />
-          </AuthWrapper>
-        </NotificationWrapper>
-      </RouterProvider>
+          </RouterProvider>
+        </AuthWrapper>
+      </NotificationWrapper>
     </Provider>
   );
 }
