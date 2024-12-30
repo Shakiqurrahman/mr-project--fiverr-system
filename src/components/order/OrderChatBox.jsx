@@ -164,11 +164,11 @@ const OrderChatBox = () => {
     }
   }, [projectDetails, getAllUserMessages]);
 
-  useEffect(() => {
-    if ((allUserMessages || messages) && projectDetails) {
-      updateMessageSeen(projectDetails?.projectNumber);
-    }
-  }, [allUserMessages, messages, projectDetails, updateMessageSeen]);
+  // useEffect(() => {
+  //   if ((allUserMessages || messages) && projectDetails) {
+  //     updateMessageSeen(projectDetails?.projectNumber);
+  //   }
+  // }, [allUserMessages, messages, projectDetails, updateMessageSeen]);
 
   useEffect(() => {
     const checkVisibility = () => {
