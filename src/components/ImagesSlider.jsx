@@ -45,8 +45,6 @@ const ImagesSlider = ({ files, handleClose }) => {
       });
   };
 
-  console.dir(imgRef?.current);
-
   return (
     <div className="fixed left-0 top-0 z-[9999999999] flex h-screen w-full flex-col items-start justify-center bg-black/50 backdrop-blur">
       <button
