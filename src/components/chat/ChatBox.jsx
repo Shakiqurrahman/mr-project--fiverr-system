@@ -1108,7 +1108,7 @@ const ChatBox = ({ openToggle }) => {
                                   Download All
                                 </Link>
                               )}
-                              <div className="grid grid-cols-3 gap-3">
+                              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
                                 {msg?.contactForm?.exampleDesign?.map(
                                   (att, i) => (
                                     <div key={i}>
@@ -1142,7 +1142,7 @@ const ChatBox = ({ openToggle }) => {
                                   ),
                                 )}
                               </div>
-                              {msg?.contactForm?.exampleDesign?.length >= 6 &&
+                              {msg?.contactForm?.exampleDesign?.length >= 9 &&
                                 (!expand ? (
                                   <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
                                     <button
@@ -1287,7 +1287,7 @@ const ChatBox = ({ openToggle }) => {
                             Download All
                           </Link>
                         )}
-                        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
                           {msg?.attachment.map((att, i) => (
                             <div key={i}>
                               <PreviewChatFiles
@@ -1316,7 +1316,7 @@ const ChatBox = ({ openToggle }) => {
                             </div>
                           ))}
                         </div>
-                        {msg?.attachment?.length >= 6 &&
+                        {msg?.attachment?.length >= 9 &&
                           (!expand ? (
                             <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
                               <button
