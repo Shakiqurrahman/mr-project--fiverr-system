@@ -28,6 +28,7 @@ import {
   useDeleteAOrderMessageMutation,
   useLazyGetOrderUserMessagesQuery,
   useSendAOrderMessageMutation,
+  useUpdateOrderMessageSeenMutation,
 } from "../../Redux/api/orderApiSlice";
 import {
   rollbackMessages,
@@ -57,6 +58,8 @@ const OrderChatBox = () => {
   const [deleteQuickResMsg] = useDeleteQuickResMsgMutation();
   const [sendAOrderMessage] = useSendAOrderMessageMutation();
   const [deleteAOrderMessage] = useDeleteAOrderMessageMutation();
+
+  const [updateMessageSeen] = useUpdateOrderMessageSeenMutation();
 
   const { user, token, onlineUsers } = useSelector((state) => state.user);
   const { projectDetails, clientDetails, messages, replyTo } = useSelector(
@@ -160,6 +163,12 @@ const OrderChatBox = () => {
       });
     }
   }, [projectDetails, getAllUserMessages]);
+
+  useEffect(() => {
+    if ((allUserMessages || messages) && projectDetails) {
+      updateMessageSeen(projectDetails?.projectNumber);
+    }
+  }, [allUserMessages, messages, projectDetails, updateMessageSeen]);
 
   useEffect(() => {
     const checkVisibility = () => {

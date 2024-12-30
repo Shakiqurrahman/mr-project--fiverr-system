@@ -139,6 +139,14 @@ export const orderApiSlice = createApi({
       invalidatesTags: ["messages"],
     }),
 
+    updateOrderMessageSeen: builder.mutation({
+      query: (projectNumber) => ({
+        url: `order-message/${projectNumber}`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["messages"],
+    }),
+
     cancelOrderProject: builder.mutation({
       query: ({ orderId, orderMessageId, piId }) => ({
         url: `cancel-order`,
@@ -219,4 +227,5 @@ export const {
   useAcceptDeliveryMutation,
   useAcceptExtendDeliveryMutation,
   useUpdateExtendDeliveryMutation,
+  useUpdateOrderMessageSeenMutation,
 } = orderApiSlice;
