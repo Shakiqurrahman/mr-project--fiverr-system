@@ -1,11 +1,14 @@
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import NotificationPopper from "../components/Notifications/NotificationPopper";
 import { configApi } from "./configApi";
 import { connectSocket } from "./socketService";
 
 const NotificationWrapper = ({ children }) => {
+  const location = useLocation();
+  const path = location?.pathname;
   const { conversationUser } = useSelector((state) => state.chat);
   const token = Cookies.get("authToken");
   const socket = connectSocket(`${configApi.socket}`, token);
@@ -13,11 +16,10 @@ const NotificationWrapper = ({ children }) => {
   const [notification, setNotification] = useState(null);
   const [showNotification, setShowNotification] = useState(false);
 
-  //   useEffect(() => {
-  //     if (conversationUser) {
-
-  //     }
-  //   }, [notification, conversationUser]);
+  let projectNumber;
+  if (path.startsWith("/order/")) {
+    projectNumber = path.split("/order/")[1];
+  }
 
   // Listen to new notifications from the server
   useEffect(() => {
@@ -30,18 +32,30 @@ const NotificationWrapper = ({ children }) => {
       ) {
         setNotification(null);
         setShowNotification(false);
-      } else if (
-        conversationUser &&
-        notification?.senderId !== conversationUser &&
-        notification?.type === "Message"
+      }
+      if (
+        projectNumber &&
+        projectNumber === notification?.projectNumber &&
+        notification?.type === "OrderMessage"
       ) {
-        setNotification(notification);
-        setShowNotification(true);
-      } else {
+        setNotification(null);
+        setShowNotification(false);
+      }
+      //   else if (
+      //     conversationUser &&
+      //     notification?.senderId !== conversationUser &&
+      //     notification?.type === "Message"
+      //   ) {
+      //     setNotification(notification);
+      //     setShowNotification(true);
+      //   }
+      else {
         setNotification(notification);
         setShowNotification(true);
       }
     });
+    setNotification(notification);
+    setShowNotification(true);
   }, [socket, conversationUser, notification]);
 
   return (

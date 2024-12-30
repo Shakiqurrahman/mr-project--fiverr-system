@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { IoClose } from "react-icons/io5";
 import { MdOutlineNotifications } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useGetNotificationQuery } from "../../Redux/api/apiSlice";
 import { setOnlineUsers } from "../../Redux/features/userSlice";
 import useOutsideClick from "../../hooks/useOutsideClick";

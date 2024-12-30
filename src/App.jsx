@@ -27,13 +27,13 @@ function App() {
 
   return (
     <Provider store={store}>
-      <NotificationWrapper>
-        <AuthWrapper>
-          <RouterProvider router={router}>
+      <RouterProvider router={router}>
+        <NotificationWrapper>
+          <AuthWrapper>
             <Layout />
-          </RouterProvider>
-        </AuthWrapper>
-      </NotificationWrapper>
+          </AuthWrapper>
+        </NotificationWrapper>
+      </RouterProvider>
     </Provider>
   );
 }
