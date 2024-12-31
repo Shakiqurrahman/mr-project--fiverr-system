@@ -93,6 +93,7 @@ const ChatBox = ({ openToggle }) => {
   const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
 
   const menuRef = useRef(null);
+  const messageRefs = useRef([]);
   const fileInputRef = useRef(null);
   const [selectedImages, setSelectedImages] = useState([]);
   const [uploadedFilesLength, setUploadedFilesLength] = useState(0);
@@ -107,6 +108,7 @@ const ChatBox = ({ openToggle }) => {
   const [messages, setMessages] = useState([]);
   const [clientTimeAndDate, setClientTimeAndDate] = useState(null);
   const [replyTo, setReplyTo] = useState(null);
+  const [replyUniqueId, setReplyUniqueId] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState(null);
   // const [typingStatus, setTypingStatus] = useState("");
@@ -278,18 +280,21 @@ const ChatBox = ({ openToggle }) => {
     const replySenderUserRole = user?.role;
     const msgSenderUserName = msg?.senderUserName;
     const msgSenderUserRole = msg?.isFromAdmin;
+    const msgUniqueId = msg?.uniqueId;
     const replyObj = {
       replySenderUserName,
       replySenderUserRole,
       msgSenderUserName,
       msgSenderUserRole,
       replyText,
+      msgUniqueId,
     };
     setReplyTo(replyObj);
   };
 
   // generate replied to function
   const generateRepliedTo = (msg) => {
+    console.log(msg?.replyTo);
     const {
       msgSenderUserRole,
       replySenderUserName,
@@ -336,6 +341,22 @@ const ChatBox = ({ openToggle }) => {
       return msgSenderUserName; // User is seeing their own message
     }
   };
+
+  // handle highlightReply
+  const highlightReply = (msg) => {
+    if (msg?.replyTo) {
+      setReplyUniqueId(msg?.replyTo?.msgUniqueId);
+      const messageElement = messageRefs.current[msg?.replyTo?.msgUniqueId];
+      if (messageElement) {
+        messageElement.scrollIntoView({ block: "end" });
+      }
+      setTimeout(() => {
+        setReplyUniqueId(null);
+      }, 1200);
+    }
+  };
+
+  console.log("replyUniqueId", replyUniqueId);
 
   // Quick Messages Handlers
   const handleQuickMsgs = (id) => {
@@ -981,14 +1002,20 @@ const ChatBox = ({ openToggle }) => {
             return (
               <Fragment key={i}>
                 {msg?.replyTo && (
-                  <div className="mt-2 border-s-2 border-primary bg-gray-50 px-3 py-1">
+                  <div
+                    className="cursor-pointer border-s-2 border-primary bg-gray-50 px-3 py-1"
+                    onClick={() => highlightReply(msg)}
+                  >
                     <h1 className="text-xs font-semibold text-primary">
                       {generateRepliedTo(msg)}
                     </h1>
                     <p className="text-sm">{msg?.replyTo?.replyText}</p>
                   </div>
                 )}
-                <div className="group mt-3 flex items-start gap-3 px-3">
+                <div
+                  ref={(el) => (messageRefs.current[msg?.uniqueId] = el)}
+                  className={`${msg?.uniqueId === replyUniqueId ? "bg-slate-300/20" : ""} group flex items-start gap-3 px-3 py-3`}
+                >
                   <div className="flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[#ffefef]">
                     {isAdmin &&
                       (msg?.userImage ? (
