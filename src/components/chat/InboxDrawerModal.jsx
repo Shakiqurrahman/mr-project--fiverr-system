@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {
   useGetAvailableChatUsersQuery,
+  useInboxBubbleCountingQuery,
   useLazyGetAllMessagesQuery,
 } from "../../Redux/api/inboxApiSlice";
 import {
@@ -23,6 +24,10 @@ const InboxDrawerModal = ({ close }) => {
   const { data: availableUsers, isLoading } = useGetAvailableChatUsersQuery();
   const { user } = useSelector((state) => state.user);
   const wrapperRef = useRef(null);
+
+  const { data: inboxBubbleCount } = useInboxBubbleCountingQuery(null, {
+    skip: !user,
+  });
 
   // after clicking on the message button
   const [triggerGetAllMessages, { data: getAllMessages }] =
@@ -46,10 +51,10 @@ const InboxDrawerModal = ({ close }) => {
     });
   };
 
-  const totalUnseenMessage = availableUsers?.reduce(
-    (prev, curr) => prev + curr?.lastmessageinfo?.totalUnseenMessage,
-    0,
-  );
+  // const totalUnseenMessage = availableUsers?.reduce(
+  //   (prev, curr) => prev + curr?.lastmessageinfo?.totalUnseenMessage,
+  //   0,
+  // );
 
   const socket = connectSocket(`${configApi.socket}`, token);
   // all avaliable users
@@ -74,7 +79,7 @@ const InboxDrawerModal = ({ close }) => {
         <h1 className="flex items-center gap-2">
           <FaRegEnvelope className="text-lg" />
           Inbox
-          <span>({totalUnseenMessage || 0})</span>
+          <span>({inboxBubbleCount || 0})</span>
         </h1>
         <Link
           className="text-primary"
