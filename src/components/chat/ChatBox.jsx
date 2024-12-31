@@ -891,7 +891,7 @@ const ChatBox = ({ openToggle }) => {
                 typingStatus
               ) : (
                 <p>
-                  {lastSeen
+                  {lastSeen && lastSeen !== "Online"
                     ? `Last seen: ${timeAgoTracker(lastSeen)}`
                     : "Online"}
                 </p>
