@@ -71,13 +71,13 @@ const NotificationPopper = ({
     return onlineUsers.some((onlineUser) => onlineUser.userId === userId);
   };
 
-  const handleClick = () => {
-    if (notification?.type === "OrderMessage") {
-      window.location.href = `/order/${notification?.projectNumber}`;
-    } else if (notification?.type === "Message") {
-      window.location.href = `/inbox`;
-    }
-  };
+  // const handleClick = () => {
+  //   if (notification?.type === "OrderMessage") {
+  //     window.location.href = `/order/${notification?.projectNumber}`;
+  //   } else if (notification?.type === "Message") {
+  //     window.location.href = `/inbox`;
+  //   }
+  // };
 
   return (
     <div
@@ -86,7 +86,7 @@ const NotificationPopper = ({
       }`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onClick={handleClick}
+      // onClick={handleClick}
     >
       <div className="relative mx-auto flex size-10 items-center justify-center rounded-full border border-gray-300 bg-[#ffefef]/30 sm:size-14">
         {notification?.avatar ? (
