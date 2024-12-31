@@ -22,7 +22,7 @@ const NotificationWrapper = ({ children }) => {
   // Listen to new notifications from the server
   useEffect(() => {
     socket?.on("get:notification", (notification) => {
-      console.log("notification", notification);
+      // console.log("notification", notification);
       if (
         conversationUser &&
         notification?.senderId === conversationUser &&

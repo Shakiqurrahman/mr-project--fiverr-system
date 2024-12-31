@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { configApi } from "../../libs/configApi";
 import { connectSocket } from "../../libs/socketService";
 import { setOnlineUsers } from "../../Redux/features/userSlice";
@@ -16,6 +17,7 @@ const NotificationPopper = ({
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { onlineUsers, token } = useSelector((state) => state.user);
   const socket = connectSocket(`${configApi.socket}`, token);
@@ -69,6 +71,14 @@ const NotificationPopper = ({
     return onlineUsers.some((onlineUser) => onlineUser.userId === userId);
   };
 
+  const handleClick = () => {
+    if (notification?.type === "OrderMessage") {
+      navigate(`/order/${notification?.projectNumber}`);
+    } else if (notification?.type === "Message") {
+      navigate(`/inbox`);
+    }
+  };
+
   return (
     <div
       className={`fixed bottom-4 right-4 z-[999] flex max-w-80 items-center rounded-lg bg-white p-4 shadow-xl sm:max-w-[400px] ${
@@ -76,6 +86,7 @@ const NotificationPopper = ({
       }`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
     >
       <div className="relative mx-auto flex size-10 items-center justify-center rounded-full border border-gray-300 bg-[#ffefef]/30 sm:size-14">
         {notification?.avatar ? (

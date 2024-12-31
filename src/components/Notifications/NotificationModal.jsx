@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { IoClose } from "react-icons/io5";
 import { MdOutlineNotifications } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   useGetNotificationQuery,
   useNotificationMakeSeenMutation,
@@ -16,6 +16,7 @@ import GetNotificationTitle from "./GetNotificationTitle";
 
 const NotificationModal = ({ close }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const notificalModal = useRef(null);
 
   const { data: notificationData } = useGetNotificationQuery();
@@ -84,9 +85,21 @@ const NotificationModal = ({ close }) => {
                 hours: notification?.payload?.hours,
                 days: notification?.payload?.days,
               });
+
+              // for navigate to the destination of notification
+              const handleClick = () => {
+                if (notification?.payload?.type === "OrderMessage") {
+                  navigate(`/order/${notification?.payload?.projectNumber}`);
+                  dispatch(close(false));
+                } else if (notification?.payload?.type === "Message") {
+                  navigate(`/inbox`);
+                  dispatch(close(false));
+                }
+              };
               return (
                 <div
                   key={notification?.id}
+                  onClick={handleClick}
                   className="flex items-center justify-between gap-4 border-b p-4 last:border-b-0"
                 >
                   <div className="flex items-center gap-2">
