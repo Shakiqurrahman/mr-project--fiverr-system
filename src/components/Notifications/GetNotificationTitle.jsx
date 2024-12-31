@@ -189,12 +189,20 @@ const GetNotificationTitle = ({
     OfferReject: (
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
-          <span className="font-bold">User </span>
+          <span className="font-bold">{userName } </span>
           {`has rejected your offer.`}
         </p>
       </div>
     ),
-     
+    AdditionalOfferWithdraw: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+          <span className="font-bold">mahfujurrahm535</span>
+          {` withdrawn the additional offer`}
+        </p>
+      </div>
+    ),
+
   };
 
   return notificationTemplates[type] || "";

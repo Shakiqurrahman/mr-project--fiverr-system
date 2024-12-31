@@ -116,7 +116,7 @@ const CancellingProjectPreview = ({ messageObj, value }) => {
               type="button"
               onClick={handleWithdrawOffer}
               disabled={isLoading}
-              className="bg-primary px-5 py-2 text-sm font-semibold text-white disabled:bg-primary/50 sm:px-10 sm:text-base"
+              className="bg-primary px-5 mb-5 py-2 text-sm font-semibold text-white disabled:bg-primary/50 sm:px-10 sm:text-base"
             >
               Withdraw Offer
             </button>
