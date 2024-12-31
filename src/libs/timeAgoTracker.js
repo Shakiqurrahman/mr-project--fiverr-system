@@ -19,7 +19,7 @@ export const timeAgoTracker = (lastSeen) => {
       interval = Math.floor(seconds / 60); // minutes
       if (interval >= 1) return `${interval} minute${interval > 1 ? 's' : ''} ago`;
   
-      return '1 minute ago';
+      return 'Online';
     }
   };
   

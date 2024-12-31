@@ -59,10 +59,9 @@ export const apiSlice = createApi({
     }),
 
     notificationMakeSeen: builder.mutation({
-      query: (data) => ({
+      query: () => ({
         url: "notification/update",
         method: "PUT",
-        body: data,
       }),
       invalidatesTags: ["socialMedia", "notification"],
     }),

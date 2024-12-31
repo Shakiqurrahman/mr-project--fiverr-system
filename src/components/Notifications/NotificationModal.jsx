@@ -2,8 +2,11 @@ import React, { useEffect, useRef } from "react";
 import { IoClose } from "react-icons/io5";
 import { MdOutlineNotifications } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
-import { useGetNotificationQuery } from "../../Redux/api/apiSlice";
+import { Link } from "react-router-dom";
+import {
+  useGetNotificationQuery,
+  useNotificationMakeSeenMutation,
+} from "../../Redux/api/apiSlice";
 import { setOnlineUsers } from "../../Redux/features/userSlice";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { configApi } from "../../libs/configApi";
@@ -14,7 +17,6 @@ import GetNotificationTitle from "./GetNotificationTitle";
 const NotificationModal = ({ close }) => {
   const dispatch = useDispatch();
   const notificalModal = useRef(null);
-  const unReadNotifications = 0;
 
   const { data: notificationData } = useGetNotificationQuery();
   const { onlineUsers, token } = useSelector((state) => state.user);
@@ -33,6 +35,19 @@ const NotificationModal = ({ close }) => {
   };
 
   useOutsideClick(notificalModal, () => dispatch(close(false)));
+
+  // update the notification seen status
+  const [makeSeenNotifications] = useNotificationMakeSeenMutation();
+
+  useEffect(() => {
+    const updateNotifications = async () => {
+      try {
+        await makeSeenNotifications().unwrap();
+      } catch (error) {}
+    };
+
+    updateNotifications();
+  }, [makeSeenNotifications]);
   return (
     <div
       className="static w-full max-w-[400px] rounded-md bg-white shadow-lg sm:absolute sm:top-10 md:right-0 md:w-[450px]"
@@ -41,7 +56,7 @@ const NotificationModal = ({ close }) => {
       <div>
         <h2 className="flex items-center justify-between gap-2 border-b p-4 text-base font-semibold text-black md:justify-start">
           <MdOutlineNotifications className="text-2xl" /> Notifications (
-          {unReadNotifications})
+          {notificationData?.length ?? 0})
           <button
             className="block md:hidden"
             type="button"

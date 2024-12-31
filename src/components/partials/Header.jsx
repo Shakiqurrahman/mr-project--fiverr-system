@@ -18,6 +18,7 @@ import "react-modern-drawer/dist/index.css";
 
 import { IoSearch } from "react-icons/io5";
 import useSyncCart from "../../hooks/useSyncCart";
+import { useGetNotificationCountQuery } from "../../Redux/api/apiSlice";
 import { useInboxBubbleCountingQuery } from "../../Redux/api/inboxApiSlice";
 import { useLazyGetDesignsBySearchQuery } from "../../Redux/api/uploadDesignApiSlice";
 import {
@@ -43,6 +44,9 @@ function Header() {
   const { items: cartItems } = useSelector((state) => state.cart);
 
   const { data: inboxBubbleCount } = useInboxBubbleCountingQuery(null, {
+    skip: !user,
+  });
+  const { data: notificationBubbleCount } = useGetNotificationCountQuery(null, {
     skip: !user,
   });
 
@@ -190,7 +194,9 @@ function Header() {
                 )}
                 <li className="hidden md:block">
                   <Badge
-                    badgeContent={0}
+                    badgeContent={
+                      notificationBubbleCount ? notificationBubbleCount : 0
+                    }
                     sx={{
                       "& .MuiBadge-badge": {
                         backgroundColor: "#1b8cdc",
@@ -212,7 +218,9 @@ function Header() {
                 </li>
                 <li className="block md:hidden">
                   <Badge
-                    badgeContent={0}
+                    badgeContent={
+                      notificationBubbleCount ? notificationBubbleCount : 0
+                    }
                     sx={{
                       "& .MuiBadge-badge": {
                         backgroundColor: "#1b8cdc",
