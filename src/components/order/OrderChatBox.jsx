@@ -644,10 +644,10 @@ const OrderChatBox = () => {
                 )}
                 <div
                   ref={(el) => (messageRefs.current[msg?.uniqueId] = el)}
-                  className="group mt-3 flex items-start gap-3 px-3"
+                  className={`${msg?.uniqueId === replyUniqueId ? "bg-slate-300/20" : ""} group mt-3 flex items-start gap-3 p-3`}
                 >
                   <div
-                    className={`${msg?.uniqueId === replyUniqueId ? "bg-slate-300/20" : ""} flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[#ffefef] py-3`}
+                    className={`flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[#ffefef]`}
                   >
                     {msg?.userImage && msg?.isFromAdmin === "USER" ? (
                       <img
