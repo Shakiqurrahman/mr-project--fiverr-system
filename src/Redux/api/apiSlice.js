@@ -14,7 +14,7 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ["socialMedia", "user"],
+  tagTypes: ["socialMedia", "user", "notification"],
   refetchOnMountOrArgChange: true,
   refetchOnReconnect: true,
   refetchOnFocus: true,
@@ -22,7 +22,7 @@ export const apiSlice = createApi({
   endpoints: (builder) => ({
     fetchUserData: builder.query({
       query: () => "get-singel-user",
-      providesTags: ["user"],
+      providesTags: ["user", "notification"],
     }),
 
     fetchSocialMedias: builder.query({
@@ -49,7 +49,22 @@ export const apiSlice = createApi({
     getNotification: builder.query({
       query: () => `notification/get`,
       transformResponse: (response) => response?.data?.filteredNotifications,
-      providesTags: ["user"],
+      providesTags: ["user", "notification"],
+    }),
+
+    getNotificationCount: builder.query({
+      query: () => `notification/count`,
+      transformResponse: (response) => response?.data,
+      providesTags: ["user", "notification"],
+    }),
+
+    notificationMakeSeen: builder.mutation({
+      query: (data) => ({
+        url: "notification/update",
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["socialMedia", "notification"],
     }),
   }),
 });
@@ -59,5 +74,7 @@ export const {
   useFetchSocialMediasQuery,
   useUpdateSocialMediasMutation,
   useLazyGetUsersProjectStatusQuery,
-  useGetNotificationQuery
+  useGetNotificationQuery,
+  useGetNotificationCountQuery,
+  useNotificationMakeSeenMutation,
 } = apiSlice;
