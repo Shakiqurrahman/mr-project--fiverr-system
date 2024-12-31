@@ -294,7 +294,6 @@ const ChatBox = ({ openToggle }) => {
 
   // generate replied to function
   const generateRepliedTo = (msg) => {
-    console.log(msg?.replyTo);
     const {
       msgSenderUserRole,
       replySenderUserName,
@@ -355,8 +354,6 @@ const ChatBox = ({ openToggle }) => {
       }, 1200);
     }
   };
-
-  console.log("replyUniqueId", replyUniqueId);
 
   // Quick Messages Handlers
   const handleQuickMsgs = (id) => {
