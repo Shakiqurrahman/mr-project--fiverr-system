@@ -85,6 +85,7 @@ const CancellingProjectPreview = ({ messageObj, value }) => {
       {!isAdmin &&
         !messageObj?.isCancelled &&
         !value?.isRejected &&
+        !value?.isWithdrawn &&
         projectDetails?.projectStatus !== "Completed" &&
         projectDetails?.projectStatus !== "Canceled" && (
           <div className="flex flex-wrap justify-center gap-2 border-t pb-6 pt-6 sm:flex-nowrap sm:gap-8">

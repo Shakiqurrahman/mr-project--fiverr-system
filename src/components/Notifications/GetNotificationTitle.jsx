@@ -189,7 +189,7 @@ const GetNotificationTitle = ({
     OfferReject: (
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
-          <span className="font-bold">{userName } </span>
+          <span className="font-bold">{userName} </span>
           {`has rejected your offer.`}
         </p>
       </div>
@@ -199,6 +199,31 @@ const GetNotificationTitle = ({
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
           <span className="font-bold">mahfujurrahm535</span>
           {` withdrawn the additional offer`}
+        </p>
+      </div>
+    ),
+
+    CancelOffer: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+          <span className="font-bold">mahfujurrahm535 </span>
+          {`has sent you an cancel request.`}
+        </p>
+      </div>
+    ),
+    CancelOfferWithdraw: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+          <span className="font-bold">mahfujurrahm535</span>
+          {` withdrawn the cancel request`}
+        </p>
+      </div>
+    ),
+    CancelOfferReject: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+          <span className="font-bold">{userName} </span>
+          {`has rejected your cancel request .`}
         </p>
       </div>
     ),
