@@ -81,8 +81,8 @@ const OrderChatBox = () => {
   const fileInputRef = useRef(null);
   const textareaRef = useRef(null);
   const menuRef = useRef(null);
-  const prevMessagesRef = useRef([]);
   const endOfMessagesRef = useRef(null);
+  const messageRefs = useRef([]);
 
   // all states defination here
   const [isImageUploading, setIsImageUploading] = useState(false);
@@ -96,6 +96,8 @@ const OrderChatBox = () => {
   const [uploadTempFilesLength, setUploadTempFilesLength] = useState(0);
   const [visibility, setVisibility] = useState({});
   const [clientTimeAndDate, setClientTimeAndDate] = useState(null);
+
+  const [replyUniqueId, setReplyUniqueId] = useState(null);
 
   // all side effect calls here
   useEffect(() => {
@@ -500,11 +502,13 @@ const OrderChatBox = () => {
     const replySenderUserRole = user?.role;
     const msgSenderUserName = msg?.senderUserName;
     const msgSenderUserRole = msg?.isFromAdmin;
+    const msgUniqueId = msg?.uniqueId;
     const replyObj = {
       replySenderUserName,
       replySenderUserRole,
       msgSenderUserName,
       msgSenderUserRole,
+      msgUniqueId,
       replyText,
     };
     dispatch(setReplyTo(replyObj));
@@ -556,6 +560,20 @@ const OrderChatBox = () => {
       user?.role !== "USER"
     ) {
       return msgSenderUserName; // User is seeing their own message
+    }
+  };
+
+  // handle highlightReply
+  const highlightReply = (msg) => {
+    if (msg?.replyTo) {
+      setReplyUniqueId(msg?.replyTo?.msgUniqueId);
+      const messageElement = messageRefs.current[msg?.replyTo?.msgUniqueId];
+      if (messageElement) {
+        messageElement.scrollIntoView({ block: "end" });
+      }
+      setTimeout(() => {
+        setReplyUniqueId(null);
+      }, 1200);
     }
   };
 
@@ -614,15 +632,23 @@ const OrderChatBox = () => {
                 )}
                 {/* A conversation message Ui */}
                 {msg?.replyTo && (
-                  <div className="mt-2 border-s-2 border-primary bg-gray-50 px-3 py-1">
+                  <div
+                    className="cursor-pointer border-s-2 border-primary bg-gray-50 px-3 py-1"
+                    onClick={() => highlightReply(msg)}
+                  >
                     <h1 className="text-xs font-semibold text-primary">
                       {generateRepliedTo(msg)}
                     </h1>
                     <p className="text-sm">{msg?.replyTo?.replyText}</p>
                   </div>
                 )}
-                <div className="group mt-3 flex items-start gap-3 px-3">
-                  <div className="flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[#ffefef]">
+                <div
+                  ref={(el) => (messageRefs.current[msg?.uniqueId] = el)}
+                  className="group mt-3 flex items-start gap-3 px-3"
+                >
+                  <div
+                    className={`${msg?.uniqueId === replyUniqueId ? "bg-slate-300/20" : ""} flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[#ffefef] py-3`}
+                  >
                     {msg?.userImage && msg?.isFromAdmin === "USER" ? (
                       <img
                         src={msg?.userImage}
