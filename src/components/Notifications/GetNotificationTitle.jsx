@@ -106,6 +106,30 @@ const GetNotificationTitle = ({
         </p>
       </div>
     ),
+    OrderExtend: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+          <span className="font-bold">{userName} </span>
+          {` Sent Order extended request`}
+        </p>
+      </div>
+    ),
+    OrderExtendWithdraw: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+          <span className="font-bold">{userName} </span>
+          {` Order extended request withdrawn`}
+        </p>
+      </div>
+    ),
+    OrderExtendReject: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+          <span className="font-bold">{userName} </span>
+          {` Order extended request rejected`}
+        </p>
+      </div>
+    ),
 
     CancelAccept: (
       <div className="flex-1">
