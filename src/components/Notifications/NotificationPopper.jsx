@@ -17,7 +17,7 @@ const NotificationPopper = ({
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const { onlineUsers, token } = useSelector((state) => state.user);
   const socket = connectSocket(`${configApi.socket}`, token);
@@ -73,9 +73,9 @@ const NotificationPopper = ({
 
   const handleClick = () => {
     if (notification?.type === "OrderMessage") {
-      navigate(`/order/${notification?.projectNumber}`);
+      window.location.href = `/order/${notification?.projectNumber}`;
     } else if (notification?.type === "Message") {
-      navigate(`/inbox`);
+      window.location.href = `/inbox`;
     }
   };
 
