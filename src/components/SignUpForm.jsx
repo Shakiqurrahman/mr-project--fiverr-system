@@ -63,6 +63,7 @@ function SignUpForm({ handleClick }) {
   });
 
   const onSubmit = async (data) => {
+    const existingVData = JSON.parse(localStorage.getItem("hasVisited"));
     try {
       setLoading(true);
       const affiliateURL = localStorage.getItem("aff-query") || "";
@@ -91,6 +92,10 @@ function SignUpForm({ handleClick }) {
         // toast.success("Signed Up successfully");
         reset();
         dispatch(clearPasswordVisibility());
+        localStorage.setItem(
+          "hasVisited",
+          JSON.stringify({ ...existingVData, startTimeStamp: Date.now() }),
+        );
         navigate("/setup-profile");
       } else {
         setError("User was not created");

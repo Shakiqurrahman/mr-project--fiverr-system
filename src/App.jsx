@@ -9,19 +9,44 @@ import AuthWrapper from "./libs/AuthWrapper";
 import NotificationWrapper from "./libs/NotificationWrapper";
 import { configApi } from "./libs/configApi";
 function App() {
+  const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
   useEffect(() => {
     const hasVisited = JSON.parse(localStorage.getItem("hasVisited"));
+    if (
+      !hasVisited ||
+      Date.now() - hasVisited.startTimeStamp < ONE_DAY_IN_MS ||
+      (!hasVisited.startTimeStamp &&
+        Date.now() - hasVisited.timestamp > ONE_DAY_IN_MS)
+    ) {
+      console.log(" i am calling here because I am new user");
 
-    if (!hasVisited || Date.now() - hasVisited.timestamp > 86400000) {
       axios
         .get(`${configApi.api}analytics/visitors/`)
         .then(() => {
           localStorage.setItem(
             "hasVisited",
-            JSON.stringify({ timestamp: Date.now() }),
+            JSON.stringify({
+              ...hasVisited,
+              timestamp: Date.now(),
+              userType: "New",
+            }),
           );
         })
         .catch(() => {});
+    } else if (
+      hasVisited.startTimeStamp &&
+      Date.now() - hasVisited.startTimeStamp > ONE_DAY_IN_MS &&
+      Date.now() - hasVisited.timestamp > ONE_DAY_IN_MS
+    ) {
+      console.log(" i am calling here because I am returning user");
+      localStorage.setItem(
+        "hasVisited",
+        JSON.stringify({
+          ...hasVisited,
+          timestamp: Date.now(),
+          userType: "Returning",
+        }),
+      );
     }
   }, []);
 

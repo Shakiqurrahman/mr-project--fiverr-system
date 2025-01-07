@@ -80,6 +80,17 @@ function SignInForm({ handleClick }) {
       Cookies.set("authToken", JSON.stringify(token), {
         expires: expiresInDays,
       });
+
+      const existingVData = JSON.parse(localStorage.getItem("hasVisited"));
+      localStorage.setItem(
+        "hasVisited",
+        JSON.stringify({
+          ...existingVData,
+          startTimeStamp: existingVData.startTimeStamp
+            ? existingVData.startTimeStamp
+            : Date.now(),
+        }),
+      );
       reset();
       navigate(from, { replace: true });
     } catch (error) {
@@ -129,7 +140,9 @@ function SignInForm({ handleClick }) {
           <label className="select-none">
             <input type="checkbox" {...register("isRemember")} /> Remember me
           </label>
-          <Link to='/forget-password' className="text-primary">Forgot password?</Link>
+          <Link to="/forget-password" className="text-primary">
+            Forgot password?
+          </Link>
         </div>
         <button
           type="submit"
