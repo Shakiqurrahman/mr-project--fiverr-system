@@ -44,9 +44,7 @@ function SetupProfile({ from_profile }) {
       // Example API endpoint
       const { data } = await axios.post(`${configApi.api}/update-user`, form);
       dispatch(setUser({ user: data.data }));
-      if (from_profile) {
-        navigate("/");
-      } else {
+      if (!from_profile) {
         navigate("/social-media", { state: "newUser" });
       }
       toast.success("Saved successfully");

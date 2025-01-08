@@ -175,6 +175,19 @@ function Profile({ user = {}, slug }) {
     tiktok,
   } = user.SocialMediaLinks || {};
 
+  const isSocialExists =
+    facebook ||
+    instagram ||
+    twitter ||
+    google ||
+    linkedin ||
+    yelp ||
+    tumblr ||
+    youtube ||
+    nextdoor ||
+    pinterest ||
+    tiktok;
+
   const lastSeen = timeAgoTracker(user?.lastSeen);
 
   // after clicking on the message button
@@ -382,7 +395,7 @@ function Profile({ user = {}, slug }) {
           </div>
 
           {/* social medias icons  */}
-          {(user?.SocialMediaLinks || user?.id === loggedUser?.id) && (
+          {(isSocialExists || user?.id === loggedUser?.id) && (
             <div className="relative mt-4 border-t border-gray-300">
               <p className="mb-4 pt-4 text-center">Social Media Links</p>
               {slug === loggedUser?.userName && (
