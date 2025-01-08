@@ -102,9 +102,10 @@ function SignInForm({ handleClick }) {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} autoComplete="on" autoSave="on">
         <label className="block px-2 pt-2">Email</label>
         <input
+          autoComplete="email"
           type="email"
           {...register("email")}
           className={`${
@@ -125,6 +126,7 @@ function SignInForm({ handleClick }) {
             {showPassword ? <FaEyeSlash /> : <FaEye />}
           </button>
           <input
+            autoComplete="password"
             type={showPassword ? "text" : "password"}
             {...register("password")}
             className={`${
