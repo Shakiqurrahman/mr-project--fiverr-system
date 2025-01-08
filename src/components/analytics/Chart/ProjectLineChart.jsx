@@ -190,7 +190,7 @@ const ProjectLineChart = ({
         backgroundColor: "#fff", // Tooltip background color
         titleColor: "#1b8cdc", // Title color
         titleFont: {
-          size: 16, // Change this value to adjust the font size of the title
+          size: 18, // Change this value to adjust the font size of the title
           weight: "600", // Optional: set the font weight
         },
         bodyColor: "black", // Body text color
@@ -199,6 +199,10 @@ const ProjectLineChart = ({
         padding: 15,
         cornerRadius: 10,
         usePointStyle: true,
+        bodyFont: {
+          size: 14, // Increase this value to adjust body text font size
+          weight: "normal", // Optional: set the font weight for body text
+        },
       },
       legend: {
         display: false,

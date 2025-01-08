@@ -185,6 +185,10 @@ const VisitorLineChart = ({
         padding: 15,
         cornerRadius: 10,
         usePointStyle: true,
+        bodyFont: {
+          size: 14, // Increase this value to adjust body text font size
+          weight: "normal", // Optional: set the font weight for body text
+        },
       },
       legend: {
         display: false,
