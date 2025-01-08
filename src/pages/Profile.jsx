@@ -282,10 +282,12 @@ function Profile({ user = {}, slug }) {
               <span>Member Since</span>
               <p className="font-semibold">{monthYear}</p>
             </div>
-            <div className="flex justify-between gap-1 text-sm">
-              <span>Language</span>
-              <p className="font-semibold">{user?.language}</p>
-            </div>
+            {user?.language && (
+              <div className="flex justify-between gap-1 text-sm">
+                <span>Language</span>
+                <p className="font-semibold">{user?.language}</p>
+              </div>
+            )}
             <div className="flex justify-between gap-1 text-sm">
               <span>Last Visited</span>
               {lastSeen ? (
@@ -301,7 +303,7 @@ function Profile({ user = {}, slug }) {
             </div>
           </div>
 
-          <div className="space-y-3 border-b border-gray-300 py-4">
+          <div className="space-y-3 pt-4">
             {user?.role === "USER" ? (
               <div className="flex justify-between gap-1 text-sm">
                 <span>Completed Projects</span>
@@ -361,13 +363,14 @@ function Profile({ user = {}, slug }) {
               </div>
             )}
             {user?.role === "USER" ? (
-              <div className="flex justify-between gap-1 text-sm">
-                <span>Last Project on</span>
-                <p className="font-semibold">
-                  {userProfileData?.LastProjectOn &&
-                    timeFormatter(userProfileData?.LastProjectOn)}
-                </p>
-              </div>
+              userProfileData?.LastProjectOn && (
+                <div className="flex justify-between gap-1 text-sm">
+                  <span>Last Project on</span>
+                  <p className="font-semibold">
+                    timeFormatter(userProfileData?.LastProjectOn)
+                  </p>
+                </div>
+              )
             ) : (
               <div className="flex items-center justify-between gap-1 text-sm">
                 <span>Last Project Completed</span>
@@ -379,172 +382,175 @@ function Profile({ user = {}, slug }) {
           </div>
 
           {/* social medias icons  */}
-          <div className="relative">
-            <p className="mb-4 pt-4 text-center">Social Media Links</p>
-            {slug === loggedUser?.userName && (
-              <Link className="absolute right-0 top-4" to="/social-media">
-                <LiaEditSolid className="size-6 cursor-pointer text-xl" />
-              </Link>
-            )}
-            <div className="flex flex-wrap items-center justify-center gap-4 pb-4">
-              {facebook && (
-                <Link
-                  to={facebook}
-                  target="_blank"
-                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
-                >
-                  <FaFacebookF />
+          {(user?.SocialMediaLinks || user?.id === loggedUser?.id) && (
+            <div className="relative mt-4 border-t border-gray-300">
+              <p className="mb-4 pt-4 text-center">Social Media Links</p>
+              {slug === loggedUser?.userName && (
+                <Link className="absolute right-0 top-4" to="/social-media">
+                  <LiaEditSolid className="size-6 cursor-pointer text-xl" />
                 </Link>
               )}
-
-              {instagram && (
-                <Link
-                  to={instagram}
-                  target="_blank"
-                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
-                >
-                  <FaInstagram />
-                </Link>
-              )}
-
-              {twitter && (
-                <Link
-                  to={twitter}
-                  target="_blank"
-                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
-                >
-                  <FaXTwitter />
-                </Link>
-              )}
-
-              {pinterest && (
-                <Link
-                  to={pinterest}
-                  target="_blank"
-                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
-                >
-                  <FaPinterestP />
-                </Link>
-              )}
-
-              {linkedin && (
-                <Link
-                  to={linkedin}
-                  target="_blank"
-                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
-                >
-                  <FaLinkedinIn />
-                </Link>
-              )}
-              {google && (
-                <Link
-                  to={google}
-                  target="_blank"
-                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
-                >
-                  <FaGoogle />
-                </Link>
-              )}
-              {tumblr && (
-                <Link
-                  to={tumblr}
-                  target="_blank"
-                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
-                >
-                  <FaTumblr />
-                </Link>
-              )}
-              {youtube && (
-                <Link
-                  to={youtube}
-                  target="_blank"
-                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
-                >
-                  <FaYoutube />
-                </Link>
-              )}
-              {tiktok && (
-                <Link
-                  to={tiktok}
-                  target="_blank"
-                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
-                >
-                  <FaTiktok />
-                </Link>
-              )}
-              {yelp && (
-                <Link
-                  to={yelp}
-                  target="_blank"
-                  className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
-                >
-                  <FaYelp />
-                </Link>
-              )}
-              {nextdoor && (
-                <Link
-                  to={nextdoor}
-                  target="_blank"
-                  className="group flex-shrink-0 rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
-                >
-                  <Nextdoor className="!fill-primary group-hover:!fill-white" />
-                </Link>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* description  */}
-        <div className="mt-6 border border-gray-300 bg-[#edf7fd] p-4 py-6">
-          <div className="flex items-center justify-between gap-1 pb-3">
-            <h2 className="text-base font-bold sm:text-lg">Description</h2>
-            {!showDesqEdit && slug === loggedUser?.userName && (
-              <LiaEditSolid
-                onClick={handleDesqEdit}
-                className="size-6 cursor-pointer text-xl"
-              />
-            )}
-          </div>
-          <div>
-            {!showDesqEdit ? (
-              <p className="border-t border-gray-300 pt-4 text-[15px] font-medium leading-relaxed">
-                {description}
-              </p>
-            ) : (
-              <p
-                contentEditable
-                suppressContentEditableWarning
-                className="border border-gray-300 bg-white p-4 text-[15px] font-medium leading-relaxed outline-none"
-                onBlur={(e) => setDescription(e.target.innerText)}
-              >
-                {description}
-              </p>
-            )}
-          </div>
-          {showDesqEdit && (
-            <div className="flex gap-4">
-              <button
-                className="mt-4 w-full border border-primary bg-transparent px-4 py-2 font-semibold text-primary"
-                onClick={handleCancel}
-              >
-                Cancel
-              </button>
-
-              <button
-                className="mt-4 flex w-full items-center justify-center bg-primary px-4 py-2 font-semibold text-white"
-                onClick={handleSave}
-              >
-                {loading ? (
-                  <span className="animate-spin text-xl">
-                    <FaSpinner />
-                  </span>
-                ) : (
-                  "Save"
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                {facebook && (
+                  <Link
+                    to={facebook}
+                    target="_blank"
+                    className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                  >
+                    <FaFacebookF />
+                  </Link>
                 )}
-              </button>
+
+                {instagram && (
+                  <Link
+                    to={instagram}
+                    target="_blank"
+                    className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                  >
+                    <FaInstagram />
+                  </Link>
+                )}
+
+                {twitter && (
+                  <Link
+                    to={twitter}
+                    target="_blank"
+                    className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                  >
+                    <FaXTwitter />
+                  </Link>
+                )}
+
+                {pinterest && (
+                  <Link
+                    to={pinterest}
+                    target="_blank"
+                    className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                  >
+                    <FaPinterestP />
+                  </Link>
+                )}
+
+                {linkedin && (
+                  <Link
+                    to={linkedin}
+                    target="_blank"
+                    className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                  >
+                    <FaLinkedinIn />
+                  </Link>
+                )}
+                {google && (
+                  <Link
+                    to={google}
+                    target="_blank"
+                    className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                  >
+                    <FaGoogle />
+                  </Link>
+                )}
+                {tumblr && (
+                  <Link
+                    to={tumblr}
+                    target="_blank"
+                    className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                  >
+                    <FaTumblr />
+                  </Link>
+                )}
+                {youtube && (
+                  <Link
+                    to={youtube}
+                    target="_blank"
+                    className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                  >
+                    <FaYoutube />
+                  </Link>
+                )}
+                {tiktok && (
+                  <Link
+                    to={tiktok}
+                    target="_blank"
+                    className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                  >
+                    <FaTiktok />
+                  </Link>
+                )}
+                {yelp && (
+                  <Link
+                    to={yelp}
+                    target="_blank"
+                    className="rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                  >
+                    <FaYelp />
+                  </Link>
+                )}
+                {nextdoor && (
+                  <Link
+                    to={nextdoor}
+                    target="_blank"
+                    className="group flex-shrink-0 rounded-full border border-gray-400 bg-transparent p-2 text-primary duration-300 hover:bg-primary hover:text-white"
+                  >
+                    <Nextdoor className="!fill-primary group-hover:!fill-white" />
+                  </Link>
+                )}
+              </div>
             </div>
           )}
         </div>
+        {/* description  */}
+        {(description || user?.id === loggedUser?.id) && (
+          <div className="mt-6 border border-gray-300 bg-[#edf7fd] p-4 py-6">
+            <div className="flex items-center justify-between gap-1 pb-3">
+              <h2 className="text-base font-bold sm:text-lg">Description</h2>
+              {!showDesqEdit && slug === loggedUser?.userName && (
+                <LiaEditSolid
+                  onClick={handleDesqEdit}
+                  className="size-6 cursor-pointer text-xl"
+                />
+              )}
+            </div>
+            <div>
+              {!showDesqEdit ? (
+                <p className="border-t border-gray-300 pt-4 text-[15px] font-medium leading-relaxed">
+                  {description}
+                </p>
+              ) : (
+                <p
+                  contentEditable
+                  suppressContentEditableWarning
+                  className="border border-gray-300 bg-white p-4 text-[15px] font-medium leading-relaxed outline-none"
+                  onBlur={(e) => setDescription(e.target.innerText)}
+                >
+                  {description}
+                </p>
+              )}
+            </div>
+            {showDesqEdit && (
+              <div className="flex gap-4">
+                <button
+                  className="mt-4 w-full border border-primary bg-transparent px-4 py-2 font-semibold text-primary"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  className="mt-4 flex w-full items-center justify-center bg-primary px-4 py-2 font-semibold text-white"
+                  onClick={handleSave}
+                >
+                  {loading ? (
+                    <span className="animate-spin text-xl">
+                      <FaSpinner />
+                    </span>
+                  ) : (
+                    "Save"
+                  )}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* projects  */}
