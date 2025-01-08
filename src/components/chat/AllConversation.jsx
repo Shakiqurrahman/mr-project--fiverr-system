@@ -234,7 +234,9 @@ const AllConversation = ({ closeToggle }) => {
           onChange={handleSelectChange}
         >
           <option value="AllConversations">All Conversations</option>
-          <option value="unread">Unread {unreadCount > 0 && `- ${unreadCount}`}</option>
+          <option value="unread">
+            Unread {unreadCount > 0 && `- ${unreadCount}`}
+          </option>
           <option value="starred">Starred</option>
           <option value="blockList">Block List</option>
           <option value="archived">
@@ -263,7 +265,7 @@ const AllConversation = ({ closeToggle }) => {
             return (
               <div
                 key={chat?.id}
-                className={`flex cursor-pointer items-center justify-between gap-2 border-b p-4 hover:bg-lightcream/50 ${chat?.id === conversationUser && "bg-lightcream/50"}`}
+                className={`flex cursor-pointer items-center justify-between gap-2 border-b p-4 hover:bg-lightcream/50 ${chat?.id === conversationUser && "bg-lightcream/50"} ${totalUnseenMessage > 0 && "bg-lightcream/50"}`}
                 onClick={() => handleChatOpen(chat?.id, chat?.userName)}
               >
                 <div className="flex flex-shrink-0 items-center gap-4">
