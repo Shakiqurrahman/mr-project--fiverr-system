@@ -14,7 +14,7 @@ const Navbar = () => {
 
   return (
     <nav className="relative bg-primary">
-      <ul className="max-width flex flex-wrap justify-center gap-x-6 gap-y-2 py-4 text-[13px] text-white sm:text-base lg:py-0">
+      <ul className="max-width flex flex-wrap justify-center gap-x-6 gap-y-2 py-4 text-[15px] text-white sm:text-base lg:py-0">
         {isAuthorized && (
           <>
             <li className="duration-300 hover:text-gray-300 lg:py-4">
