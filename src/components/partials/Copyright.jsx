@@ -21,7 +21,7 @@ function Copyright() {
         </Link>
       </div>
       <p className="w-full lg:w-1/2 lg:text-end">
-        &copy; 2024 Muhfujurrahm535 LTD. All Rights Reserved.
+        &copy; 2025 Muhfujurrahm535 LTD. All Rights Reserved.
       </p>
     </div>
   );

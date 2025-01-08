@@ -4,7 +4,7 @@ function HomeActivityCards() {
       <div className="homeactivitycard grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
         <div className="h-full">
           <div className="h-full rounded-xl bg-primary px-3 py-5 text-center text-white">
-            <span className="text-2xl font-bold sm:text-3xl">8+</span>
+            <span className="text-2xl font-bold sm:text-3xl">9+</span>
             <h1 className="my-2 text-sm font-medium sm:text-xl">
               Years of Experience
             </h1>
