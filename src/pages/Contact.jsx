@@ -118,17 +118,21 @@ function Contact() {
   // Form Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await createContract({
-      name: value.name,
-      email: value.email,
-      websiteOrFacebook: value.link,
-      message: value.Message,
-      exampleDesign: matchingImages,
-      senderUserName: user.userName,
-      userImage: user?.image,
-      timeAndDate,
-    }).unwrap();
-    navigate("/inbox");
+    if (user) {
+      const res = await createContract({
+        name: value.name,
+        email: value.email,
+        websiteOrFacebook: value.link,
+        message: value.Message,
+        exampleDesign: matchingImages,
+        senderUserName: user.userName,
+        userImage: user?.image,
+        timeAndDate,
+      }).unwrap();
+      navigate("/inbox");
+    } else {
+      navigate("/join");
+    }
   };
 
   const handleKeyUp = (e) => {
