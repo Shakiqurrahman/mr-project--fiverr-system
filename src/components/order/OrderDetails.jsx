@@ -112,12 +112,12 @@ const OrderDetails = () => {
               <Fragment key={index}>
                 <div className="flex">
                   <div className="w-3/6 shrink-0 border-b p-3">
-                    {item?.title && item?.designId && (
+                    {item?.designTitle && item?.designId && (
                       <Link
                         to={`/design/${item?.designId}`}
                         className="font-semibold text-primary underline"
                       >
-                        {item?.title}
+                        {item?.designTitle}
                       </Link>
                     )}
                     <h1 className="text-lg font-medium">
