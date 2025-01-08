@@ -205,7 +205,7 @@ function SetupProfile({ from_profile }) {
               name="fullName"
               value={form.fullName}
               onChange={handleChange}
-              className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+              className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
             />
             <label className="block px-2 pt-2">Username</label>
             <input
@@ -214,7 +214,7 @@ function SetupProfile({ from_profile }) {
               value={form.userName}
               disabled
               onChange={handleChange}
-              className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+              className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
             />
             <label className="block px-2 pt-2">Industry Name</label>
             <input
@@ -222,7 +222,7 @@ function SetupProfile({ from_profile }) {
               name="industryName"
               value={form.industryName}
               onChange={handleChange}
-              className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+              className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
             />
             <div className="flex gap-3">
               <div className="w-1/2">
@@ -238,7 +238,7 @@ function SetupProfile({ from_profile }) {
                   name="city"
                   value={form.city}
                   onChange={handleChange}
-                  className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+                  className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
                 />
               </div>
             </div>
@@ -248,7 +248,7 @@ function SetupProfile({ from_profile }) {
               name="address"
               value={form.address}
               onChange={handleChange}
-              className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+              className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
             />
             <label className="block px-2 pt-2">Email</label>
             <input
@@ -257,10 +257,10 @@ function SetupProfile({ from_profile }) {
               disabled
               value={form.email}
               onChange={handleChange}
-              className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+              className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
             />
             <label className="block px-2 pt-2">Phone Number</label>
-            <div className="mt-1 flex">
+            <div className="flex">
               <div className="flex flex-shrink-0 select-none items-center border border-r-0 border-[#e7e7e7] bg-white p-1 sm:p-2">
                 <CountryCode
                   setCountryCode={setForm}
@@ -284,7 +284,7 @@ function SetupProfile({ from_profile }) {
               value={form.language}
               placeholder="Example: English, Spanish"
               onChange={handleChange}
-              className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+              className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
             />
           </div>
         </div>
