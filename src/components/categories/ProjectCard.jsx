@@ -97,7 +97,7 @@ function ProjectCard({
               />
             </div>
           )}
-          <h1 className="px-3 py-2" title={title}>
+          <h1 className="px-3 py-2 text-sm sm:text-base" title={title}>
             <span className="line-clamp-2">{title}</span>
           </h1>
         </Link>
