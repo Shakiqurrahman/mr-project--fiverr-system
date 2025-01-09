@@ -595,6 +595,22 @@ const OrderChatBox = () => {
         {/* Conversation Field */}
         <div className={`h-auto overflow-y-auto p-2 sm:p-5`}>
           {/* All message Container */}
+          {messages?.filter(
+            (m) => m?.projectNumber === projectDetails?.projectNumber,
+          )?.length === 0 &&
+            (projectDetails?.projectStatus === "Waiting" ||
+              projectDetails?.projectStatus === "Ongoing" ||
+              projectDetails?.projectStatus === "Revision") && (
+              <div className="text-center">
+                <h1 className="mb-2 font-semibold">
+                  Thank you very much for starting a project.
+                </h1>
+                <p className="mx-auto sm:w-[80%] md:w-[65%]">
+                  If you have any questions, you can send a message using the
+                  chat box below.
+                </p>
+              </div>
+            )}
           {messages
             ?.filter((m) => m?.projectNumber === projectDetails?.projectNumber)
             ?.map((msg, index) => (
