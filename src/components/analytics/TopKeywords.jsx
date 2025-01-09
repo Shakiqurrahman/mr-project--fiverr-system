@@ -30,8 +30,10 @@ const TopKeywords = () => {
     "Last 3 Months",
     "Last 6 Months",
     "This Year",
-    lastYear,
-    twoYearsAgo,
+    ...(lastYear && ![2022, 2023, 2024].includes(lastYear) ? [lastYear] : []),
+    ...(twoYearsAgo && ![2022, 2023, 2024].includes(twoYearsAgo)
+      ? [twoYearsAgo]
+      : []),
     "All Times",
   ];
 
@@ -77,7 +79,7 @@ const TopKeywords = () => {
           <select
             value={selectedFilterOption}
             onChange={(e) => setSelectedFilterOption(e.target.value)}
-            className="shrink-0 border px-2 py-1 text-sm outline-none sm:text-base bg-white"
+            className="shrink-0 border bg-white px-2 py-1 text-sm outline-none sm:text-base"
           >
             {keywordFilterOptions.map((key, i) => (
               <option value={key} key={i}>
@@ -88,7 +90,7 @@ const TopKeywords = () => {
           <select
             value={selectedTimeOption}
             onChange={(e) => setSelectedTimeOption(e.target.value)}
-            className="shrink-0 border px-2 py-1 text-sm outline-none sm:text-base bg-white"
+            className="shrink-0 border bg-white px-2 py-1 text-sm outline-none sm:text-base"
           >
             {filterTimes.map((key, i) => (
               <option value={key} key={i}>

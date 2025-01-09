@@ -12,8 +12,12 @@ const getFilterTimes = () => {
     "Last 3 Months",
     "Last 6 Months",
     "This Year",
-    `${currentYear - 1}`, // Last Year
-    `${currentYear - 2}`, // 2 Years Ago
+    ...(currentYear !== 2025
+      ? [`${currentYear - 1}`] // 1 year ago
+      : []),
+    ...(currentYear !== 2025 && currentYear !== 2026
+      ? [`${currentYear - 2}`] // 2 year ago
+      : []),
   ];
 };
 
@@ -116,7 +120,7 @@ const VisitorsData = () => {
         <select
           value={selectedFilterOption}
           onChange={(e) => setSelectedFilterOption(e.target.value)}
-          className="shrink-0 border px-2 py-1 text-sm outline-none sm:text-base bg-white"
+          className="shrink-0 border bg-white px-2 py-1 text-sm outline-none sm:text-base"
         >
           {keywordFilterOptions.map((key, i) => (
             <option value={key} key={i}>
@@ -127,7 +131,7 @@ const VisitorsData = () => {
         <select
           value={selectedTimeOption}
           onChange={(e) => setSelectedTimeOption(e.target.value)}
-          className="shrink-0 border px-2 py-1 text-sm outline-none sm:text-base bg-white"
+          className="shrink-0 border bg-white px-2 py-1 text-sm outline-none sm:text-base"
         >
           {filterTimes.map((key, i) => (
             <option value={key} key={i}>

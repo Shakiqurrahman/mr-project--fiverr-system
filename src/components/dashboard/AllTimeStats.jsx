@@ -2,36 +2,25 @@ import React, { useEffect, useState } from "react";
 import { useLazyGetProjectsStatsQuery } from "../../Redux/api/dashboardApiSlice";
 
 const AllTimeStats = () => {
-  const statsType = [
-    {
-      id: 1,
-      name: "All Times",
-    },
-    {
-      id: 2,
-      name: "Last Month",
-    },
-    {
-      id: 3,
-      name: "Last 3 Months",
-    },
-    {
-      id: 4,
-      name: "Last 6 Months",
-    },
-    {
-      id: 5,
-      name: "This Year",
-    },
-    {
-      id: 6,
-      name: parseInt(new Date().getFullYear()) - 1,
-    },
-    {
-      id: 7,
-      name: parseInt(new Date().getFullYear()) - 2,
-    },
+  const currentYear = new Date().getFullYear();
+
+  const staticStats = [
+    { id: 1, name: "All Times" },
+    { id: 2, name: "Last Month" },
+    { id: 3, name: "Last 3 Months" },
+    { id: 4, name: "Last 6 Months" },
+    { id: 5, name: "This Year" },
   ];
+
+  const conditionalYears = [
+    currentYear === 2025 ? null : { id: 6, name: currentYear - 1 },
+    currentYear === 2025 || currentYear === 2026
+      ? null
+      : { id: 7, name: currentYear - 2 },
+  ].filter(Boolean); // Removes null values
+
+  const statsType = [...staticStats, ...conditionalYears];
+
   const [selectedStatsType, setSelectedStatsType] = useState(
     statsType[0]?.name || 0,
   );

@@ -9,109 +9,22 @@ import { connectSocket } from "../../libs/socketService";
 const AllUsers = () => {
   const dispatch = useDispatch();
   const { onlineUsers, token } = useSelector((state) => state.user);
-  const clientData = [
-    {
-      id: 1,
-      name: "John Doe",
-      userName: "jhon123",
-      usersType: "Returning",
-      isAffiliate: false,
-      isOnline: true,
-      date: "2022-01-01",
-      avatar:
-        "https://i.pinimg.com/564x/57/00/c0/5700c04197ee9a4372a35ef16eb78f4e.jpg",
-    },
-    {
-      id: 2,
-      name: "John Abraham",
-      userName: "abraham123",
-      userType: "Returning",
-      isOnline: false,
-      date: "2022-01-01",
-    },
-    {
-      id: 3,
-      name: "John Sina",
-      userName: "jhonsina",
-      userType: "New",
-      isOnline: false,
-      date: "2022-01-01",
-      avatar:
-        "https://i.pinimg.com/564x/57/00/c0/5700c04197ee9a4372a35ef16eb78f4e.jpg",
-    },
-    {
-      id: 4,
-      name: "Shake",
-      userName: "shake75",
-      userType: "Returning",
-      isAffiliate: true,
-      isOnline: true,
-      affiliateUsers: [
-        {
-          id: 1,
-          name: "John Doe",
-          userName: "jhon123",
-          date: "2022-01-01",
-          isOnline: true,
-        },
-        {
-          id: 2,
-          name: "Puthin",
-          userName: "puthin",
-          date: "2022-01-01",
-          isOnline: true,
-          avatar:
-            "https://i.pinimg.com/564x/57/00/c0/5700c04197ee9a4372a35ef16eb78f4e.jpg",
-        },
-      ],
-      date: "2022-01-01",
-      avatar:
-        "https://i.pinimg.com/564x/57/00/c0/5700c04197ee9a4372a35ef16eb78f4e.jpg",
-    },
-  ];
 
+  const currentYear = new Date().getFullYear();
   const filterType = [
-    {
-      id: 1,
-      name: "Today",
-    },
-    {
-      id: 2,
-      name: "Last 7 Days",
-    },
-    {
-      id: 3,
-      name: "This Month",
-    },
-    {
-      id: 4,
-      name: "Last Month",
-    },
-    {
-      id: 5,
-      name: "Last 3 Months",
-    },
-    {
-      id: 5,
-      name: "Last 6 Months",
-    },
-    {
-      id: 6,
-      name: "This Year",
-    },
-    {
-      id: 7,
-      name: parseInt(new Date().getFullYear()) - 1,
-    },
-    {
-      id: 8,
-      name: parseInt(new Date().getFullYear()) - 2,
-    },
-    {
-      id: 9,
-      name: "All Times",
-    },
-  ];
+    { id: 1, name: "Today" },
+    { id: 2, name: "Last 7 Days" },
+    { id: 3, name: "This Month" },
+    { id: 4, name: "Last Month" },
+    { id: 5, name: "Last 3 Months" },
+    { id: 6, name: "Last 6 Months" },
+    { id: 7, name: "This Year" },
+    currentYear === 2025 ? null : { id: 8, name: currentYear - 1 }, // Last Year
+    currentYear === 2025 || currentYear === 2026
+      ? null
+      : { id: 9, name: currentYear - 2 }, // 2 Years Ago
+    { id: 10, name: "All Times" },
+  ].filter(Boolean);
 
   const usersType = ["Returning", "New", "Affiliate"];
 
@@ -174,7 +87,7 @@ const AllUsers = () => {
         <select
           name="filterStatistics"
           id="filterStatistics"
-          className="border p-1 px-2 text-sm font-medium outline-none bg-white"
+          className="border bg-white p-1 px-2 text-sm font-medium outline-none"
           onChange={handleStatsTypeChange}
         >
           {filterType?.map((type, idx) => (

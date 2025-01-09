@@ -380,7 +380,7 @@ function Profile({ user = {}, slug }) {
                 <div className="flex justify-between gap-1 text-sm">
                   <span>Last Project on</span>
                   <p className="font-semibold">
-                    timeFormatter(userProfileData?.LastProjectOn)
+                    {timeFormatter(userProfileData?.LastProjectOn)}
                   </p>
                 </div>
               )

@@ -3,48 +3,22 @@ import { FaPlus } from "react-icons/fa6";
 import { useLazyGetVisitorsByFilterQuery } from "../../Redux/api/analyticsApiSlice";
 
 const TotalVisitors = () => {
+  const currentYear = new Date().getFullYear();
+
   const filterType = [
-    {
-      id: 1,
-      name: "Today",
-    },
-    {
-      id: 2,
-      name: "Last 7 Days",
-    },
-    {
-      id: 3,
-      name: "This Month",
-    },
-    {
-      id: 4,
-      name: "Last Month",
-    },
-    {
-      id: 5,
-      name: "Last 3 Months",
-    },
-    {
-      id: 5,
-      name: "Last 6 Months",
-    },
-    {
-      id: 6,
-      name: "This Year",
-    },
-    {
-      id: 7,
-      name: parseInt(new Date().getFullYear()) - 1,
-    },
-    {
-      id: 8,
-      name: parseInt(new Date().getFullYear()) - 2,
-    },
-    {
-      id: 9,
-      name: "All Times",
-    },
-  ];
+    { id: 1, name: "Today" },
+    { id: 2, name: "Last 7 Days" },
+    { id: 3, name: "This Month" },
+    { id: 4, name: "Last Month" },
+    { id: 5, name: "Last 3 Months" },
+    { id: 6, name: "Last 6 Months" },
+    { id: 7, name: "This Year" },
+    currentYear === 2025 ? null : { id: 8, name: currentYear - 1 }, // Last Year
+    currentYear === 2025 || currentYear === 2026
+      ? null
+      : { id: 9, name: currentYear - 2 }, // 2 Years Ago
+    { id: 10, name: "All Times" },
+  ].filter(Boolean);
 
   const [getVisitorsByFilter, { data: VisitorsData }] =
     useLazyGetVisitorsByFilterQuery();
@@ -79,7 +53,7 @@ const TotalVisitors = () => {
         <select
           name="filterStatistics"
           id="filterStatistics"
-          className="border p-1 px-2 text-sm font-medium outline-none bg-white"
+          className="border bg-white p-1 px-2 text-sm font-medium outline-none"
           onChange={handleStatsTypeChange}
         >
           {filterType.map((type, idx) => (

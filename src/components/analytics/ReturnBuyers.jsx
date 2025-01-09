@@ -25,8 +25,10 @@ const ReturnBuyers = () => {
     "Last 3 Months",
     "Last 6 Months",
     "This Year",
-    lastYear,
-    twoYearsAgo,
+    ...(lastYear && ![2022, 2023, 2024].includes(lastYear) ? [lastYear] : []),
+    ...(twoYearsAgo && ![2022, 2023, 2024].includes(twoYearsAgo)
+      ? [twoYearsAgo]
+      : []),
     "All Times",
   ];
 
