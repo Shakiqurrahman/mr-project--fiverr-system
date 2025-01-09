@@ -47,6 +47,8 @@ function CompletedProject() {
         settings: {
           slidesToShow: 3,
           slidesToScroll: 1,
+          infinite: data?.length > 3 ? true : false,
+          autoplay: data?.length > 3 ? true : false,
         },
       },
       {
@@ -55,6 +57,8 @@ function CompletedProject() {
           arrows: false,
           slidesToShow: 2,
           slidesToScroll: 1,
+          infinite: data?.length > 2 ? true : false,
+          autoplay: data?.length > 2 ? true : false,
         },
       },
       {
@@ -63,6 +67,8 @@ function CompletedProject() {
           arrows: false,
           slidesToShow: 2,
           slidesToScroll: 1,
+          infinite: data?.length > 2 ? true : false,
+          autoplay: data?.length > 2 ? true : false,
         },
       },
     ],

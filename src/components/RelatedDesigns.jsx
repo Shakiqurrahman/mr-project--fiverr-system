@@ -31,7 +31,12 @@ function RelatedDesigns({
       relatedDesigns?.length > 4
         ? true
         : false,
-    autoplay: true,
+    autoplay:
+      items?.length > 4 ||
+      relatedFolders?.length > 4 ||
+      relatedDesigns?.length > 4
+        ? true
+        : false,
     autoplaySpeed: 2000,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
@@ -41,6 +46,18 @@ function RelatedDesigns({
         settings: {
           slidesToShow: 3,
           slidesToScroll: 1,
+          infinite:
+            items?.length > 3 ||
+            relatedFolders?.length > 3 ||
+            relatedDesigns?.length > 3
+              ? true
+              : false,
+          autoplay:
+            items?.length > 3 ||
+            relatedFolders?.length > 3 ||
+            relatedDesigns?.length > 3
+              ? true
+              : false,
         },
       },
       {
@@ -49,6 +66,18 @@ function RelatedDesigns({
           arrows: false,
           slidesToShow: 2,
           slidesToScroll: 1,
+          infinite:
+            items?.length > 2 ||
+            relatedFolders?.length > 2 ||
+            relatedDesigns?.length > 2
+              ? true
+              : false,
+          autoplay:
+            items?.length > 2 ||
+            relatedFolders?.length > 2 ||
+            relatedDesigns?.length > 2
+              ? true
+              : false,
         },
       },
       {
@@ -57,6 +86,18 @@ function RelatedDesigns({
           arrows: false,
           slidesToShow: 2,
           slidesToScroll: 1,
+          infinite:
+            items?.length > 2 ||
+            relatedFolders?.length > 2 ||
+            relatedDesigns?.length > 2
+              ? true
+              : false,
+          autoplay:
+            items?.length > 3 ||
+            relatedFolders?.length > 2 ||
+            relatedDesigns?.length > 2
+              ? true
+              : false,
         },
       },
     ],

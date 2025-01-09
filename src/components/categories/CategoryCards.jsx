@@ -14,7 +14,7 @@ function CategoryCards({ title, path, subCategory = [], titleSlug }) {
     className: "category-cards",
     slidesToScroll: 1,
     arrows: subCategory?.length > 3 ? true : false,
-    autoplay: true,
+    autoplay: subCategory?.length > 3 ? true : false,
     autoplaySpeed: 1500,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
@@ -24,6 +24,8 @@ function CategoryCards({ title, path, subCategory = [], titleSlug }) {
         settings: {
           slidesToShow: 3,
           slidesToScroll: 1,
+          infinite: subCategory?.length > 3 ? true : false,
+          autoplay: subCategory?.length > 3 ? true : false,
         },
       },
       {
@@ -32,6 +34,8 @@ function CategoryCards({ title, path, subCategory = [], titleSlug }) {
           arrows: false,
           slidesToShow: 2,
           slidesToScroll: 1,
+          infinite: subCategory?.length > 2 ? true : false,
+          autoplay: subCategory?.length > 2 ? true : false,
         },
       },
       {
@@ -40,6 +44,8 @@ function CategoryCards({ title, path, subCategory = [], titleSlug }) {
           arrows: false,
           slidesToShow: 2,
           slidesToScroll: 1,
+          infinite: subCategory?.length > 2 ? true : false,
+          autoplay: subCategory?.length > 2 ? true : false,
         },
       },
     ],
