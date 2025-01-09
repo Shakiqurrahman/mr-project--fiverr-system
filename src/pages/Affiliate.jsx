@@ -54,7 +54,11 @@ function Affiliate() {
   };
 
   const createAffiliateHandler = async () => {
-    if (affLink) {
+    if (
+      affLink &&
+      (affLink.startsWith("https://mahfujurrahm535.com") ||
+        affLink.startsWith("mahfujurrahm535.com"))
+    ) {
       try {
         const res = await createAffiliate({
           link: `aff-${user?.userName}`,
@@ -64,7 +68,7 @@ function Affiliate() {
         toast.error("Failed to create affiliate link");
       }
     } else {
-      toast.error("Please enter something to generate your link.");
+      toast.error("Invalid URL. Please use a URL from this website.");
     }
     setAffLink("");
   };

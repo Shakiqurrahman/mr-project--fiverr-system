@@ -18,8 +18,6 @@ function App() {
       (!hasVisited.startTimeStamp &&
         Date.now() - hasVisited.timestamp > ONE_DAY_IN_MS)
     ) {
-      console.log(" i am calling here because I am new user");
-
       axios
         .get(`${configApi.api}analytics/visitors/`)
         .then(() => {
@@ -38,7 +36,6 @@ function App() {
       Date.now() - hasVisited.startTimeStamp > ONE_DAY_IN_MS &&
       Date.now() - hasVisited.timestamp > ONE_DAY_IN_MS
     ) {
-      console.log(" i am calling here because I am returning user");
       localStorage.setItem(
         "hasVisited",
         JSON.stringify({
