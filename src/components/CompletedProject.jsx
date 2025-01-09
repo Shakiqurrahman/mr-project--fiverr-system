@@ -61,7 +61,7 @@ function CompletedProject() {
         breakpoint: 576,
         settings: {
           arrows: false,
-          slidesToShow: 1,
+          slidesToShow: 2,
           slidesToScroll: 1,
         },
       },

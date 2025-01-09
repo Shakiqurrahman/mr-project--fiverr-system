@@ -43,7 +43,7 @@ function AllCompletedProjects() {
           Completed Projects
         </h1>
         {completedProjects?.length > 0 && (
-          <div className="grid grid-cols-1 gap-x-3 gap-y-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 lg:grid-cols-4">
             {currentPageData?.map((project, index) => (
               <ProjectCard
                 key={index}

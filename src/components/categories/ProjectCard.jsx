@@ -103,24 +103,27 @@ function ProjectCard({
         </Link>
         {clientName && (
           <div
-            className="mt-3 flex items-center justify-between px-3"
+            className="mt-1 flex items-center justify-between sm:mt-3 sm:px-3"
             ref={clientRef}
           >
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
               {clientLogo ? (
                 <img
                   src={clientLogo}
                   alt=""
-                  className="size-[25px] rounded-full object-cover"
+                  className="size-[30px] shrink-0 rounded-full object-cover"
                 />
               ) : (
-                <div className="flex size-[25px] items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-lg font-bold text-[#3b3b3b]/50">
+                <div className="flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-lg font-bold text-[#3b3b3b]/50">
                   {clientName?.charAt(0)?.toUpperCase()}
                 </div>
               )}
-              <Link className="text-sm font-semibold">{clientName}</Link>
+              <div>
+                <Link className="text-sm font-semibold">{clientName}</Link>
+                <span className="block text-xs sm:hidden">{timeStamp}</span>
+              </div>
             </div>
-            <span className="text-xs">{timeStamp}</span>
+            <span className="hidden text-xs sm:block">{timeStamp}</span>
           </div>
         )}
       </div>
