@@ -296,7 +296,7 @@ const AllConversation = ({ closeToggle }) => {
                     <p className="flex items-center gap-2 font-semibold">
                       {chat?.userName}{" "}
                       <span className="text-secondary">
-                        {chat?.isClock && <LuClock3 />}
+                        {!chat?.isClock && <LuClock3 />}
                       </span>
                     </p>
                     <p
