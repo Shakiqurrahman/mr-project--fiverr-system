@@ -86,9 +86,10 @@ function SignInForm({ handleClick }) {
         "hasVisited",
         JSON.stringify({
           ...existingVData,
-          startTimeStamp: existingVData.startTimeStamp
-            ? existingVData.startTimeStamp
+          startTimeStamp: userData?.user?.createdAt
+            ? new Date(userData?.user?.createdAt).getTime()
             : Date.now(),
+            userType: userData?.user?.createdAt ? "REPEATED_CLIENT" : "NEW_CLIENT"
         }),
       );
       reset();

@@ -14,36 +14,51 @@ function App() {
     const hasVisited = JSON.parse(localStorage.getItem("hasVisited"));
     if (
       !hasVisited ||
-      Date.now() - hasVisited.startTimeStamp < ONE_DAY_IN_MS ||
+      (Date.now() - hasVisited.startTimeStamp < ONE_DAY_IN_MS &&
+        Date.now() - hasVisited.timestamp > ONE_DAY_IN_MS) ||
       (!hasVisited.startTimeStamp &&
         Date.now() - hasVisited.timestamp > ONE_DAY_IN_MS)
     ) {
       axios
-        .get(`${configApi.api}analytics/visitors/`)
+        .post(`${configApi.api}analytics/user-visitor`, {
+          userType: "NEW_CLIENT",
+        })
         .then(() => {
           localStorage.setItem(
             "hasVisited",
             JSON.stringify({
               ...hasVisited,
               timestamp: Date.now(),
-              userType: "New",
+              userType: "NEW_CLIENT",
             }),
           );
         })
-        .catch(() => {});
+        .catch((error) => {
+          console.error("Error with analytics request:", error);
+        });
     } else if (
       hasVisited.startTimeStamp &&
       Date.now() - hasVisited.startTimeStamp > ONE_DAY_IN_MS &&
       Date.now() - hasVisited.timestamp > ONE_DAY_IN_MS
     ) {
-      localStorage.setItem(
-        "hasVisited",
-        JSON.stringify({
-          ...hasVisited,
-          timestamp: Date.now(),
-          userType: "Returning",
-        }),
-      );
+      const response = axios
+        .post(`${configApi.api}analytics/user-visitor`, {
+          userType: "REPEATED_CLIENT",
+        })
+        .then(() => {
+          localStorage.setItem(
+            "hasVisited",
+            JSON.stringify({
+              ...hasVisited,
+              timestamp: Date.now(),
+              userType: "REPEATED_CLIENT",
+            }),
+          );
+          console.log("I am calling AS A RETURNING USER");
+        })
+        .catch((error) => {
+          console.error("Error during analytics request:", error);
+        });
     }
   }, []);
 
