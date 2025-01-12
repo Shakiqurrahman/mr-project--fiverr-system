@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { ImPlus } from "react-icons/im";
+import { ImPlus, ImSpinner8 } from "react-icons/im";
 import { IoIosArrowDown, IoIosArrowUp, IoIosAttach } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
@@ -45,6 +45,7 @@ const CreateOfferModal = ({
   const fileInputRef = useRef(null);
   const formRef = useRef(null);
   const [requirements, setRequirements] = useState([""]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (imageObject) {
@@ -57,6 +58,7 @@ const CreateOfferModal = ({
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     try {
+      setIsLoading(true);
       const formData = new FormData();
       // formData.append("fileName", file.file);
       formData.append("files", file);
@@ -69,12 +71,15 @@ const CreateOfferModal = ({
         const url = res.data.data.file.optimizedUrl;
         setForm((prev) => ({ ...prev, thumbnail: url }));
       }
+      setIsLoading(false);
     } catch {
       toast.error("Image Upload Failed!");
+      setIsLoading(false);
     }
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
+      setIsLoading(false);
     }
   };
 
@@ -182,11 +187,18 @@ const CreateOfferModal = ({
         <div className="px-3 py-4">
           <label className="block w-full font-medium">Title</label>
           <div className="flex items-start gap-3 border bg-white p-4">
-            <img
-              src={form.thumbnail ? form.thumbnail : thumbnailDemo}
-              alt=""
-              className="w-[80px] shrink-0 object-cover sm:w-[100px]"
-            />
+            <div className="relative">
+              <img
+                src={form.thumbnail ? form.thumbnail : thumbnailDemo}
+                alt=""
+                className="w-[80px] shrink-0 object-cover sm:w-[100px]"
+              />
+              {isLoading && (
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                  <ImSpinner8 className="animate-spin text-xl text-primary" />
+                </div>
+              )}
+            </div>
             <input
               type="text"
               name="title"
@@ -286,14 +298,15 @@ const CreateOfferModal = ({
           <div className="flex gap-3">
             <button
               type="button"
-              className="w-1/2 bg-canceled p-2 font-medium text-white"
+              className="w-1/2 bg-canceled p-2 font-medium text-white disabled:bg-canceled/50"
               onClick={() => handleClose(false)}
+              disabled={isLoading}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="w-1/2 bg-primary p-2 font-medium text-white"
+              className="w-1/2 bg-primary p-2 font-medium text-white disabled:bg-primary/50"
             >
               Send Offer
             </button>
