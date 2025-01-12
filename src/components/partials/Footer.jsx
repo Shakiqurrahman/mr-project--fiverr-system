@@ -8,7 +8,7 @@ import {
 import { Link } from "react-router-dom";
 import ScrollToTop from "react-scroll-to-top";
 import Logo from "../../assets/images/MR Logo White.png";
-import Cards from "../../assets/images/card.png";
+import Cards from "../../assets/images/Payment-cards.svg";
 import UpArrow from "../../assets/images/icons/Upper Arrow.svg";
 import Divider from "../Divider";
 import Copyright from "./Copyright";
@@ -153,8 +153,8 @@ function Footer() {
                   </Link>
                 </div>
               </div>
-              <div className="flex items-center">
-                <p>We Accept:- </p>
+              <div className="flex flex-wrap items-center gap-1 sm:flex-nowrap">
+                <p className="ml-2 sm:ml-0">We Accept:- </p>
                 <div className="flex items-center">
                   <img src={Cards} className="h-[40px]" alt="" />
                 </div>
