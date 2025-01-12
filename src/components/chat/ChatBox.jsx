@@ -893,7 +893,9 @@ const ChatBox = ({ openToggle }) => {
                 <p>
                   {lastSeen && lastSeen !== "Online"
                     ? `Last seen: ${timeAgoTracker(lastSeen)}`
-                    : "Online"}
+                    : lastSeen === "Online"
+                      ? "Online"
+                      : "Offline"}
                 </p>
               ))}
             {user?.role === "USER" ? (
