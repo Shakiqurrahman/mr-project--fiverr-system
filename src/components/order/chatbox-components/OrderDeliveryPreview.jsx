@@ -8,7 +8,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { BiDownload } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   useAcceptDeliveryMutation,
   useAcceptRevisionMutation,
@@ -238,7 +238,7 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
                         className="block w-full max-w-full cursor-pointer object-cover"
                       />
                       <div className="mt-4 text-center">
-                        <Link
+                        <button
                           onClick={() =>
                             handleSingleDownload(
                               projectDetails?.projectStatus === "Completed" &&
@@ -251,7 +251,7 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
                           className="inline-block rounded-[30px] border border-gray-400 px-5 py-2 text-sm font-medium text-black/50 sm:text-lg"
                         >
                           Download
-                        </Link>
+                        </button>
                       </div>
                     </div>
                   ))}

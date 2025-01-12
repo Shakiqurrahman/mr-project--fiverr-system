@@ -49,7 +49,8 @@ const CreateOfferModal = ({
   useEffect(() => {
     if (imageObject) {
       setForm((prev) => ({ ...prev, thumbnail: imageObject?.image?.url }));
-      setRequirements(imageObject?.requirements || [""]);
+      if (imageObject?.requirments?.length > 0)
+        setRequirements(imageObject?.requirments);
     }
   }, [imageObject]);
 
