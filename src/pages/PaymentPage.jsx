@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import Check from "../assets/svg/Check";
-import stripe from "../assets/svg/stripe.svg";
+// import stripe from "../assets/svg/stripe.svg";
 import { ToggleSwitch } from "../libs/ToggleSwitch";
 import { STRIPE_PUBLIC_KEY, configApi } from "../libs/configApi";
 
@@ -277,7 +277,7 @@ const PaymentPage = () => {
               </ul>
 
               <div className="w-full">
-                <img src={stripe} alt="Stripe Logo" className="mx-auto w-16" />
+                {/* <img src={stripe} alt="Stripe Logo" className="mx-auto w-16" /> */}
                 <p className="mb-4 text-center">Single Payment</p>
                 <button
                   type="submit"
