@@ -104,11 +104,7 @@ function RelatedDesigns({
   };
 
   return (
-    <div
-      className={`${
-        bgColor ? bgColor : "bg-lightskyblue"
-      } relative -mb-10 sm:-mb-20`}
-    >
+    <div className={`${bgColor ? bgColor : "bg-lightskyblue"} relative -mb-5`}>
       <div className="max-width mt-10 py-10">
         <h1
           className={`${
