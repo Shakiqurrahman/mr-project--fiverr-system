@@ -93,7 +93,7 @@ const AttachmentsPreview = ({ files }) => {
               >
                 <BiDownload className="shrink-0 text-lg text-primary" />
                 <div
-                  className="mx-2 line-clamp-1 font-medium"
+                  className="mx-[2px] line-clamp-1 font-medium"
                   title={att?.name}
                 >
                   <GenerateName name={att?.name} />

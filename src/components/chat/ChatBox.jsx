@@ -864,7 +864,9 @@ const ChatBox = ({ openToggle }) => {
     dispatch(setConversationUser(null));
     try {
       await makeUnchange({ userId: recipientUserId }).unwrap();
-    } catch (error) {}
+    } catch (error) {
+      // console.log(error)
+    }
   };
 
   return (
@@ -1164,7 +1166,7 @@ const ChatBox = ({ openToggle }) => {
                                       >
                                         <BiDownload className="shrink-0 text-lg text-primary" />
                                         <div
-                                          className="mx-2 line-clamp-1 font-medium"
+                                          className="mx-[2px] line-clamp-1 font-medium"
                                           title={att?.name}
                                         >
                                           <GenerateName name={att.name} />
@@ -1339,7 +1341,7 @@ const ChatBox = ({ openToggle }) => {
                               >
                                 <BiDownload className="shrink-0 text-lg text-primary" />
                                 <div
-                                  className="mx-[2px] max-w-[30%] shrink font-medium md:mx-2 md:max-w-[50%]"
+                                  className="mx-[2px] max-w-[30%] shrink font-medium md:max-w-[50%]"
                                   title={att.name}
                                 >
                                   <GenerateName name={att.name} />
