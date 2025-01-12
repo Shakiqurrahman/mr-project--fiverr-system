@@ -199,7 +199,6 @@ const AllConversation = ({ closeToggle }) => {
     (count, chat) => count + (chat.isArchived ? 1 : 0),
     0,
   );
-
   return (
     <div className="flex h-full flex-col">
       <div className="flex h-[70px] items-center justify-between bg-primary/20 px-4">
@@ -259,6 +258,7 @@ const AllConversation = ({ closeToggle }) => {
               customOffer,
               attachment,
               totalUnseenMessage,
+              contactForm,
               createdAt,
             } = chat?.lastmessageinfo || {};
             const sameUser = senderUserName === user?.userName;
@@ -305,14 +305,24 @@ const AllConversation = ({ closeToggle }) => {
                           ? "You just sent a new Custom Offer"
                           : attachment?.length > 0
                             ? `Attachment!`
-                            : messageText
+                            : contactForm
+                              ? `new message...`
+                              : messageText
                       }
                       className={`${totalUnseenMessage > 0 && "font-bold"} max-w-[180px] truncate text-[12px] sm:max-w-[250px] md:max-w-[80px] lg:max-w-[150px]`}
                     >
                       {/* -----for user name printing in user last message----- */}
                       {senderUserName
                         ? `${sameUser ? "Me" : senderUserName} :
-                       ${customOffer ? "You just sent a new Custom Offer" : attachment?.length > 0 ? `Attachment...` : messageText}`
+                       ${
+                         customOffer
+                           ? "You just sent a new Custom Offer"
+                           : attachment?.length > 0
+                             ? `Attachment...`
+                             : contactForm
+                               ? `sent new message`
+                               : messageText
+                       }`
                         : messageText}
                     </p>
                   </div>
