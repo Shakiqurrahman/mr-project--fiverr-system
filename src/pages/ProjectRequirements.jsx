@@ -64,15 +64,15 @@ const ProjectRequirements = () => {
     },
     {
       url: depositPhotos,
-      link: "",
+      link: "https://depositphotos.com/?ref=40165016&utm_source=linkCopy&utm_medium=referral",
     },
     {
       url: Vectezzy,
-      link: "",
+      link: "https://vecteezycom.sjv.io/09GxmN",
     },
     {
       url: Dreamstime,
-      link: "",
+      link: "https://www.dreamstime.com/#res22427301",
     },
     {
       url: alamy,
