@@ -158,7 +158,7 @@ export const inboxApiSlice = createApi({
     // custom offer image api slice
     fetchCustomOfferImage: builder.query({
       query: () => "image/get",
-      transformResponse: (response) => response?.data?.image,
+      transformResponse: (response) => response?.data,
     }),
     updateCustomOfferImage: builder.mutation({
       query: (data) => ({
