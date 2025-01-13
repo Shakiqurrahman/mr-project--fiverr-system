@@ -4,6 +4,7 @@ import { useGetAllProjectsQuery } from "../Redux/api/dashboardApiSlice";
 import prevBtn from "../assets/images/icons/Left Arrow.svg";
 import nextBtn from "../assets/images/icons/Right Arrow.svg";
 import ProjectCard from "../components/categories/ProjectCard";
+import { timeAgoTracker } from "../libs/timeAgoTracker";
 
 function AllCompletedProjects() {
   const { data } = useGetAllProjectsQuery({ status: "Completed" });
@@ -55,7 +56,9 @@ function AllCompletedProjects() {
                 clientLogo={project?.user?.image}
                 title={project?.projectName}
                 clientName={project?.user?.userName}
-                timeStamp={"5 days ago"}
+                timeStamp={
+                  timeAgoTracker(project?.completedDate) || "5 days ago"
+                }
               />
             ))}
           </div>

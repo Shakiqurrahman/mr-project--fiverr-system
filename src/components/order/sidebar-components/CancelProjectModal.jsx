@@ -166,7 +166,7 @@ const CancelProjectModal = ({ handleClose }) => {
                   id="requestByMe"
                   checked={extendType === "requestByMe"}
                 />
-                <label htmlFor="requestByMe">Request by me</label>
+                <label htmlFor="requestByMe">Direct Cancel</label>
               </div>
             </div>
           )}

@@ -251,7 +251,7 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
                 disabled={isLoading}
                 className="bg-primary px-5 py-2 text-sm font-semibold text-white disabled:bg-primary/50 sm:px-10 sm:text-base"
               >
-                Withdraw Offer
+                Withdraw Request
               </button>
             </div>
           )}

@@ -120,10 +120,14 @@ function ProjectCard({
               )}
               <div>
                 <Link className="text-sm font-semibold">{clientName}</Link>
-                <span className="block text-xs sm:hidden">{timeStamp}</span>
+                <span className="block text-right text-xs sm:hidden">
+                  {timeStamp}
+                </span>
               </div>
             </div>
-            <span className="hidden text-xs sm:block">{timeStamp}</span>
+            <span className="hidden text-right text-xs sm:block">
+              {timeStamp}
+            </span>
           </div>
         )}
       </div>
