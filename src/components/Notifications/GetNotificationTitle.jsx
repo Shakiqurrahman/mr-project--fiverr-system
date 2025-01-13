@@ -14,7 +14,7 @@ const GetNotificationTitle = ({
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
           {`You have a new `}
-          <span className="font-bold">{type}</span>
+          <span className="font-bold">project</span>
           {` from `}
           <span className="font-bold">{userName}</span>
           {` and are awaiting buyer requirements.`}
@@ -42,7 +42,7 @@ const GetNotificationTitle = ({
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
           <span className="font-bold">{userName}: requested </span>a change to
-          your order. Review the feedback.
+          your project. Review the feedback.
         </p>
       </div>
     ),
@@ -66,7 +66,7 @@ const GetNotificationTitle = ({
     OrderStart: (
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
-          {`Your order has started! The designer is now working on your order.`}
+          {`Your project has started! The designer is now working on your project.`}
         </p>
       </div>
     ),
@@ -74,7 +74,7 @@ const GetNotificationTitle = ({
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
           {`You have a new `}
-          <span className="font-bold">order</span>
+          <span className="font-bold">project</span>
           {` and instructions from `}
           <span className="font-bold">{userName}</span>
           {`. Get Started.`}
@@ -102,7 +102,7 @@ const GetNotificationTitle = ({
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
           <span className="font-bold">Update: </span>
-          {`You extended your order's delivery period by ${days ? `${days} days` : `${hours} hours`} `}
+          {`You extended your project's delivery period by ${days ? `${days} days` : `${hours} hours`} `}
         </p>
       </div>
     ),
@@ -110,7 +110,7 @@ const GetNotificationTitle = ({
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
           <span className="font-bold">{userName} </span>
-          {` Sent Order extended request`}
+          {` Sent project extended request`}
         </p>
       </div>
     ),
@@ -118,7 +118,7 @@ const GetNotificationTitle = ({
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
           <span className="font-bold">{userName} </span>
-          {` Order extended request withdrawn`}
+          {` Project extended request withdrawn`}
         </p>
       </div>
     ),
@@ -126,7 +126,7 @@ const GetNotificationTitle = ({
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
           <span className="font-bold">{userName} </span>
-          {` Order extended request rejected`}
+          {` Project extended request rejected`}
         </p>
       </div>
     ),
@@ -135,7 +135,7 @@ const GetNotificationTitle = ({
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
           <span className="font-bold">{userName} </span>
-          {`has been canceled his order.`}
+          {`has been canceled his project.`}
         </p>
       </div>
     ),
@@ -143,7 +143,7 @@ const GetNotificationTitle = ({
     CancelAcceptUser: (
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
-          <span className="font-bold">Your order has been canceled. </span>
+          <span className="font-bold">Your project has been canceled. </span>
           Your payment will be refunded within 24 to 48 hours.
         </p>
       </div>
@@ -162,7 +162,7 @@ const GetNotificationTitle = ({
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
           <span className="font-bold">{userName}</span>
-          {` marked his order as complete`}
+          {` marked his project as complete`}
         </p>
       </div>
     ),
@@ -170,7 +170,7 @@ const GetNotificationTitle = ({
     CompleteOrderUser: (
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
-          {`You marked your order as complete`}
+          {`You marked your project as complete`}
         </p>
       </div>
     ),
@@ -179,7 +179,7 @@ const GetNotificationTitle = ({
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
           <span className="font-bold">{userName}'s </span>
-          {`order was automatically marked as complete`}
+          {`project was automatically marked as complete`}
         </p>
       </div>
     ),
@@ -187,7 +187,7 @@ const GetNotificationTitle = ({
     AutoCompleteOrderUser: (
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
-          {`Your order was automatically marked as complete`}
+          {`Your project was automatically marked as complete`}
         </p>
       </div>
     ),
