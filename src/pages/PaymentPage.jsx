@@ -210,7 +210,7 @@ const PaymentPage = () => {
           </div>
           <form onSubmit={handleSubmit} className="mt-4 space-y-8">
             {/* payment details  */}
-            <div className="flex flex-col items-center gap-8 border bg-white p-4 sm:flex-row sm:gap-16 sm:p-6">
+            <div className="flex flex-col items-center gap-8 border bg-white p-4 sm:p-6">
               <ul className="w-full space-y-3 [&>li:last-child]:border-t">
                 {!designs.designs && (
                   <li className="flex justify-between gap-2 px-2">
@@ -291,8 +291,7 @@ const PaymentPage = () => {
               </div>
             </div>
             <p className="!mt-6 text-center text-base font-medium">
-              Go to the Project Requirement option by clicking on &quot;Pay
-              Now&quot;
+              Click on &quot;Pay Now&quot; and complete the payment easily.
             </p>
           </form>
         </div>
