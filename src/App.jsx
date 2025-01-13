@@ -33,9 +33,7 @@ function App() {
             }),
           );
         })
-        .catch((error) => {
-          console.error("Error with analytics request:", error);
-        });
+        .catch((error) => {});
     } else if (
       hasVisited.startTimeStamp &&
       Date.now() - hasVisited.startTimeStamp > ONE_DAY_IN_MS &&
@@ -54,11 +52,8 @@ function App() {
               userType: "REPEATED_CLIENT",
             }),
           );
-          console.log("I am calling AS A RETURNING USER");
         })
-        .catch((error) => {
-          console.error("Error during analytics request:", error);
-        });
+        .catch((error) => {});
     }
   }, []);
 

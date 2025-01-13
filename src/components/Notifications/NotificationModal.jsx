@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { IoClose } from "react-icons/io5";
 import { MdOutlineNotifications } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   useGetNotificationQuery,
   useNotificationMakeSeenMutation,
@@ -94,13 +94,16 @@ const NotificationModal = ({ close }) => {
                 } else if (notification?.payload?.type === "Message") {
                   navigate(`/inbox`);
                   dispatch(close(false));
+                } else if (notification?.payload?.projectNumber) {
+                  navigate(`/order/${notification?.payload?.projectNumber}`);
+                  dispatch(close(false));
                 }
               };
               return (
                 <div
                   key={notification?.id}
                   onClick={handleClick}
-                  className="flex items-center justify-between gap-4 border-b p-4 last:border-b-0"
+                  className="flex cursor-pointer items-center justify-between gap-4 border-b p-4 last:border-b-0"
                 >
                   <div className="flex items-center gap-2">
                     {/* avatar  */}
@@ -132,17 +135,13 @@ const NotificationModal = ({ close }) => {
                     </div>
                   </div>
                   {notification?.payload?.thumbnailUrl && (
-                    <Link
-                      className="w-24 flex-grow-0"
-                      to={`/order/${notification?.payload?.projectNumber}`}
-                      onClick={() => dispatch(close(false))}
-                    >
+                    <div className="w-24 flex-grow-0">
                       <img
                         className="w-full rounded-lg object-cover"
                         src={notification?.payload?.thumbnailUrl}
                         alt="ordered image"
                       />
-                    </Link>
+                    </div>
                   )}
                 </div>
               );
