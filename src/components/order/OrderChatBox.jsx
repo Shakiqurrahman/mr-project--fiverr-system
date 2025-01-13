@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   useDeleteQuickResMsgMutation,
   useFetchQuickResMsgQuery,
+  useLazyGetAllMessagesQuery,
 } from "../../Redux/api/inboxApiSlice";
 import logo from "../../assets/images/MR Logo Icon.png";
 import { useLocalStorageObject } from "../../hooks/useLocalStorageObject";
@@ -22,7 +23,7 @@ import EmojiPicker from "../chat/EmojiPicker";
 
 import axios from "axios";
 import { IoClose } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import shortid from "shortid";
 import {
   useDeleteAOrderMessageMutation,
@@ -30,6 +31,10 @@ import {
   useSendAOrderMessageMutation,
   useUpdateOrderMessageSeenMutation,
 } from "../../Redux/api/orderApiSlice";
+import {
+  setChatData,
+  setConversationUser,
+} from "../../Redux/features/chatSlice";
 import {
   rollbackMessages,
   setMessages,
@@ -51,6 +56,7 @@ import OrderDeliveryPreview from "./chatbox-components/OrderDeliveryPreview";
 
 const OrderChatBox = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   // Redux query imports here
   const [getAllUserMessages, { data: allUserMessages }] =
     useLazyGetOrderUserMessagesQuery();
@@ -589,6 +595,24 @@ const OrderChatBox = () => {
     }
   }, [onlineUsers]);
 
+  // after clicking on the message button
+  const [triggerGetAllMessages, { data: getAllMessages }] =
+    useLazyGetAllMessagesQuery();
+
+  useEffect(() => {
+    if (getAllMessages) {
+      dispatch(setChatData(getAllMessages));
+      navigate("/inbox");
+    }
+  }, [dispatch, getAllMessages, navigate]);
+
+  const handleMessageButton = (id) => {
+    dispatch(setConversationUser(id));
+    triggerGetAllMessages({
+      receiverId: id,
+    });
+  };
+
   return (
     <>
       <div className="flex max-h-[2000px] min-h-[800px] w-full flex-col rounded-lg shadow-btn-shadow">
@@ -1045,9 +1069,13 @@ const OrderChatBox = () => {
           <p className="my-5 text-center">
             View conversation with{" "}
             {isAdmin ? (
-              <Link to={`/inbox`} className="font-semibold text-primary">
+              <button
+                type="button"
+                onClick={() => handleMessageButton(clientDetails?.id)}
+                className="font-semibold text-primary"
+              >
                 {clientDetails?.userName}
-              </Link>
+              </button>
             ) : (
               <Link to={`/inbox`} className="font-semibold text-primary">
                 mahfujurrahm535

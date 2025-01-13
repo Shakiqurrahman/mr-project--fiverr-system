@@ -3,6 +3,15 @@ import { Link } from "react-router-dom";
 import { getStatusText } from "./StatusText";
 
 const CompletedProjects = ({ completedProjects }) => {
+  const formatDate = (isoString) => {
+    const date = new Date(isoString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
   return (
     <div className="mb-16 mt-8 grid grid-cols-2 gap-4">
       {completedProjects?.length > 0 ? (
@@ -29,7 +38,9 @@ const CompletedProjects = ({ completedProjects }) => {
                 </div>
               </div>
               <div className="mt-2 flex justify-between">
-                <p>{project?.time}</p>
+                {project?.completedDate && (
+                  <p>{formatDate(project?.completedDate)}</p>
+                )}
                 <p className="font-semibold">
                   {getStatusText(project?.projectStatus)}
                 </p>

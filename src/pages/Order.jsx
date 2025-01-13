@@ -5,12 +5,6 @@ import { MdOutlineDoNotDisturbAlt } from "react-icons/md";
 import { PiWarningCircleFill } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useLazyFetchSingleUserByIdQuery } from "../Redux/api/allUserApiSlice";
-import { useRequirementByProjectNumberQuery } from "../Redux/api/orderApiSlice";
-import {
-  setClientDetails,
-  setProjectDetails,
-} from "../Redux/features/orderSlice";
 import Check from "../assets/svg/Check";
 import Divider from "../components/Divider";
 import OrderChatBox from "../components/order/OrderChatBox";
@@ -20,6 +14,14 @@ import OrderReview from "../components/order/OrderReview";
 import OrderReviewForm from "../components/order/OrderReviewForm";
 import OrderSidePanel from "../components/order/OrderSidePanel";
 import OrderTipsForm from "../components/order/OrderTipsForm";
+import { useLazyFetchSingleUserByIdQuery } from "../Redux/api/allUserApiSlice";
+import { useLazyGetAllMessagesQuery } from "../Redux/api/inboxApiSlice";
+import { useRequirementByProjectNumberQuery } from "../Redux/api/orderApiSlice";
+import { setChatData, setConversationUser } from "../Redux/features/chatSlice";
+import {
+  setClientDetails,
+  setProjectDetails,
+} from "../Redux/features/orderSlice";
 
 const Order = () => {
   const dispatch = useDispatch();
@@ -96,6 +98,24 @@ const Order = () => {
   const adminReview = projectDetails?.review?.find(
     (r) => r.senderType === "OWNER",
   );
+
+  // after clicking on the message button
+  const [triggerGetAllMessages, { data: getAllMessages }] =
+    useLazyGetAllMessagesQuery();
+
+  useEffect(() => {
+    if (getAllMessages) {
+      dispatch(setChatData(getAllMessages));
+      navigate("/inbox");
+    }
+  }, [dispatch, getAllMessages, navigate]);
+
+  const handleMessageButton = (id) => {
+    dispatch(setConversationUser(id));
+    triggerGetAllMessages({
+      receiverId: id,
+    });
+  };
 
   return (
     projectDetails && (
@@ -184,9 +204,13 @@ const Order = () => {
                     <p className="mt-5 text-center text-lg font-semibold">
                       Your project is complete. If you need to contact the
                       buyer,{" "}
-                      <Link to={"/inbox"} className="text-primary underline">
+                      <button
+                        type="button"
+                        onClick={() => handleMessageButton(clientDetails?.id)}
+                        className="text-primary underline"
+                      >
                         Go to Inbox
-                      </Link>
+                      </button>
                     </p>
                   )}
                 </div>
