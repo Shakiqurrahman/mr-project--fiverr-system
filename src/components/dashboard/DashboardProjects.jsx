@@ -234,11 +234,13 @@ const DashboardProjects = () => {
                         {project?.completedDate ? "Date" : "Time"}
                       </p>
                       <p
-                        className={`font-bold ${color === "red" ? "text-red-500" : "text-black"}`}
+                        className={`font-bold ${color === "red" && (!project?.completedDate || !project?.cancelledDate) === "red" ? "text-red-500" : "text-black"}`}
                       >
-                        {project?.completedDate
-                          ? new Date(project?.completedDate)?.toLocaleDateString()
-                          : time || "Not Determined"}
+                        {project?.completedDate || project?.cancelledDate
+                          ? new Date(
+                              project.completedDate || project.cancelledDate,
+                            ).toLocaleDateString()
+                          : (time ?? "Not Determined")}
                       </p>
                     </div>
                     <div className="w-[30%] text-center text-sm">
