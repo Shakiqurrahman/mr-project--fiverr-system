@@ -739,7 +739,7 @@ const OrderChatBox = () => {
                     {/* Here is the message text to preview */}
                     {msg?.messageText && (
                       <div className="mt-1 w-11/12">
-                        <p className="text-sm sm:text-base">
+                        <p className="whitespace-pre-wrap text-sm sm:text-base">
                           {msg?.messageText}
                         </p>
                       </div>
