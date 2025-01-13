@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { IoMdClose } from "react-icons/io";
-import useOutsideClick from "../../hooks/useOutsideClick";
 import { useCreateQuickResMsgMutation } from "../../Redux/api/inboxApiSlice";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 const AddQuickMsgModal = ({ handleClose }) => {
   const [createQuickResMsg, { isLoading, error }] =
@@ -79,7 +79,7 @@ const AddQuickMsgModal = ({ handleClose }) => {
           type="submit"
           className="mt-3 block w-full rounded-md bg-primary px-3 py-2 font-medium text-white outline-none"
         >
-          Submit
+          Save
         </button>
       </form>
     </div>

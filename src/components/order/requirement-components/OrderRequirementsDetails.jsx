@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BiDownload } from "react-icons/bi";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import formatFileSize from "../../../libs/formatFileSize";
 
 const OrderRequirementsDetails = () => {
@@ -90,12 +89,12 @@ const OrderRequirementsDetails = () => {
                 {faq?.attachments?.length > 0 && (
                   <div>
                     {faq?.attachments?.length > 3 && (
-                      <Link
+                      <button
                         onClick={() => handleDownloadAll(faq?.attachments)}
                         className="mt-2 font-medium text-primary"
                       >
                         Download All
-                      </Link>
+                      </button>
                     )}
                     <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
                       {faq?.attachments?.map((att, index) => (

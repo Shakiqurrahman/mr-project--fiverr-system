@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FaQuoteLeft, FaQuoteRight } from "react-icons/fa6";
 import { IoIosStar } from "react-icons/io";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
@@ -70,7 +71,28 @@ const AllReviews = ({ user, allReviews }) => {
                 </Link>
               </div>
               <div className="flex items-start justify-between gap-3">
-                <p className="mb-2 text-gray-600">{review?.message}</p>
+                <div>
+                  <p className="mb-2 text-gray-600">
+                    <span>
+                      <FaQuoteLeft className="mb-3 mr-1 inline text-xs text-red-500" />
+                    </span>
+                    {review?.message}
+                    <span>
+                      <FaQuoteRight className="mb-3 ml-1 inline text-xs text-red-500" />
+                    </span>
+                  </p>
+                  <div className="flex items-center gap-8">
+                    <span className="flex items-center gap-2">
+                      {review?.rating}
+                      {[...Array(review?.rating)].map((_, i) => (
+                        <IoIosStar className="text-primary" key={i} />
+                      ))}
+                    </span>
+                    <p className="text-xs text-gray-500">
+                      {timeAgoTracker(review?.createdAt)}
+                    </p>
+                  </div>
+                </div>
                 {review?.isThumbnail && (
                   <img
                     src={review?.thumbnail?.replaceAll(
@@ -82,17 +104,6 @@ const AllReviews = ({ user, allReviews }) => {
                     onClick={(e) => handlePreviewImage(e, review?.thumbnail)}
                   />
                 )}
-              </div>
-              <div className="flex items-center gap-8">
-                <span className="flex items-center gap-2">
-                  {review?.rating}
-                  {[...Array(review?.rating)].map((_, i) => (
-                    <IoIosStar className="text-primary" key={i} />
-                  ))}
-                </span>
-                <p className="text-xs text-gray-500">
-                  {timeAgoTracker(review?.createdAt)}
-                </p>
               </div>
             </div>
           ))

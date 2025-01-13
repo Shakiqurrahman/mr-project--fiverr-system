@@ -73,13 +73,13 @@ const ImagesSlider = ({ files, handleClose }) => {
       />
       <div className="absolute left-0 top-1/2 flex w-full items-center justify-between px-5">
         <button
-          className="flex size-8 shrink-0 items-center justify-center rounded-full bg-gray-200 text-2xl text-black sm:size-10"
+          className={`flex size-8 shrink-0 items-center justify-center rounded-full ${selectedPosition === 0 ? "bg-gray-200/20" : "bg-gray-200"} text-2xl text-black sm:size-10`}
           onClick={handlePrev}
         >
           <IoIosArrowBack />
         </button>
         <button
-          className="flex size-8 shrink-0 items-center justify-center rounded-full bg-gray-200 text-2xl text-black sm:size-10"
+          className={`flex size-8 shrink-0 items-center justify-center rounded-full ${selectedPosition === imageFiles?.length - 1 ? "bg-gray-200/20" : "bg-gray-200"} text-2xl text-black sm:size-10`}
           onClick={handleNext}
         >
           <IoIosArrowForward />
