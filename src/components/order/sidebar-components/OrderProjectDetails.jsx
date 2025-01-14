@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { getStatusText } from "../../customer-profile/StatusText";
 
 const OrderProjectDetails = () => {
@@ -75,7 +76,13 @@ const OrderProjectDetails = () => {
       </div>
       <ul>
         <li className="my-2 flex items-center justify-between gap-3 text-base">
-          Project by <b className="text-base">{clientDetails?.userName}</b>
+          Project by{" "}
+          <Link
+            to={`/${clientDetails?.userName}`}
+            className="text-base font-bold"
+          >
+            {clientDetails?.userName}
+          </Link>
         </li>
         <li className="my-2 flex items-center justify-between gap-3 text-base">
           Quantity <b className="text-base">{projectDetails?.totalQuantity}</b>
