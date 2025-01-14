@@ -91,12 +91,12 @@ const NotificationPopper = ({
       <div className="relative mx-auto flex size-10 items-center justify-center rounded-full border border-gray-300 bg-[#ffefef]/30 sm:size-14">
         {notification?.avatar ? (
           <img
-            className="h-full w-full rounded-full object-cover"
+            className="h-full w-full rounded-full object-cover select-none"
             src={notification?.avatar}
             alt="Sender Logo"
           />
         ) : (
-          <div className="text-3xl font-bold text-[#7c7c7c]/50 sm:text-4xl">
+          <div className="text-3xl font-bold text-[#7c7c7c]/50 sm:text-4xl select-none">
             {letterLogo}
           </div>
         )}

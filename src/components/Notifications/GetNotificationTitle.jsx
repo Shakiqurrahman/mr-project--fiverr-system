@@ -251,7 +251,14 @@ const GetNotificationTitle = ({
         </p>
       </div>
     ),
-
+    Tips: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+          <span className="font-bold">{userName} </span>
+          {`left you a tip.`}
+        </p>
+      </div>
+    ),
   };
 
   return notificationTemplates[type] || "";

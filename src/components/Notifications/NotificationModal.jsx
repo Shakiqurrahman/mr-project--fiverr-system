@@ -20,7 +20,7 @@ const NotificationModal = ({ close }) => {
   const navigate = useNavigate();
   const notificalModal = useRef(null);
 
-  const { data: notificationData } = useGetNotificationQuery();
+  const { data: notificationData, isLoading } = useGetNotificationQuery();
   const { onlineUsers, token, user } = useSelector((state) => state.user);
 
   const socket = connectSocket(`${configApi.socket}`, token);
@@ -49,16 +49,6 @@ const NotificationModal = ({ close }) => {
       await makeSeenNotifications(id).unwrap();
     } catch (error) {}
   };
-
-  // useEffect(() => {
-  //   const updateNotifications = async () => {
-  //     try {
-  //       await makeSeenNotifications().unwrap();
-  //     } catch (error) {}
-  //   };
-
-  //   updateNotifications();
-  // }, [makeSeenNotifications]);
   return (
     <div
       className="static w-full max-w-[400px] overflow-hidden rounded-md bg-white shadow-lg sm:absolute sm:top-10 md:right-0 md:w-[450px]"
@@ -79,8 +69,10 @@ const NotificationModal = ({ close }) => {
 
         {/* List of unread notifications */}
         <div className="max-h-[400px] overflow-y-auto">
-          {notificationData
-            ?.map((notification) => {
+          {isLoading ? (
+            <p className="p-4 text-center text-black">Loading...</p>
+          ) : (
+            notificationData?.map((notification) => {
               const letterLogo = notification?.payload?.senderUserName
                 ?.trim()
                 ?.charAt(0)
@@ -123,7 +115,7 @@ const NotificationModal = ({ close }) => {
                 <div
                   key={notification?.id}
                   onClick={() => handleClick(notification?.id)}
-                  className={`flex cursor-pointer items-center justify-between gap-4 border-b ${isSeen ? "bg-white" : "bg-lightcream"} p-4 last:border-b-0`}
+                  className={`flex cursor-pointer items-center justify-between gap-4 border-b ${isSeen ? "bg-white" : "bg-lightcream/50"} p-4 last:border-b-0`}
                 >
                   <div className="flex items-center gap-2">
                     {/* avatar  */}
@@ -135,7 +127,7 @@ const NotificationModal = ({ close }) => {
                           alt="Sender Logo"
                         />
                       ) : (
-                        <div className="text-3xl font-bold text-[#7c7c7c]/50 sm:text-4xl">
+                        <div className="text-3xl font-bold text-[#7c7c7c]/50 sm:text-4xl select-none">
                           {letterLogo}
                         </div>
                       )}
@@ -155,7 +147,7 @@ const NotificationModal = ({ close }) => {
                     </div>
                   </div>
                   {notification?.payload?.thumbnailUrl && (
-                    <div className="w-24 flex-grow-0">
+                    <div className="w-16 flex-shrink-0">
                       <img
                         className="w-full rounded-lg object-cover"
                         src={notification?.payload?.thumbnailUrl}
@@ -165,7 +157,8 @@ const NotificationModal = ({ close }) => {
                   )}
                 </div>
               );
-            })}
+            })
+          )}
           {notificationData?.length === 0 && (
             <p className="py-3 text-center text-black">
               No notifications found.
