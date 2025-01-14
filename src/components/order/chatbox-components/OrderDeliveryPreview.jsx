@@ -288,7 +288,7 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
                     data?.isAccepted && (
                       <BiDownload className="shrink-0 text-lg text-primary" />
                     )}
-                  <p className="w-full break-words">
+                  <p className="w-full break-all text-left">
                     {data?.thumbnailImage?.name}{" "}
                     <span className="text-black/50">
                       ({formatFileSize(parseInt(data?.thumbnailImage?.size))})
@@ -315,7 +315,7 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
                     data?.isAccepted && (
                       <BiDownload className="shrink-0 text-lg text-primary" />
                     )}
-                  <p className="w-full break-words">
+                  <p className="w-full break-all text-left">
                     {att?.name}{" "}
                     <span className="text-black/50">
                       ({formatFileSize(att?.size)})

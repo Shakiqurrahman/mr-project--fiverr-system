@@ -83,7 +83,9 @@ const OrderDetails = () => {
       <h1 className="mb-5 text-xl font-bold text-primary">PROJECT DETAILS</h1>
       <p className="mb-2">
         Project started by{" "}
-        <span className="font-semibold">{clientDetails?.userName}</span>
+        <Link to={`/${clientDetails?.userName}`} className="font-semibold">
+          {clientDetails?.userName}
+        </Link>
       </p>
       <p className="mb-2">
         The project has started {startTime} - The project will be completed{" "}

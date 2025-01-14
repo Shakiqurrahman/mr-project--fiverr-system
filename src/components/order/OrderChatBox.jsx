@@ -613,12 +613,46 @@ const OrderChatBox = () => {
     });
   };
 
+  // Load More Messages Work
+
+  const [page, setPage] = useState(1);
+
+  const handleLoadMore = (e) => {
+    e.preventDefault();
+    setPage((prev) => prev + 1);
+  };
+
+  const showMessages =
+    messages?.filter((m) => m?.projectNumber === projectDetails?.projectNumber)
+      ?.length > 15
+      ? messages
+          ?.filter((m) => m?.projectNumber === projectDetails?.projectNumber)
+          ?.slice(-(page * 15))
+      : messages?.filter(
+          (m) => m?.projectNumber === projectDetails?.projectNumber,
+        );
+
   return (
     <>
-      <div className="flex max-h-[2000px] min-h-[800px] w-full flex-col rounded-lg shadow-btn-shadow">
+      <div className="flex min-h-[800px] w-full flex-col rounded-lg shadow-btn-shadow">
         {/* Conversation Field */}
         <div className={`h-auto overflow-y-auto p-2 sm:p-5`}>
           {/* All message Container */}
+          {messages?.filter(
+            (m) => m?.projectNumber === projectDetails?.projectNumber,
+          )?.length > 15 &&
+            messages?.filter(
+              (m) => m?.projectNumber === projectDetails?.projectNumber,
+            )?.length !== showMessages?.length && (
+              <div className="relative text-center before:absolute before:left-1/2 before:top-1/2 before:-z-[1] before:block before:h-px before:w-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:bg-gray-300">
+                <button
+                  onClick={handleLoadMore}
+                  className="z-2 relative rounded-lg bg-lightskyblue px-3 py-2 text-sm font-medium after:absolute after:left-0 after:top-0 after:-z-[1] after:block after:h-full after:w-[110%] after:-translate-x-[5%] after:bg-white sm:px-5 sm:text-base"
+                >
+                  Load More
+                </button>
+              </div>
+            )}
           {messages?.filter(
             (m) => m?.projectNumber === projectDetails?.projectNumber,
           )?.length === 0 &&
@@ -635,7 +669,7 @@ const OrderChatBox = () => {
                 </p>
               </div>
             )}
-          {messages
+          {showMessages
             ?.filter((m) => m?.projectNumber === projectDetails?.projectNumber)
             ?.map((msg, index) => (
               <div key={index}>
