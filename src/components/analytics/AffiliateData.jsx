@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useLazyGetAllAffiliatesQuery } from "../../Redux/api/affiliateApiSlice";
 import DownArrow from "../../assets/svg/DownArrow";
 import UpArrow from "../../assets/svg/UpArrow";
-import { useLazyGetAllAffiliatesQuery } from "../../Redux/api/affiliateApiSlice";
 
 const AffiliateData = () => {
   const [expend, setExpend] = useState(false);
@@ -142,6 +142,9 @@ const AffiliateData = () => {
           </table>
         </div>
       </div>
+      {slicedAffiliateData?.length === 0 && (
+        <p className="bg-white py-4 text-center">No data found!</p>
+      )}
       {affiliateData.length > 10 && (
         <button
           className="mx-auto mt-5 flex items-center gap-1 rounded-[30px] bg-primary px-3 py-1 text-white"

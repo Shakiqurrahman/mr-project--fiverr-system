@@ -119,7 +119,9 @@ function ProjectCard({
                 </div>
               )}
               <div>
-                <Link className="text-sm font-semibold">{clientName}</Link>
+                <Link to={`/${clientName}`} className="text-sm font-semibold">
+                  {clientName}
+                </Link>
                 <span className="block text-right text-xs sm:hidden">
                   {timeStamp}
                 </span>

@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { FaQuoteLeft, FaQuoteRight } from "react-icons/fa";
 import { IoSearch, IoStar } from "react-icons/io5";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
@@ -416,9 +417,12 @@ const AllReviews = () => {
                           {review?.sender?.userName?.charAt(0)?.toUpperCase()}
                         </div>
                       )}
-                      <h1 className="text-base font-semibold md:text-xl">
+                      <Link
+                        to={`/${review?.sender?.userName}`}
+                        className="text-base font-semibold md:text-xl"
+                      >
                         {review?.sender?.userName}
-                      </h1>
+                      </Link>
                       <div className="ml-0 flex justify-center gap-2 text-lg text-[#C8E3F6] md:text-2xl lg:ml-3">
                         {Array.from(
                           { length: review?.rating },
