@@ -54,7 +54,7 @@ function AllCompletedProjects() {
                 )}
                 watermark={project?.projectThumbnail}
                 clientLogo={project?.user?.image}
-                title={project?.projectName}
+                title={project?.completedProjectName}
                 clientName={project?.user?.userName}
                 timeStamp={
                   timeAgoTracker(project?.completedDate) || "5 days ago"
