@@ -1,11 +1,13 @@
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import NotificationPopper from "../components/Notifications/NotificationPopper";
+import { setNotificationBubble } from "../Redux/features/utilSlice";
 import { configApi } from "./configApi";
 import { connectSocket } from "./socketService";
 
 const NotificationWrapper = ({ children }) => {
+  const dispatch = useDispatch();
   const path = window.location.pathname;
   const { conversationUser } = useSelector((state) => state.chat);
   const token = Cookies.get("authToken");
@@ -22,7 +24,7 @@ const NotificationWrapper = ({ children }) => {
   // Listen to new notifications from the server
   useEffect(() => {
     socket?.on("get:notification", (notification) => {
-      // console.log("notification", notification);
+      console.log("🚀 notification:", notification)
       if (
         conversationUser &&
         notification?.senderId === conversationUser &&
@@ -38,6 +40,7 @@ const NotificationWrapper = ({ children }) => {
       ) {
         setNotification(null);
         setShowNotification(false);
+        dispatch(setNotificationBubble(1)); // for showing the bubble if any notification arrise
       }
       //   else if (
       //     conversationUser &&
@@ -50,6 +53,7 @@ const NotificationWrapper = ({ children }) => {
       else {
         setNotification(notification);
         setShowNotification(true);
+        dispatch(setNotificationBubble(1)); // for showing the bubble if any notification arrise
       }
     });
   }, [socket, conversationUser, notification]);
