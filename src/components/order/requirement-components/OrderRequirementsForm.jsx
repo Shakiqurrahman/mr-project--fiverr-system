@@ -213,12 +213,12 @@ const OrderRequirementsForm = () => {
     }
   };
 
-  const handleChangeSelectedImage = (event, id) => {
+  const handleChangeSelectedImage = (event, id, index) => {
     const files = Array.from(event.target.files);
     getImagesWithDimensions(files, id);
     setUploadFilesLength([
       ...uploadFilesLength,
-      fileInputsRef.current[id].files.length,
+      { [index]: fileInputsRef.current[id].files.length },
     ]);
   };
 
@@ -339,7 +339,7 @@ const OrderRequirementsForm = () => {
                           hidden
                           ref={(el) => (fileInputsRef.current[item.id] = el)}
                           onChange={(e) =>
-                            handleChangeSelectedImage(e, item.id)
+                            handleChangeSelectedImage(e, item.id, i)
                           }
                           multiple
                         />
@@ -351,10 +351,11 @@ const OrderRequirementsForm = () => {
                   </div>
                   {item.attachments.length > 0 && (
                     <>
-                      {uploadFilesLength[i] !== item?.attachments?.length && (
+                      {uploadFilesLength?.find((f) => f[i])[i] !==
+                        item?.attachments?.length && (
                         <p className="mt-4 text-xs">
                           Uploaded {item?.attachments?.length}/
-                          {uploadFilesLength[i]}
+                          {uploadFilesLength?.find((f) => f[i])[i]}
                         </p>
                       )}
                       <div className="preview-scroll-overflow-x mt-4 flex gap-4">
