@@ -22,6 +22,7 @@ import { useGetNotificationCountQuery } from "../../Redux/api/apiSlice";
 import { useInboxBubbleCountingQuery } from "../../Redux/api/inboxApiSlice";
 import { useLazyGetDesignsBySearchQuery } from "../../Redux/api/uploadDesignApiSlice";
 import {
+  setNotificationBubble,
   setOpenNotificationDrawer,
   setOpenNotifications,
   setSearchedText,
@@ -34,9 +35,8 @@ import SearchBox from "./SearchBox";
 function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { openNotifications, openNotificationDrawer } = useSelector(
-    (state) => state.utils,
-  );
+  const { openNotifications, openNotificationDrawer, notificationBubble } =
+    useSelector((state) => state.utils);
   const [getDesignsBySearch, { data: searchResults }] =
     useLazyGetDesignsBySearchQuery();
 
@@ -67,11 +67,13 @@ function Header() {
   const handleNotificationClick = () => {
     setActiveMenu(false);
     dispatch(setOpenNotifications(true));
+    dispatch(setNotificationBubble(0));// for showing the bubble off
   };
 
   const handleNotificationDrawerClick = () => {
     setActiveMenu(false);
     dispatch(setOpenNotificationDrawer(true));
+    dispatch(setNotificationBubble(0)); // for showing the bubble of
   };
   useSyncCart();
 
@@ -195,8 +197,13 @@ function Header() {
                 <li className="hidden md:block">
                   <Badge
                     badgeContent={
-                      notificationBubbleCount ? notificationBubbleCount : 0
+                      notificationBubbleCount > 0
+                        ? notificationBubbleCount
+                        : notificationBubble
+                          ? notificationBubble
+                          : 0
                     }
+                    variant="dot"
                     sx={{
                       "& .MuiBadge-badge": {
                         backgroundColor: "#1b8cdc",
@@ -219,8 +226,13 @@ function Header() {
                 <li className="block md:hidden">
                   <Badge
                     badgeContent={
-                      notificationBubbleCount ? notificationBubbleCount : 0
+                      notificationBubbleCount > 0
+                        ? notificationBubbleCount
+                        : notificationBubble
+                          ? notificationBubble
+                          : 0
                     }
+                    variant="dot"
                     sx={{
                       "& .MuiBadge-badge": {
                         backgroundColor: "#1b8cdc",

@@ -4,6 +4,7 @@ import { MdOutlineNotifications } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
+  useGetNotificationCountQuery,
   useGetNotificationQuery,
   useNotificationMakeSeenMutation,
 } from "../../Redux/api/apiSlice";
@@ -20,7 +21,7 @@ const NotificationModal = ({ close }) => {
   const notificalModal = useRef(null);
 
   const { data: notificationData } = useGetNotificationQuery();
-  const { onlineUsers, token } = useSelector((state) => state.user);
+  const { onlineUsers, token, user } = useSelector((state) => state.user);
 
   const socket = connectSocket(`${configApi.socket}`, token);
   // all avaliable users
@@ -37,27 +38,36 @@ const NotificationModal = ({ close }) => {
 
   useOutsideClick(notificalModal, () => dispatch(close(false)));
 
+  const { data: notificationBubbleCount } = useGetNotificationCountQuery(null, {
+    skip: !user,
+  });
   // update the notification seen status
   const [makeSeenNotifications] = useNotificationMakeSeenMutation();
 
-  useEffect(() => {
-    const updateNotifications = async () => {
-      try {
-        await makeSeenNotifications().unwrap();
-      } catch (error) {}
-    };
+  const updateNotificationById = async (id) => {
+    try {
+      await makeSeenNotifications(id).unwrap();
+    } catch (error) {}
+  };
 
-    updateNotifications();
-  }, [makeSeenNotifications]);
+  // useEffect(() => {
+  //   const updateNotifications = async () => {
+  //     try {
+  //       await makeSeenNotifications().unwrap();
+  //     } catch (error) {}
+  //   };
+
+  //   updateNotifications();
+  // }, [makeSeenNotifications]);
   return (
     <div
-      className="static w-full max-w-[400px] rounded-md bg-white shadow-lg sm:absolute sm:top-10 md:right-0 md:w-[450px]"
+      className="static w-full max-w-[400px] overflow-hidden rounded-md bg-white shadow-lg sm:absolute sm:top-10 md:right-0 md:w-[450px]"
       ref={notificalModal}
     >
       <div>
         <h2 className="flex items-center justify-between gap-2 border-b p-4 text-base font-semibold text-black md:justify-start">
           <MdOutlineNotifications className="text-2xl" /> Notifications (
-          {notificationData?.length ?? 0})
+          {notificationBubbleCount ?? 0})
           <button
             className="block md:hidden"
             type="button"
@@ -86,8 +96,18 @@ const NotificationModal = ({ close }) => {
                 days: notification?.payload?.days,
               });
 
+              let isSeen;
+              if (user?.role === "USER") {
+                isSeen = notification?.isClientSeen;
+              } else {
+                isSeen = notification?.isAdminSeen?.includes(user?.id);
+              }
+
               // for navigate to the destination of notification
-              const handleClick = () => {
+              const handleClick = (id) => {
+                if (!isSeen) {
+                  updateNotificationById(id); // make the notification status seen
+                }
                 if (notification?.payload?.type === "OrderMessage") {
                   navigate(`/order/${notification?.payload?.projectNumber}`);
                   dispatch(close(false));
@@ -102,8 +122,8 @@ const NotificationModal = ({ close }) => {
               return (
                 <div
                   key={notification?.id}
-                  onClick={handleClick}
-                  className="flex cursor-pointer items-center justify-between gap-4 border-b p-4 last:border-b-0"
+                  onClick={() => handleClick(notification?.id)}
+                  className={`flex cursor-pointer items-center justify-between gap-4 border-b ${isSeen ? "bg-white" : "bg-lightcream"} p-4 last:border-b-0`}
                 >
                   <div className="flex items-center gap-2">
                     {/* avatar  */}
@@ -145,8 +165,7 @@ const NotificationModal = ({ close }) => {
                   )}
                 </div>
               );
-            })
-            .reverse()}
+            })}
           {notificationData?.length === 0 && (
             <p className="py-3 text-center text-black">
               No notifications found.
