@@ -49,8 +49,8 @@ const GetNotificationTitle = ({
     Reminder: (
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
-          <span className="font-bold">Reminder: </span>
-          the delivery is due in less than 12 hours
+          <span className="">Reminder: </span>
+          the delivery is due in less than 12 hours.
           <span className="font-bold"> Deliver Now</span>
         </p>
       </div>
@@ -84,8 +84,7 @@ const GetNotificationTitle = ({
     Comment: (
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
-          <span className="font-bold">{userName}: </span>
-          {`left you ${commentQuantity} comment`}
+          {`You have ${commentQuantity} new comment${commentQuantity > 1 ? 's' :''} in your order files`}
         </p>
       </div>
     ),
@@ -162,7 +161,7 @@ const GetNotificationTitle = ({
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
           <span className="font-bold">{userName}</span>
-          {` marked his project as complete`}
+          {` marked your project as complete`}
         </p>
       </div>
     ),
@@ -195,8 +194,9 @@ const GetNotificationTitle = ({
     AdditionalOfferAccept: (
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
-          <span className="font-bold">{userName}: </span>
-          {`has accepted the offer`}
+          <span className="font-bold">{userName} </span>
+          <span className="font-bold">updated </span>
+          {`your order.`}
         </p>
       </div>
     ),
