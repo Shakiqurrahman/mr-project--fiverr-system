@@ -1,8 +1,8 @@
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import NotificationPopper from "../components/Notifications/NotificationPopper";
 import { setNotificationBubble } from "../Redux/features/utilSlice";
+import NotificationPopper from "../components/Notifications/NotificationPopper";
 import { configApi } from "./configApi";
 import { connectSocket } from "./socketService";
 
@@ -104,7 +104,7 @@ const NotificationWrapper = ({ children }) => {
     dispatch,
     path,
     projectNumber,
-    user.role,
+    user?.role,
     isAdmin,
   ]);
 
