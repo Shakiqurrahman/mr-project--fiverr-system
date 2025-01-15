@@ -268,6 +268,14 @@ const GetNotificationTitle = ({
         </p>
       </div>
     ),
+    OrderAttchFile: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+          <span className="font-bold">{userName} </span>
+          attached a file to your project
+        </p>
+      </div>
+    ),
   };
 
   return notificationTemplates[type] || "";
