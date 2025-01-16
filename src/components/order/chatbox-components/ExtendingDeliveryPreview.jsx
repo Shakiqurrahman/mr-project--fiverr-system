@@ -259,11 +259,13 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
               </button>
             </div>
           )}
-        {value?.isPending && (
-          <p className="text-center text-sm sm:text-base">
-            Extend Delivery Request Payment Pending
-          </p>
-        )}
+        {value?.isPending &&
+          projectDetails?.projectStatus !== "Completed" &&
+          projectDetails?.projectStatus !== "Canceled" && (
+            <p className="text-center text-sm sm:text-base">
+              Extend Delivery Request Payment Pending
+            </p>
+          )}
         {value?.isWithdrawn && (
           <p className="text-center text-sm sm:text-base">
             Extend Delivery Request Withdrawn
