@@ -1,18 +1,10 @@
-import {
-  differenceInDays,
-  differenceInHours,
-  differenceInMinutes,
-  differenceInMonths,
-  differenceInYears,
-  isPast,
-  parseISO,
-} from "date-fns";
 import React, { Fragment, useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import ComputerIcon from "../../assets/svg/ComputerIcon";
 import { configApi } from "../../libs/configApi";
+import { getTimeStatus } from "../../libs/getTimeStatus";
 import { connectSocket } from "../../libs/socketService";
 import {
   useAllProjectStatusQuery,
@@ -83,64 +75,6 @@ const DashboardProjects = () => {
     return onlineUsers.some((onlineUser) => onlineUser.userId === userId);
   };
 
-  // Function to get time status
-  const getTimeStatus = (deadline) => {
-    const now = new Date();
-    const eventDate = parseISO(deadline); // Convert string to date
-
-    if (isPast(eventDate)) {
-      // time is late
-      const yearsLate = differenceInYears(now, eventDate);
-      const monthsLate = differenceInMonths(now, eventDate) % 12;
-      const daysLate = differenceInDays(now, eventDate) % 30;
-      const hoursLate = differenceInHours(now, eventDate) % 24;
-      const minutesLate = differenceInMinutes(now, eventDate) % 60;
-
-      let overdueText = "";
-
-      if (yearsLate >= 1) {
-        overdueText = `${yearsLate} year${yearsLate > 1 ? "s" : ""} late`;
-      } else if (monthsLate >= 1) {
-        overdueText = `${monthsLate} month${monthsLate > 1 ? "s" : ""} late`;
-      } else if (daysLate >= 1) {
-        overdueText = `${daysLate} day${daysLate > 1 ? "s" : ""} late`;
-      } else if (hoursLate >= 1) {
-        overdueText = `${hoursLate}h ${minutesLate}min late`;
-      } else {
-        overdueText = `${minutesLate}min late`;
-      }
-
-      return {
-        time: overdueText,
-        color: "red",
-      };
-    } else {
-      // time is remaining
-      const timeRemaining = eventDate - now;
-
-      const totalHours = Math.floor(timeRemaining / (1000 * 60 * 60)); // Total hours remaining
-      const days = Math.floor(totalHours / 24); // Calculate remaining days
-      const hours = totalHours % 24; // Remaining hours
-      const minutes = Math.floor(
-        (timeRemaining % (1000 * 60 * 60)) / (1000 * 60),
-      ); // Remaining minutes
-
-      let displayTime;
-      if (days > 0) {
-        displayTime = `${days}d - ${hours}h`;
-      } else {
-        displayTime = `${hours}h - ${minutes} min`;
-      }
-
-      const color = totalHours < 12 ? "red" : "black"; // Red if less than 12 hours
-
-      return {
-        time: displayTime,
-        color: color,
-      };
-    }
-  };
-
   return (
     <>
       {searchFor && searchText ? (
@@ -182,7 +116,7 @@ const DashboardProjects = () => {
             if (project?.deliveryDate) {
               timeStatus = getTimeStatus(project?.deliveryDate || "");
             }
-            const { time, color } = timeStatus || "";
+            const { time, color } = timeStatus || {};
             const letterLogo =
               (!project?.user?.image &&
                 project?.user?.userName?.trim()?.charAt(0)?.toUpperCase()) ||
@@ -234,7 +168,7 @@ const DashboardProjects = () => {
                         {project?.completedDate ? "Date" : "Time"}
                       </p>
                       <p
-                        className={`font-bold ${color === "red" && (!project?.completedDate || !project?.cancelledDate) === "red" ? "text-red-500" : "text-black"}`}
+                        className={`font-bold ${color === "red" && !project?.completedDate && !project?.cancelledDate ? "text-red-500" : "text-black"}`}
                       >
                         {project?.completedDate || project?.cancelledDate
                           ? new Date(

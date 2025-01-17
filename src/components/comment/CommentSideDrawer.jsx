@@ -276,7 +276,7 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
                               <p className="ms-auto size-2 rounded-full bg-revision"></p>
                             )}
                           </div>
-                          <p className="text-sm font-medium text-gray-500">
+                          <p className="whitespace-pre-wrap text-sm font-medium text-gray-500">
                             {comment?.commentText}
                           </p>
                           {projectDetails?.projectStatus !== "Completed" &&
@@ -347,7 +347,7 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
                                     </p>
                                   )}
                                 </div>
-                                <p className="text-sm font-medium text-gray-500">
+                                <p className="whitespace-pre-wrap text-sm font-medium text-gray-500">
                                   {reply?.replyText}
                                 </p>
                                 {projectDetails?.projectStatus !==
