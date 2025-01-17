@@ -1,6 +1,7 @@
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useGetNotificationCountQuery } from "../Redux/api/apiSlice";
 import { setNotificationBubble } from "../Redux/features/utilSlice";
 import NotificationPopper from "../components/Notifications/NotificationPopper";
 import { configApi } from "./configApi";
@@ -24,6 +25,11 @@ const NotificationWrapper = ({ children }) => {
   if (path.startsWith("/order/")) {
     projectNumber = path.split("/order/")[1];
   }
+
+  const { data: notificationBubbleCount } = useGetNotificationCountQuery(null, {
+    skip: !user,
+    pollingInterval: 30000, //30 sec
+  });
 
   useEffect(() => {
     const handlePathChange = () => setPath(window.location.pathname);
@@ -73,7 +79,11 @@ const NotificationWrapper = ({ children }) => {
         } else {
           setNotification(notification);
           setShowNotification(true);
-          dispatch(setNotificationBubble(1)); // for showing the bubble if any notification arrise
+          dispatch(
+            setNotificationBubble(
+              notificationBubbleCount ? notificationBubbleCount : 1,
+            ),
+          ); // for showing the bubble if any notification arrise
         }
       } else if (isAdmin) {
         if (

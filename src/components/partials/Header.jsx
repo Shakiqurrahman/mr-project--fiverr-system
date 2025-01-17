@@ -203,7 +203,7 @@ function Header() {
                           ? notificationBubble
                           : 0
                     }
-                    variant="dot"
+                    // variant="dot"
                     sx={{
                       "& .MuiBadge-badge": {
                         backgroundColor: "#1b8cdc",
@@ -232,7 +232,7 @@ function Header() {
                           ? notificationBubble
                           : 0
                     }
-                    variant="dot"
+                    // variant="dot"
                     sx={{
                       "& .MuiBadge-badge": {
                         backgroundColor: "#1b8cdc",
