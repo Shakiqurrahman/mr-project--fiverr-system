@@ -59,6 +59,7 @@ const ExtendDeliveryModal = ({ handleClose }) => {
               isAccepted: false,
               isRejected: false,
               isWithdrawn: false,
+              isPending: user?.role === "USER" ? true : false,
               isSubmittedByAdmin: isAdmin ? true : false,
             }
           : {
@@ -68,6 +69,7 @@ const ExtendDeliveryModal = ({ handleClose }) => {
               isAccepted: false,
               isRejected: false,
               isWithdrawn: false,
+              isPending: user?.role === "USER" ? true : false,
               isSubmittedByAdmin: isAdmin ? true : false,
             };
 

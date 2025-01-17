@@ -167,6 +167,7 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
 
         {!value?.isAccepted &&
           !value?.isRejected &&
+          !value?.isPending &&
           !value?.isWithdrawn &&
           value?.isSubmittedByAdmin &&
           user?.role === "USER" &&
@@ -196,6 +197,7 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
           )}
         {!value?.isAccepted &&
           !value?.isRejected &&
+          !value?.isPending &&
           !value?.isWithdrawn &&
           !value?.isSubmittedByAdmin &&
           isAdmin &&
@@ -221,6 +223,7 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
           )}
         {!value?.isAccepted &&
           !value?.isRejected &&
+          !value?.isPending &&
           !value?.isWithdrawn &&
           !value?.isSubmittedByAdmin &&
           user?.role === "USER" &&
@@ -240,6 +243,7 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
         {isAdmin &&
           !value?.isAccepted &&
           !value?.isRejected &&
+          !value?.isPending &&
           !value?.isWithdrawn &&
           value?.isSubmittedByAdmin &&
           projectDetails?.projectStatus !== "Completed" &&
@@ -254,6 +258,13 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
                 Withdraw Request
               </button>
             </div>
+          )}
+        {value?.isPending &&
+          projectDetails?.projectStatus !== "Completed" &&
+          projectDetails?.projectStatus !== "Canceled" && (
+            <p className="text-center text-sm sm:text-base">
+              Extend Delivery Request Payment Pending
+            </p>
           )}
         {value?.isWithdrawn && (
           <p className="text-center text-sm sm:text-base">

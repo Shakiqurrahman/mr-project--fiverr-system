@@ -237,6 +237,7 @@ function Affiliate() {
 
           {/* <div className="mt-10 flex justify-center">
             <Pagination
+            boundaryCount={0}
               count={10}
               renderItem={(item) => (
                 <PaginationItem

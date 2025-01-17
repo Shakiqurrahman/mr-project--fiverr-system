@@ -130,11 +130,18 @@ const CancellingProjectPreview = ({ messageObj, value }) => {
         </p>
       )}
 
-      {messageObj?.isCancelled && (
+      {value?.extendType !== "requestByMe" && messageObj?.isCancelled && (
         <p className="mb-5 text-center text-sm sm:text-base">
           Cancel Request Accepted
         </p>
       )}
+
+      {value?.extendType === "requestByMe" && messageObj?.isCancelled && (
+        <p className="mb-5 text-center text-sm sm:text-base">
+          This Project has been Canceled
+        </p>
+      )}
+
       {value?.isRejected && (
         <p className="mb-5 text-center text-sm sm:text-base">
           Cancel Request Rejected
