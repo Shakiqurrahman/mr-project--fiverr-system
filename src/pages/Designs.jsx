@@ -1,7 +1,7 @@
 import ProjectCard from "../components/categories/ProjectCard";
 
 import { Pagination, PaginationItem, Stack } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import {
@@ -60,6 +60,9 @@ function Designs() {
     },
   );
 
+  const prevDesignKeyword = useRef(null);
+  const prevIndustryKeyword = useRef(null);
+
   const selectedOption = useCallback(
     (data) => {
       if (data) {
@@ -78,6 +81,35 @@ function Designs() {
 
   useEffect(() => {
     if (!designsData) return; // Return early if no designs data is available
+
+    // if (
+    //   selectedValue &&
+    //   industrySelectedValue &&
+    //   selectedValue !== prevDesignKeyword?.current
+    // ) {
+    //   const updatedIndustryKeywords = industryKeyWordsData?.map((key) => ({
+    //     name: key,
+    //     quantity: filterDesignData?.filter((design) =>
+    //       design?.industrys?.includes(key),
+    //     ).length,
+    //   }));
+    //   setIndustryKeywords(updatedIndustryKeywords);
+    // }
+
+    // if (
+    //   selectedValue &&
+    //   industrySelectedValue &&
+    //   industrySelectedValue !== prevIndustryKeyword?.current
+    // ) {
+    //   const updatedDesignKeywords = designKeyWordsData?.map((key) => ({
+    //     name: key,
+    //     quantity: filterIndustryData?.filter((design) =>
+    //       design?.designs?.includes(key),
+    //     ).length,
+    //   }));
+    //   setDesignKeywords(updatedDesignKeywords);
+    // }
+
     // searching results
     if (designsData && searchedText) {
       const searchDesigns = designsData.filter((d) =>
@@ -112,6 +144,30 @@ function Designs() {
         setDesigns([]);
         selectedOption([]);
         setCurrentPage(1);
+      }
+      if (
+        prevDesignKeyword?.current &&
+        selectedValue === prevDesignKeyword?.current
+      ) {
+        const updatedIndustryKeywords = industryKeyWordsData?.map((key) => ({
+          name: key,
+          quantity: filterDesignData?.filter((design) =>
+            design?.industrys?.includes(key),
+          ).length,
+        }));
+        setIndustryKeywords(updatedIndustryKeywords);
+      }
+      if (
+        prevIndustryKeyword?.current &&
+        industrySelectedValue === prevIndustryKeyword?.current
+      ) {
+        const updatedDesignKeywords = designKeyWordsData?.map((key) => ({
+          name: key,
+          quantity: filterIndustryData?.filter((design) =>
+            design?.designs?.includes(key),
+          ).length,
+        }));
+        setDesignKeywords(updatedDesignKeywords);
       }
     }
     // Check if only design keyword is selected
@@ -187,15 +243,19 @@ function Designs() {
     selectedOption,
     searchedText,
     searchResult,
+    prevDesignKeyword,
+    prevIndustryKeyword,
   ]);
 
   const handleDesignClick = useCallback((value) => {
     dispatch(setSearchedText(""));
+    prevDesignKeyword.current = value;
     setSelectedValue((prev) => (prev === value ? null : value));
   }, []);
 
   const handleIndustryClick = useCallback((value) => {
     dispatch(setSearchedText(""));
+    prevIndustryKeyword.current = value;
     setIndustrySelectedValue((prev) => (prev === value ? null : value));
   }, []);
 

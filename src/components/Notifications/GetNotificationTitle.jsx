@@ -84,7 +84,7 @@ const GetNotificationTitle = ({
     Comment: (
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
-          {`You have ${commentQuantity} new comment${commentQuantity > 1 ? "s" : ""} in your order files`}
+          {`You have ${commentQuantity} new comment${commentQuantity > 1 ? "s" : ""} in your project files`}
         </p>
       </div>
     ),
@@ -205,7 +205,7 @@ const GetNotificationTitle = ({
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
           <span className="font-bold">{userName} </span>
           <span className="font-bold">updated </span>
-          {`your order.`}
+          {`your project.`}
         </p>
       </div>
     ),

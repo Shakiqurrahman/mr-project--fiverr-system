@@ -3,7 +3,7 @@ import ProjectCard from "../components/categories/ProjectCard";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import Stack from "@mui/material/Stack";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
   useFetchAllDesignKeywordsQuery,
@@ -76,6 +76,9 @@ function Industries() {
     [sortedBy],
   );
 
+  const prevDesignKeyword = useRef(null);
+  const prevIndustryKeyword = useRef(null);
+
   useEffect(() => {
     if (!designsData) return; // Return early if no designs data is available
 
@@ -90,6 +93,30 @@ function Industries() {
         setDesigns([]);
         selectedOption([]);
         setCurrentPage(1);
+      }
+      if (
+        prevDesignKeyword?.current &&
+        selectedValue === prevDesignKeyword?.current
+      ) {
+        const updatedIndustryKeywords = industryKeyWordsData?.map((key) => ({
+          name: key,
+          quantity: filterDesignData?.filter((design) =>
+            design?.industrys?.includes(key),
+          ).length,
+        }));
+        setIndustryKeywords(updatedIndustryKeywords);
+      }
+      if (
+        prevIndustryKeyword?.current &&
+        industrySelectedValue === prevIndustryKeyword?.current
+      ) {
+        const updatedDesignKeywords = designKeyWordsData?.map((key) => ({
+          name: key,
+          quantity: filterIndustryData?.filter((design) =>
+            design?.designs?.includes(key),
+          ).length,
+        }));
+        setDesignKeywords(updatedDesignKeywords);
       }
     }
     // Check if only design keyword is selected
@@ -163,13 +190,17 @@ function Industries() {
     designKeyWordsData,
     industryKeyWordsData,
     selectedOption,
+    prevDesignKeyword,
+    prevIndustryKeyword,
   ]);
 
   const handleDesignClick = useCallback((value) => {
+    prevDesignKeyword.current = value;
     setSelectedValue((prev) => (prev === value ? null : value));
   }, []);
 
   const handleIndustryClick = useCallback((value) => {
+    prevIndustryKeyword.current = value;
     setIndustrySelectedValue((prev) => (prev === value ? null : value));
   }, []);
 
@@ -270,7 +301,6 @@ function Industries() {
           <div className="mt-10 flex justify-center">
             <Stack spacing={2}>
               <Pagination
-                boundaryCount={0}
                 count={totalPages}
                 page={currentPage}
                 onChange={(_, page) => {

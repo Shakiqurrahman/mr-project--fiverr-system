@@ -7,7 +7,7 @@ const OrderReview = ({ reviewDetails }) => {
   return (
     <div className="mt-5 border border-gray-200 shadow-btn-shadow">
       <h1 className="bg-lightskyblue p-4 text-lg font-semibold sm:text-xl">
-        {isAdmin ? "Marfujurrahm535" : reviewDetails?.sender?.fullName}&apos;s
+        {isAdmin ? reviewDetails?.sender?.userName : "Marfujurrahm535"}&apos;s
         Review
       </h1>
       <div className="p-4">

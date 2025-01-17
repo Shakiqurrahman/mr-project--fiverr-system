@@ -67,7 +67,6 @@ function AllCompletedProjects() {
           <div className="mt-10 flex justify-center">
             <Stack spacing={2}>
               <Pagination
-                boundaryCount={0}
                 count={totalPages}
                 page={currentPage}
                 onChange={(_, page) => {
@@ -88,7 +87,6 @@ function AllCompletedProjects() {
         {/* <div className="mt-10 flex justify-center">
           <Stack spacing={2}>
             <Pagination
-            boundaryCount={0}
               count={10}
               renderItem={(item) => (
                 <PaginationItem
