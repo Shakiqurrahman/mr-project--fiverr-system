@@ -148,7 +148,6 @@ function AllDesign() {
           <div className="mt-10 flex justify-center">
             <Stack spacing={2}>
               <Pagination
-                boundaryCount={0}
                 count={totalPages}
                 page={currentPage}
                 onChange={(_, page) => {

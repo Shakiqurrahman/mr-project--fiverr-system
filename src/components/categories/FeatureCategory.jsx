@@ -119,7 +119,7 @@ function FeatureCategory() {
               <div>
                 {tempProducts.map((category, idx) => {
                   if (!expand) {
-                    if (idx <= 4) {
+                    if (idx <= 3) {
                       return (
                         <div
                           key={idx}
@@ -158,7 +158,7 @@ function FeatureCategory() {
                 })}
               </div>
 
-              {categories?.length > 5 &&
+              {categories?.length > 4 &&
                 (!expand ? (
                   <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-white pb-8 pt-40">
                     <button

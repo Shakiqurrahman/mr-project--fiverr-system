@@ -474,26 +474,28 @@ const ProjectRequirements = () => {
               choose images from any of sites linked below for your design.
             </p>
             <div className="grid grid-cols-2 gap-x-3 p-2 sm:grid-cols-1">
-              {stockImages.map((stock, i) => (
-                <div
-                  key={i}
-                  className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500"
-                >
-                  <div className="p-2">
-                    <img
-                      className="h-[100px] w-full object-contain"
-                      src={stock.url}
-                      alt=""
-                    />
-                  </div>
-                  <Link
-                    to={stock.link}
-                    className="block w-full bg-gray-500 p-1 text-center text-white"
+              {stockImages
+                ?.filter((s) => s?.link)
+                ?.map((stock, i) => (
+                  <div
+                    key={i}
+                    className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500"
                   >
-                    Click Here
-                  </Link>
-                </div>
-              ))}
+                    <div className="p-2">
+                      <img
+                        className="h-[100px] w-full object-contain"
+                        src={stock.url}
+                        alt=""
+                      />
+                    </div>
+                    <Link
+                      to={stock.link}
+                      className="block w-full bg-gray-500 p-1 text-center text-white"
+                    >
+                      Click Here
+                    </Link>
+                  </div>
+                ))}
             </div>
           </div>
         </div>

@@ -17,7 +17,7 @@ function Feedback() {
   const [submitReview] = useCreateAReviewMutation();
 
   const [thumbnail, setThumbnail] = useState(true);
-  const [value, setValue] = useState(2);
+  const [value, setValue] = useState(0);
   const [text, setText] = useState("");
 
   const projectDetails = state?.projectDetails;
@@ -30,7 +30,7 @@ function Feedback() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (text && value) {
+    if (text && value > 0) {
       const data = {
         orderId: projectDetails?.id,
         thumbnail: projectDetails?.projectThumbnail,
