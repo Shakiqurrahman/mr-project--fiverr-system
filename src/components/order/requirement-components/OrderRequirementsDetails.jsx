@@ -85,7 +85,7 @@ const OrderRequirementsDetails = () => {
               </span>
               <div>
                 <h1 className="font-semibold">{faq?.question}</h1>
-                <p className="my-1">{faq?.answer}</p>
+                <p className="my-1 whitespace-pre-wrap">{faq?.answer}</p>
                 {faq?.attachments?.length > 0 && (
                   <div>
                     {faq?.attachments?.length > 3 && (

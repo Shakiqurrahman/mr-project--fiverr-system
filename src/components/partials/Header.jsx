@@ -22,7 +22,6 @@ import { useGetNotificationCountQuery } from "../../Redux/api/apiSlice";
 import { useInboxBubbleCountingQuery } from "../../Redux/api/inboxApiSlice";
 import { useLazyGetDesignsBySearchQuery } from "../../Redux/api/uploadDesignApiSlice";
 import {
-  setNotificationBubble,
   setOpenNotificationDrawer,
   setOpenNotifications,
   setSearchedText,
@@ -67,13 +66,11 @@ function Header() {
   const handleNotificationClick = () => {
     setActiveMenu(false);
     dispatch(setOpenNotifications(true));
-    dispatch(setNotificationBubble(0));// for showing the bubble off
   };
 
   const handleNotificationDrawerClick = () => {
     setActiveMenu(false);
     dispatch(setOpenNotificationDrawer(true));
-    dispatch(setNotificationBubble(0)); // for showing the bubble of
   };
   useSyncCart();
 
@@ -203,7 +200,7 @@ function Header() {
                           ? notificationBubble
                           : 0
                     }
-                    variant="dot"
+                    // variant="dot"
                     sx={{
                       "& .MuiBadge-badge": {
                         backgroundColor: "#1b8cdc",
@@ -232,7 +229,7 @@ function Header() {
                           ? notificationBubble
                           : 0
                     }
-                    variant="dot"
+                    // variant="dot"
                     sx={{
                       "& .MuiBadge-badge": {
                         backgroundColor: "#1b8cdc",

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { getTimeStatus } from "../../../libs/getTimeStatus";
 import OrderDeliveryForm from "../OrderDeliveryForm";
 import ExtendDeliveryModal from "./ExtendDeliveryModal";
 
@@ -51,34 +52,54 @@ const DeliveryTimer = ({ deliveryTime }) => {
 
   const { days, hours, minutes, seconds } = calculateTimeLeft(timeLeft);
 
+  const { color } = getTimeStatus(projectDetails?.deliveryDate);
+
   return (
     <>
       <div className="bg-lightskyblue p-3">
         <h1 className="text-xl font-semibold">Time left to deliver</h1>
         <div className="my-3 flex flex-wrap border border-primary">
           <div className="w-1/4 border-r border-primary py-3 text-center">
-            <h1 className="text-xl font-bold">
+            <h1
+              className={`text-xl font-bold ${color === "red" ? "text-red-500" : "text-black/80"}`}
+            >
               {String(days).padStart(2, "0")}
             </h1>
-            <p className="text-sm font-medium text-black/80">Days</p>
+            <p
+              className={`text-sm font-medium text-black/80`}
+            >
+              Days
+            </p>
           </div>
           <div className="w-1/4 border-r border-primary py-3 text-center">
-            <h1 className="text-xl font-bold">
+            <h1 className={`text-xl font-bold ${color === "red" ? "text-red-500" : "text-black/80"}`}>
               {String(hours).padStart(2, "0")}
             </h1>
-            <p className="text-sm font-medium text-black/80">Hours</p>
+            <p
+              className={`text-sm font-medium text-black/80`}
+            >
+              Hours
+            </p>
           </div>
           <div className="w-1/4 border-r border-primary py-3 text-center">
-            <h1 className="text-xl font-bold">
+            <h1 className={`text-xl font-bold ${color === "red" ? "text-red-500" : "text-black/80"}`}>
               {String(minutes).padStart(2, "0")}
             </h1>
-            <p className="text-sm font-medium text-black/80">Minutes</p>
+            <p
+              className={`text-sm font-medium text-black/80`}
+            >
+              Minutes
+            </p>
           </div>
           <div className="w-1/4 py-3 text-center">
-            <h1 className="text-xl font-bold">
+            <h1 className={`text-xl font-bold ${color === "red" ? "text-red-500" : "text-black/80"}`}>
               {String(seconds).padStart(2, "0")}
             </h1>
-            <p className="text-sm font-medium text-black/80">Second</p>
+            <p
+              className={`text-sm font-medium text-black/80`}
+            >
+              Second
+            </p>
           </div>
           {isAdmin && (
             <button
