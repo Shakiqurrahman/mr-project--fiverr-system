@@ -61,7 +61,7 @@ function Affiliate() {
     ) {
       try {
         const res = await createAffiliate({
-          link: `aff-${user?.userName}`,
+          link: affLink,
         }).unwrap();
         toast.success("Affiliate link created successfully!");
       } catch (error) {
@@ -191,7 +191,7 @@ function Affiliate() {
                 .slice(0, 1) // Get only the first item
                 .map((aff, index) => (
                   <div key={index} className="mt-3 flex">
-                    <p className="flex-shrink-1 w-full select-none border-[2px] p-2 text-sm outline-none">{`https://mahfujurrahm535.com/?${aff?.links}`}</p>
+                    <p className="flex-shrink-1 w-full select-none border-[2px] p-2 text-sm outline-none">{`${aff?.url}?${aff?.links}`}</p>
                     <button
                       className="min-w-[100px] bg-primary p-2 text-white"
                       onClick={() => handleCopyLink(aff?.links)}
@@ -218,7 +218,7 @@ function Affiliate() {
                   className="mt-3 flex items-center gap-1 border-b border-gray-500 p-1 text-center text-sm sm:gap-2"
                 >
                   <p className="w-[40%] break-words text-start sm:w-[50%]">
-                    {`https://mahfujurrahm535.com/?${aff?.links}`}
+                    {`${aff?.url}?${aff?.links}`}
                   </p>
                   <p className="w-[18%] sm:w-[15%]">{aff?.totalClicks}</p>
                   <p className="w-[18%] sm:w-[15%]">{aff?.join}</p>
