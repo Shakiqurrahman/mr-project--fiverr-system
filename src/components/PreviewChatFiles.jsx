@@ -24,7 +24,7 @@ const PreviewChatFiles = ({
     if (isImages?.length > 0 && isImage) {
       return (
         <img
-          src={file.url}
+          src={file?.url}
           alt=""
           className="h-[100px] w-full cursor-pointer object-cover sm:h-[150px]"
           onClick={handleOpenSlider}
@@ -33,7 +33,7 @@ const PreviewChatFiles = ({
     } else if (isImage) {
       return (
         <img
-          src={file.url}
+          src={file?.url}
           alt=""
           className="h-[100px] w-full cursor-pointer object-cover sm:h-[150px]"
           onClick={(e) => handlePreviewImage(e, file?.url)}

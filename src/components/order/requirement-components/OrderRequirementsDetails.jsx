@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { BiDownload } from "react-icons/bi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setPreviewImage } from "../../../Redux/features/previewImageSlice";
 import formatFileSize from "../../../libs/formatFileSize";
+import GenerateName from "../../GenerateName";
+import ImagesSlider from "../../ImagesSlider";
+import PreviewChatFiles from "../../PreviewChatFiles";
 
 const OrderRequirementsDetails = () => {
+  const dispatch = useDispatch();
+
   const { user } = useSelector((state) => state.user);
   const { projectDetails } = useSelector((state) => state.order);
   // Checking Admin
@@ -12,6 +18,7 @@ const OrderRequirementsDetails = () => {
   // All states here
   const [requirements, setRequirements] = useState([]);
   const [isOrderStartByAdmin, setIsOrderStartByAdmin] = useState(false);
+  const [openImageSlider, setOpenImageSlider] = useState(null);
 
   // all side effects here
   useEffect(() => {
@@ -31,17 +38,23 @@ const OrderRequirementsDetails = () => {
     }
   }, [projectDetails]);
 
+  const handlePreviewImage = (e, url) => {
+    e.preventDefault();
+    dispatch(setPreviewImage(url));
+  };
+
   // handle download all button
-  const handleDownloadAll = (files) => {
+  const handleDownloadAll = (e, files) => {
+    e.preventDefault();
     files.forEach((file) => {
       // Use fetch to download the file as a Blob
-      fetch(file.url)
+      fetch(file?.url)
         .then((response) => response.blob()) // Convert response to a Blob
         .then((blob) => {
           const link = document.createElement("a");
           const url = URL.createObjectURL(blob); // Create a URL for the Blob
           link.href = url;
-          link.setAttribute("download", file.name); // Set the filename for download
+          link.setAttribute("download", file?.name); // Set the filename for download
           document.body.appendChild(link);
           link.click(); // Trigger the download
           document.body.removeChild(link); // Clean up after download
@@ -90,7 +103,7 @@ const OrderRequirementsDetails = () => {
                   <div>
                     {faq?.attachments?.length > 3 && (
                       <button
-                        onClick={() => handleDownloadAll(faq?.attachments)}
+                        onClick={(e) => handleDownloadAll(e, faq?.attachments)}
                         className="mt-2 font-medium text-primary"
                       >
                         Download All
@@ -99,24 +112,25 @@ const OrderRequirementsDetails = () => {
                     <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
                       {faq?.attachments?.map((att, index) => (
                         <div key={index}>
-                          <img
-                            src={att?.url}
-                            alt=""
-                            className="h-[100px] w-full object-cover sm:h-[180px]"
+                          <PreviewChatFiles
+                            file={att}
+                            files={faq?.attachments}
+                            setSliderData={setOpenImageSlider}
+                            handlePreviewImage={handlePreviewImage}
                           />
                           <button
                             onClick={() =>
                               handleSingleDownload(att?.url, att?.name)
                             }
-                            className="mt-2 flex items-center justify-center text-xs"
+                            className="mt-2 flex items-center justify-start text-xs"
                           >
                             <BiDownload className="shrink-0 text-lg text-primary" />
-                            <p
-                              className="mx-2 line-clamp-1 font-medium"
+                            <div
+                              className="mx-[2px] line-clamp-1 shrink font-medium"
                               title={att?.name}
                             >
-                              {att.name}
-                            </p>
+                              <GenerateName name={att?.name} />
+                            </div>
                             <span className="shrink-0 text-black/50">
                               ({formatFileSize(att.size)})
                             </span>
@@ -139,6 +153,12 @@ const OrderRequirementsDetails = () => {
         <div className="text-lg font-medium">
           This Project Requirements Are Manually Submitted.
         </div>
+      )}
+      {openImageSlider?.openSlider && (
+        <ImagesSlider
+          handleClose={setOpenImageSlider}
+          files={openImageSlider}
+        />
       )}
     </>
   );

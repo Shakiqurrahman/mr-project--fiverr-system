@@ -1317,12 +1317,12 @@ const ChatBox = ({ openToggle }) => {
                     {msg?.attachment && msg?.attachment?.length > 0 && (
                       <div className="relative mt-2">
                         {msg?.attachment.length > 3 && (
-                          <Link
+                          <button
                             onClick={() => handleDownloadAll(msg?.attachment)}
                             className="mb-2 inline-block text-sm font-medium text-primary"
                           >
                             Download All
-                          </Link>
+                          </button>
                         )}
                         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
                           {msg?.attachment.map((att, i) => (

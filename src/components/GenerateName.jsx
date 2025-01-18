@@ -8,7 +8,10 @@ const GenerateName = ({ name }) => {
 
   return (
     <div className="flex items-center">
-      <p className="shrink truncate">{nameWithoutExtName}</p>{" "}
+      <p className="shrink truncate">
+        {nameWithoutExtName?.slice(0, 12)}
+        {nameWithoutExtName?.length > 12 ? "..." : ""}
+      </p>{" "}
       <span className="shrink-0 grow">{extension}</span>
     </div>
   );

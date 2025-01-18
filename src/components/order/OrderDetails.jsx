@@ -137,8 +137,12 @@ const OrderDetails = () => {
                     {item?.selectedQuantity || item?.quantity}
                   </div>
                   <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
-                    {item?.deliveryDuration || item?.regularDeliveryDays}{" "}
-                    {item?.deliveryDuration > 1 || item?.regularDeliveryDays > 1
+                    {item?.deliveryWay === "hours" &&
+                      (item?.deliveryDuration ||
+                        item?.regularDeliveryDays)}{" "}
+                    {item?.deliveryWay !== "hours" &&
+                    (item?.deliveryDuration > 1 ||
+                      item?.regularDeliveryDays > 1)
                       ? "Days"
                       : "Day"}
                   </div>
