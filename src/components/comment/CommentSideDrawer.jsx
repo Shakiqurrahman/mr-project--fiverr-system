@@ -131,6 +131,7 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
       extendDeliveryTime: null,
       deliverProject: null,
       cancelProject: null,
+      revisionProject: null,
       imageComments: updatedComments || [],
       timeAndDate,
       replyTo,
