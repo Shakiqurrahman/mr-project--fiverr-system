@@ -28,7 +28,6 @@ const NotificationWrapper = ({ children }) => {
 
   const { data: notificationBubbleCount } = useGetNotificationCountQuery(null, {
     skip: !user,
-    pollingInterval: 30000, //30 sec
   });
 
   useEffect(() => {
@@ -103,7 +102,11 @@ const NotificationWrapper = ({ children }) => {
         } else {
           setNotification(notification);
           setShowNotification(true);
-          dispatch(setNotificationBubble(1)); // for showing the bubble if any notification arrise
+          dispatch(
+            setNotificationBubble(
+              notificationBubbleCount ? notificationBubbleCount : 1,
+            ),
+          ); // for showing the bubble if any notification arrise
         }
       }
     });
@@ -116,6 +119,7 @@ const NotificationWrapper = ({ children }) => {
     projectNumber,
     user?.role,
     isAdmin,
+    notificationBubbleCount,
   ]);
 
   return (

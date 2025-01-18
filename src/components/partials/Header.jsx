@@ -22,6 +22,7 @@ import { useGetNotificationCountQuery } from "../../Redux/api/apiSlice";
 import { useInboxBubbleCountingQuery } from "../../Redux/api/inboxApiSlice";
 import { useLazyGetDesignsBySearchQuery } from "../../Redux/api/uploadDesignApiSlice";
 import {
+  setNotificationBubble,
   setOpenNotificationDrawer,
   setOpenNotifications,
   setSearchedText,
@@ -47,6 +48,7 @@ function Header() {
   });
   const { data: notificationBubbleCount } = useGetNotificationCountQuery(null, {
     skip: !user,
+    pollingInterval: 30000,
   });
 
   const [activeMenu, setActiveMenu] = useState(false);

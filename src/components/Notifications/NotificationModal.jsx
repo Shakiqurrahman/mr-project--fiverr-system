@@ -9,6 +9,7 @@ import {
   useNotificationMakeSeenMutation,
 } from "../../Redux/api/apiSlice";
 import { setOnlineUsers } from "../../Redux/features/userSlice";
+import { setNotificationBubble } from "../../Redux/features/utilSlice";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { configApi } from "../../libs/configApi";
 import { connectSocket } from "../../libs/socketService";
@@ -110,6 +111,7 @@ const NotificationModal = ({ close }) => {
                   navigate(`/order/${notification?.payload?.projectNumber}`);
                   dispatch(close(false));
                 }
+                dispatch(setNotificationBubble(0));
               };
               return (
                 <div
@@ -127,7 +129,7 @@ const NotificationModal = ({ close }) => {
                           alt="Sender Logo"
                         />
                       ) : (
-                        <div className="text-3xl font-bold text-[#7c7c7c]/50 sm:text-4xl select-none">
+                        <div className="select-none text-3xl font-bold text-[#7c7c7c]/50 sm:text-4xl">
                           {letterLogo}
                         </div>
                       )}
