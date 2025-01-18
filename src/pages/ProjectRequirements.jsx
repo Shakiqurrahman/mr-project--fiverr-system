@@ -40,6 +40,8 @@ const ProjectRequirements = () => {
   const [requirements, setRequirements] = useState(null);
   const [uploadFilesLength, setUploadFilesLength] = useState([]);
 
+  // const [requirementsDraft] = useLocalStorageObject("requirementsDraft", dataRequirements);
+
   //Sidebar Stock Images Data
   const stockImages = [
     {
@@ -82,7 +84,10 @@ const ProjectRequirements = () => {
 
   // Initial stage Update requirements state
   useEffect(() => {
-    if (projectDetails?.requirements) {
+    if (JSON.parse(localStorage.getItem("requirements"))?.length > 0) {
+      const localData = JSON.parse(localStorage.getItem("requirements"));
+      setRequirements(localData);
+    } else if (projectDetails?.requirements) {
       const updateRequirements = projectDetails?.requirements
         ?.filter((item) => item?.question)
         ?.map((item) => ({
@@ -94,6 +99,11 @@ const ProjectRequirements = () => {
       setRequirements(updateRequirements);
     }
   }, [projectDetails?.requirements]);
+
+  const handleSaveDraft = (e) => {
+    e.preventDefault();
+    localStorage.setItem("requirements", JSON.stringify(requirements));
+  };
 
   //Emoji Picker component handler
 
@@ -299,6 +309,7 @@ const ProjectRequirements = () => {
           if (res?.success) {
             setSubmitLoading(false);
             navigate(`/order/${projectNumber}`);
+            localStorage.removeItem("requirements");
           }
         } catch {
           setSubmitLoading(false);
@@ -381,13 +392,15 @@ const ProjectRequirements = () => {
                     </div>
                     {item?.attachments?.length > 0 && (
                       <>
-                        {uploadFilesLength?.find((f) => f[i])[i] !==
-                          item?.attachments?.length && (
-                          <p className="mt-4 text-xs">
-                            Uploaded {item?.attachments?.length}/
-                            {uploadFilesLength?.find((f) => f[i])[i]}
-                          </p>
-                        )}
+                        {uploadFilesLength?.find((f) => f[i]) &&
+                          uploadFilesLength?.find((f) => f[i])[i] !==
+                            item?.attachments?.length && (
+                            <p className="mt-4 text-xs">
+                              Uploaded {item?.attachments?.length}/
+                              {uploadFilesLength?.find((f) => f[i]) &&
+                                uploadFilesLength?.find((f) => f[i])[i]}
+                            </p>
+                          )}
                         <div className="preview-scroll-overflow-x mt-4 flex gap-4">
                           {item?.attachments?.map((att, idx) => (
                             <div key={idx} className="w-[120px] shrink-0">
@@ -432,7 +445,11 @@ const ProjectRequirements = () => {
                 ))}
                 {projectDetails?.projectStatus === "Waiting" && (
                   <div className="flex justify-end">
-                    <button type="button" className="mt-5 font-semibold">
+                    <button
+                      type="button"
+                      className="mt-5 font-semibold"
+                      onClick={handleSaveDraft}
+                    >
                       Save Requirements
                     </button>
                   </div>

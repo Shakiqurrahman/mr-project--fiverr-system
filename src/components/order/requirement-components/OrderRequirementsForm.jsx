@@ -32,15 +32,20 @@ const OrderRequirementsForm = () => {
   // Initial stage Update requirements state
   useEffect(() => {
     if (!projectDetails?.isRequirementsFullFilled) {
-      const updateRequirements = projectDetails?.requirements
-        ?.filter((item) => item?.question)
-        ?.map((item) => ({
-          id: shortid.generate(),
-          question: item.question,
-          answer: "",
-          attachments: [],
-        }));
-      setRequirements(updateRequirements);
+      if (JSON.parse(localStorage.getItem("requirements"))?.length > 0) {
+        const localData = JSON.parse(localStorage.getItem("requirements"));
+        setRequirements(localData);
+      } else {
+        const updateRequirements = projectDetails?.requirements
+          ?.filter((item) => item?.question)
+          ?.map((item) => ({
+            id: shortid.generate(),
+            question: item.question,
+            answer: "",
+            attachments: [],
+          }));
+        setRequirements(updateRequirements);
+      }
     }
   }, [projectDetails?.isRequirementsFullFilled, projectDetails?.requirements]);
 
@@ -54,6 +59,11 @@ const OrderRequirementsForm = () => {
       }
     }
   }, [projectDetails]);
+
+  const handleSaveDraft = (e) => {
+    e.preventDefault();
+    localStorage.setItem("requirements", JSON.stringify(requirements));
+  };
 
   //Emoji Picker component handler
   const handleEmojiSelect = (emoji, index, id) => {
@@ -253,6 +263,7 @@ const OrderRequirementsForm = () => {
       if (res?.success) {
         setSubmitLoading(false);
         setIsOrderStartByAdmin(true);
+        localStorage.removeItem("requirements");
       }
     } catch {
       toast.error("error to save requirements");
@@ -276,6 +287,7 @@ const OrderRequirementsForm = () => {
         const res = await updateRequirementHandler(requirementData).unwrap();
         if (res?.success) {
           setSubmitLoading(false);
+          localStorage.removeItem("requirements");
         }
       } catch {
         toast.error("error to save requirements");
@@ -351,13 +363,15 @@ const OrderRequirementsForm = () => {
                   </div>
                   {item.attachments.length > 0 && (
                     <>
-                      {uploadFilesLength?.find((f) => f[i])[i] !==
-                        item?.attachments?.length && (
-                        <p className="mt-4 text-xs">
-                          Uploaded {item?.attachments?.length}/
-                          {uploadFilesLength?.find((f) => f[i])[i]}
-                        </p>
-                      )}
+                      {uploadFilesLength?.find((f) => f[i]) &&
+                        uploadFilesLength?.find((f) => f[i])[i] !==
+                          item?.attachments?.length && (
+                          <p className="mt-4 text-xs">
+                            Uploaded {item?.attachments?.length}/
+                            {uploadFilesLength?.find((f) => f[i]) &&
+                              uploadFilesLength?.find((f) => f[i])[i]}
+                          </p>
+                        )}
                       <div className="preview-scroll-overflow-x mt-4 flex gap-4">
                         {item.attachments?.map((att, idx) => (
                           <div key={idx} className="w-[120px] shrink-0">
@@ -401,7 +415,11 @@ const OrderRequirementsForm = () => {
                 </div>
               ))}
               <div className="flex justify-end">
-                <button type="button" className="mt-5 font-semibold">
+                <button
+                  type="button"
+                  className="mt-5 font-semibold"
+                  onClick={handleSaveDraft}
+                >
                   Save Requirements
                 </button>
               </div>
