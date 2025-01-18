@@ -1,17 +1,8 @@
-import {
-  differenceInDays,
-  differenceInHours,
-  differenceInMinutes,
-  differenceInMonths,
-  differenceInYears,
-  isPast,
-  parseISO,
-} from "date-fns";
 import React from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import { getStatusText } from "./StatusText";
 import { getTimeStatus } from "../../libs/getTimeStatus";
+import { getStatusText } from "./StatusText";
 
 const ActiveProjects = ({ activeProjects, isActiveProjectsLoading }) => {
   return (
