@@ -53,6 +53,7 @@ import CancellingProjectPreview from "./chatbox-components/CancellingProjectPrev
 import CommentsPreview from "./chatbox-components/CommentsPreview";
 import ExtendingDeliveryPreview from "./chatbox-components/ExtendingDeliveryPreview";
 import OrderDeliveryPreview from "./chatbox-components/OrderDeliveryPreview";
+import RevisionPreview from "./chatbox-components/RevisionPreview";
 
 const OrderChatBox = () => {
   const dispatch = useDispatch();
@@ -413,6 +414,7 @@ const OrderChatBox = () => {
         extendDeliveryTime: null,
         deliverProject: null,
         cancelProject: null,
+        revisionProject: null,
         imageComments: [],
         timeAndDate,
         replyTo,
@@ -778,20 +780,22 @@ const OrderChatBox = () => {
                         >
                           <BsFillReplyFill className="text-xl" />
                         </button>
-                        {visibility[msg?.id] && msg?.senderId === user?.id && (
-                          <button
-                            type="button"
-                            onClick={(e) =>
-                              handleDeleteAMessage(
-                                e,
-                                msg?.uniqueId,
-                                msg?.projectNumber,
-                              )
-                            }
-                          >
-                            <FaTrashAlt />
-                          </button>
-                        )}
+                        {!msg?.revisionProject &&
+                          visibility[msg?.id] &&
+                          msg?.senderId === user?.id && (
+                            <button
+                              type="button"
+                              onClick={(e) =>
+                                handleDeleteAMessage(
+                                  e,
+                                  msg?.uniqueId,
+                                  msg?.projectNumber,
+                                )
+                              }
+                            >
+                              <FaTrashAlt />
+                            </button>
+                          )}
                       </div>
                     </div>
                     {/* Here is the message text to preview */}
@@ -818,6 +822,7 @@ const OrderChatBox = () => {
                       <OrderDeliveryPreview
                         messageObj={msg}
                         data={msg?.deliverProject || {}}
+                        socket={socket}
                       />
                     )}
                     {msg?.extendDeliveryTime && (
@@ -831,6 +836,14 @@ const OrderChatBox = () => {
                         <CancellingProjectPreview
                           messageObj={msg}
                           value={msg?.cancelProject || {}}
+                        />
+                      </div>
+                    )}
+                    {msg?.revisionProject && (
+                      <div className="mt-2">
+                        <RevisionPreview
+                          messageObj={msg}
+                          value={msg?.revisionProject || {}}
                         />
                       </div>
                     )}

@@ -9,16 +9,14 @@ import toast from "react-hot-toast";
 import { BiDownload } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-  useAcceptDeliveryMutation,
-  useAcceptRevisionMutation,
-} from "../../../Redux/api/orderApiSlice";
+import { useAcceptDeliveryMutation } from "../../../Redux/api/orderApiSlice";
 import { setPreviewImage } from "../../../Redux/features/previewImageSlice";
 import formatFileSize from "../../../libs/formatFileSize";
 import CommentPage from "../../../pages/CommentPage";
 import Divider from "../../Divider";
+import RevisionModal from "./RevisionModal";
 
-const OrderDeliveryPreview = ({ messageObj, data }) => {
+const OrderDeliveryPreview = ({ messageObj, data, socket }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -27,10 +25,10 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
 
   const isAdmin = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
 
-  const [acceptRevision] = useAcceptRevisionMutation();
   const [acceptDelivery] = useAcceptDeliveryMutation();
 
   const [openCommentBox, setOpenCommentBox] = useState(false);
+  const [openRevisionModal, setOpenRevisionModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
 
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -159,19 +157,7 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
 
   const handleRevision = async (e) => {
     e.preventDefault();
-    if (messageObj?.uniqueId) {
-      const { id, ...updatedMessage } = messageObj;
-      const data = {
-        projectNumber: projectDetails?.projectNumber,
-        uniqueId: messageObj?.uniqueId,
-        updatedMessage,
-      };
-      try {
-        const res = await acceptRevision(data).unwrap();
-      } catch (error) {
-        toast.error("Something went wrong!");
-      }
-    }
+    setOpenRevisionModal(true);
   };
 
   const handleAccept = async (e) => {
@@ -421,6 +407,13 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
           selected={selectedImage}
           images={data?.attachments || []}
           close={setOpenCommentBox}
+        />
+      )}
+      {openRevisionModal && (
+        <RevisionModal
+          handleClose={setOpenRevisionModal}
+          onOfferSubmit={socket}
+          messageObj={messageObj}
         />
       )}
     </>
