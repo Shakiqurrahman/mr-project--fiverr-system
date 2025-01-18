@@ -4,7 +4,7 @@ import Slider from "react-slick/lib/slider";
 import LeftArrowIcon from "../../../assets/images/icons/Left Arrow.svg";
 import RightArrowIcon from "../../../assets/images/icons/Right Arrow.svg";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { BiDownload } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,6 +32,9 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
 
   const [openCommentBox, setOpenCommentBox] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [showImages, setShowImages] = useState([]);
 
   // handle download all button
   const handleDownloadAll = (files) => {
@@ -99,8 +102,9 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
     arrows: true,
     // autoplay: true,
     // autoplaySpeed: 2000,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
+    nextArrow: <NextArrow position={currentSlide} total={showImages?.length} />,
+    prevArrow: <PrevArrow position={currentSlide} total={showImages?.length} />,
+    afterChange: (index) => setCurrentSlide(index),
     responsive: [
       {
         breakpoint: 1024,
@@ -110,8 +114,12 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
           arrows: true,
           // autoplay: true,
           // autoplaySpeed: 2000,
-          nextArrow: <NextArrow />,
-          prevArrow: <PrevArrow />,
+          nextArrow: (
+            <NextArrow position={currentSlide} total={showImages?.length} />
+          ),
+          prevArrow: (
+            <PrevArrow position={currentSlide} total={showImages?.length} />
+          ),
         },
       },
       {
@@ -122,8 +130,12 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
           arrows: false,
           // autoplay: true,
           // autoplaySpeed: 2000,
-          nextArrow: <NextArrow />,
-          prevArrow: <PrevArrow />,
+          nextArrow: (
+            <NextArrow position={currentSlide} total={showImages?.length} />
+          ),
+          prevArrow: (
+            <PrevArrow position={currentSlide} total={showImages?.length} />
+          ),
         },
       },
       {
@@ -134,8 +146,12 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
           arrows: false,
           // autoplay: true,
           // autoplaySpeed: 2000,
-          nextArrow: <NextArrow />,
-          prevArrow: <PrevArrow />,
+          nextArrow: (
+            <NextArrow position={currentSlide} total={showImages?.length} />
+          ),
+          prevArrow: (
+            <PrevArrow position={currentSlide} total={showImages?.length} />
+          ),
         },
       },
     ],
@@ -197,7 +213,10 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
     file?.format?.startsWith("image/"),
   );
 
-  const showImages = [data?.thumbnailImage, ...attImages];
+  useEffect(() => {
+    const showImagesToSet = [data?.thumbnailImage, ...attImages];
+    setShowImages(showImagesToSet);
+  }, [data?.thumbnailImage]);
 
   const foundImages =
     data?.attachments?.filter((file) => file?.format?.startsWith("image/"))
@@ -409,22 +428,22 @@ const OrderDeliveryPreview = ({ messageObj, data }) => {
 };
 
 // Custom arrows design components
-function NextArrow({ onClick }) {
+function NextArrow({ onClick, position, total }) {
   return (
     <div
       onClick={onClick}
-      className="slick-arrow absolute right-0 top-[35%] z-[2] flex h-[35px] w-[35px] translate-y-[35%] cursor-pointer items-center justify-center rounded-full border before:content-none"
+      className={`slick-arrow absolute right-0 top-[35%] z-[2] flex h-[35px] w-[35px] translate-y-[35%] cursor-pointer items-center justify-center rounded-full border before:content-none ${position === total - 1 ? "opacity-50" : "opacity-100"}`}
     >
       <img src={RightArrowIcon} alt="" />
     </div>
   );
 }
 
-function PrevArrow({ onClick }) {
+function PrevArrow({ onClick, position, total }) {
   return (
     <div
       onClick={onClick}
-      className="slick-arrow absolute left-0 top-[35%] z-[2] flex h-[35px] w-[35px] translate-y-[35%] cursor-pointer items-center justify-center rounded-full border before:content-none"
+      className={`slick-arrow absolute left-0 top-[35%] z-[2] flex h-[35px] w-[35px] translate-y-[35%] cursor-pointer items-center justify-center rounded-full border before:content-none ${position === 0 ? "opacity-50" : "opacity-100"}`}
     >
       <img src={LeftArrowIcon} alt="" />
     </div>
