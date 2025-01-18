@@ -185,24 +185,25 @@ const Order = () => {
                   {adminReview && user?.role === "USER" && (
                     <OrderReview reviewDetails={adminReview} />
                   )}
-                  {parseInt(projectDetails?.projectTips?.amount) > 0 && (
-                    <div className="mt-5 text-center">
-                      <img
-                        src={TipImage}
-                        alt="Project Tip Congrats Image"
-                        className="mx-auto block w-[150px]"
-                      />
-                      <p className="text-lg">
-                        You&apos;ve just recieved a tip of
-                      </p>
-                      <h3 className="text-[30px] font-medium">
-                        $
-                        {Number(projectDetails?.projectTips?.amount)?.toFixed(
-                          2,
-                        )}
-                      </h3>
-                    </div>
-                  )}
+                  {parseInt(projectDetails?.projectTips?.amount) > 0 &&
+                    isAdmin && (
+                      <div className="mt-5 text-center">
+                        <img
+                          src={TipImage}
+                          alt="Project Tip Congrats Image"
+                          className="mx-auto block w-[150px]"
+                        />
+                        <p className="text-lg">
+                          You&apos;ve just recieved a tip of
+                        </p>
+                        <h3 className="text-[30px] font-medium">
+                          $
+                          {Number(projectDetails?.projectTips?.amount)?.toFixed(
+                            2,
+                          )}
+                        </h3>
+                      </div>
+                    )}
                   {projectDetails?.review?.length === 0 &&
                   user?.role === "USER" ? (
                     <OrderReviewForm />
