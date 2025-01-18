@@ -5,6 +5,14 @@ import { MdOutlineDoNotDisturbAlt } from "react-icons/md";
 import { PiWarningCircleFill } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useLazyFetchSingleUserByIdQuery } from "../Redux/api/allUserApiSlice";
+import { useLazyGetAllMessagesQuery } from "../Redux/api/inboxApiSlice";
+import { useRequirementByProjectNumberQuery } from "../Redux/api/orderApiSlice";
+import { setChatData, setConversationUser } from "../Redux/features/chatSlice";
+import {
+  setClientDetails,
+  setProjectDetails,
+} from "../Redux/features/orderSlice";
 import Check from "../assets/svg/Check";
 import Divider from "../components/Divider";
 import OrderChatBox from "../components/order/OrderChatBox";
@@ -14,14 +22,8 @@ import OrderReview from "../components/order/OrderReview";
 import OrderReviewForm from "../components/order/OrderReviewForm";
 import OrderSidePanel from "../components/order/OrderSidePanel";
 import OrderTipsForm from "../components/order/OrderTipsForm";
-import { useLazyFetchSingleUserByIdQuery } from "../Redux/api/allUserApiSlice";
-import { useLazyGetAllMessagesQuery } from "../Redux/api/inboxApiSlice";
-import { useRequirementByProjectNumberQuery } from "../Redux/api/orderApiSlice";
-import { setChatData, setConversationUser } from "../Redux/features/chatSlice";
-import {
-  setClientDetails,
-  setProjectDetails,
-} from "../Redux/features/orderSlice";
+
+import TipImage from "../assets/images/Tip.webp";
 
 const Order = () => {
   const dispatch = useDispatch();
@@ -182,6 +184,24 @@ const Order = () => {
                   )}
                   {adminReview && user?.role === "USER" && (
                     <OrderReview reviewDetails={adminReview} />
+                  )}
+                  {parseInt(projectDetails?.projectTips?.amount) > 0 && (
+                    <div className="mt-5 text-center">
+                      <img
+                        src={TipImage}
+                        alt="Project Tip Congrats Image"
+                        className="mx-auto block w-[150px]"
+                      />
+                      <p className="text-lg">
+                        You&apos;ve just recieved a tip of
+                      </p>
+                      <h3 className="text-[30px] font-medium">
+                        $
+                        {Number(projectDetails?.projectTips?.amount)?.toFixed(
+                          2,
+                        )}
+                      </h3>
+                    </div>
                   )}
                   {projectDetails?.review?.length === 0 &&
                   user?.role === "USER" ? (

@@ -283,24 +283,26 @@ const ProjectRequirements = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const checkTextLength = requirements.every(
-      (item) => item.answer.length <= 5000 && item.answer.length > 0,
-    );
-    if (checkTextLength) {
-      try {
-        setSubmitLoading(true);
-        const requirementData = {
-          orderId: projectDetails?.id,
-          isRequirementsFullFilled: true,
-          requirements,
-        };
-        const res = await updateRequirementHandler(requirementData).unwrap();
-        if (res?.success) {
+    if (projectDetails?.projectStatus === "Waiting") {
+      const checkTextLength = requirements.every(
+        (item) => item.answer.length <= 5000 && item.answer.length > 0,
+      );
+      if (checkTextLength) {
+        try {
+          setSubmitLoading(true);
+          const requirementData = {
+            orderId: projectDetails?.id,
+            isRequirementsFullFilled: true,
+            requirements,
+          };
+          const res = await updateRequirementHandler(requirementData).unwrap();
+          if (res?.success) {
+            setSubmitLoading(false);
+            navigate(`/order/${projectNumber}`);
+          }
+        } catch {
           setSubmitLoading(false);
-          navigate(`/order/${projectNumber}`);
         }
-      } catch {
-        setSubmitLoading(false);
       }
     }
   };
@@ -428,34 +430,38 @@ const ProjectRequirements = () => {
                     )}
                   </div>
                 ))}
-                <div className="flex justify-end">
-                  <button type="button" className="mt-5 font-semibold">
-                    Save Requirements
-                  </button>
-                </div>
-                <div className="mt-5 flex justify-center gap-5">
-                  <button
-                    type="button"
-                    onClick={() => navigate(`/order/${projectNumber}`)}
-                    disabled={submitLoading}
-                    className="mt-5 flex h-[45px] w-1/2 items-center justify-center bg-gray-400 text-base font-semibold text-white disabled:cursor-not-allowed sm:text-lg"
-                  >
-                    Skip
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={submitLoading}
-                    className="mt-5 flex h-[45px] w-1/2 items-center justify-center bg-primary text-base font-semibold text-white disabled:cursor-not-allowed sm:text-lg"
-                  >
-                    {submitLoading ? (
-                      <span className="animate-spin text-xl">
-                        <FaSpinner />
-                      </span>
-                    ) : (
-                      "Start Now"
-                    )}
-                  </button>
-                </div>
+                {projectDetails?.projectStatus === "Waiting" && (
+                  <div className="flex justify-end">
+                    <button type="button" className="mt-5 font-semibold">
+                      Save Requirements
+                    </button>
+                  </div>
+                )}
+                {projectDetails?.projectStatus === "Waiting" && (
+                  <div className="mt-5 flex justify-center gap-5">
+                    <button
+                      type="button"
+                      onClick={() => navigate(`/order/${projectNumber}`)}
+                      disabled={submitLoading}
+                      className="mt-5 flex h-[45px] w-1/2 items-center justify-center bg-gray-400 text-base font-semibold text-white disabled:cursor-not-allowed sm:text-lg"
+                    >
+                      Skip
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={submitLoading}
+                      className="mt-5 flex h-[45px] w-1/2 items-center justify-center bg-primary text-base font-semibold text-white disabled:cursor-not-allowed sm:text-lg"
+                    >
+                      {submitLoading ? (
+                        <span className="animate-spin text-xl">
+                          <FaSpinner />
+                        </span>
+                      ) : (
+                        "Start Now"
+                      )}
+                    </button>
+                  </div>
+                )}
                 <p className="py-6 text-center text-sm sm:text-base">
                   Start your project now by clicking &quot;Start Now&quot;
                 </p>
