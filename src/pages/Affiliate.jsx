@@ -28,8 +28,8 @@ function Affiliate() {
   const { data: affiliateData } = useGetAUserAffiliatesQuery();
   const { data: userPaymentInfo } = useGetWithdrawInfoQuery();
 
-  const handleCopyLink = (link) => {
-    const textToCopy = `https://mahfujurrahm535.com/?${link}`;
+  const handleCopyLink = (url, link) => {
+    const textToCopy = `${url}?${link}`;
     navigator.clipboard
       .writeText(textToCopy)
       .then(() => {
@@ -194,7 +194,7 @@ function Affiliate() {
                     <p className="flex-shrink-1 w-full select-none border-[2px] p-2 text-sm outline-none">{`${aff?.url}?${aff?.links}`}</p>
                     <button
                       className="min-w-[100px] bg-primary p-2 text-white"
-                      onClick={() => handleCopyLink(aff?.links)}
+                      onClick={() => handleCopyLink(aff?.url, aff?.links)}
                     >
                       Copy
                     </button>
