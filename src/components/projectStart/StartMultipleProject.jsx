@@ -198,6 +198,7 @@ const StartMultipleProject = ({ items }) => {
         return {
           ...item,
           designDbId: id,
+          designTitle: item?.title,
           designId: item?.designId,
           bulletPoint,
           category: { categoryId, ...restCategory },

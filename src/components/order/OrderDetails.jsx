@@ -78,6 +78,8 @@ const OrderDetails = () => {
     return accumulator + price;
   }, 0);
 
+  console.log(projectDetails);
+
   return (
     <>
       <h1 className="mb-5 text-xl font-bold text-primary">PROJECT DETAILS</h1>
@@ -137,14 +139,35 @@ const OrderDetails = () => {
                     {item?.selectedQuantity || item?.quantity}
                   </div>
                   <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
+                    {item?.isFastDelivery
+                      ? item?.fastDeliveryDuration ||
+                        item?.fastDeliveryDays ||
+                        item?.durationHours
+                      : item?.deliveryDuration ||
+                        item?.regularDeliveryDays ||
+                        item?.durationHours}{" "}
+                    {!item?.isFastDelivery &&
+                      (parseInt(item?.deliveryDuration) > 1 ||
+                        parseInt(item?.regularDeliveryDays) > 1) &&
+                      "Days"}
+                    {!item?.isFastDelivery &&
+                      (parseInt(item?.deliveryDuration) === 1 ||
+                        parseInt(item?.regularDeliveryDays) === 1) &&
+                      "Day"}
+                    {item?.isFastDelivery &&
+                      (parseInt(item?.fastDeliveryDuration) > 1 ||
+                        parseInt(item?.fastDeliveryDays) > 1) &&
+                      "Days"}
+                    {item?.isFastDelivery &&
+                      (parseInt(item?.fastDeliveryDuration) === 1 ||
+                        parseInt(item?.fastDeliveryDays) === 1) &&
+                      "Day"}
                     {item?.deliveryWay === "hours" &&
-                      (item?.deliveryDuration ||
-                        item?.regularDeliveryDays)}{" "}
-                    {item?.deliveryWay !== "hours" &&
-                    (item?.deliveryDuration > 1 ||
-                      item?.regularDeliveryDays > 1)
-                      ? "Days"
-                      : "Day"}
+                      parseInt(item?.durationHours) > 1 &&
+                      "hours"}
+                    {item?.deliveryWay === "hours" &&
+                      parseInt(item?.durationHours) === 1 &&
+                      "hour"}
                   </div>
                   <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
                     {item?.subCategory?.subAmount || item?.subTotal}
@@ -258,11 +281,21 @@ const OrderDetails = () => {
                 : totalQuantity}
             </div>
             <div className="w-1/6 shrink-0 border-l border-gray-300 p-3 text-center">
-              {totalDuration} {items[0]?.durationHours && "hours"}
-              {items[0]?.deliveryDuration > 1 ||
-              items[0]?.regularDeliveryDays > 1
-                ? "Days"
-                : "Day"}
+              {totalDuration}{" "}
+              {items[0]?.deliveryWay === "hours" &&
+                parseInt(items[0]?.durationHours) > 1 &&
+                "hours"}
+              {items[0]?.deliveryWay === "hours" &&
+                parseInt(items[0]?.durationHours) === 1 &&
+                "hour"}
+              {items[0]?.deliveryWay !== "hours" &&
+                (parseInt(items[0]?.deliveryDuration) > 1 ||
+                  parseInt(items[0]?.regularDeliveryDays) > 1) &&
+                "Days"}
+              {items[0]?.deliveryWay !== "hours" &&
+                (parseInt(items[0]?.deliveryDuration) === 1 ||
+                  parseInt(items[0]?.regularDeliveryDays) === 1) &&
+                "Day"}
             </div>
             <div className="w-1/6 shrink-0 border-l border-gray-300 p-3 text-center">
               ${totalAmount}
