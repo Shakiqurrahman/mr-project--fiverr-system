@@ -318,6 +318,7 @@ const OrderDeliveryForm = ({ handleClose }) => {
         extendDeliveryTime: null,
         deliverProject: formData,
         cancelProject: null,
+        revisionProject: null,
         imageComments: [],
         timeAndDate,
         replyTo,

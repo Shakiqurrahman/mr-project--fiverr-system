@@ -67,6 +67,7 @@ const CancelProjectModal = ({ handleClose }) => {
         extendDeliveryTime: null,
         deliverProject: null,
         cancelProject: data,
+        revisionProject: null,
         imageComments: [],
         isCancelled: extendType === "requestByMe" || false,
         timeAndDate,

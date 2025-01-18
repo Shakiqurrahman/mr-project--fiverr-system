@@ -82,6 +82,7 @@ const ExtendDeliveryModal = ({ handleClose }) => {
         extendDeliveryTime: data,
         deliverProject: null,
         cancelProject: null,
+        revisionProject: null,
         imageComments: [],
         timeAndDate,
         replyTo,

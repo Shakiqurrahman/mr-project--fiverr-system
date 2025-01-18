@@ -46,6 +46,7 @@ const AdditionalOfferModal = ({ handleClose, onOfferSubmit }) => {
       extendDeliveryTime: null,
       deliverProject: null,
       cancelProject: null,
+      revisionProject: null,
       imageComments: [],
       timeAndDate,
       replyTo,
