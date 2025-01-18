@@ -25,6 +25,7 @@ function CreateOfferProject() {
 
   // Form state
   const [form, setForm] = useState({
+    title: offerProjects?.title || "",
     freeBannerName: offerProjects?.freeDesignName || "",
     offerAmount: offerProjects?.offerAmount || "",
     originalAmount: offerProjects?.originalAmount || "",
@@ -249,8 +250,9 @@ function CreateOfferProject() {
 
     const image = { ...projectImage, ...imageResult };
 
-    if (image) {
+    if (image && form.title) {
       const data = {
+        title: form.title,
         projectImage: imageResult,
         offerAmount: form.offerAmount,
         originalAmount: form.originalAmount,
@@ -313,6 +315,20 @@ function CreateOfferProject() {
           </div>
         </div>
 
+        <div className="mt-6 bg-lightskyblue">
+          <h1 className="bg-primary p-3 text-white">Project Title</h1>
+          <div className="p-3">
+            <input
+              type="text"
+              name="title"
+              value={form.title}
+              onChange={handleChange}
+              placeholder="Project Title"
+              className="block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
+              required
+            />
+          </div>
+        </div>
         <div className="mt-6 bg-lightskyblue">
           <h1 className="bg-primary p-3 text-white">Banner Free Design Name</h1>
           <div className="p-3">

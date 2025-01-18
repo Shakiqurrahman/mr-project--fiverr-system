@@ -171,7 +171,7 @@ function OfferProject() {
     );
 
     const data = {
-      title: "Free Offer Project",
+      title: state?.title,
       image: state?.projectImage,
       subTotal: state?.offerAmount,
       fastDeliveryDuration: state?.extraFastDelivery,
