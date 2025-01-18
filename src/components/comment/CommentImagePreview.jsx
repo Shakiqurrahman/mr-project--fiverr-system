@@ -14,10 +14,12 @@ import {
 } from "../../Redux/features/commentsSlice";
 import formatFileSize from "../../libs/formatFileSize";
 import GenerateName from "../GenerateName";
+import ADMINLOGO from "/public/MR Logo Icon.png";
 
 const CommentImagePreview = ({ selected, close, openDrawer, drawer }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
+  const { clientDetails } = useSelector((state) => state.order);
   const { imageDetails, highlight, images } = useSelector(
     (state) => state.comment,
   );
@@ -113,28 +115,28 @@ const CommentImagePreview = ({ selected, close, openDrawer, drawer }) => {
           <LiaDownloadSolid className="text-xl text-primary" />
         </button>
         <div className="ms-auto flex gap-2">
-          {user?.image ? (
+          {clientDetails?.image ? (
             <img
               className="size-8 rounded-full bg-[rgba(255,255,255,0.20)] object-cover"
-              src={user?.image}
+              src={clientDetails?.image}
               alt="user"
             />
           ) : (
             <div className="flex size-8 items-center justify-center rounded-full bg-[#ffefef]/80 text-2xl font-bold text-[#3b3b3b]/50">
-              {user?.userName?.charAt(0)?.toUpperCase()}
+              {clientDetails?.userName?.charAt(0)?.toUpperCase()}
             </div>
           )}
-          {user?.image ? (
-            <img
-              className="size-8 rounded-full bg-[rgba(255,255,255,0.20)] object-cover"
-              src={user?.image}
-              alt="user"
-            />
-          ) : (
+          {/* {user?.userName ? ( */}
+          <img
+            className="size-8 rounded-full bg-[rgba(255,255,255,0.20)] object-cover"
+            src={ADMINLOGO}
+            alt="user"
+          />
+          {/* ) : (
             <div className="flex size-8 items-center justify-center rounded-full bg-[#ffefef]/80 text-2xl font-bold text-[#3b3b3b]/50">
               {user?.userName?.charAt(0)?.toUpperCase()}
             </div>
-          )}
+          )} */}
         </div>
         {!drawer && (
           <FaRegCommentDots

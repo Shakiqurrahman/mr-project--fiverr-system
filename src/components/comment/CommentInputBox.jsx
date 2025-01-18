@@ -40,6 +40,7 @@ const CommentInputBox = ({ focusWriteComment, setFocusWriteComment }) => {
             userId: user?.id,
             senderImage: user?.image,
             senderUserName: user?.userName,
+            senderRole: user?.role,
             replies: [],
           }),
         );
@@ -53,6 +54,7 @@ const CommentInputBox = ({ focusWriteComment, setFocusWriteComment }) => {
             userId: user?.id,
             senderImage: user?.image,
             senderUserName: user?.userName,
+            senderRole: user?.role,
             replies: [],
           }),
         );

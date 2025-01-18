@@ -21,6 +21,8 @@ import EditCommentBox from "./EditCommentBox";
 import EditReplyBox from "./EditReplyBox";
 import ReplyCommentBox from "./ReplyCommentBox";
 
+import ADMINLOGO from "/public/MR Logo Icon.png";
+
 const CommentSideDrawer = ({ close, drawerClose }) => {
   const [sendAOrderMessage] = useSendAOrderMessageMutation();
   const dispatch = useDispatch();
@@ -246,7 +248,22 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
                     >
                       {comment?.senderImage ? (
                         <img
-                          src={comment?.senderImage}
+                          src={
+                            isAdmin
+                              ? comment?.senderImage
+                              : user?.id === comment?.userId &&
+                                  user?.role === "USER"
+                                ? comment?.senderImage
+                                : ADMINLOGO
+                          }
+                          alt={comment?.senderUserName}
+                          className="h-6 w-6 rounded-full"
+                        />
+                      ) : !comment?.senderImage &&
+                        user?.role === "USER" &&
+                        user?.id !== comment?.userId ? (
+                        <img
+                          src={ADMINLOGO}
                           alt={comment?.senderUserName}
                           className="h-6 w-6 rounded-full"
                         />
@@ -262,10 +279,22 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
                         <div className="group w-full space-y-2 overflow-hidden">
                           <div className="flex flex-wrap items-center gap-2">
                             <p
-                              title={comment?.senderUserName}
+                              title={
+                                isAdmin
+                                  ? comment?.senderUserName
+                                  : user?.id === comment?.userId &&
+                                      user?.role === "USER"
+                                    ? comment?.senderUserName
+                                    : "mahfujurrahm535"
+                              }
                               className={`${!comment?.isSubmitted && "max-w-[110px]"} truncate text-sm font-bold`}
                             >
-                              {comment?.senderUserName}
+                              {isAdmin
+                                ? comment?.senderUserName
+                                : user?.id === comment?.userId &&
+                                    user?.role === "USER"
+                                  ? comment?.senderUserName
+                                  : "mahfujurrahm535"}
                             </p>
                             {!comment?.isSubmitted && (
                               <p className="rounded-full border px-2 py-1 text-xs font-medium text-gray-500">
@@ -292,22 +321,26 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
                                   <MdReply className="text-lg" />
                                   Reply
                                 </button>
-                                <div className="hidden items-center gap-2 duration-300 group-hover:flex">
-                                  <button
-                                    onClick={() => handleEditComment(comment)}
-                                    type="button"
-                                    className="text-lg text-gray-400 duration-300 hover:text-black"
-                                  >
-                                    <MdEdit />
-                                  </button>
-                                  <button
-                                    onClick={() => handleCommentDelete(comment)}
-                                    type="button"
-                                    className="text-lg text-gray-400 duration-300 hover:text-black"
-                                  >
-                                    <RiDeleteBin6Line />
-                                  </button>
-                                </div>
+                                {user?.id === comment?.userId && (
+                                  <div className="hidden items-center gap-2 duration-300 group-hover:flex">
+                                    <button
+                                      onClick={() => handleEditComment(comment)}
+                                      type="button"
+                                      className="text-lg text-gray-400 duration-300 hover:text-black"
+                                    >
+                                      <MdEdit />
+                                    </button>
+                                    <button
+                                      onClick={() =>
+                                        handleCommentDelete(comment)
+                                      }
+                                      type="button"
+                                      className="text-lg text-gray-400 duration-300 hover:text-black"
+                                    >
+                                      <RiDeleteBin6Line />
+                                    </button>
+                                  </div>
+                                )}
                               </div>
                             )}
                         </div>
@@ -321,7 +354,22 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
                             <div className="flex items-start gap-2">
                               {reply?.senderImage ? (
                                 <img
-                                  src={reply?.senderImage}
+                                  src={
+                                    isAdmin
+                                      ? reply?.senderImage
+                                      : user?.id === reply?.userId &&
+                                          user?.role === "USER"
+                                        ? reply?.senderImage
+                                        : ADMINLOGO
+                                  }
+                                  alt={reply?.senderUserName}
+                                  className="h-6 w-6 rounded-full"
+                                />
+                              ) : !reply?.senderImage &&
+                                user?.role === "USER" &&
+                                user?.id !== reply?.userId ? (
+                                <img
+                                  src={ADMINLOGO}
                                   alt={reply?.senderUserName}
                                   className="h-6 w-6 rounded-full"
                                 />
@@ -336,10 +384,22 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
                               <div className="w-full space-y-2 overflow-hidden">
                                 <div className="flex flex-wrap items-center gap-2">
                                   <p
-                                    title={reply?.senderUserName}
+                                    title={
+                                      isAdmin
+                                        ? reply?.senderUserName
+                                        : user?.id === reply?.userId &&
+                                            user?.role === "USER"
+                                          ? reply?.senderUserName
+                                          : "mahfujurrahm535"
+                                    }
                                     className={`${!reply?.isSubmitted && "max-w-[110px]"} truncate text-sm font-bold`}
                                   >
-                                    {reply?.senderUserName}
+                                    {isAdmin
+                                      ? reply?.senderUserName
+                                      : user?.id === reply?.userId &&
+                                          user?.role === "USER"
+                                        ? reply?.senderUserName
+                                        : "mahfujurrahm535"}
                                   </p>
                                   {!reply?.isSubmitted && (
                                     <p className="rounded-full border px-2 py-1 text-xs font-medium text-gray-500">
@@ -365,29 +425,31 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
                                         <MdReply className="text-lg" />
                                         Reply
                                       </button>
-                                      <div className="hidden items-center gap-2 duration-300 group-hover:flex">
-                                        <button
-                                          onClick={() =>
-                                            handleEditComment(comment, reply)
-                                          }
-                                          type="button"
-                                          className="text-lg text-gray-400 duration-300 hover:text-black"
-                                        >
-                                          <MdEdit />
-                                        </button>
-                                        <button
-                                          onClick={() =>
-                                            handleCommentDelete(
-                                              comment,
-                                              reply?.replyId,
-                                            )
-                                          }
-                                          type="button"
-                                          className="text-lg text-gray-400 duration-300 hover:text-black"
-                                        >
-                                          <RiDeleteBin6Line />
-                                        </button>
-                                      </div>
+                                      {user?.id === reply?.userId && (
+                                        <div className="hidden items-center gap-2 duration-300 group-hover:flex">
+                                          <button
+                                            onClick={() =>
+                                              handleEditComment(comment, reply)
+                                            }
+                                            type="button"
+                                            className="text-lg text-gray-400 duration-300 hover:text-black"
+                                          >
+                                            <MdEdit />
+                                          </button>
+                                          <button
+                                            onClick={() =>
+                                              handleCommentDelete(
+                                                comment,
+                                                reply?.replyId,
+                                              )
+                                            }
+                                            type="button"
+                                            className="text-lg text-gray-400 duration-300 hover:text-black"
+                                          >
+                                            <RiDeleteBin6Line />
+                                          </button>
+                                        </div>
+                                      )}
                                     </div>
                                   )}
                               </div>
