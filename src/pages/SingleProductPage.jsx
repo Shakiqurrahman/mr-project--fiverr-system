@@ -34,7 +34,8 @@ function SingleProductPage() {
   const [images, setImages] = useState([]);
   const [showAll, setShowAll] = useState(false);
 
-  const isAuthorized = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
+  const isAdmin = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
+  const isAuthorized = ["ADMIN", "SUPER_ADMIN", "SUB_ADMIN"].includes(user?.role);
 
   const settings = {
     dots: false,
@@ -173,7 +174,7 @@ function SingleProductPage() {
   return (
     <>
       <div className="max-width">
-        {isAuthorized && (
+        {isAdmin && (
           <div className="relative mt-5 text-right">
             <button className="text-4xl" onClick={handleIsClicked}>
               <BsThreeDots />
@@ -201,7 +202,7 @@ function SingleProductPage() {
           </div>
         )}
         <div
-          className={`mt-5 flex flex-wrap items-start gap-4 ${isAuthorized ? "sm:mt-2" : "sm:mt-10"} md:flex-nowrap`}
+          className={`mt-5 flex flex-wrap items-start gap-4 ${isAdmin ? "sm:mt-2" : "sm:mt-10"} md:flex-nowrap`}
         >
           <div className="w-full md:w-2/3 lg:w-3/4">
             {images?.length === 1 ? (

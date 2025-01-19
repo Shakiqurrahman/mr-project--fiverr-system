@@ -868,7 +868,6 @@ const ChatBox = ({ openToggle }) => {
       // console.log(error)
     }
   };
-
   return (
     <div className="flex h-full flex-col">
       {/* Header Part */}
@@ -1120,7 +1119,7 @@ const ChatBox = ({ openToggle }) => {
                           {msg?.contactForm?.website}
                         </p>
                         <p className="my-1">
-                          <span className="font-semibold">Message: </span>{" "}
+                          <span className="font-semibold whitespace-pre-wrap">Message: </span>{" "}
                           {msg.contactForm.messageText}
                         </p>
                         {msg?.contactForm?.exampleDesign?.length > 0 && (
@@ -1238,7 +1237,7 @@ const ChatBox = ({ openToggle }) => {
                             </span>
                           </div>
                           <div className="p-3 text-sm sm:text-base">
-                            <p className="mb-5 mt-2">
+                            <p className="mb-5 mt-2 whitespace-pre-wrap">
                               {msg?.customOffer?.desc}
                             </p>
                             <div className="flex items-center gap-2 font-medium">

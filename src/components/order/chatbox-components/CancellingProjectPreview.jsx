@@ -80,7 +80,9 @@ const CancellingProjectPreview = ({ messageObj, value }) => {
         <p className="mb-1 text-sm font-semibold sm:text-lg">
           Reason For Cancelling Project
         </p>
-        <p className="text-sm sm:text-base">{value?.explainWhyCancel}</p>
+        <p className="whitespace-pre-wrap text-sm sm:text-base">
+          {value?.explainWhyCancel}
+        </p>
       </div>
       {!isAdmin &&
         !messageObj?.isCancelled &&

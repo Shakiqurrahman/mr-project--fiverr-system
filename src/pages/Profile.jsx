@@ -388,7 +388,10 @@ function Profile({ user = {}, slug }) {
               <div className="flex items-center justify-between gap-1 text-sm">
                 <span>Last Project Completed</span>
                 <p className="text-nowrap font-semibold">
-                  {adminProfileData?.LastProjectCompleted?.date}
+                  {adminProfileData?.LastProjectCompleted?.date?.replace(
+                    "about",
+                    "",
+                  )}
                 </p>
               </div>
             )}

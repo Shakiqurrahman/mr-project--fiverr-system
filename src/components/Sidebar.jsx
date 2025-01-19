@@ -38,13 +38,14 @@ function Sidebar() {
       link: "https://depositphotos.com/?ref=40165016&utm_source=linkCopy&utm_medium=referral",
     },
     {
-      url: Vectezzy,
-      link: "https://vecteezycom.sjv.io/09GxmN",
-    },
-    {
       url: Dreamstime,
       link: "https://www.dreamstime.com/#res22427301",
     },
+    {
+      url: Vectezzy,
+      link: "https://vecteezycom.sjv.io/09GxmN",
+    },
+
     {
       url: alamy,
       link: "",
@@ -62,7 +63,8 @@ function Sidebar() {
           {stockImages
             ?.filter((s) => s?.link)
             ?.map((stock, i) => (
-              <div
+              <Link
+                to={stock.link}
                 key={i}
                 className="mt-3 overflow-hidden rounded-lg border border-solid border-gray-500"
               >
@@ -73,13 +75,10 @@ function Sidebar() {
                     alt=""
                   />
                 </div>
-                <Link
-                  to={stock.link}
-                  className="block w-full bg-gray-500 p-1 text-center text-white"
-                >
+                <div className="block w-full bg-gray-500 p-1 text-center text-white">
                   Click Here
-                </Link>
-              </div>
+                </div>
+              </Link>
             ))}
         </div>
       </div>

@@ -147,9 +147,9 @@ const CancelProjectModal = ({ handleClose }) => {
 
           {isAdmin && (
             <div className="mt-4 flex justify-center gap-8">
-              <div className="flex items-center gap-2">
+              <div className="flex gap-2">
                 <input
-                  className="size-4"
+                  className="size-4 mt-1"
                   type="radio"
                   name="extendType"
                   onChange={handleExtendType}
@@ -158,9 +158,9 @@ const CancelProjectModal = ({ handleClose }) => {
                 />
                 <label htmlFor="requestByClient">Requested by client</label>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex gap-2">
                 <input
-                  className="size-4"
+                  className="size-4 mt-1"
                   type="radio"
                   name="extendType"
                   onChange={handleExtendType}

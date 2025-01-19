@@ -146,7 +146,7 @@ const ExtendingDeliveryPreview = ({ messageObj, value }) => {
       <div className="p-2 py-6 sm:p-4">
         <div className="mb-6 flex items-center text-sm sm:text-base">
           <div
-            className={`${value?.amount ? "w-3/6 sm:w-4/6" : "w-4/6 sm:w-5/6"} pr-4`}
+            className={`${value?.amount ? "w-3/6 sm:w-4/6" : "w-4/6 sm:w-5/6"} whitespace-pre-wrap pr-4`}
           >
             {value?.explainWhyExtend}
           </div>

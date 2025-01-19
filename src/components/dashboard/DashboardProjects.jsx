@@ -123,7 +123,7 @@ const DashboardProjects = () => {
               "";
             return (
               <Fragment key={idx}>
-                <div className="mb-6 flex min-w-[700px] items-center justify-between gap-4 border bg-lightskyblue p-4 last:mb-0">
+                <div className="mb-6 flex min-w-[800px] items-center justify-between gap-4 border bg-lightskyblue p-4 last:mb-0">
                   <div className="flex w-full items-center">
                     <img
                       src={project?.projectImage}
@@ -152,7 +152,7 @@ const DashboardProjects = () => {
                       </div>
                       <h2
                         title={project?.user?.userName}
-                        className="max-w-[160px] truncate text-sm font-semibold duration-300 group-hover:underline"
+                        className="max-w-[150px] truncate text-sm font-semibold duration-300 group-hover:underline"
                       >
                         {project?.user?.userName}
                       </h2>
@@ -165,7 +165,9 @@ const DashboardProjects = () => {
                     </div>
                     <div className="w-[50%] text-center text-sm">
                       <p className="font-medium text-gray-500">
-                        {project?.completedDate ? "Date" : "Time"}
+                        {project?.completedDate || project.cancelledDate
+                          ? "Date"
+                          : "Time"}
                       </p>
                       <p
                         className={`font-bold ${color === "red" && !project?.completedDate && !project?.cancelledDate ? "text-red-500" : "text-black"}`}

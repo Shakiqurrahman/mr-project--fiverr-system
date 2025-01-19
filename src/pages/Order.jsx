@@ -196,7 +196,7 @@ const Order = () => {
                         <p className="text-lg">
                           You&apos;ve just recieved a tip of
                         </p>
-                        <h3 className="text-[30px] font-medium">
+                        <h3 className="text-[30px] font-semibold">
                           $
                           {Number(projectDetails?.projectTips?.amount)?.toFixed(
                             2,

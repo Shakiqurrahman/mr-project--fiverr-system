@@ -149,7 +149,7 @@ const NotificationModal = ({ close }) => {
                     </div>
                   </div>
                   {notification?.payload?.thumbnailUrl && (
-                    <div className="w-16 flex-shrink-0">
+                    <div className="w-12 flex-shrink-0">
                       <img
                         className="w-full rounded-lg object-cover"
                         src={notification?.payload?.thumbnailUrl}
