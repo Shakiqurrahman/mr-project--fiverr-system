@@ -13,13 +13,13 @@ const CommentsPreview = ({ commentedImages }) => {
 
   const filteredImages = commentedImages?.filter((image) => {
     // Check if any comment in this image has newComment: true
-    const hasNewComment = image.comments.some(
-      (comment) => comment.newComment === true,
+    const hasNewComment = image?.comments?.some(
+      (comment) => comment?.newComment === true,
     );
 
     // Check if any comment has replies with newReply: true
-    const hasNewReply = image.comments.some((comment) =>
-      comment.replies.some((reply) => reply.newReply === true),
+    const hasNewReply = image?.comments?.some((comment) =>
+      comment.replies?.some((reply) => reply?.newReply === true),
     );
 
     // Return true if either hasNewComment or hasNewReply is true
@@ -28,15 +28,15 @@ const CommentsPreview = ({ commentedImages }) => {
 
   const totalNewComments =
     filteredImages
-      ?.map((img) => img.comments.filter((c) => c.newComment).length)
-      .reduce((accumulator, currentValue) => accumulator + currentValue, 0) +
+      ?.map((img) => img?.comments?.filter((c) => c?.newComment)?.length)
+      ?.reduce((accumulator, currentValue) => accumulator + currentValue, 0) +
     filteredImages
       ?.map((img) =>
-        img.comments
-          .map((c) => c.replies.filter((r) => r.newReply).length)
-          .reduce((accumulator, currentValue) => accumulator + currentValue, 0),
+        img?.comments
+          ?.map((c) => c?.replies?.filter((r) => r?.newReply)?.length)
+          ?.reduce((accumulator, currentValue) => accumulator + currentValue, 0),
       )
-      .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+      ?.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
   const handleOpenCommentBox = (imgObj) => {
     const image = { ...imgObj, newComment: false };
@@ -64,7 +64,7 @@ const CommentsPreview = ({ commentedImages }) => {
                 View{" "}
                 {img?.comments?.filter((c) => c.newComment).length +
                   img?.comments
-                    ?.map((c) => c.replies.filter((r) => r.newReply).length)
+                    ?.map((c) => c?.replies?.filter((r) => r?.newReply)?.length)
                     .reduce(
                       (accumulator, currentValue) => accumulator + currentValue,
                       0,

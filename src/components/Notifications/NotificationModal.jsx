@@ -34,7 +34,7 @@ const NotificationModal = ({ close }) => {
   }, [socket, dispatch]);
 
   const isUserOnline = (userId) => {
-    return onlineUsers.some((onlineUser) => onlineUser.userId === userId);
+    return onlineUsers?.some((onlineUser) => onlineUser.userId === userId);
   };
 
   useOutsideClick(notificalModal, () => dispatch(close(false)));

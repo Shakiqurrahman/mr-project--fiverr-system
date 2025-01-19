@@ -92,7 +92,7 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
   const unsubmittedRepliedComments = images
     ?.map((image) => {
       return image?.comments
-        ?.flatMap((c) => c.replies || [])
+        ?.flatMap((c) => c?.replies || [])
         ?.filter((r) => !r?.isSubmitted)?.length;
     })
     ?.reduce((accumulator, currentValue) => accumulator + currentValue, 0);

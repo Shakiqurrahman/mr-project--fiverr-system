@@ -451,7 +451,7 @@ function EditDesign() {
     const newImagesToAdd = [];
 
     const updatedMatchingImages = matchingImages.filter((image) => {
-      return !imagesToRemove.some(
+      return !imagesToRemove?.some(
         (removeImage) => removeImage.name === image.name,
       );
     });

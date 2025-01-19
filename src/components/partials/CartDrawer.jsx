@@ -26,11 +26,11 @@ const CartDrawer = ({ close }) => {
 
   // Handle checkout
   const handleCheckout = () => {
-    const selectedItems = cart.filter((item) => item.checked);
+    const selectedItems = cart?.filter((item) => item?.checked);
     navigate("/project", { state: { items: selectedItems } });
     close();
   };
-  const hasSelectedItems = cart.some((item) => item.checked);
+  const hasSelectedItems = cart?.some((item) => item?.checked);
 
   return (
     <div className="ml-auto h-full w-full max-w-[450px] p-4 pt-0">

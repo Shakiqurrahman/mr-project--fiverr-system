@@ -26,16 +26,16 @@ function Cart() {
 
   // Handle checkout
   const handleCheckout = () => {
-    const selectedItems = cart.filter((item) => item.checked);
+    const selectedItems = cart?.filter((item) => item.checked);
     navigate("/project", { state: { items: selectedItems } });
   };
-  const hasSelectedItems = cart.some((item) => item.checked);
+  const hasSelectedItems = cart?.some((item) => item.checked);
 
   return (
     <div className="mx-auto max-w-[800px] bg-slate-100 p-4 sm:mt-0 md:mt-10">
       <div className="flex justify-between border-b border-black/20 pb-4">
         <h1 className="text-xl font-bold text-primary">
-          Your Cart &#40;{cart.length} Item{cart.length > 1 && "s"}&#41;
+          Your Cart &#40;{cart?.length} Item{cart?.length > 1 && "s"}&#41;
         </h1>
         {/* <RiCloseLargeFill onClick={close} className="cursor-pointer text-2xl" /> */}
       </div>

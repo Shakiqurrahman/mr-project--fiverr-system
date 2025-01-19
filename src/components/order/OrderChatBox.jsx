@@ -588,7 +588,7 @@ const OrderChatBox = () => {
   const [isAdminOnline, setIsAdminOnline] = useState(false);
   useEffect(() => {
     if (onlineUsers && onlineUsers.length > 0) {
-      const adminOnline = onlineUsers.some(
+      const adminOnline = onlineUsers?.some(
         (onlineUser) => onlineUser?.role !== "USER",
       );
       setIsAdminOnline(adminOnline);
