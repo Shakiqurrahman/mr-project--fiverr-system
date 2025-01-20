@@ -195,7 +195,7 @@ const OrderDetails = () => {
               </Fragment>
             ))}
           {projectDetails?.from === "offerProject" &&
-            items[0]?.freeDesign?.designName && (
+            items[0]?.freeDesign?.freeSubDesign && (
               <div className="flex">
                 <div className="w-3/6 shrink-0 border-b p-3">
                   <h1 className="text-base font-semibold text-primary">
@@ -272,11 +272,13 @@ const OrderDetails = () => {
           <div className="flex items-center font-semibold">
             <div className="w-3/6 shrink-0 p-3">Total</div>
             <div className="w-1/6 shrink-0 border-l border-gray-300 p-3 text-center">
-              {projectDetails?.from === "offerProject"
-                ? items[0]?.isFastDelivery
-                  ? items[0]?.designs?.length + 1
-                  : items[0]?.designs?.length
-                : totalQuantity}
+              {projectDetails?.from === "offerProject" &&
+              items[0]?.freeDesign?.freeSubDesign
+                ? items[0]?.designs?.length + 1
+                : projectDetails?.from === "offerProject" &&
+                    !items[0]?.freeDesign?.freeSubDesign
+                  ? items[0]?.designs?.length
+                  : totalQuantity}
             </div>
             <div className="w-1/6 shrink-0 border-l border-gray-300 p-3 text-center">
               {totalDuration}{" "}
