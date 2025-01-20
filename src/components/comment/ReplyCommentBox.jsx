@@ -46,12 +46,12 @@ const ReplyCommentBox = ({
   };
 
   useEffect(() => {
-    if (autoFocus && textAreaRef.current) {
-      textAreaRef.current.focus();
+    if (autoFocus && textAreaRef?.current) {
+      textAreaRef?.current?.focus();
     }
   }, [autoFocus]);
 
-  const letterLogo = user?.userName?.trim().charAt(0).toUpperCase();
+  const letterLogo = user?.userName?.trim()?.charAt(0)?.toUpperCase();
 
   // useOutsideClick(commentBox, () => setShowCommentReply(null));
   return (

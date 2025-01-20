@@ -19,11 +19,11 @@ const EditCommentBox = ({
 
   useEffect(() => {
     if (commentObj) {
-      textAreaRef.current.focus();
+      textAreaRef?.current?.focus();
 
       // Set the selection to the end of the current value
-      const textArea = textAreaRef.current;
-      const valueLength = textArea.value.length;
+      const textArea = textAreaRef?.current;
+      const valueLength = textArea?.value?.length;
       textArea.setSelectionRange(valueLength, valueLength);
     }
   }, [commentObj]);
@@ -101,7 +101,7 @@ const EditCommentBox = ({
                 type="submit"
                 disabled={
                   !commentObj?.commentText ||
-                  commentObj.commentText === comment?.commentText
+                  commentObj?.commentText === comment?.commentText
                 }
                 className="flex items-center gap-1 text-sm font-semibold text-primary disabled:text-primary/50"
               >

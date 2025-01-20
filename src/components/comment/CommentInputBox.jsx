@@ -17,7 +17,7 @@ const CommentInputBox = ({ focusWriteComment, setFocusWriteComment }) => {
 
   useEffect(() => {
     if (commentObj) {
-      textAreaRef.current.focus();
+      textAreaRef?.current?.focus();
     }
   }, [commentObj]);
 
@@ -70,7 +70,7 @@ const CommentInputBox = ({ focusWriteComment, setFocusWriteComment }) => {
     setCommentText("");
   };
 
-  const letterLogo = user?.userName?.trim().charAt(0).toUpperCase();
+  const letterLogo = user?.userName?.trim()?.charAt(0)?.toUpperCase();
 
   // useOutsideClick(commentBox, () => setFocusWriteComment(false));
   return (

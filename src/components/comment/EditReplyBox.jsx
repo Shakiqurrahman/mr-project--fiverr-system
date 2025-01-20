@@ -18,11 +18,11 @@ const EditReplyBox = ({
 
   useEffect(() => {
     if (replyObj) {
-      textAreaRef.current.focus();
+      textAreaRef?.current?.focus();
 
       // Set the selection to the end of the current value
-      const textArea = textAreaRef.current;
-      const valueLength = textArea.value.length;
+      const textArea = textAreaRef?.current;
+      const valueLength = textArea?.value?.length;
       textArea.setSelectionRange(valueLength, valueLength);
     }
   }, [replyObj]);
@@ -102,7 +102,7 @@ const EditReplyBox = ({
               </button>
               <button
                 type="submit"
-                disabled={replyObj?.replyText === reply.reply.replyText}
+                disabled={replyObj?.replyText === reply?.reply?.replyText}
                 className="flex items-center gap-1 text-sm font-semibold text-primary disabled:text-primary/50"
               >
                 Update

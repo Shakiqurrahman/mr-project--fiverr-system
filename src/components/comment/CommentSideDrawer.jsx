@@ -109,14 +109,14 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
     const updatedComments = images?.map((image) => {
       return {
         ...image,
-        comments: image?.comments.map((comment) => ({
+        comments: image?.comments?.map((comment) => ({
           ...comment,
           isSubmitted: true,
-          newComment: comment.isSubmitted ? false : true,
+          newComment: comment?.isSubmitted ? false : true,
           replies: comment?.replies?.map((reply) => ({
             ...reply,
             isSubmitted: true,
-            newReply: reply.isSubmitted ? false : true,
+            newReply: reply?.isSubmitted ? false : true,
           })),
         })),
       };
@@ -177,10 +177,10 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
   useEffect(() => {
     if (
       (showCommentEdit || focusWriteComment) &&
-      commentsContainerRef.current
+      commentsContainerRef?.current
     ) {
-      commentsContainerRef.current.scrollTo({
-        top: commentsContainerRef.current.scrollHeight,
+      commentsContainerRef?.current?.scrollTo({
+        top: commentsContainerRef?.current?.scrollHeight,
         behavior: "smooth",
       });
     }
@@ -215,7 +215,7 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
           onClick={() => setCommentCollapse(!commentCollapse)}
           className="flex items-center gap-1 text-xs text-gray-500"
         >
-          {comments?.filter((c) => c.commentId)?.length} COMMENTS{" "}
+          {comments?.filter((c) => c?.commentId)?.length} COMMENTS{" "}
           <GrFormUp
             className={`text-base ${commentCollapse && "rotate-180"} duration-300`}
           />
@@ -228,10 +228,10 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
             {/* comments  */}
             <div>
               {comments
-                ?.filter((c) => c.commentId)
+                ?.filter((c) => c?.commentId)
                 ?.map((comment) => (
                   <div
-                    key={comment.commentId}
+                    key={comment?.commentId}
                     ref={commentRef}
                     className={`border-b`}
                   >
@@ -239,13 +239,13 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
                       onClick={() =>
                         dispatch(
                           setHighlight(
-                            highlight && highlight === comment.markerId
+                            highlight && highlight === comment?.markerId
                               ? null
-                              : comment.markerId,
+                              : comment?.markerId,
                           ),
                         )
                       }
-                      className={`flex items-start gap-2 p-4 ${highlight && comment.markerId === highlight ? "bg-lightcream" : ""} `}
+                      className={`flex items-start gap-2 p-4 ${highlight && comment?.markerId === highlight ? "bg-lightcream" : ""} `}
                     >
                       {comment?.senderImage ? (
                         <img
@@ -314,7 +314,7 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
                               <div className="flex w-full items-center justify-between gap-1 pb-2">
                                 <button
                                   onClick={() =>
-                                    setShowCommentReply(comment.commentId)
+                                    setShowCommentReply(comment?.commentId)
                                   }
                                   type="button"
                                   className="flex items-center gap-1 text-sm font-semibold text-gray-400"
@@ -349,7 +349,7 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
                         {/* Replies */}
                         {comment?.replies?.map((reply) => (
                           <div
-                            key={reply.replyId}
+                            key={reply?.replyId}
                             className="group border-t pb-2 pt-4"
                           >
                             <div className="flex items-start gap-2">
@@ -418,7 +418,9 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
                                     <div className="flex w-full items-center justify-between gap-1">
                                       <button
                                         onClick={() =>
-                                          setShowCommentReply(comment.commentId)
+                                          setShowCommentReply(
+                                            comment?.commentId,
+                                          )
                                         }
                                         type="button"
                                         className="flex items-center gap-1 text-sm font-semibold text-gray-400"

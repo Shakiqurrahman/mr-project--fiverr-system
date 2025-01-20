@@ -168,7 +168,7 @@ const CommentImagePreview = ({ selected, close, openDrawer, drawer }) => {
               <img
                 src={img?.url}
                 alt={img?.name}
-                className={`h-2/3 object-contain opacity-50 ${img.imageId === selectedImage.imageId && "scale-105 !opacity-100"}`}
+                className={`h-2/3 object-contain opacity-50 ${img?.imageId === selectedImage?.imageId && "scale-105 !opacity-100"}`}
               />
               <h1 className="line-clamp-1 text-xs text-white">
                 <GenerateName name={img?.name} />
