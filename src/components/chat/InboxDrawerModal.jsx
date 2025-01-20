@@ -132,6 +132,7 @@ const InboxDrawerModal = ({ close }) => {
                           ? `${msg?.lastmessageinfo?.senderUserName} just sent you some attachments.`
                           : msg?.lastmessageinfo?.messageText
                     }`}
+                  {msg?.lastmessageinfo?.contactForm && `sent a new message.`}
                 </p>
                 <span className="mt-3 block text-xs font-semibold text-[#3b3b3b]/50">
                   {msg?.lastmessageinfo?.createdAt &&
