@@ -504,7 +504,9 @@ const OrderChatBox = () => {
                 ? "Cancel Request..."
                 : msg?.imageComments?.length > 0
                   ? "Image Comments..."
-                  : msg?.messageText;
+                  : msg?.revisionProject
+                    ? "Revision Project..."
+                    : msg?.messageText;
 
     const replySenderUserName = user?.userName;
     const replySenderUserRole = user?.role;

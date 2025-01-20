@@ -104,7 +104,7 @@ const RevisionModal = ({ handleClose, onOfferSubmit, messageObj }) => {
   };
   useOutsideClick(formRef, () => handleClose(false));
   return (
-    <div className="fixed left-0 top-0 z-[999] flex h-screen w-full items-center justify-center bg-black/50 p-5 backdrop-blur-sm">
+    <div className="fixed left-0 top-0 z-[999] flex h-screen w-full items-center justify-center bg-black/30 p-5">
       <form
         className="w-full max-w-[800px] border border-gray-200 bg-white shadow-btn-shadow"
         ref={formRef}
