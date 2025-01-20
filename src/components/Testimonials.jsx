@@ -205,7 +205,7 @@ function Testimonials() {
   const testimonialSetting = {
     dots: false,
     draggable: true,
-    infinite: false,
+    infinite: reviews?.length > 1 ? true : false,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -244,6 +244,8 @@ function Testimonials() {
   const flooredStars = Math.floor(adminInfo?.Avg_Rating);
 
   const imageAttachedReviewsLength = data?.filter((r) => r.isThumbnail)?.length;
+
+  const reversedReviews = reviews && [...reviews]?.reverse();
 
   return (
     <div className="max-width">
@@ -416,7 +418,7 @@ function Testimonials() {
         <Divider className="my-5 h-px w-full !bg-black/30 sm:my-10" />
         <div className="mb-5">
           <Slider {...testimonialSetting}>
-            {reviews?.map((review, index) => (
+            {reversedReviews?.map((review, index) => (
               <div key={index} className="px-0 md:px-10">
                 <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div>
@@ -470,7 +472,7 @@ function Testimonials() {
                         "",
                       )}
                       alt=""
-                      className="w-[150px] cursor-pointer rounded-xl object-cover"
+                      className="w-[100px] cursor-pointer rounded-xl object-cover sm:w-[150px]"
                       onClick={(e) => handlePreviewImage(e, review?.thumbnail)}
                     />
                   )}

@@ -221,6 +221,8 @@ const AllReviews = () => {
 
   const imageAttachedReviewsLength = data?.filter((r) => r.isThumbnail)?.length;
 
+  const reversedReviews = reviews && [...reviews]?.reverse();
+
   return (
     <div className="max-width">
       <div className="relative mt-20 rounded-lg bg-[#E7F4FC] p-5 pt-0">
@@ -389,7 +391,7 @@ const AllReviews = () => {
             </button>
           </form>
         </div>
-        {reviews?.map((review, index) => (
+        {reversedReviews?.map((review, index) => (
           <Fragment key={index}>
             <Divider className="my-5 h-px w-full !bg-black/30 sm:my-10" />
             <div className="mb-5">
@@ -447,7 +449,7 @@ const AllReviews = () => {
                         "",
                       )}
                       alt=""
-                      className="w-[150px] cursor-pointer rounded-xl object-cover"
+                      className="w-[100px] cursor-pointer rounded-xl object-cover sm:w-[150px]"
                       onClick={(e) => handlePreviewImage(e, review?.thumbnail)}
                     />
                   )}
