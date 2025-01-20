@@ -1,14 +1,19 @@
 import { IoStar } from "react-icons/io5";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import adminLogo from "../../assets/images/MR Logo Icon.png";
 import { timeAgoTracker } from "../../libs/timeAgoTracker";
 
 const OrderReview = ({ reviewDetails }) => {
+  const { user } = useSelector((state) => state.user);
   const isAdmin = reviewDetails?.senderType === "OWNER";
   return (
     <div className="mt-5 border border-gray-200 shadow-btn-shadow">
       <h1 className="bg-lightskyblue p-4 text-lg font-semibold sm:text-xl">
-        {isAdmin ? reviewDetails?.sender?.userName : "Marfujurrahm535"}&apos;s
-        Review
+        {user?.role === "USER"
+          ? "Mahfujurrahm535"
+          : reviewDetails?.sender?.userName}
+        &apos;s Review
       </h1>
       <div className="p-4">
         <div className="flex items-center gap-3">
@@ -23,9 +28,12 @@ const OrderReview = ({ reviewDetails }) => {
               {reviewDetails?.sender?.userName?.charAt(0).toUpperCase()}
             </div>
           )}
-          <h1 className="text-lg font-semibold">
-            {isAdmin ? "mahfujurrahm535" : reviewDetails?.sender?.userName}
-          </h1>
+          <Link
+            to={`/${isAdmin ? "Mahfujurrahm535" : reviewDetails?.sender?.userName}`}
+            className="text-lg font-semibold"
+          >
+            {isAdmin ? "Mahfujurrahm535" : reviewDetails?.sender?.userName}
+          </Link>
         </div>
         <p className="my-5">{reviewDetails?.message}</p>
         <div className="flex items-center gap-2 text-lg font-semibold">

@@ -36,6 +36,7 @@ function CompletedProject() {
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
+    className: "completed-cards",
     arrows: data?.length > 4 ? true : false,
     autoplay: data?.length > 4 ? true : false,
     autoplaySpeed: 2000,

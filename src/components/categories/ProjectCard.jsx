@@ -40,7 +40,7 @@ function ProjectCard({
   };
   return (
     <>
-      <div className="relative h-full px-[5px]">
+      <div className={`relative ${clientName ? "h-full" : "h-full"} px-[5px]`}>
         {!user?.block_for_chat &&
           cart &&
           (cartItems.some((item) => item?.designId === design?.designId) ? (
@@ -71,7 +71,7 @@ function ProjectCard({
         <Link
           to={slug}
           className="block cursor-pointer border bg-white"
-          style={{ height: `calc(100% - ${clientRefHeight}px)` }}
+          style={{ height: `calc(100% - ${clientRefHeight + 12}px)` }}
         >
           {clientName ? (
             <div

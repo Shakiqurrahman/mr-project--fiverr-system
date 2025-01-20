@@ -760,14 +760,17 @@ const OrderChatBox = () => {
                   <div className="max-w-[calc(100%_-_42px)] grow">
                     <div className="mt-1 flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <h1 className="text-sm font-semibold sm:text-base">
+                        <Link
+                          to={`/${isAdmin ? msg?.senderUserName : user?.role === "USER" && user?.userName === msg?.senderUserName ? msg?.senderUserName : "mahfujurrahm535"}`}
+                          className="text-sm font-semibold sm:text-base"
+                        >
                           {msg?.senderUserName === user?.userName
                             ? "Me"
                             : msg?.senderUserName !== user?.userName &&
                                 user?.role === "USER"
                               ? "Mahfujurrahm535"
                               : msg?.senderUserName}
-                        </h1>
+                        </Link>
                         <p className="text-[10px] text-black/50 sm:text-xs">
                           {renderMessageDate(parseInt(msg?.timeAndDate))},{" "}
                           {renderMessageTime(parseInt(msg?.timeAndDate))}

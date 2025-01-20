@@ -877,7 +877,7 @@ const ChatBox = ({ openToggle }) => {
             {isAdmin ? (
               <Link to={`/${recipientUserName}`}>{recipientUserName}</Link>
             ) : (
-              "Mahfujurrahm535"
+              <Link to={`/mahfujurrahm535`}>Mahfujurrahm535</Link>
             )}
           </h1>
           <div className="flex flex-col items-start text-xs sm:flex-row sm:items-center sm:gap-3 lg:text-sm">
@@ -1053,15 +1053,18 @@ const ChatBox = ({ openToggle }) => {
                   <div className="grow">
                     <div className="mt-1 flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <h1 className="text-sm font-semibold sm:text-base">
+                        <Link
+                          to={`/${isAdmin ? msg?.senderUserName : user?.role === "USER" && sameUser ? msg?.senderUserName : "mahfujurrahm535"}`}
+                          className="text-sm font-semibold sm:text-base"
+                        >
                           {isAdmin
                             ? sameUser
                               ? "Me"
                               : msg?.senderUserName
                             : sameUser
                               ? "Me"
-                              : "mahfujurrahm535"}
-                        </h1>
+                              : "Mahfujurrahm535"}
+                        </Link>
                         <p className="text-[10px] text-black/50 sm:text-xs">
                           {renderMessageDate(parseInt(msg?.timeAndDate))},{" "}
                           {renderMessageTime(parseInt(msg?.timeAndDate))}
@@ -1119,7 +1122,9 @@ const ChatBox = ({ openToggle }) => {
                           {msg?.contactForm?.website}
                         </p>
                         <p className="my-1">
-                          <span className="font-semibold whitespace-pre-wrap">Message: </span>{" "}
+                          <span className="whitespace-pre-wrap font-semibold">
+                            Message:{" "}
+                          </span>{" "}
                           {msg.contactForm.messageText}
                         </p>
                         {msg?.contactForm?.exampleDesign?.length > 0 && (
