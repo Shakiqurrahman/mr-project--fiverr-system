@@ -14,7 +14,7 @@ function Feedback() {
 
   const { user } = useSelector((state) => state?.user);
 
-  const [submitReview] = useCreateAReviewMutation();
+  const [submitReview, { isLoading }] = useCreateAReviewMutation();
 
   const [thumbnail, setThumbnail] = useState(true);
   const [value, setValue] = useState(0);
@@ -127,7 +127,10 @@ function Feedback() {
               )}
             </div>
             <div className="relative mx-auto mt-5 flex w-full justify-center lg:mt-10">
-              <button className="w-[200px] bg-primary p-2 text-center text-xl font-semibold text-white hover:bg-blue-400">
+              <button
+                disabled={isLoading}
+                className="w-[200px] bg-primary p-2 text-center text-xl font-semibold text-white hover:bg-blue-400 disabled:bg-primary/50"
+              >
                 Send Feedback
               </button>
               <Link

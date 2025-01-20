@@ -102,6 +102,7 @@ const CreateOfferModal = ({
   const handleSubmit = async (e) => {
     const { title, thumbnail, price, deliveryCount, desc } = form;
     e.preventDefault();
+    setIsLoading(true);
     if (values && title && thumbnail && price && deliveryCount && desc) {
       const imageObj = {
         url: form.thumbnail,
@@ -153,7 +154,7 @@ const CreateOfferModal = ({
           toast.error("Something went wrong!");
         }
       }
-
+      setIsLoading(false);
       handleClose(false);
     }
   };
@@ -306,6 +307,7 @@ const CreateOfferModal = ({
             </button>
             <button
               type="submit"
+              disabled={isLoading}
               className="w-1/2 bg-primary p-2 font-medium text-white disabled:bg-primary/50"
             >
               Send Offer

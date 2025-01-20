@@ -8,7 +8,7 @@ import { useCreateAReviewMutation } from "../../Redux/api/orderApiSlice";
 import Divider from "../Divider";
 
 const OrderReviewForm = () => {
-  const [submitReview] = useCreateAReviewMutation();
+  const [submitReview, { isLoading }] = useCreateAReviewMutation();
   const { user } = useSelector((state) => state.user);
   const { projectDetails } = useSelector((state) => state.order);
 
@@ -103,7 +103,8 @@ const OrderReviewForm = () => {
         <button
           type="button"
           onClick={handleSubmit}
-          className="rounded-md bg-primary px-10 py-2 text-lg font-semibold text-white"
+          disabled={isLoading}
+          className="rounded-md bg-primary px-10 py-2 text-lg font-semibold text-white disabled:bg-primary/50"
         >
           Send Feedback
         </button>
