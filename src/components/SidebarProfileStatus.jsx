@@ -21,7 +21,7 @@ function SidebarProfileStatus() {
       </span>
       <p className="text-sm">Last Project Completed</p>
       <span className="mb-3 block text-lg font-semibold">
-        {data?.LastProjectCompleted?.date}
+        {data?.LastProjectCompleted?.date?.replace("about", "")}
       </span>
       <p className="text-sm">Active Projects</p>
       <span className="block text-lg font-semibold">
