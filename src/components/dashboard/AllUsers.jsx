@@ -115,77 +115,82 @@ const AllUsers = () => {
       {/* all users */}
       <div className="mt-6 space-y-4">
         {filteredUsers?.length > 0 ? (
-          filteredUsers?.map((user, idx) => {
-            const letterLogo =
-              !user?.image && user?.userName?.trim().charAt(0).toUpperCase();
-            const letterLogo2 =
-              !user?.user?.image &&
-              user?.user?.userName?.trim().charAt(0).toUpperCase();
-            return (
-              <div key={idx}>
-                <Link
-                  to={`/${user?.userName || user?.user?.userName}`}
-                  className="group flex items-center gap-2"
-                >
-                  <div className="relative flex-shrink-0">
-                    {user?.image || user?.user?.image ? (
-                      <img
-                        src={user?.image || user?.user?.image}
-                        alt={user?.fullName || user?.user?.fullName}
-                        className="size-8 rounded-full border object-cover"
-                      />
-                    ) : (
-                      <div className="flex size-8 items-center justify-center rounded-full border bg-gray-200 object-cover text-xl font-bold text-[#3b3b3b]/50">
-                        {letterLogo || letterLogo2}
-                      </div>
-                    )}
-                    <span
-                      className={`absolute bottom-0 right-0.5 size-2 rounded-full border border-white ${isUserOnline(user?.id || user?.user?.id) ? "bg-primary" : "bg-gray-400"}`}
-                    ></span>
-                  </div>
-                  <h3 className="text-base font-semibold duration-300 group-hover:underline">
-                    {user?.userName || user?.user?.userName}
-                  </h3>
-                </Link>
+          filteredUsers
+            ?.filter((user) => user?.AffiliateJoin?.length > 0)
+            ?.map((user, idx) => {
+              const letterLogo =
+                !user?.image && user?.userName?.trim().charAt(0).toUpperCase();
+              const letterLogo2 =
+                !user?.user?.image &&
+                user?.user?.userName?.trim().charAt(0).toUpperCase();
+              return (
+                <div key={idx}>
+                  <Link
+                    to={`/${user?.userName || user?.user?.userName}`}
+                    className="group flex items-center gap-2"
+                  >
+                    <div className="relative flex-shrink-0">
+                      {user?.image || user?.user?.image ? (
+                        <img
+                          src={user?.image || user?.user?.image}
+                          alt={user?.fullName || user?.user?.fullName}
+                          className="size-8 rounded-full border object-cover"
+                        />
+                      ) : (
+                        <div className="flex size-8 items-center justify-center rounded-full border bg-gray-200 object-cover text-xl font-bold text-[#3b3b3b]/50">
+                          {letterLogo || letterLogo2}
+                        </div>
+                      )}
+                      <span
+                        className={`absolute bottom-0 right-0.5 size-2 rounded-full border border-white ${isUserOnline(user?.id || user?.user?.id) ? "bg-primary" : "bg-gray-400"}`}
+                      ></span>
+                    </div>
+                    <h3 className="text-base font-semibold duration-300 group-hover:underline">
+                      {user?.userName || user?.user?.userName}
+                    </h3>
+                  </Link>
 
-                <div className="ml-10 mt-2 space-y-2">
-                  {user?.AffiliateJoin?.length > 0 &&
-                    user?.AffiliateJoin?.map((affUser, idx) => {
-                      const letterLogo =
-                        !affUser?.user?.image &&
-                        affUser?.user?.userName.trim().charAt(0).toUpperCase();
-                      return (
-                        <Link
-                          to={`/${affUser?.user?.userName}`}
-                          key={idx}
-                          className="group flex items-center gap-2"
-                        >
-                          <div className="relative flex-shrink-0">
-                            {affUser?.user?.image ? (
-                              <img
-                                src={affUser?.user?.image}
-                                alt={affUser?.user?.fullName}
-                                className="size-5 rounded-full border object-cover"
-                              />
-                            ) : (
-                              <div className="flex size-5 items-center justify-center rounded-full border bg-gray-200 object-cover text-sm font-bold text-[#3b3b3b]/50">
-                                {letterLogo}
-                              </div>
-                            )}
-                            <span
-                              className={`absolute bottom-0 right-0 size-1.5 rounded-full border border-white ${isUserOnline(affUser?.user?.id) ? "bg-primary" : "bg-gray-400"}`}
-                            ></span>
-                          </div>
-                          <h3 className="text-sm font-medium duration-300 group-hover:underline">
-                            {affUser?.user?.userName}
-                          </h3>
-                        </Link>
-                      );
-                    })}
+                  <div className="ml-10 mt-2 space-y-2">
+                    {user?.AffiliateJoin?.length > 0 &&
+                      user?.AffiliateJoin?.map((affUser, idx) => {
+                        const letterLogo =
+                          !affUser?.user?.image &&
+                          affUser?.user?.userName
+                            .trim()
+                            .charAt(0)
+                            .toUpperCase();
+                        return (
+                          <Link
+                            to={`/${affUser?.user?.userName}`}
+                            key={idx}
+                            className="group flex items-center gap-2"
+                          >
+                            <div className="relative flex-shrink-0">
+                              {affUser?.user?.image ? (
+                                <img
+                                  src={affUser?.user?.image}
+                                  alt={affUser?.user?.fullName}
+                                  className="size-5 rounded-full border object-cover"
+                                />
+                              ) : (
+                                <div className="flex size-5 items-center justify-center rounded-full border bg-gray-200 object-cover text-sm font-bold text-[#3b3b3b]/50">
+                                  {letterLogo}
+                                </div>
+                              )}
+                              <span
+                                className={`absolute bottom-0 right-0 size-1.5 rounded-full border border-white ${isUserOnline(affUser?.user?.id) ? "bg-primary" : "bg-gray-400"}`}
+                              ></span>
+                            </div>
+                            <h3 className="text-sm font-medium duration-300 group-hover:underline">
+                              {affUser?.user?.userName}
+                            </h3>
+                          </Link>
+                        );
+                      })}
+                  </div>
                 </div>
-              </div>
-            );
-          })
+              );
+            })
         ) : (
           <p className="text-center">No users found!</p>
         )}
