@@ -85,11 +85,15 @@ const DashboardProjects = () => {
         </div>
       ) : (
         <div className="mb-6 flex flex-col items-center justify-between gap-2 border p-4 sm:flex-row md:flex-wrap">
-          <h1 className="text-nowrap text-lg font-bold text-primary sm:text-xl">
-            {filteredSelectedProject?.name} -{" "}
-            {filteredSelectedProject?.quantity} ($
-            {filteredSelectedProject?.totalPrice})
-          </h1>
+          {isStatusLoading ? (
+            <p className="text-center">Loading...</p>
+          ) : (
+            <h1 className="text-nowrap text-lg font-bold text-primary sm:text-xl">
+              {filteredSelectedProject?.name} -{" "}
+              {filteredSelectedProject?.quantity} ($
+              {filteredSelectedProject?.totalPrice})
+            </h1>
+          )}
           <select
             className="border bg-white p-1 px-2 font-semibold outline-none"
             name="projectType"
@@ -106,7 +110,7 @@ const DashboardProjects = () => {
         </div>
       )}
       <div className="dashboard-overflow-x">
-        {isLoading ? (
+        {isStatusLoading || isLoading ? (
           <div className="max-width flex h-[200px] items-center justify-center text-primary">
             <AiOutlineLoading3Quarters className="animate-spin text-4xl" />
           </div>
