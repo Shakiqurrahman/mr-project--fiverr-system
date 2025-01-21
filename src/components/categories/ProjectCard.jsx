@@ -82,7 +82,7 @@ function ProjectCard({
               <img
                 src={thumbnail}
                 alt=""
-                className="pointer-events-none block w-full object-cover"
+                className={`pointer-events-none block w-full object-cover ${clientName ? "h-[100px] object-top sm:h-[230px]" : ""}`}
               />
             </div>
           ) : (
