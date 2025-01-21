@@ -286,7 +286,7 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
                                   : user?.id === comment?.userId &&
                                       user?.role === "USER"
                                     ? comment?.senderUserName
-                                    : "mahfujurrahm535"
+                                    : "Mahfujurrahm535"
                               }
                               className={`${!comment?.isSubmitted && "max-w-[110px]"} truncate text-sm font-bold`}
                             >
@@ -295,7 +295,7 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
                                 : user?.id === comment?.userId &&
                                     user?.role === "USER"
                                   ? comment?.senderUserName
-                                  : "mahfujurrahm535"}
+                                  : "Mahfujurrahm535"}
                             </p>
                             {!comment?.isSubmitted && (
                               <p className="rounded-full border px-2 py-1 text-xs font-medium text-gray-500">
@@ -391,7 +391,7 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
                                         : user?.id === reply?.userId &&
                                             user?.role === "USER"
                                           ? reply?.senderUserName
-                                          : "mahfujurrahm535"
+                                          : "Mahfujurrahm535"
                                     }
                                     className={`${!reply?.isSubmitted && "max-w-[110px]"} truncate text-sm font-bold`}
                                   >
@@ -400,7 +400,7 @@ const CommentSideDrawer = ({ close, drawerClose }) => {
                                       : user?.id === reply?.userId &&
                                           user?.role === "USER"
                                         ? reply?.senderUserName
-                                        : "mahfujurrahm535"}
+                                        : "Mahfujurrahm535"}
                                   </p>
                                   {!reply?.isSubmitted && (
                                     <p className="rounded-full border px-2 py-1 text-xs font-medium text-gray-500">

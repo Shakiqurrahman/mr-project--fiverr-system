@@ -100,7 +100,7 @@ const AllReviews = ({ user, allReviews }) => {
                       "",
                     )}
                     alt=""
-                    className="w-[60px] cursor-pointer rounded sm:w-[120px]"
+                    className="h-[40px] w-[60px] cursor-pointer rounded object-cover object-top sm:h-[80px] sm:w-[120px]"
                     onClick={(e) => handlePreviewImage(e, review?.thumbnail)}
                   />
                 )}

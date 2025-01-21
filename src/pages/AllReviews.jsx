@@ -488,7 +488,7 @@ const AllReviews = () => {
                           "",
                         )}
                         alt=""
-                        className="w-[100px] cursor-pointer rounded-xl object-cover sm:w-[150px]"
+                        className="h-[80px] w-[100px] cursor-pointer rounded-xl object-cover object-top sm:h-[120px] sm:w-[150px]"
                         onClick={(e) =>
                           handlePreviewImage(e, review?.thumbnail)
                         }

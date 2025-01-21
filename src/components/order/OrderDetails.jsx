@@ -168,7 +168,7 @@ const OrderDetails = () => {
                       "hour"}
                   </div>
                   <div className="w-1/6 shrink-0 border-b border-l border-gray-300 p-3 text-center font-medium">
-                    {item?.subCategory?.subAmount || item?.subTotal}
+                    ${item?.subCategory?.subAmount || item?.subTotal}
                   </div>
                 </div>
                 {item?.isFastDelivery && (

@@ -1130,7 +1130,7 @@ const OrderChatBox = () => {
               </button>
             ) : (
               <Link to={`/inbox`} className="font-semibold text-primary">
-                mahfujurrahm535
+                Mahfujurrahm535
               </Link>
             )}{" "}
             in your inbox

@@ -8,7 +8,7 @@ function PrivacyAndPolicy() {
         Privacy Policy
       </h1>
       <p className="mt-5 leading-[30px]">
-        Thank you for joining the mahfujurrahm535 family, We are dedicated to
+        Thank you for joining the Mahfujurrahm535 family, We are dedicated to
         safeguarding your personal data and ensuring your privacy. If you have
         any questions or inquiries regarding our privacy policy, please feel
         free to contact us at{" "}

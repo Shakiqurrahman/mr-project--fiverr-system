@@ -11,7 +11,7 @@ function About() {
       <p>
         We are a team of graphic designers. We have worked with many online
         marketplaces since 2016 with graphics design. And we&apos;ve been
-        successful in those marketplaces. Now we have created this site in 2024.
+        successful in those marketplaces. Now we have created this site in 2025.
         We want to help many businesses worldwide improve their business through
         marketing design based on our experience.
       </p>

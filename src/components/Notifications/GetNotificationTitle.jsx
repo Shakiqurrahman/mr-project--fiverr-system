@@ -222,7 +222,7 @@ const GetNotificationTitle = ({
     AdditionalOffer: (
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
-          <span className="font-bold">mahfujurrahm535 </span>
+          <span className="font-bold">Mahfujurrahm535 </span>
           {`has sent you an additional offer.`}
         </p>
       </div>
@@ -239,7 +239,7 @@ const GetNotificationTitle = ({
     AdditionalOfferWithdraw: (
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
-          <span className="font-bold">mahfujurrahm535</span>
+          <span className="font-bold">Mahfujurrahm535</span>
           {` withdrawn the additional offer`}
         </p>
       </div>
@@ -248,7 +248,7 @@ const GetNotificationTitle = ({
     CancelOffer: (
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
-          <span className="font-bold">mahfujurrahm535 </span>
+          <span className="font-bold">Mahfujurrahm535 </span>
           {`has sent you an cancel request.`}
         </p>
       </div>
@@ -256,7 +256,7 @@ const GetNotificationTitle = ({
     CancelOfferWithdraw: (
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
-          <span className="font-bold">mahfujurrahm535</span>
+          <span className="font-bold">Mahfujurrahm535</span>
           {` withdrawn the cancel request`}
         </p>
       </div>
