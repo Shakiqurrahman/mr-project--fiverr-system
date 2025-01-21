@@ -1046,7 +1046,11 @@ const ChatBox = ({ openToggle }) => {
                         />
                       ) : (
                         <div className="text-xl font-bold text-[#7c7c7c]/50">
-                          {isAdmin ? letterLogo : "M"}
+                          {isAdmin
+                            ? letterLogo
+                            : user?.role === "USER" && sameUser
+                              ? letterLogo
+                              : "M"}
                         </div>
                       ))}
                   </div>
