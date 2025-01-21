@@ -429,73 +429,82 @@ const AllReviews = () => {
             </button>
           </form>
         </div>
-        {reversedReviews?.map((review, index) => (
-          <Fragment key={index}>
-            <Divider className="my-5 h-px w-full !bg-black/30 sm:my-10" />
-            <div className="mb-5">
-              <div className="">
-                <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
-                    <p className="text-center text-base leading-[40px] sm:text-start md:text-lg">
-                      <span>
-                        <FaQuoteLeft className="mb-3 mr-1 inline text-xs text-red-500" />
-                      </span>
-                      {review?.message}
-                      <span>
-                        <FaQuoteRight className="mb-3 ml-1 inline text-xs text-red-500" />
-                      </span>
-                    </p>
-                    <div className="mt-5 flex flex-col items-center gap-2 sm:gap-4 lg:flex-row">
-                      {review?.sender?.image ? (
-                        <img
-                          src={review?.sender?.image}
-                          alt=""
-                          className="size-[30px] rounded-full sm:size-[40px]"
-                        />
-                      ) : (
-                        <div className="flex size-[30px] items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-3xl font-bold text-[#3b3b3b]/50 sm:size-[40px]">
-                          {review?.sender?.userName?.charAt(0)?.toUpperCase()}
+        {reversedReviews?.length > 0 ? (
+          reversedReviews?.map((review, index) => (
+            <Fragment key={index}>
+              <Divider className="my-5 h-px w-full !bg-black/30 sm:my-10" />
+              <div className="mb-5">
+                <div className="">
+                  <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                      <p className="text-center text-base leading-[40px] sm:text-start md:text-lg">
+                        <span>
+                          <FaQuoteLeft className="mb-3 mr-1 inline text-xs text-red-500" />
+                        </span>
+                        {review?.message}
+                        <span>
+                          <FaQuoteRight className="mb-3 ml-1 inline text-xs text-red-500" />
+                        </span>
+                      </p>
+                      <div className="mt-5 flex flex-col items-center gap-2 sm:gap-4 lg:flex-row">
+                        {review?.sender?.image ? (
+                          <img
+                            src={review?.sender?.image}
+                            alt=""
+                            className="size-[30px] rounded-full sm:size-[40px]"
+                          />
+                        ) : (
+                          <div className="flex size-[30px] items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-3xl font-bold text-[#3b3b3b]/50 sm:size-[40px]">
+                            {review?.sender?.userName?.charAt(0)?.toUpperCase()}
+                          </div>
+                        )}
+                        <Link
+                          to={`/${review?.sender?.userName}`}
+                          className="text-base font-semibold md:text-xl"
+                        >
+                          {review?.sender?.userName}
+                        </Link>
+                        <div className="ml-0 flex justify-center gap-2 text-lg text-[#C8E3F6] md:text-2xl lg:ml-3">
+                          {Array.from(
+                            { length: review?.rating },
+                            (_, index) => index + 1,
+                          )?.map((_, i) => (
+                            <IoStar key={i} className="text-primary" />
+                          ))}
                         </div>
-                      )}
-                      <Link
-                        to={`/${review?.sender?.userName}`}
-                        className="text-base font-semibold md:text-xl"
-                      >
-                        {review?.sender?.userName}
-                      </Link>
-                      <div className="ml-0 flex justify-center gap-2 text-lg text-[#C8E3F6] md:text-2xl lg:ml-3">
-                        {Array.from(
-                          { length: review?.rating },
-                          (_, index) => index + 1,
-                        )?.map((_, i) => (
-                          <IoStar key={i} className="text-primary" />
-                        ))}
+                        <p className="ml-0 text-base md:text-lg lg:ml-3">
+                          {review?.sender?.country}
+                        </p>
+                        <p className="mt-2 text-xs md:text-base lg:mt-0">
+                          {timeAgoTracker(review?.createdAt)}
+                        </p>
                       </div>
-                      <p className="ml-0 text-base md:text-lg lg:ml-3">
-                        {review?.sender?.country}
-                      </p>
-                      <p className="mt-2 text-xs md:text-base lg:mt-0">
-                        {timeAgoTracker(review?.createdAt)}
-                      </p>
                     </div>
-                  </div>
 
-                  {review?.isThumbnail && (
-                    <img
-                      src={review?.thumbnail?.replaceAll(
-                        "-watermark-resized",
-                        "",
-                      )}
-                      alt=""
-                      className="w-[100px] cursor-pointer rounded-xl object-cover sm:w-[150px]"
-                      onClick={(e) => handlePreviewImage(e, review?.thumbnail)}
-                    />
-                  )}
+                    {review?.isThumbnail && (
+                      <img
+                        src={review?.thumbnail?.replaceAll(
+                          "-watermark-resized",
+                          "",
+                        )}
+                        alt=""
+                        className="w-[100px] cursor-pointer rounded-xl object-cover sm:w-[150px]"
+                        onClick={(e) =>
+                          handlePreviewImage(e, review?.thumbnail)
+                        }
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          </Fragment>
-        ))}
+            </Fragment>
+          ))
+        ) : (
+          <>
+            <Divider className="my-5 h-px w-full !bg-black/30 sm:my-10" />
+            <p className="mb-5 text-center">No reviews found!</p>
+          </>
+        )}
       </div>
     </div>
   );
