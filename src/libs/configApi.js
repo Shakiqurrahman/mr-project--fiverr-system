@@ -8,8 +8,8 @@ export const configApi = {
   // socket: "https://dev.mahfujurrahm535.com",
 };
 
-export const STRIPE_PUBLIC_KEY =
-  "pk_test_51QToP3HmTDX4RS9Z2NsPZpJjs28tLouiQvVDfcnBJpv7QsZoBcLG23KWfAVf7koUCUVWRW43xh47HBdgTH3YaYNw00IdshSc1u"; // mahfujurrahm535
-  
 // export const STRIPE_PUBLIC_KEY =
-//   "pk_test_51Q3c1Z05wdRai5jAgWs4J0qLRbitnKzGjUkZLgRmaYdve8kCky7ufa4FkctcfQ25u4pFHFu0lKyz2j7DShiPGAQK00GRNNexlc";
+//   "pk_test_51QToP3HmTDX4RS9Z2NsPZpJjs28tLouiQvVDfcnBJpv7QsZoBcLG23KWfAVf7koUCUVWRW43xh47HBdgTH3YaYNw00IdshSc1u"; // mahfujurrahm535
+  
+export const STRIPE_PUBLIC_KEY =
+  "pk_test_51QToP3HmTDX4RS9Z2NsPZpJjs28tLouiQvVDfcnBJpv7QsZoBcLG23KWfAVf7koUCUVWRW43xh47HBdgTH3YaYNw00IdshSc1u";
