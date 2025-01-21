@@ -23,6 +23,8 @@ function Testimonials() {
   const [reviews, setReviews] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [selectedReviewTab, setSelectedReviewTab] = useState("");
+
   useEffect(() => {
     if (data) {
       setReviews(data);
@@ -224,19 +226,15 @@ function Testimonials() {
     ],
   };
 
-  const oneStarReviews = reviews?.filter(
-    (review) => review?.rating === 1,
-  )?.length;
-  const twoStarReviews = reviews?.filter(
-    (review) => review?.rating === 2,
-  )?.length;
-  const threeStarReviews = reviews?.filter(
+  const oneStarReviews = data?.filter((review) => review?.rating === 1)?.length;
+  const twoStarReviews = data?.filter((review) => review?.rating === 2)?.length;
+  const threeStarReviews = data?.filter(
     (review) => review?.rating === 3,
   )?.length;
-  const fourStarReviews = reviews?.filter(
+  const fourStarReviews = data?.filter(
     (review) => review?.rating === 4,
   )?.length;
-  const fiveStarReviews = reviews?.filter(
+  const fiveStarReviews = data?.filter(
     (review) => review?.rating === 5,
   )?.length;
 
@@ -246,6 +244,31 @@ function Testimonials() {
   const imageAttachedReviewsLength = data?.filter((r) => r.isThumbnail)?.length;
 
   const reversedReviews = reviews && [...reviews]?.reverse();
+
+  const handleReviewTab = (review) => {
+    setSelectedReviewTab((prev) => {
+      return review === prev ? "" : review;
+    });
+  };
+
+  useEffect(() => {
+    const ratingMap = {
+      oneStar: 1,
+      twoStar: 2,
+      threeStar: 3,
+      fourStar: 4,
+      fiveStar: 5,
+    };
+    if (selectedReviewTab) {
+      // filter review by selecting tab
+      const filteredReviews = data?.filter((r) => {
+        return r.rating === ratingMap[selectedReviewTab];
+      });
+      setReviews(filteredReviews);
+    } else {
+      setReviews(data);
+    }
+  }, [selectedReviewTab, data]);
 
   return (
     <div className="max-width">
@@ -257,7 +280,7 @@ function Testimonials() {
         </div>
         <div className="mb-10 flex flex-col items-center justify-between sm:flex-row">
           <h3 className="text-lg font-semibold sm:text-2xl">
-            {reviews?.length} Reviews
+            {data?.length} Reviews
           </h3>
           <div className="flex items-center gap-3">
             <h3 className="text-lg font-medium sm:text-2xl">
@@ -273,7 +296,10 @@ function Testimonials() {
         <div>
           <Slider {...reviewSetting}>
             <div className="px-2 lg:pr-4">
-              <div className="rounded-2xl bg-white p-5 text-center">
+              <div
+                onClick={() => handleReviewTab("oneStar")}
+                className={`rounded-2xl ${selectedReviewTab === "oneStar" ? "bg-white/70" : "bg-white"} cursor-pointer p-5 text-center`}
+              >
                 <h1 className="text-lg font-semibold sm:text-2xl">1 Star</h1>
                 <div className="my-2 flex justify-center gap-3 text-lg text-[#C8E3F6] sm:my-5 sm:text-3xl">
                   <IoStar className="text-primary" />
@@ -289,7 +315,10 @@ function Testimonials() {
               </div>
             </div>
             <div className="px-2 lg:pr-4">
-              <div className="rounded-2xl bg-white p-5 text-center">
+              <div
+                onClick={() => handleReviewTab("twoStar")}
+                className={`rounded-2xl ${selectedReviewTab === "twoStar" ? "bg-white/70" : "bg-white"} cursor-pointer p-5 text-center`}
+              >
                 <h1 className="text-lg font-semibold sm:text-2xl">2 Stars</h1>
                 <div className="my-2 flex justify-center gap-3 text-lg text-[#C8E3F6] sm:my-5 sm:text-3xl">
                   <IoStar className="text-primary" />
@@ -305,7 +334,10 @@ function Testimonials() {
               </div>
             </div>
             <div className="px-2 lg:pr-4">
-              <div className="rounded-2xl bg-white p-5 text-center">
+              <div
+                onClick={() => handleReviewTab("threeStar")}
+                className={`rounded-2xl ${selectedReviewTab === "threeStar" ? "bg-white/70" : "bg-white"} cursor-pointer p-5 text-center`}
+              >
                 <h1 className="text-lg font-semibold sm:text-2xl">3 Stars</h1>
                 <div className="my-2 flex justify-center gap-3 text-lg text-[#C8E3F6] sm:my-5 sm:text-3xl">
                   <IoStar className="text-primary" />
@@ -324,7 +356,10 @@ function Testimonials() {
               </div>
             </div>
             <div className="px-2 lg:pr-4">
-              <div className="rounded-2xl bg-white p-5 text-center">
+              <div
+                onClick={() => handleReviewTab("fourStar")}
+                className={`rounded-2xl ${selectedReviewTab === "fourStar" ? "bg-white/70" : "bg-white"} cursor-pointer p-5 text-center`}
+              >
                 <h1 className="text-lg font-semibold sm:text-2xl">4 Stars</h1>
                 <div className="my-2 flex justify-center gap-3 text-lg text-[#C8E3F6] sm:my-5 sm:text-3xl">
                   <IoStar className="text-primary" />
@@ -343,7 +378,10 @@ function Testimonials() {
               </div>
             </div>
             <div className="px-2 lg:pr-0">
-              <div className="rounded-2xl bg-white p-5 text-center">
+              <div
+                onClick={() => handleReviewTab("fiveStar")}
+                className={`rounded-2xl ${selectedReviewTab === "fiveStar" ? "bg-white/70" : "bg-white"} cursor-pointer p-5 text-center`}
+              >
                 <h1 className="text-lg font-semibold sm:text-2xl">5 Stars</h1>
                 <div className="my-2 flex justify-center gap-3 text-lg text-[#C8E3F6] sm:my-5 sm:text-3xl">
                   <IoStar className="text-primary" />
@@ -417,69 +455,75 @@ function Testimonials() {
         </div>
         <Divider className="my-5 h-px w-full !bg-black/30 sm:my-10" />
         <div className="mb-5">
-          <Slider {...testimonialSetting}>
-            {reversedReviews?.map((review, index) => (
-              <div key={index} className="px-0 md:px-10">
-                <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
-                    <p className="text-center text-base leading-[40px] sm:text-start md:text-lg">
-                      <span>
-                        <FaQuoteLeft className="mb-3 mr-1 inline text-xs text-red-500" />
-                      </span>
-                      {review?.message}
-                      <span>
-                        <FaQuoteRight className="mb-3 ml-1 inline text-xs text-red-500" />
-                      </span>
-                    </p>
-                    <div className="mt-5 flex flex-col items-center gap-2 sm:gap-4 lg:flex-row">
-                      {review?.sender?.image ? (
-                        <img
-                          src={review?.sender?.image}
-                          alt=""
-                          className="size-[30px] rounded-full sm:size-[40px]"
-                        />
-                      ) : (
-                        <div className="flex size-[30px] items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-3xl font-bold text-[#3b3b3b]/50 sm:size-[40px]">
-                          {review?.sender?.userName?.charAt(0)?.toUpperCase()}
+          {reversedReviews?.length > 0 ? (
+            <Slider {...testimonialSetting}>
+              {reversedReviews?.map((review, index) => (
+                <div key={index} className="px-0 md:px-10">
+                  <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                      <p className="text-center text-base leading-[40px] sm:text-start md:text-lg">
+                        <span>
+                          <FaQuoteLeft className="mb-3 mr-1 inline text-xs text-red-500" />
+                        </span>
+                        {review?.message}
+                        <span>
+                          <FaQuoteRight className="mb-3 ml-1 inline text-xs text-red-500" />
+                        </span>
+                      </p>
+                      <div className="mt-5 flex flex-col items-center gap-2 sm:gap-4 lg:flex-row">
+                        {review?.sender?.image ? (
+                          <img
+                            src={review?.sender?.image}
+                            alt=""
+                            className="size-[30px] rounded-full sm:size-[40px]"
+                          />
+                        ) : (
+                          <div className="flex size-[30px] items-center justify-center rounded-full bg-[#ffefef]/80 object-cover text-3xl font-bold text-[#3b3b3b]/50 sm:size-[40px]">
+                            {review?.sender?.userName?.charAt(0)?.toUpperCase()}
+                          </div>
+                        )}
+                        <Link
+                          to={`/${review?.sender?.userName}`}
+                          className="text-base font-semibold md:text-xl"
+                        >
+                          {review?.sender?.userName}
+                        </Link>
+                        <div className="ml-0 flex justify-center gap-2 text-lg text-[#C8E3F6] md:text-2xl lg:ml-3">
+                          {Array.from(
+                            { length: review?.rating },
+                            (_, index) => index + 1,
+                          )?.map((_, i) => (
+                            <IoStar key={i} className="text-primary" />
+                          ))}
                         </div>
-                      )}
-                      <Link
-                        to={`/${review?.sender?.userName}`}
-                        className="text-base font-semibold md:text-xl"
-                      >
-                        {review?.sender?.userName}
-                      </Link>
-                      <div className="ml-0 flex justify-center gap-2 text-lg text-[#C8E3F6] md:text-2xl lg:ml-3">
-                        {Array.from(
-                          { length: review?.rating },
-                          (_, index) => index + 1,
-                        )?.map((_, i) => (
-                          <IoStar key={i} className="text-primary" />
-                        ))}
+                        <p className="ml-0 text-base md:text-lg lg:ml-3">
+                          {review?.sender?.country}
+                        </p>
+                        <p className="mt-2 text-xs md:text-base lg:mt-0">
+                          {timeAgoTracker(review?.createdAt)}
+                        </p>
                       </div>
-                      <p className="ml-0 text-base md:text-lg lg:ml-3">
-                        {review?.sender?.country}
-                      </p>
-                      <p className="mt-2 text-xs md:text-base lg:mt-0">
-                        {timeAgoTracker(review?.createdAt)}
-                      </p>
                     </div>
+                    {review?.isThumbnail && (
+                      <img
+                        src={review?.thumbnail?.replaceAll(
+                          "-watermark-resized",
+                          "",
+                        )}
+                        alt=""
+                        className="w-[100px] cursor-pointer rounded-xl object-cover sm:w-[150px]"
+                        onClick={(e) =>
+                          handlePreviewImage(e, review?.thumbnail)
+                        }
+                      />
+                    )}
                   </div>
-                  {review?.isThumbnail && (
-                    <img
-                      src={review?.thumbnail?.replaceAll(
-                        "-watermark-resized",
-                        "",
-                      )}
-                      alt=""
-                      className="w-[100px] cursor-pointer rounded-xl object-cover sm:w-[150px]"
-                      onClick={(e) => handlePreviewImage(e, review?.thumbnail)}
-                    />
-                  )}
                 </div>
-              </div>
-            ))}
-          </Slider>
+              ))}
+            </Slider>
+          ) : (
+            <p className="text-center">No reviews found!</p>
+          )}
         </div>
         <Link
           to={"/all-reviews"}
