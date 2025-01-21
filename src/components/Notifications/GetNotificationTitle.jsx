@@ -285,6 +285,14 @@ const GetNotificationTitle = ({
         </p>
       </div>
     ),
+    AttchFile: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+          <span className="font-bold">{userName} </span>
+          sent you some attachments
+        </p>
+      </div>
+    ),
     CustomOfferByClient: (
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">

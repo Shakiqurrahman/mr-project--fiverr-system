@@ -127,9 +127,8 @@ const InboxDrawerModal = ({ close }) => {
                     }: ${
                       msg?.lastmessageinfo?.customOffer
                         ? `You just sent a new Custom Offer.`
-                        : msg?.lastmessageinfo?.attachment?.length > 0 &&
-                            !msg?.lastmessageinfo?.messageText
-                          ? `${msg?.lastmessageinfo?.senderUserName} just sent you some attachments.`
+                        : msg?.lastmessageinfo?.attachment?.length > 0
+                          ? ` just sent some attachments.`
                           : msg?.lastmessageinfo?.messageText
                     }`}
                   {msg?.lastmessageinfo?.contactForm && `sent a new message.`}
