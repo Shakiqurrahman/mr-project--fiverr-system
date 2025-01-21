@@ -186,8 +186,17 @@ const GetNotificationTitle = ({
     AutoCompleteOrder: (
       <div className="flex-1">
         <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
-          <span className="font-bold">{userName}'s </span>
+          <span className="font-bold">{userName}&apos;s </span>
           {`project was automatically marked as complete`}
+        </p>
+      </div>
+    ),
+
+    AutoCancelOrder: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+          <span className="font-bold">{userName}&apos;s </span>
+          {`project was automatically marked as canceled`}
         </p>
       </div>
     ),
