@@ -6,8 +6,10 @@ export const TimeZoneConverter = (country) => {
     // Get country information based on the country name
     const allCountries = getAllCountries();
     const countriesArray = Object.values(allCountries);
+    const countryFullName =
+      country === "United States" ? "United States of America" : country;
     const countryInfo = countriesArray.find(
-      (c) => c.name.toLowerCase() === country?.toLowerCase(),
+      (c) => c.name.toLowerCase() === countryFullName?.toLowerCase(),
     );
     if (countryInfo && countryInfo.timezones) {
       // Use the first timezone if there are multiple
