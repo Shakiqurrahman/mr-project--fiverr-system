@@ -104,7 +104,9 @@ const AdditionalOfferPreview = ({ value, messageObj }) => {
         </div>
         <div className="p-4">
           <div className="flex items-center border-b pb-4 text-sm sm:text-base">
-            <div className="w-3/6 sm:w-4/6">{value?.text}</div>
+            <div className="w-3/6 whitespace-pre-wrap sm:w-4/6">
+              {value?.text}
+            </div>
             <div className="w-[25%] text-center sm:w-1/6">
               {parseInt(value?.duration) > 1
                 ? value?.duration + " Days"
