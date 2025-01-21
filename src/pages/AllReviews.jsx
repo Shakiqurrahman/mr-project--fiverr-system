@@ -20,6 +20,8 @@ const AllReviews = () => {
   const [reviews, setReviews] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [selectedReviewTab, setSelectedReviewTab] = useState("");
+
   const reviewSetting = {
     dots: false,
     draggable: false,
@@ -200,19 +202,15 @@ const AllReviews = () => {
     setReviews(filteredReviews);
   };
 
-  const oneStarReviews = reviews?.filter(
-    (review) => review?.rating === 1,
-  )?.length;
-  const twoStarReviews = reviews?.filter(
-    (review) => review?.rating === 2,
-  )?.length;
-  const threeStarReviews = reviews?.filter(
+  const oneStarReviews = data?.filter((review) => review?.rating === 1)?.length;
+  const twoStarReviews = data?.filter((review) => review?.rating === 2)?.length;
+  const threeStarReviews = data?.filter(
     (review) => review?.rating === 3,
   )?.length;
-  const fourStarReviews = reviews?.filter(
+  const fourStarReviews = data?.filter(
     (review) => review?.rating === 4,
   )?.length;
-  const fiveStarReviews = reviews?.filter(
+  const fiveStarReviews = data?.filter(
     (review) => review?.rating === 5,
   )?.length;
 
@@ -222,6 +220,31 @@ const AllReviews = () => {
   const imageAttachedReviewsLength = data?.filter((r) => r.isThumbnail)?.length;
 
   const reversedReviews = reviews && [...reviews]?.reverse();
+
+  const handleReviewTab = (review) => {
+    setSelectedReviewTab((prev) => {
+      return review === prev ? "" : review;
+    });
+  };
+
+  useEffect(() => {
+    const ratingMap = {
+      oneStar: 1,
+      twoStar: 2,
+      threeStar: 3,
+      fourStar: 4,
+      fiveStar: 5,
+    };
+    if (selectedReviewTab) {
+      // filter review by selecting tab
+      const filteredReviews = data?.filter((r) => {
+        return r.rating === ratingMap[selectedReviewTab];
+      });
+      setReviews(filteredReviews);
+    } else {
+      setReviews(data);
+    }
+  }, [selectedReviewTab, data]);
 
   return (
     <div className="max-width">
@@ -233,7 +256,7 @@ const AllReviews = () => {
         </div>
         <div className="mb-10 flex flex-col items-center justify-between sm:flex-row">
           <h3 className="text-lg font-semibold sm:text-2xl">
-            {reviews?.length} Reviews
+            {data?.length} Reviews
           </h3>
           <div className="flex items-center gap-3">
             <h3 className="text-lg font-medium sm:text-2xl">
@@ -249,7 +272,10 @@ const AllReviews = () => {
         <div>
           <Slider {...reviewSetting}>
             <div className="px-2 lg:pr-4">
-              <div className="rounded-2xl bg-white p-5 text-center">
+              <div
+                onClick={() => handleReviewTab("oneStar")}
+                className={`rounded-2xl ${selectedReviewTab === "oneStar" ? "bg-white/70" : "bg-white"} cursor-pointer p-5 text-center`}
+              >
                 <h1 className="text-lg font-semibold sm:text-2xl">1 Star</h1>
                 <div className="my-2 flex justify-center gap-3 text-lg text-[#C8E3F6] sm:my-5 sm:text-3xl">
                   <IoStar className="text-primary" />
@@ -265,7 +291,10 @@ const AllReviews = () => {
               </div>
             </div>
             <div className="px-2 lg:pr-4">
-              <div className="rounded-2xl bg-white p-5 text-center">
+              <div
+                onClick={() => handleReviewTab("twoStar")}
+                className={`rounded-2xl ${selectedReviewTab === "twoStar" ? "bg-white/70" : "bg-white"} cursor-pointer p-5 text-center`}
+              >
                 <h1 className="text-lg font-semibold sm:text-2xl">2 Stars</h1>
                 <div className="my-2 flex justify-center gap-3 text-lg text-[#C8E3F6] sm:my-5 sm:text-3xl">
                   <IoStar className="text-primary" />
@@ -281,7 +310,10 @@ const AllReviews = () => {
               </div>
             </div>
             <div className="px-2 lg:pr-4">
-              <div className="rounded-2xl bg-white p-5 text-center">
+              <div
+                onClick={() => handleReviewTab("threeStar")}
+                className={`rounded-2xl ${selectedReviewTab === "threeStar" ? "bg-white/70" : "bg-white"} cursor-pointer p-5 text-center`}
+              >
                 <h1 className="text-lg font-semibold sm:text-2xl">3 Stars</h1>
                 <div className="my-2 flex justify-center gap-3 text-lg text-[#C8E3F6] sm:my-5 sm:text-3xl">
                   <IoStar className="text-primary" />
@@ -300,7 +332,10 @@ const AllReviews = () => {
               </div>
             </div>
             <div className="px-2 lg:pr-4">
-              <div className="rounded-2xl bg-white p-5 text-center">
+              <div
+                onClick={() => handleReviewTab("fourStar")}
+                className={`rounded-2xl ${selectedReviewTab === "fourStar" ? "bg-white/70" : "bg-white"} cursor-pointer p-5 text-center`}
+              >
                 <h1 className="text-lg font-semibold sm:text-2xl">4 Stars</h1>
                 <div className="my-2 flex justify-center gap-3 text-lg text-[#C8E3F6] sm:my-5 sm:text-3xl">
                   <IoStar className="text-primary" />
@@ -319,7 +354,10 @@ const AllReviews = () => {
               </div>
             </div>
             <div className="px-2 lg:pr-0">
-              <div className="rounded-2xl bg-white p-5 text-center">
+              <div
+                onClick={() => handleReviewTab("fiveStar")}
+                className={`rounded-2xl ${selectedReviewTab === "fiveStar" ? "bg-white/70" : "bg-white"} cursor-pointer p-5 text-center`}
+              >
                 <h1 className="text-lg font-semibold sm:text-2xl">5 Stars</h1>
                 <div className="my-2 flex justify-center gap-3 text-lg text-[#C8E3F6] sm:my-5 sm:text-3xl">
                   <IoStar className="text-primary" />
