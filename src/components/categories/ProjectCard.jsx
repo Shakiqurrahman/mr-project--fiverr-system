@@ -71,7 +71,9 @@ function ProjectCard({
         <Link
           to={slug}
           className="block cursor-pointer border bg-white"
-          style={{ height: `calc(100% - ${clientRefHeight + 12}px)` }}
+          style={{
+            height: `calc(100% - ${clientRefHeight + clientRefHeight > 0 ? 12 : 0}px)`,
+          }}
         >
           {clientName ? (
             <div

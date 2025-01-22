@@ -56,6 +56,7 @@ const CancelProjectModal = ({ handleClose }) => {
         ...form,
         isAccepted: extendType === "requestByMe" || false,
         extendType,
+        disputedFrom: projectDetails?.projectStatus,
       };
 
       const submitForm = {
@@ -149,7 +150,7 @@ const CancelProjectModal = ({ handleClose }) => {
             <div className="mt-4 flex justify-center gap-8">
               <div className="flex gap-2">
                 <input
-                  className="size-4 mt-1"
+                  className="mt-1 size-4"
                   type="radio"
                   name="extendType"
                   onChange={handleExtendType}
@@ -160,7 +161,7 @@ const CancelProjectModal = ({ handleClose }) => {
               </div>
               <div className="flex gap-2">
                 <input
-                  className="size-4 mt-1"
+                  className="mt-1 size-4"
                   type="radio"
                   name="extendType"
                   onChange={handleExtendType}

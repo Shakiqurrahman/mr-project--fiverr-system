@@ -225,7 +225,6 @@ const ChatBox = ({ openToggle }) => {
     };
   }, [conversationUser, isAdmin, socket, messages, user]);
 
-
   useEffect(() => {
     // Inital Scroll to last message
     endOfMessagesRef.current?.scrollIntoView();
@@ -1123,10 +1122,8 @@ const ChatBox = ({ openToggle }) => {
                           </span>{" "}
                           {msg?.contactForm?.website}
                         </p>
-                        <p className="my-1">
-                          <span className="whitespace-pre-wrap font-semibold">
-                            Message:{" "}
-                          </span>{" "}
+                        <p className="my-1 whitespace-pre-wrap">
+                          <span className="font-semibold">Message: </span>{" "}
                           {msg.contactForm.messageText}
                         </p>
                         {msg?.contactForm?.exampleDesign?.length > 0 && (

@@ -117,7 +117,7 @@ const InboxDrawerModal = ({ close }) => {
               <div>
                 <h1 className="font-bold">{msg?.userName}</h1>
                 <p
-                  className={`line-clamp-3 max-w-full ${msg?.lastmessageinfo?.totalUnseenMessage > 0 ? "font-bold" : "font-medium"}`}
+                  className={`line-clamp-3 max-w-full break-all ${msg?.lastmessageinfo?.totalUnseenMessage > 0 ? "font-bold" : "font-medium"}`}
                 >
                   {msg?.lastmessageinfo?.senderUserName &&
                     `${

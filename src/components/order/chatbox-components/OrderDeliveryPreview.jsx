@@ -414,6 +414,7 @@ const OrderDeliveryPreview = ({ messageObj, data, socket }) => {
           handleClose={setOpenRevisionModal}
           onOfferSubmit={socket}
           messageObj={messageObj}
+          images={showImages}
         />
       )}
     </>

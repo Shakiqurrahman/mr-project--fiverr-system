@@ -103,6 +103,7 @@ const ProjectRequirements = () => {
   const handleSaveDraft = (e) => {
     e.preventDefault();
     localStorage.setItem("requirements", JSON.stringify(requirements));
+    toast.success("Saved Successful.");
   };
 
   //Emoji Picker component handler
