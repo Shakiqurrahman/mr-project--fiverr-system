@@ -61,7 +61,6 @@ const AllConversation = ({ closeToggle }) => {
 
   useEffect(() => {
     const handleSeenBy = (msg) => {
-      // console.log("updated message", msg);
       setChatList((prev) =>
         prev.map((chat) => {
           if (chat.id === msg?.senderId) {

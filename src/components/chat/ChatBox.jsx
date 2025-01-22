@@ -188,7 +188,6 @@ const ChatBox = ({ openToggle }) => {
       // let filter = msg.userId === conversationUser && msg;
       // if (isAdmin && filter) {
       //   // setMessages((prev) => [...prev, filter]);
-      //   console.log("deltedMsg", msg);
       // }
     });
 
@@ -226,7 +225,6 @@ const ChatBox = ({ openToggle }) => {
     };
   }, [conversationUser, isAdmin, socket, messages, user]);
 
-  // console.log(typingStatus);
 
   useEffect(() => {
     // Inital Scroll to last message

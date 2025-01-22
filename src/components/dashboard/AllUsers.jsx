@@ -68,8 +68,6 @@ const AllUsers = () => {
   };
 
   const filteredUsers = filteredUsersData(usersData);
-  console.log(filteredUsers);
-
   const socket = connectSocket(`${configApi.socket}`, token);
   // all avaliable users
   useEffect(() => {

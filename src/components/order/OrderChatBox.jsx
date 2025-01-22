@@ -149,7 +149,6 @@ const OrderChatBox = () => {
 
     //     dispatch(setTypingStatus(`Typing...`));
     //   }
-    //   console.log(data);
     // });
 
     // Listen for stop typing
