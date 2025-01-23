@@ -167,9 +167,12 @@ const NotificationModal = ({ close }) => {
             })
           )}
         </div>
-        {(!notificationData || notificationData?.length === 0) && !isLoading && (
-          <p className="py-3 text-center text-black">No notifications found.</p>
-        )}
+        {(!notificationData || notificationData?.length === 0) &&
+          !isLoading && (
+            <p className="py-3 text-center text-black">
+              No notifications found.
+            </p>
+          )}
       </div>
     </div>
   );
