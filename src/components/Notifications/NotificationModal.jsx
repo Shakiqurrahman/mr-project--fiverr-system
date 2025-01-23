@@ -52,6 +52,9 @@ const NotificationModal = ({ close }) => {
       await makeSeenNotifications(id).unwrap();
     } catch (error) {}
   };
+
+  console.log(notificationData);
+
   return (
     <div
       className="static w-full max-w-[400px] overflow-hidden rounded-md bg-white shadow-lg sm:absolute sm:top-10 md:right-0 md:w-[450px]"
@@ -163,12 +166,10 @@ const NotificationModal = ({ close }) => {
               );
             })
           )}
-          {notificationData?.length === 0 && (
-            <p className="py-3 text-center text-black">
-              No notifications found.
-            </p>
-          )}
         </div>
+        {(!notificationData || notificationData?.length === 0) && !isLoading && (
+          <p className="py-3 text-center text-black">No notifications found.</p>
+        )}
       </div>
     </div>
   );
