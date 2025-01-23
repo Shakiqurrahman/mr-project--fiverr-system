@@ -124,7 +124,7 @@ function ProjectCard({
                 <Link
                   to={`/${clientName}`}
                   title={clientName}
-                  className="block max-w-[80px] truncate break-all text-sm font-semibold"
+                  className="block max-w-[80px] md:max-w-[120px] truncate break-all text-sm font-semibold"
                 >
                   {clientName}
                 </Link>
