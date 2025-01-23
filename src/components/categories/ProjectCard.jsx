@@ -120,16 +120,20 @@ function ProjectCard({
                   {clientName?.charAt(0)?.toUpperCase()}
                 </div>
               )}
-              <div>
-                <Link to={`/${clientName}`} className="text-sm font-semibold">
+              <div className="w-[calc(100%_-_30px)]">
+                <Link
+                  to={`/${clientName}`}
+                  title={clientName}
+                  className="block max-w-[80px] truncate break-all text-sm font-semibold"
+                >
                   {clientName}
                 </Link>
-                <span className="block text-right text-xs sm:hidden">
+                <span className="block text-left text-xs sm:hidden sm:text-right">
                   {timeStamp}
                 </span>
               </div>
             </div>
-            <span className="hidden text-right text-xs sm:block">
+            <span className="hidden text-left text-xs sm:block sm:text-right">
               {timeStamp}
             </span>
           </div>

@@ -20,8 +20,8 @@ const AllReviews = ({ user, allReviews }) => {
 
   const initialReviews = 5;
   const reviewsToShow = showMore
-    ? allReviews
-    : allReviews?.slice(0, initialReviews);
+    ? [...allReviews].reverse()
+    : [...allReviews]?.slice(0, initialReviews)?.reverse();
 
   return (
     <div>

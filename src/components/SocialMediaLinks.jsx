@@ -36,7 +36,7 @@ function SocialMediaLinks() {
           <Link
             to={"https://m.me/271007334772353"}
             target="_blank"
-            className="flex h-[30px] w-[30px] items-center justify-center rounded-full border-[3px] border-solid border-purple-500"
+            className="flex size-[30px] items-center justify-center rounded-full border-[3px] border-solid border-purple-500"
           >
             <img
               className="object-contain"
@@ -47,7 +47,7 @@ function SocialMediaLinks() {
           <Link
             to={"https://wa.me/+8801764547805"}
             target="_blank"
-            className="flex h-[30px] w-[30px] items-center justify-center rounded-full border-[3px] border-solid border-green-500"
+            className="flex size-[30px] items-center justify-center rounded-full border-[3px] border-solid border-green-500"
           >
             <FaWhatsapp className="text-green-500" />
           </Link>
@@ -56,7 +56,7 @@ function SocialMediaLinks() {
           </Link> */}
           <Link
             to={"mailto:mahfujurrahm535@gmail.com"}
-            className="flex h-[30px] w-[30px] items-center justify-center rounded-full border-[3px] border-solid border-red-500"
+            className="flex size-[30px] items-center justify-center rounded-full border-[3px] border-solid border-red-500"
           >
             <img
               className="h-[14px] w-[14px] object-contain"
@@ -67,7 +67,7 @@ function SocialMediaLinks() {
           <Link
             to={"https://t.me/+8801764547805"}
             target="_blank"
-            className="flex h-[30px] w-[30px] items-center justify-center rounded-full border-[3px] border-solid border-blue-500"
+            className="flex size-[30px] items-center justify-center rounded-full border-[3px] border-solid border-blue-500"
           >
             <FaTelegramPlane className="text-blue-500" />
           </Link>
@@ -76,12 +76,12 @@ function SocialMediaLinks() {
       <div className="relative z-[10] flex cursor-pointer flex-col items-center justify-center rounded-lg bg-primary p-2 text-white">
         <button type="button" onClick={handleExpend}>
           {expend ? (
-            <RiPlayLargeFill className="text-xl" />
+            <RiPlayLargeFill className="text-lg sm:text-xl" />
           ) : (
-            <RiPlayReverseLargeFill className="text-xl" />
+            <RiPlayReverseLargeFill className="text-lg sm:text-xl" />
           )}
         </button>
-        <PiDotsSixBold className="cursor-move text-2xl" />
+        <PiDotsSixBold className="cursor-move text-lg sm:text-2xl" />
       </div>
     </motion.div>
   );
