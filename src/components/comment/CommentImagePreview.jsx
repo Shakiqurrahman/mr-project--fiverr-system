@@ -117,18 +117,18 @@ const CommentImagePreview = ({ selected, close, openDrawer, drawer }) => {
         <div className="ms-auto flex gap-2">
           {clientDetails?.image ? (
             <img
-              className="size-8 rounded-full bg-[rgba(255,255,255,0.20)] object-cover"
+              className="size-8 shrink-0 rounded-full bg-[rgba(255,255,255,0.20)] object-cover"
               src={clientDetails?.image}
               alt="user"
             />
           ) : (
-            <div className="flex size-8 items-center justify-center rounded-full bg-[#ffefef]/80 text-2xl font-bold text-[#3b3b3b]/50">
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#ffefef]/80 text-2xl font-bold text-[#3b3b3b]/50">
               {clientDetails?.userName?.charAt(0)?.toUpperCase()}
             </div>
           )}
           {/* {user?.userName ? ( */}
           <img
-            className="size-8 rounded-full bg-[rgba(255,255,255,0.20)] object-cover"
+            className="size-8 shrink-0 rounded-full bg-[rgba(255,255,255,0.20)] object-cover"
             src={ADMINLOGO}
             alt="user"
           />
