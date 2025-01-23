@@ -301,6 +301,14 @@ const GetNotificationTitle = ({
         </p>
       </div>
     ),
+    paymentConfirmation: (
+      <div className="flex-1">
+        <p className="line-clamp-3 text-sm font-medium text-gray-900 sm:text-base">
+          <span className="font-bold">Thank you </span>
+          for your payment! Your transaction has been successfully processed.
+        </p>
+      </div>
+    ),
   };
 
   return notificationTemplates[type] || "";
