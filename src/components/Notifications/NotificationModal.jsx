@@ -21,7 +21,9 @@ const NotificationModal = ({ close }) => {
   const navigate = useNavigate();
   const notificalModal = useRef(null);
 
-  const { data: notificationData, isLoading } = useGetNotificationQuery();
+  const { data: notificationData, isLoading } = useGetNotificationQuery(null, {
+    skip: !user,
+  });
   const { onlineUsers, token, user } = useSelector((state) => state.user);
 
   const socket = connectSocket(`${configApi.socket}`, token);
