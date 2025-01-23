@@ -72,7 +72,7 @@ function ProjectCard({
           to={slug}
           className="block cursor-pointer border bg-white"
           style={{
-            height: `calc(100% - ${clientRefHeight + clientRefHeight > 0 ? 12 : 0}px)`,
+            height: `calc(100% - ${clientName ? clientRefHeight + 12 : 0}px)`,
           }}
         >
           {clientName ? (
