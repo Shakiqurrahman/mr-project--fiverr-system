@@ -1,3 +1,4 @@
+import { Backdrop, CircularProgress } from "@mui/material";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
@@ -13,7 +14,7 @@ import { configApi } from "../libs/configApi";
 
 const MultiProject = () => {
   const dispatch = useDispatch();
-  const { data } = useFetchMultiProjectQuery();
+  const { data, isLoading } = useFetchMultiProjectQuery();
   const imageRef = useRef(null);
   const navigate = useNavigate();
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -136,7 +137,18 @@ const MultiProject = () => {
   };
 
   return (
-    <div className="max-width mt-5">
+    <div className="max-width my-16">
+      {isLoading && (
+        <Backdrop
+          sx={{
+            color: "#fff",
+            zIndex: (theme) => theme.zIndex.drawer + 1,
+          }}
+          open
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
       <form className="mx-auto w-full max-w-[800px]" onSubmit={handleSubmit}>
         {/* Project Title */}
         <div className="bg-lightskyblue">
