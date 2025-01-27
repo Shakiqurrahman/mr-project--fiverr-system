@@ -240,7 +240,8 @@ function Contact() {
           <div className="mt-5 text-center">
             <button
               type="submit"
-              className="scro w-[200px] bg-[#248EDA] p-3 text-[20px] font-medium text-white"
+              disabled={isLoading}
+              className="scro w-[200px] bg-[#248EDA] p-3 text-[20px] font-medium text-white disabled:bg-primary/50"
             >
               SUBMIT
             </button>
