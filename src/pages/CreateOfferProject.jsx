@@ -76,12 +76,10 @@ function CreateOfferProject() {
   };
 
   // Handle design name change
-  const handleDesignChange = (designId, e) => {
+  const handleDesignChange = (index, e) => {
     setDesigns(
-      designs?.map((design) =>
-        design.designId === designId
-          ? { ...design, designName: e.target.value }
-          : design,
+      designs?.map((design, i) =>
+        i === index ? { ...design, designName: e.target.value } : design,
       ),
     );
   };
@@ -443,8 +441,8 @@ function CreateOfferProject() {
                   <input
                     type="text"
                     placeholder="Design Name"
-                    value={design.designName}
-                    onChange={(e) => handleDesignChange(design.designId, e)}
+                    value={design?.designName}
+                    onChange={(e) => handleDesignChange(idx, e)}
                     className="mt-3 block w-full border border-solid border-[#e7e7e7] bg-white p-2 outline-none"
                     required
                   />
