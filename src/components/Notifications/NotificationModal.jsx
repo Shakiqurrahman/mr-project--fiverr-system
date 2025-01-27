@@ -53,8 +53,6 @@ const NotificationModal = ({ close }) => {
     } catch (error) {}
   };
 
-  console.log(notificationData);
-
   return (
     <div
       className="static w-full max-w-[400px] overflow-hidden rounded-md bg-white shadow-lg sm:absolute sm:top-10 md:right-0 md:w-[450px]"
