@@ -13,6 +13,7 @@ const DragAndDropSubFolders = () => {
   const [subFolders, setSubFolders] = useState([]);
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [isCustomizing, setIsCustomizing] = useState(true);
+
   //   const [tempProducts, setTempProducts] = useState([]);
 
   useEffect(() => {
@@ -64,6 +65,18 @@ const DragAndDropSubFolders = () => {
     navigate(-1);
   };
 
+  // pagination
+  const designsPerPage = 20;
+  const totalDesigns = subFolders?.length;
+  const totalPages = Math.ceil(totalDesigns / designsPerPage);
+
+  // Create a structure of paginated designs
+  const paginatedDesigns = Array.from({ length: totalPages }, (_, index) => {
+    const startIndex = index * designsPerPage;
+    const endIndex = startIndex + designsPerPage;
+    return subFolders?.slice(startIndex, endIndex);
+  });
+
   return (
     <div className="max-width my-10">
       <div className="mb-5 flex items-center gap-5">
@@ -81,28 +94,37 @@ const DragAndDropSubFolders = () => {
         </button>
       </div>
       {subFolders?.length > 0 && (
-        <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
-          {subFolders?.map((subfolder, index) => {
-            const thumbnail = subfolder?.images?.find(
-              (img) => img?.thumbnail === true,
-            ).url;
-            return (
-              <div
-                key={index}
-                className="w-full border bg-white"
-                draggable={isCustomizing}
-                onDragStart={() => handleDragStart(index)}
-                onDragEnter={() => handleDragEnter(index)}
-                onDragEnd={handleDragEnd}
-              >
-                <img src={thumbnail} alt="" />
-                <h1 className="line-clamp-2 px-3 py-2 text-sm sm:text-base">
-                  {subfolder?.subFolder}
-                </h1>
+        <>
+          {paginatedDesigns?.map((pageDesigns, pageIndex) => (
+            <div key={pageIndex}>
+              <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
+                {pageDesigns?.map((subfolder, index) => {
+                  const thumbnail = subfolder?.images?.find(
+                    (img) => img?.thumbnail === true,
+                  ).url;
+                  return (
+                    <div
+                      key={index}
+                      className="w-full border bg-white"
+                      draggable={isCustomizing}
+                      onDragStart={() => handleDragStart(index)}
+                      onDragEnter={() => handleDragEnter(index)}
+                      onDragEnd={handleDragEnd}
+                    >
+                      <img src={thumbnail} alt="" />
+                      <h1 className="line-clamp-2 px-3 py-2 text-sm sm:text-base">
+                        {subfolder?.subFolder}
+                      </h1>
+                    </div>
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
+              <p className="my-5 bg-lightcream py-5 text-center font-semibold">
+                Page {pageIndex + 1} of {totalPages}
+              </p>
+            </div>
+          ))}
+        </>
       )}
     </div>
   );
