@@ -12,6 +12,7 @@ const DragAndDropSubFolderDesigns = () => {
 
   const [subFolderDesigns, setSubFolderDesigns] = useState([]);
   const [draggedIndex, setDraggedIndex] = useState(null);
+  const [draggedItem, setDraggedItem] = useState(null);
   const [isCustomizing, setIsCustomizing] = useState(true);
 
   useEffect(() => {
@@ -25,21 +26,22 @@ const DragAndDropSubFolderDesigns = () => {
 
   const handleDragStart = (index) => {
     setDraggedIndex(index);
+    setDraggedItem(subFolderDesigns[index]);
   };
 
   const handleDragEnter = (index) => {
-    if (index !== draggedIndex) {
+    if (draggedIndex !== index) {
       const updatedProducts = [...subFolderDesigns];
-      const draggedProduct = updatedProducts[draggedIndex];
-      updatedProducts.splice(draggedIndex, 1);
-      updatedProducts.splice(index, 0, draggedProduct);
-      setSubFolderDesigns(updatedProducts);
-      setDraggedIndex(index);
+      updatedProducts.splice(draggedIndex, 1); // Remove from old position
+      updatedProducts.splice(index, 0, draggedItem); // Insert at new position
+      setSubFolderDesigns(updatedProducts); // Update the order of subfolders
+      setDraggedIndex(index); // Update the dragged index
     }
   };
 
   const handleDragEnd = () => {
     setDraggedIndex(null);
+    setDraggedItem(null);
   };
 
   const handleSave = async () => {
@@ -61,6 +63,10 @@ const DragAndDropSubFolderDesigns = () => {
   const handleCancel = () => {
     setSubFolderDesigns([...subFolderDesigns]); // Reset to original order
     navigate(-1);
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault(); // Allow dragging over event
   };
 
   // pagination
@@ -94,19 +100,22 @@ const DragAndDropSubFolderDesigns = () => {
       {subFolderDesigns?.length > 0 && (
         <>
           {paginatedDesigns?.map((pageDesigns, pageIndex) => (
-            <div key={pageIndex}>
+            <div key={pageIndex} onDragOver={handleDragOver}>
               <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
                 {pageDesigns?.map((design, index) => {
                   const thumbnail = design?.images?.find(
                     (img) => img?.thumbnail === true,
                   ).url;
+
+                  const globalIndex = pageIndex * designsPerPage + index;
+
                   return (
                     <div
                       key={index}
                       className="w-full border bg-white"
                       draggable={isCustomizing}
-                      onDragStart={() => handleDragStart(index)}
-                      onDragEnter={() => handleDragEnter(index)}
+                      onDragStart={() => handleDragStart(globalIndex)}
+                      onDragEnter={() => handleDragEnter(globalIndex)}
                       onDragEnd={handleDragEnd}
                     >
                       <img src={thumbnail} alt="" />
