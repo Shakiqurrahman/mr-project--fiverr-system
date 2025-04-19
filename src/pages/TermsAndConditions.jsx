@@ -91,26 +91,22 @@ function TermsAndConditions() {
               we can create your design.
             </li>
             <li>
-              How we will work on the project:
+            How we will work on the project:
               <h4 className="mt-3 font-semibold">Start work</h4>
               <p>
-                After completing the customer requirement page we will start the
-                design work.
+              After the customer completes the requirement form and makes the payment, we will begin working on their design.
               </p>
               <h4 className="mt-3 font-semibold">First concept</h4>
               <p>
-                The customer gives us the time to create his design, we will
-                create it and show it to him within that time.
+              We will create the initial design concept based on the selected package and show it to the customer within the agreed timeframe through a private project page.
               </p>
+              <h4 className="mt-3 font-semibold">Revisions</h4>
               <p>
-                (Then, if the customer feels the need to change something in
-                this design, then we will correct the changes if the customer
-                informs us about the changes.)
+              If the customer requests any changes, we will make the necessary revisions according to the selected package.
               </p>
               <h4 className="mt-3 font-semibold">Final delivery</h4>
               <p>
-                After the design work is completed we will deliver the final
-                file according to the package selected by the customer.
+              Once the design is finalized, the final files will be delivered via the customer&apos;s private project page within 1-24 hours after final approval.
               </p>
             </li>
             <li>
